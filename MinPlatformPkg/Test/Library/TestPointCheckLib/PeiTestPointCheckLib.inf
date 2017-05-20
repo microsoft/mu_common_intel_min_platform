@@ -1,0 +1,58 @@
+## @file
+# Component information file for Board Init Test Library
+#
+# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
+# This program and the accompanying materials are licensed and made available under
+# the terms and conditions of the BSD License which accompanies this distribution.
+# The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = PeiTestPointCheckLib
+  FILE_GUID                      = 2EBA7FD0-1AAC-4DCC-B42A-C12905A61133
+  MODULE_TYPE                    = PEIM
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = TestPointCheckLib
+  CONSTRUCTOR                    = PeiTestPointCheckLibConstructor
+
+[LibraryClasses]
+  BaseLib
+  DebugLib
+  BaseMemoryLib
+  MtrrLib
+  HobLib
+  PrintLib
+  PeiServicesLib
+  TestPointLib
+
+[Packages]
+  MinPlatformPkg/MinPlatformPkg.dec
+  MdePkg/MdePkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
+
+[Sources]
+  PeiTestPointCheckLib.c
+  PeiDumpMtrr.c
+  PeiDumpHob.c
+  PeiDumpFvInfo.c
+  PeiDumpSmramHob.c
+
+[Pcd]
+  gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+
+[Guids]
+  gEfiHobMemoryAllocStackGuid
+  gEfiHobMemoryAllocBspStoreGuid
+  gEfiHobMemoryAllocModuleGuid
+  gEfiSmmPeiSmramMemoryReserveGuid
+
+[Ppis]
+  gEfiPeiFirmwareVolumeInfoPpiGuid
+  gEfiPeiFirmwareVolumeInfo2PpiGuid

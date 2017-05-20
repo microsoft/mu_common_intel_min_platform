@@ -1,0 +1,86 @@
+## @file
+# Component information file for Board Init Test Library
+#
+# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
+# This program and the accompanying materials are licensed and made available under
+# the terms and conditions of the BSD License which accompanies this distribution.
+# The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = DxeTestPointCheckLib
+  FILE_GUID                      = 74A1F91F-AD11-49C5-96B8-A579F4AA65F1
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = TestPointCheckLib
+  CONSTRUCTOR                    = DxeTestPointCheckLibConstructor
+
+[LibraryClasses]
+  BaseLib
+  DebugLib
+  DxeServicesTableLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  UefiLib
+  PrintLib
+  DevicePathLib
+  HobLib
+  PeCoffGetEntryPointLib
+  HstiLib
+  TestPointLib
+
+[Packages]
+  MinPlatformPkg/MinPlatformPkg.dec
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[Sources]
+  DxeTestPointCheckLib.c
+  DxeDumpGcd.c
+  DxeDumpMemMap.c
+  DxeDumpMemAttribute.c
+  DxeDumpPci.c
+  DxeDumpConsoleVariable.c
+  DxeDumpBootVariable.c
+  DxeDumpVariable.c
+  DxeDumpDevicePath.c
+  DxeDumpMemoryTypeInformation.c
+  DxeDumpAcpi.c
+  DxeDumpAcpiMadt.c
+  DxeDumpAcpiMcfg.c
+  DxeDumpAcpiHpet.c
+  DxeDumpAcpiDmar.c
+  DxeDumpAcpiWsmt.c
+  DxeDumpHsti.c
+  DxeDumpEsrt.c
+  DxeDumpLoadedImage.c
+  DxeDumpSmmInfo.c
+  PeiDumpSmramHob.c
+
+[Guids]
+  gEfiMemoryAttributesTableGuid
+  gEfiGlobalVariableGuid
+  gEfiAcpi20TableGuid
+  gEfiAcpi10TableGuid
+  gEfiMemoryTypeInformationGuid
+  gEfiSystemResourceTableGuid
+  gEfiSmmPeiSmramMemoryReserveGuid
+
+[Protocols]
+  gEfiPciIoProtocolGuid
+  gEfiPciRootBridgeIoProtocolGuid
+  gEfiSmmAccess2ProtocolGuid
+  gEdkiiVarCheckProtocolGuid
+  gEfiLoadedImageProtocolGuid
+  gEfiLoadedImageDevicePathProtocolGuid
+  gEfiDevicePathProtocolGuid
+
+[Pcd]
+  gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature

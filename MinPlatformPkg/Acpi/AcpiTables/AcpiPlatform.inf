@@ -1,0 +1,101 @@
+### @file
+#  Component information file for AcpiPlatform module
+#
+# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
+# This program and the accompanying materials are licensed and made available under
+# the terms and conditions of the BSD License which accompanies this distribution.
+# The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+###
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = AcpiPlatform
+  FILE_GUID                      = FC90EB7A-3E0A-483C-A26C-484D36593FF4
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = InstallAcpiPlatform
+
+[Sources.common]
+  AcpiPlatform.h
+  AcpiPlatform.c
+  Fadt/Fadt.c
+  Facs/Facs.c
+  Hpet/Hpet.c
+  Madt/Madt.c
+  Mcfg/Mcfg.c
+  Wsmt/Wsmt.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+  PcAtChipsetPkg/PcAtChipsetPkg.dec
+
+[LibraryClasses]
+  UefiDriverEntryPoint
+  BaseLib
+  DebugLib
+  IoLib
+  PcdLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  BaseMemoryLib
+  HobLib
+  AslUpdateLib
+  BoardAcpiTableLib
+
+[Pcd]
+  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId     ## CONSUMES
+  gPcAtChipsetPkgTokenSpaceGuid.PcdHpetBaseAddress
+
+  gPlatformModuleTokenSpaceGuid.PcdPreferredPmProfile
+  gPlatformModuleTokenSpaceGuid.PcdLowPowerS0Idle
+  gPlatformModuleTokenSpaceGuid.PcdTenSecondPowerButtonEnable
+  gPlatformModuleTokenSpaceGuid.PcdPciExpNative
+  gPlatformModuleTokenSpaceGuid.PcdNativeAspmEnable
+
+[FixedPcd]
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiPmTimerBlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiGpe0BlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdAcpiGpe1BlockAddress
+  gPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength
+
+  gPlatformModuleTokenSpaceGuid.PcdApicLocalAddress ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdApicIoAddress    ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdAcpiEnableSwSmi  ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdAcpiDisableSwSmi ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdApicIoIdPch      ## CONSUMES
+
+  gPlatformModuleTokenSpaceGuid.PcdWsmtProtectionFlags
+
+[Protocols]
+  gEfiAcpiTableProtocolGuid                     ## CONSUMES
+  gEfiMpServiceProtocolGuid                     ## CONSUMES
+  gEfiPciIoProtocolGuid                         ## CONSUMES
+
+[Guids]
+  gEfiGlobalVariableGuid                        ## CONSUMES
+  gEfiHobListGuid                               ## CONSUMES
+  gEfiEndOfDxeEventGroupGuid                    ## CONSUMES
+
+[Depex]
+  gEfiAcpiTableProtocolGuid           AND
+  gEfiMpServiceProtocolGuid           AND
+  gEfiPciRootBridgeIoProtocolGuid     AND
+  gEfiVariableArchProtocolGuid        AND
+  gEfiVariableWriteArchProtocolGuid
+
+
