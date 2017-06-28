@@ -1,5 +1,5 @@
 ## @file
-#  Provide Dxe FSP wrapper platform reset related function.
+#  Provide Dxe FSP wrapper platform related function.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 #
@@ -20,13 +20,11 @@
 ################################################################################
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = DxeFspWrapperPlatformResetLib
+  BASE_NAME                      = DxeFspWrapperPlatformLib
   FILE_GUID                      = C176048B-EF9C-4BE2-A464-26F00C551EAA
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = FspWrapperPlatformResetLib
   LIBRARY_CLASS                  = FspWrapperPlatformLib
-
 
 #
 # The following information is for reference only and not required by the build tools.
@@ -42,7 +40,6 @@
 
 [Sources]
   DxeFspWrapperPlatformResetLib.c
-
 
 ################################################################################
 #

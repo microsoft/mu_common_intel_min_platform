@@ -90,7 +90,7 @@
   #
   # PEI phase common
   #
-  FspWrapperPlatformResetLib|MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformResetLib/PeiFspWrapperPlatformResetLib.inf
+  FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
 
@@ -98,7 +98,7 @@
   #
   # DXE phase common
   #
-  FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformResetLib/DxeFspWrapperPlatformResetLib.inf
+  FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformLib/DxeFspWrapperPlatformLib.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/DxeTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
 
@@ -149,8 +149,7 @@
   MinPlatformPkg/FspWrapper/Library/PeiFspWrapperHobProcessLib/PeiFspWrapperHobProcessLib.inf
   MinPlatformPkg/FspWrapper/Library/SecFspWrapperPlatformSecLib/SecFspWrapperPlatformSecLib.inf
   MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
-  MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformResetLib/DxeFspWrapperPlatformResetLib.inf
-  MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformResetLib/PeiFspWrapperPlatformResetLib.inf
+  MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformLib/DxeFspWrapperPlatformLib.inf
   
   MinPlatformPkg/Hsti/HstiIbvPlatformDxe/HstiIbvPlatformDxe.inf
 

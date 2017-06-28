@@ -41,6 +41,7 @@
 
 [Sources]
   PeiFspWrapperPlatformLib.c
+  PeiFspWrapperPlatformResetLib.c
 
 ################################################################################
 #
@@ -59,3 +60,5 @@
 [LibraryClasses.IA32]
   FspPolicyInitLib
   FspPolicyUpdateLib
+  PeiServicesTablePointerLib
+  BaseMemoryLib
