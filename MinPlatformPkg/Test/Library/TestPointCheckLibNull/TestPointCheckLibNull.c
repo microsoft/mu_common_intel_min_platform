@@ -80,7 +80,7 @@ TestPointDxeSmmReadyToLock (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBoots (
+TestPointReadyToBoot (
   VOID
   )
 {
