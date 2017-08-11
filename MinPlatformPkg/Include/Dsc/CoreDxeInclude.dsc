@@ -140,3 +140,8 @@
   SecurityPkg/Tcg/Tcg2Smm/Tcg2Smm.inf
   SecurityPkg/Tcg/Tcg2Config/Tcg2ConfigDxe.inf
 !endif
+
+!if gPlatformModuleTokenSpaceGuid.PcdPerformanceEnable == TRUE
+  PerformancePkg/Dp_App/Dp.inf
+!endif
+

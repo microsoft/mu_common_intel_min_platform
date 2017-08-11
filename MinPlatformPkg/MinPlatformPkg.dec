@@ -219,3 +219,4 @@ gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x00, 0x07, 0x0F, 
   gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly     |FALSE|BOOLEAN|0xF00000A3
   gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE|BOOLEAN|0xF00000A4
   gPlatformModuleTokenSpaceGuid.PcdTpm2Enable          |FALSE|BOOLEAN|0xF00000A5
+  gPlatformModuleTokenSpaceGuid.PcdPerformanceEnable   |FALSE|BOOLEAN|0xF00000A6
