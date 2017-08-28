@@ -57,8 +57,8 @@ AslUpdateLib|Include/Library/AslUpdateLib.h
 BoardAcpiEnableLib|Include/Library/BoardAcpiEnableLib.h
 BoardAcpiTableLib|Include/Library/BoardAcpiTableLib.h
 
-FspPolicyInitLib|Include/Library/FspPolicyInitLib.h
-FspPolicyUpdateLib|Include/Library/FspPolicyUpdateLib.h
+SiliconPolicyInitLib|Include/Library/SiliconPolicyInitLib.h
+SiliconPolicyUpdateLib|Include/Library/SiliconPolicyUpdateLib.h
 
 SpiFlashCommonLib|Include/Library/SpiFlashCommonLib.h
 

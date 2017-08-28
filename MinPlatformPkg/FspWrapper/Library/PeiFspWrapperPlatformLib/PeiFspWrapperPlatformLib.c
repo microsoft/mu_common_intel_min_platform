@@ -19,8 +19,8 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/MemoryAllocationLib.h>
 #include <Library/PeiServicesLib.h>
 #include <Library/FspWrapperApiLib.h>
-#include <Library/FspPolicyInitLib.h>
-#include <Library/FspPolicyUpdateLib.h>
+#include <Library/SiliconPolicyInitLib.h>
+#include <Library/SiliconPolicyUpdateLib.h>
 
 
 /**
@@ -37,8 +37,9 @@ UpdateFspmUpdData (
   IN OUT VOID        *FspUpdRgnPtr
   )
 {
-  FspmPolicyInit (FspUpdRgnPtr);
-  FspmPolicyUpdate (FspUpdRgnPtr);
+  SiliconPolicyInitPreMem (FspUpdRgnPtr);
+  SiliconPolicyUpdatePreMem (FspUpdRgnPtr);
+  SiliconPolicyDonePreMem (FspUpdRgnPtr);
 }
 
 /**
@@ -53,8 +54,9 @@ UpdateFspsUpdData (
   IN OUT VOID        *FspUpdRgnPtr
   )
 {
-  FspsPolicyInit (FspUpdRgnPtr);
-  FspsPolicyUpdate (FspUpdRgnPtr);
+  SiliconPolicyInitPostMem (FspUpdRgnPtr);
+  SiliconPolicyUpdatePostMem (FspUpdRgnPtr);
+  SiliconPolicyDonePostMem (FspUpdRgnPtr);
 }
 
 /**

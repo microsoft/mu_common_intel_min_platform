@@ -1,5 +1,5 @@
 ## @file
-#  Provide FSP wrapper platform related function.
+#  Silicon pre-mem policy PEIM.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 #
@@ -20,12 +20,11 @@
 ################################################################################
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = PeiFspWrapperPlatformLib
-  FILE_GUID                      = 415F065F-CEC1-43A3-B9D8-39E5D0DDD9A0
+  BASE_NAME                      = SiliconPolicyPeiPreMem
+  FILE_GUID                      = 3307DD15-23BA-4546-A004-FCBCC47D4A49
   MODULE_TYPE                    = PEIM
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = FspWrapperPlatformLib
-
+  ENTRY_POINT                    = SiliconPolicyPeiPreMemEntryPoint
 
 #
 # The following information is for reference only and not required by the build tools.
@@ -40,8 +39,7 @@
 ################################################################################
 
 [Sources]
-  PeiFspWrapperPlatformLib.c
-  PeiFspWrapperPlatformResetLib.c
+  SiliconPolicyPeiPreMem.c
 
 ################################################################################
 #
@@ -53,12 +51,12 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  IntelFsp2Pkg/IntelFsp2Pkg.dec
-  IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
 
-[LibraryClasses.IA32]
+[LibraryClasses]
+  PeimEntryPoint
   SiliconPolicyInitLib
   SiliconPolicyUpdateLib
-  PeiServicesTablePointerLib
-  BaseMemoryLib
+  
+[Depex]
+  gEfiPeiMasterBootModePpiGuid

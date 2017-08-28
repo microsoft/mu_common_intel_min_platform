@@ -48,6 +48,7 @@
     gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly|FALSE
     gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE
     gPlatformModuleTokenSpaceGuid.PcdTpm2Enable|FALSE
+    gPlatformModuleTokenSpaceGuid.PcdPerformanceEnable|FALSE
 
 ################################################################################
 #
@@ -81,6 +82,9 @@
   BoardInitLib|MinPlatformPkg/PlatformInit/Library/BoardInitLibNull/BoardInitLibNull.inf
   BoardAcpiTableLib|MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiTableLibNull.inf
   BoardAcpiEnableLib|MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiEnableLibNull.inf
+  SiliconPolicyInitLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
+  SiliconPolicyUpdateLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
+
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   
 [LibraryClasses.common.SEC]
@@ -163,6 +167,11 @@
   MinPlatformPkg/PlatformInit/Library/BoardInitLibNull/BoardInitLibNull.inf
   MinPlatformPkg/PlatformInit/Library/MultiBoardInitSupportLib/PeiMultiBoardInitSupportLib.inf
   MinPlatformPkg/PlatformInit/Library/MultiBoardInitSupportLib/DxeMultiBoardInitSupportLib.inf
+  MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPreMem.inf
+  MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPostMem.inf
+  MinPlatformPkg/PlatformInit/SiliconPolicyDxe/SiliconPolicyDxe.inf
+  MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
+  MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
 
   MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
