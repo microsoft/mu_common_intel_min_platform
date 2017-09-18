@@ -22,20 +22,18 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 FVB_GLOBAL   mFvbModuleGlobal;
 
 //
-// This platform driver knows there are 5 FVs on
-// FD, which are Test Menu, FvRecovery, FvMain and FvNvStorage.
+// This platform driver knows there are multiple FVs on FD.
 // Now we only provide FVs on Variable region and MicorCode region for performance issue.
 //
 FV_INFO mPlatformFvBaseAddress[] = {
   {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
-  {FixedPcdGet32(PcdFlashMicrocodeFvBase), FixedPcdGet32(PcdFlashMicrocodeFvSize)},
+  {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
   {0, 0}
 };
 
 FV_INFO mPlatformDefaultBaseAddress[] = {
   {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
-  {FixedPcdGet32(PcdFlashMicrocodeFvBase), FixedPcdGet32(PcdFlashMicrocodeFvSize)},
-  {FixedPcdGet32(PcdFlashFvMain2Base), FixedPcdGet32(PcdFlashFvMain2Size)},
+  {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
   {0, 0}
 };
 

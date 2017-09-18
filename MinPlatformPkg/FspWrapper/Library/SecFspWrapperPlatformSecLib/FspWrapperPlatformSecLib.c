@@ -71,20 +71,20 @@ PEI_SEC_PERFORMANCE_PPI  mSecPerformancePpi = {
   SecGetPerformance
 };
 
-EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mRecovery2FirmwareVolumeInfoPpi = {
+EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mFvSecurityInfoPpi = {
   EFI_FIRMWARE_FILE_SYSTEM2_GUID,
-  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvRecovery2Base),
-  FixedPcdGet32 (PcdFlashFvRecovery2Size),
+  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvSecurityBase),
+  FixedPcdGet32 (PcdFlashFvSecuritySize),
   NULL,
-  NULL
+  NULL,
 };
 
-EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mRecovery3FirmwareVolumeInfoPpi = {
+EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mFvAdvancedInfoPpi = {
   EFI_FIRMWARE_FILE_SYSTEM2_GUID,
-  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvRecovery3Base),
-  FixedPcdGet32 (PcdFlashFvRecovery3Size),
+  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvAdvancedBase),
+  FixedPcdGet32 (PcdFlashFvAdvancedSize),
   NULL,
-  NULL,
+  NULL
 };
 
 EFI_PEI_PPI_DESCRIPTOR  mPeiSecPlatformPpi[] = {
@@ -96,12 +96,12 @@ EFI_PEI_PPI_DESCRIPTOR  mPeiSecPlatformPpi[] = {
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI,
     &gEfiPeiFirmwareVolumeInfoPpiGuid,
-    &mRecovery2FirmwareVolumeInfoPpi
+    &mFvSecurityInfoPpi
   },
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI,
     &gEfiPeiFirmwareVolumeInfoPpiGuid,
-    &mRecovery3FirmwareVolumeInfoPpi
+    &mFvAdvancedInfoPpi
   },
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST,

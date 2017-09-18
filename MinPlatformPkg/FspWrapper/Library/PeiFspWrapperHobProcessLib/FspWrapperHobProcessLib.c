@@ -253,7 +253,7 @@ PostFspmHobProcess (
   }
 
   //
-  // @todo: It is a W/A for SetMemorySpaceAttribute issue in PchSpi and PchReset drivers in FVMAIN of SSPT.
+  // @todo: It is a W/A for SetMemorySpaceAttribute issue in PchSpi and PchReset drivers.
   //        We need to modify it instead of hard code here. Due to InstallEfiMemory is using hard code to
   //        describe memory resource, we have to hard code in here. Once InstallEfiMemory is merged, we should
   //        be able to remove this.

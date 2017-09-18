@@ -59,9 +59,9 @@ flashmap = data
 
 # Get FSP-S & FSP-M-T offset & calculate the base
 for line in flashmap.split("\n"):
-  if "PcdFlashFvFspsOffset" in line:
+  if "PcdFlashFvFspSOffset" in line:
     fspSBaseOffset = long(line.split("=")[1].split()[0], 16)
-  if "PcdFlashFvFspmtOffset" in line:
+  if "PcdFlashFvFspMTOffset" in line:
     fspMBaseOffset = long(line.split("=")[1].split()[0], 16)
 file.close()
 

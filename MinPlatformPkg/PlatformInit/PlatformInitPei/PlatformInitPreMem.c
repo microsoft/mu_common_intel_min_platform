@@ -334,9 +334,25 @@ ReportFv (
   } else {
 
     PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvMainBase))->FileSystemGuid),
-      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvMainBase),
-      FixedPcdGet32 (PcdFlashFvMainSize),
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvPostMemoryBase))->FileSystemGuid),
+      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvPostMemoryBase),
+      FixedPcdGet32 (PcdFlashFvPostMemorySize),
+      NULL,
+      NULL,
+      0
+      );
+    PeiServicesInstallFvInfo2Ppi (
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvUefiBootBase))->FileSystemGuid),
+      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvUefiBootBase),
+      FixedPcdGet32 (PcdFlashFvUefiBootSize),
+      NULL,
+      NULL,
+      0
+      );
+    PeiServicesInstallFvInfo2Ppi (
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvOsBootBase))->FileSystemGuid),
+      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvOsBootBase),
+      FixedPcdGet32 (PcdFlashFvOsBootSize),
       NULL,
       NULL,
       0

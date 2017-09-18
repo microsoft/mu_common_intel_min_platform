@@ -57,7 +57,7 @@ Returns:
   DevicePath  = NULL;
   Status      = EFI_SUCCESS;
 
-  DEBUG ((DEBUG_INFO, "[FVMAIN2] BdsCreateShellDevicePath\n"));
+  DEBUG ((DEBUG_INFO, "BdsCreateShellDevicePath\n"));
   gBS->LocateHandleBuffer (
         ByProtocol,
         &gEfiFirmwareVolume2ProtocolGuid,

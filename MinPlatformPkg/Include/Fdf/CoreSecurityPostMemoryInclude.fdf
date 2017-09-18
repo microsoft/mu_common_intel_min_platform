@@ -12,7 +12,3 @@
 # WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
 ##
-
-INF UefiCpuPkg/SecCore/SecCore.inf
-INF MdeModulePkg/Core/Pei/PeiMain.inf
-

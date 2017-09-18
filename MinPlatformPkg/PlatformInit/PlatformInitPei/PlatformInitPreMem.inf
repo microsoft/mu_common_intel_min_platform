@@ -43,8 +43,12 @@
 [Pcd]
   gPlatformModuleTokenSpaceGuid.PcdFlashAreaBaseAddress        ## CONSUMES
   gPlatformModuleTokenSpaceGuid.PcdFlashAreaSize               ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvMainBase             ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvMainSize             ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemoryBase          ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemorySize          ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootBase         ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootSize         ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootBase           ## CONSUMES
+  gPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootSize           ## CONSUMES
   gPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit
   gPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit
   
