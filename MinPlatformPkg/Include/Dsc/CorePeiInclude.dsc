@@ -48,7 +48,7 @@
       NULL|MdeModulePkg/Library/LzmaCustomDecompressLib/LzmaCustomDecompressLib.inf
   }
   
-!if gPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
   SecurityPkg/Tcg/Tcg2Config/Tcg2ConfigPei.inf
   SecurityPkg/Tcg/Tcg2Pei/Tcg2Pei.inf {
     <LibraryClasses>

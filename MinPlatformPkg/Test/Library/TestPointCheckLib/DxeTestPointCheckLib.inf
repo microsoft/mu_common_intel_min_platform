@@ -83,4 +83,4 @@
   gEfiDevicePathProtocolGuid
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature

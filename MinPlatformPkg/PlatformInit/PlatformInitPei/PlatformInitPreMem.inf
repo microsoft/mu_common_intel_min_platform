@@ -41,23 +41,23 @@
   UefiCpuPkg/UefiCpuPkg.dec
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdFlashAreaBaseAddress        ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashAreaSize               ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemoryBase          ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemorySize          ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootBase         ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootSize         ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootBase           ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootSize           ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit
-  gPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashAreaBaseAddress        ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashAreaSize               ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemoryBase          ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemorySize          ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootBase         ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootSize         ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootBase           ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootSize           ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit
+  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit
   
 [FixedPcd]
-  gPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize  ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize      ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdPlatformEfiReservedMemorySize     ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize       ## CONSUMES
-  gPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize       ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize  ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize      ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiReservedMemorySize     ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize       ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize       ## CONSUMES
 
 [Sources]
   PlatformInitPreMem.c

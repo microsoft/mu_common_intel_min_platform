@@ -26,7 +26,7 @@ INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
 INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
 INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
 
-!if gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == TRUE
 INF  MdeModulePkg/Universal/Variable/EmuRuntimeDxe/EmuVariableRuntimeDxe.inf
 !endif
 

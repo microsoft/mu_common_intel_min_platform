@@ -123,7 +123,7 @@
   PlatformSecureLib|SecurityPkg/Library/PlatformSecureLibNull/PlatformSecureLibNull.inf
   AuthVariableLib|MdeModulePkg/Library/AuthVariableLibNull/AuthVariableLibNull.inf
   
-!if gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
   AuthVariableLib|SecurityPkg/Library/AuthVariableLib/AuthVariableLib.inf
 !endif
 

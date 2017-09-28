@@ -45,10 +45,10 @@
   
 [PcdsFeatureFlag]
   # configuration
-    gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly|FALSE
-    gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE
-    gPlatformModuleTokenSpaceGuid.PcdTpm2Enable|FALSE
-    gPlatformModuleTokenSpaceGuid.PcdPerformanceEnable|FALSE
+    gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly|FALSE
+    gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE
+    gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable|FALSE
+    gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable|FALSE
 
 ################################################################################
 #
@@ -182,7 +182,7 @@
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
-!if gPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
 !endif

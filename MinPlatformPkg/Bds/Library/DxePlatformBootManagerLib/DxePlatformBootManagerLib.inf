@@ -54,7 +54,7 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdTpm2Enable                       ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable                       ## CONSUMES
   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut                   ## PRODUCES
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution       ## PRODUCES
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution         ## PRODUCES
@@ -65,7 +65,7 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoHorizontalResolution  ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoVerticalResolution    ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdConInConnectOnDemand            ## PRODUCES
-  gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly
+  gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly
 
 [Sources]
   BdsPlatform.c

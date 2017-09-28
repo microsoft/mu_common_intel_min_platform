@@ -45,7 +45,7 @@
   HstiLib
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdHstiIbvPlatformFeature
+  gMinPlatformModuleTokenSpaceGuid.PcdHstiIbvPlatformFeature
 
 [Protocols]
 

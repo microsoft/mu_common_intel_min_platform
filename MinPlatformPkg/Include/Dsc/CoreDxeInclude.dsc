@@ -36,7 +36,7 @@
   PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
   MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
 
-!if gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
+!if gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
   MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteSmm.inf
   MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
   MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmm.inf {
@@ -54,10 +54,10 @@
   MdeModulePkg/Universal/DriverHealthManagerDxe/DriverHealthManagerDxe.inf
   MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf {
     <LibraryClasses>
-!if gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
       NULL|SecurityPkg/Library/DxeImageVerificationLib/DxeImageVerificationLib.inf
 !endif
-!if gPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
       NULL|SecurityPkg/Library/DxeTpm2MeasureBootLib/DxeTpm2MeasureBootLib.inf
 !endif
   }
@@ -105,7 +105,7 @@
   MdeModulePkg/Application/UiApp/UiApp.inf
   MdeModulePkg/Application/BootManagerMenuApp/BootManagerMenuApp.inf
 
-!if gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
+!if gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
   MdeModulePkg/Core/PiSmmCore/PiSmmIpl.inf
   MdeModulePkg/Core/PiSmmCore/PiSmmCore.inf
 
@@ -118,18 +118,18 @@
   MdeModulePkg/Universal/SmmCommunicationBufferDxe/SmmCommunicationBufferDxe.inf
 !endif
 
-!if gPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
+!if gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly == FALSE
   MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTableDxe/FirmwarePerformanceDxe.inf
   MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTableSmm/FirmwarePerformanceSmm.inf
   MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
 !endif
 
-!if gPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable == TRUE
   SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
 !endif
 
-!if gPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
   SecurityPkg/Tcg/MemoryOverwriteControl/TcgMor.inf
   SecurityPkg/Tcg/Tcg2Dxe/Tcg2Dxe.inf {
     <LibraryClasses>
@@ -141,7 +141,7 @@
   SecurityPkg/Tcg/Tcg2Config/Tcg2ConfigDxe.inf
 !endif
 
-!if gPlatformModuleTokenSpaceGuid.PcdPerformanceEnable == TRUE
+!if gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable == TRUE
   PerformancePkg/Dp_App/Dp.inf
 !endif
 

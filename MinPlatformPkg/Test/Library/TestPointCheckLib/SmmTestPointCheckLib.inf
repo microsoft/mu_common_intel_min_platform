@@ -47,7 +47,7 @@
   SmmDumpSmrr.c
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
 
 [Guids]
   gEdkiiPiSmmMemoryAttributesTableGuid

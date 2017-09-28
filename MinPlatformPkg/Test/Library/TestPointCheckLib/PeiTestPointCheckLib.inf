@@ -45,7 +45,7 @@
   PeiDumpSmramHob.c
 
 [Pcd]
-  gPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
 
 [Guids]
   gEfiHobMemoryAllocStackGuid
