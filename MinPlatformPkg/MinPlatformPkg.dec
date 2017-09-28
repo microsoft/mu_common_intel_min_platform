@@ -151,6 +151,8 @@ gMinPlatformModuleTokenSpaceGuid.PcdWsmtProtectionFlags|0|UINT32|0x10001006
 
 gMinPlatformModuleTokenSpaceGuid.PcdPreferredPmProfile|0x0|UINT8|0x00100205
 
+gMinPlatformModuleTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x00100206
+
 #
 # See HstiIbvFeatureBit.h for the definition
 #

@@ -38,7 +38,9 @@ PlatformInit (
   // Platform initialization
   // Enable Serial port here
   //
-  SerialPortInitialize ();
+  if (PcdGetBool(PcdSecSerialPortDebugEnable)) {
+    SerialPortInitialize ();
+  }
 
   DEBUG ((DEBUG_INFO, "PrintPeiCoreEntryPointParam in PlatformInit\n"));
   DEBUG ((DEBUG_INFO, "FspHobList - 0x%x\n", FspHobList));
