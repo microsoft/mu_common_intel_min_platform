@@ -25,9 +25,6 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
 #include <Guid/Acpi.h>
 
-BOOLEAN  mDmarFound = FALSE;
-BOOLEAN  mWsmtFound = FALSE;
-
 EFI_STATUS
 DumpAcpiMadt (
   IN EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
@@ -153,11 +150,9 @@ DumpAcpiTable (
     return Status;
   case EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE:
     Status = DumpAcpiDmar ((EFI_ACPI_DMAR_HEADER *)Table);
-    mDmarFound = TRUE;
     return Status;
   case EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE:
     Status = DumpAcpiWsmt ((EFI_ACPI_WSMT_TABLE *)Table);
-    mWsmtFound = TRUE;
     return Status;
   default:
     break;
@@ -168,7 +163,9 @@ DumpAcpiTable (
 
 EFI_STATUS
 DumpAcpiRsdt (
-  IN EFI_ACPI_DESCRIPTION_HEADER  *Rsdt
+  IN EFI_ACPI_DESCRIPTION_HEADER  *Rsdt,
+  IN UINT32                       *Signature, OPTIONAL
+  OUT VOID                        **OutTable
   )
 {
   EFI_STATUS                         Status;
@@ -191,6 +188,9 @@ DumpAcpiRsdt (
     if (EFI_ERROR(Status)) {
       Result = FALSE;
     }
+    if (Signature != NULL && Table->Signature == *Signature) {
+      *OutTable = Table;
+    }
   }
   if (!Result) {
     return EFI_INVALID_PARAMETER;
@@ -200,7 +200,9 @@ DumpAcpiRsdt (
 
 EFI_STATUS
 DumpAcpiXsdt (
-  IN EFI_ACPI_DESCRIPTION_HEADER  *Xsdt
+  IN EFI_ACPI_DESCRIPTION_HEADER  *Xsdt,
+  IN UINT32                       *Signature, OPTIONAL
+  OUT VOID                        **OutTable
   )
 {
   EFI_STATUS                     Status;
@@ -226,6 +228,9 @@ DumpAcpiXsdt (
     if (EFI_ERROR(Status)) {
       Result = FALSE;
     }
+    if (Signature != NULL && Table->Signature == *Signature) {
+      *OutTable = Table;
+    }
   }
   if (!Result) {
     return EFI_INVALID_PARAMETER;
@@ -235,7 +240,9 @@ DumpAcpiXsdt (
 
 EFI_STATUS
 DumpAcpiRsdp (
-  IN EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER  *Rsdp
+  IN EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER  *Rsdp,
+  IN UINT32                                        *Signature, OPTIONAL
+  OUT VOID                                         **Table
   )
 {
   EFI_STATUS                                    Status;
@@ -259,13 +266,13 @@ DumpAcpiRsdp (
   //
   if (Rsdp->Revision >= EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION) {
     Xsdt = (EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Rsdp->XsdtAddress;
-    Status = DumpAcpiXsdt (Xsdt);
+    Status = DumpAcpiXsdt (Xsdt, Signature, Table);
   } else {
     //
     // Search RSDT
     //
     Rsdt = (EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Rsdp->RsdtAddress;
-    Status = DumpAcpiRsdt (Rsdt);
+    Status = DumpAcpiRsdt (Rsdt, Signature, Table);
   }
 
   return Status;
@@ -273,7 +280,9 @@ DumpAcpiRsdp (
 
 EFI_STATUS
 DumpAcpiWithGuid (
-  IN EFI_GUID  *AcpiTableGuid
+  IN EFI_GUID  *AcpiTableGuid,
+  IN UINT32    *Signature, OPTIONAL
+  OUT VOID     **Table
   )
 {
   VOID        *Rsdp;
@@ -284,55 +293,64 @@ DumpAcpiWithGuid (
     return EFI_NOT_FOUND;
   }
 
-  Status = DumpAcpiRsdp (Rsdp);
+  Status = DumpAcpiRsdp (Rsdp, Signature, Table);
 
   return Status;
 }
 
 EFI_STATUS
-TestPointDumpAcpi (
-  VOID
+TestPointCheckAcpi (
+  IN UINT32  *Signature OPTIONAL
   )
 {
   EFI_STATUS  Status;
+  VOID        *Table;
 
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpAcpi - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckAcpi - Enter\n"));
 
   DEBUG ((DEBUG_INFO, "AcpiTable :\n"));
   DEBUG ((DEBUG_INFO, "  Table         Address        Rev   OemId   OemTableId   OemRev   Creat  CreatorRev\n"));
-  Status = DumpAcpiWithGuid (&gEfiAcpi20TableGuid);
+  Table = NULL;
+  Status = DumpAcpiWithGuid (&gEfiAcpi20TableGuid, Signature, &Table);
   if (Status == EFI_NOT_FOUND) {
-    Status = DumpAcpiWithGuid (&gEfiAcpi10TableGuid);
+    Status = DumpAcpiWithGuid (&gEfiAcpi10TableGuid, Signature, &Table);
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpAcpi - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckAcpi - Exit\n"));
   
-  if (EFI_ERROR(Status)) {
+  if ((Signature == NULL) && (EFI_ERROR(Status))) {
+    DEBUG ((DEBUG_ERROR, "No ACPI table\n"));
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_5 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_5
+      TEST_POINT_BYTE3_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE3_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL_ERROR_STRING
       );
   }
 
-  if (!mWsmtFound) {
+  if ((Signature != NULL) && (*Signature == EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE) &&
+      ((EFI_ERROR(Status)) || (Table == NULL))) {
+    DEBUG ((DEBUG_ERROR, "No WSMT table\n"));
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_6 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_6
+      TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_DXE_SMM_READY_TO_LOCK \
+        TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL_ERROR_STRING
       );
     Status = EFI_INVALID_PARAMETER;
   }
-  if (!mDmarFound) {
+  if ((Signature != NULL) && (*Signature == EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE) &&
+      ((EFI_ERROR(Status)) || (Table == NULL))) {
+    DEBUG ((DEBUG_ERROR, "No DMAR table\n"));
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_7 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_7
+      TEST_POINT_BYTE2_END_OF_DXE_DMAT_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_END_OF_DXE \
+        TEST_POINT_BYTE2_END_OF_DXE_DMAT_TABLE_FUNCTIONAL_ERROR_STRING
       );
-    Status = EFI_INVALID_PARAMETER;
-  }
-  
-  if (!mDmarFound) {
     Status = EFI_INVALID_PARAMETER;
   }
 

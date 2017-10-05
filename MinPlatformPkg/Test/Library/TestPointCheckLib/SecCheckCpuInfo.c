@@ -33,7 +33,6 @@ TestPointDumpCpuInfo (
 
   DEBUG((DEBUG_INFO, "  Microcode ID (0x%08x)  = 0x%016lx\n", MSR_IA32_BIOS_SIGN_ID, AsmReadMsr64 (MSR_IA32_BIOS_SIGN_ID)));
   DEBUG((DEBUG_INFO, "  Platform ID (0x%08x)   = 0x%016lx\n", MSR_IA32_PLATFORM_ID, AsmReadMsr64 (MSR_IA32_PLATFORM_ID)));
-  //DEBUG((DEBUG_INFO, "  PLATFORM_INFO (0x%08x) = 0x%016lx\n", MSR_NEHALEM_PLATFORM_INFO, AsmReadMsr64 (MSR_NEHALEM_PLATFORM_INFO)));
 
   DEBUG ((DEBUG_INFO, "==== TestPointDumpCpuInfo - Exit\n"));
 }

@@ -20,6 +20,11 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DevicePathLib.h>
 #include <Library/MemoryAllocationLib.h>
 
+BOOLEAN
+IsDevicePathExist (
+  IN EFI_DEVICE_PATH_PROTOCOL          *DevicePathTarget
+  );
+
 CHAR16  *mConsoleVariableList[] = {
   L"ConIn",
   L"ConInDev",
@@ -46,7 +51,7 @@ DumpDevicePath (
 }
 
 EFI_STATUS
-TestPointDumpConsoleVariable (
+TestPointCheckConsoleVariable (
   VOID
   )
 {
@@ -54,16 +59,32 @@ TestPointDumpConsoleVariable (
   UINTN       Size;
   UINTN       Index;
   EFI_STATUS  Status;
-  
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpConsoleVariable - Enter\n"));
+  BOOLEAN     Result;
+
+  Result = TRUE;
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckConsoleVariable - Enter\n"));
   for (Index = 0; Index < sizeof(mConsoleVariableList)/sizeof(mConsoleVariableList[0]); Index++) {
     Status = GetVariable2 (mConsoleVariableList[Index], &gEfiGlobalVariableGuid, &Variable, &Size);
     if (!EFI_ERROR(Status)) {
       DumpDevicePath (mConsoleVariableList[Index], Variable, Size);
+      if (!IsDevicePathExist (Variable)) {
+        DEBUG ((DEBUG_ERROR, "DevicePath not found!\n"));
+        Result = FALSE;
+        TestPointLibAppendErrorString (
+          PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+          NULL,
+          TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL_ERROR_CODE \
+            TEST_POINT_READY_TO_BOOT \
+            TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL_ERROR_STRING
+          );
+      }
     }
   }
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpConsoleVariable - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckConsoleVariable - Exit\n"));
 
-  // Check - TBD
-  return EFI_SUCCESS;
+  if (Result) {
+    return EFI_SUCCESS;
+  } else {
+    return EFI_INVALID_PARAMETER;
+  }
 }

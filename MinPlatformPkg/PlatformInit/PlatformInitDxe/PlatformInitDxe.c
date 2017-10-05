@@ -32,6 +32,9 @@ PlatformInitUnRegisterRscHandler (
   VOID
   );
 
+EFI_EVENT                   mRscNotifyEvent = NULL;
+EFI_RSC_HANDLER_PROTOCOL    *mRscHandlerProtocol = NULL;
+
 /**
   PciEnumerationComplete Protocol notification event handler.
 
@@ -64,7 +67,9 @@ OnPciEnumerationComplete (
   Status = BoardInitAfterPciEnumeration ();
   ASSERT_EFI_ERROR(Status);
 
-  TestPointPciEnumerationDone ();
+  TestPointPciEnumerationDonePciBusMasterDisabled ();
+
+  TestPointPciEnumerationDonePciResourceAllocated ();
 }
 
 /**
@@ -83,8 +88,10 @@ OnEndOfDxe (
   )
 {
   gBS->CloseEvent (Event);
+
+  TestPointEndOfDxeNoThirdPartyPciOptionRom ();
   
-  TestPointEndOfDxe ();
+  TestPointEndOfDxeDmarTableFuntional ();
 }
 
 /**
@@ -116,7 +123,9 @@ OnDxeSmmReadyToLock (
     return ;
   }
 
-  TestPointDxeSmmReadyToLock ();
+  TestPointDxeSmmReadyToLockSmramAligned ();
+
+  TestPointDxeSmmReadyToLockWsmtTableFuntional ();
 }
 
 /**
@@ -247,9 +256,6 @@ BoardNotificationInitEntryPoint (
   return EFI_SUCCESS;
 }
 
-EFI_EVENT                   mRscNotifyEvent = NULL;
-EFI_RSC_HANDLER_PROTOCOL    *mRscHandlerProtocol = NULL;
-
 /**
   Report status code listener
   for OsLoaderLoadImageStart and OsLoaderStartImageStart.
@@ -280,6 +286,7 @@ PlatformInitStatusCodeListener (
   )
 {
   EFI_STATUS  Status;
+  STATIC BOOLEAN     Tested = FALSE;
 
   //
   // Check whether status code is what we are interested in.
@@ -290,7 +297,22 @@ PlatformInitStatusCodeListener (
 
   Status = EFI_SUCCESS;
   if (Value == (EFI_SOFTWARE_DXE_BS_DRIVER | EFI_SW_DXE_BS_PC_READY_TO_BOOT_EVENT)) {
-    TestPointReadyToBoot ();
+    if (!Tested) {
+      TestPointReadyToBootAcpiTableFuntional ();
+      TestPointReadyToBootMemoryTypeInformationFunctional ();
+      TestPointReadyToBootUefiMemoryAttributeTableFunctional ();
+      TestPointReadyToBootUefiBootVariableFunctional ();
+      TestPointReadyToBootUefiConsoleVariableFunctional ();
+      TestPointReadyToBootHstiTableFunctional ();
+      TestPointReadyToBootSmiHandlerInstrument ();
+
+      TestPointReadyToBootUefiSecureBootEnabled ();
+      TestPointReadyToBootPiSignedFvBootEnabled ();
+      TestPointReadyToBootTcgTrustedBootEnabled ();
+      TestPointReadyToBootTcgMorEnabled ();
+      TestPointReadyToBootEsrtTableFunctional ();
+      Tested = TRUE;
+    }
   } else if (Value == PcdGet32 (PcdProgressCodeOsLoaderLoad)) {
   } else if (Value == PcdGet32 (PcdProgressCodeOsLoaderStart)) {
   } else if (Value == (EFI_SOFTWARE_EFI_BOOT_SERVICE | EFI_SW_BS_PC_EXIT_BOOT_SERVICES)) {

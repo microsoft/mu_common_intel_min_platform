@@ -49,5 +49,5 @@ PlatformInit (
 
   BoardAfterTempRamInit ();
 
-  TestPointTempMemoryInitDone (StartOfRange, EndOfRange);
+  TestPointTempMemoryFunction (StartOfRange, EndOfRange);
 }

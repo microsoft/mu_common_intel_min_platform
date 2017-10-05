@@ -16,6 +16,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
 #include <Library/DebugLib.h>
+#include <Library/MemoryAllocationLib.h>
 #include <Library/DxeServicesTableLib.h>
 
 CHAR8 *mGcdMemoryTypeShortName[] = {
@@ -177,9 +178,12 @@ PrintIoDescriptor (
   DEBUG ((DEBUG_INFO, "\n"));
 }
 
-EFI_STATUS
+VOID
 TestPointDumpGcd (
-  VOID
+  OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
+  OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
+  OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
+  OUT UINTN                           *GcdIoMapNumberOfDescriptors  OPTIONAL
   )
 {
   EFI_STATUS                      Status;
@@ -187,6 +191,15 @@ TestPointDumpGcd (
   EFI_GCD_IO_SPACE_DESCRIPTOR     *IoMap;
   UINTN                           NumberOfDescriptors;
   UINTN                           Index;
+
+  if (GcdMemoryMap != NULL) {
+    *GcdMemoryMap = NULL;
+    *GcdMemoryMapNumberOfDescriptors = 0;
+  }
+  if (GcdIoMap != NULL) {
+    *GcdIoMap = NULL;
+    *GcdIoMapNumberOfDescriptors = 0;
+  }
   
   DEBUG ((DEBUG_INFO, "==== TestPointDumpGcd - Enter\n"));
   DEBUG ((DEBUG_INFO, "GCD MEM:\n"));
@@ -201,13 +214,10 @@ TestPointDumpGcd (
     for (Index = 0; Index < NumberOfDescriptors; Index++) {
       PrintMemoryDescriptor (&MemoryMap[Index]);
     }
-  } else {
-    TestPointLibAppendErrorString (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      TEST_POINT_BYTE2_END_OF_DXE_ERROR_CODE_3 TEST_POINT_END_OF_DXE TEST_POINT_BYTE2_END_OF_DXE_ERROR_STRING_3
-      );
-    goto Done;
+    if (GcdMemoryMap != NULL) {
+      *GcdMemoryMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR), MemoryMap);
+      *GcdMemoryMapNumberOfDescriptors = NumberOfDescriptors;
+    }
   }
 
   DEBUG ((DEBUG_INFO, "GCD IO:\n"));
@@ -222,9 +232,12 @@ TestPointDumpGcd (
     for (Index = 0; Index < NumberOfDescriptors; Index++) {
       PrintIoDescriptor (&IoMap[Index]);
     }
+    if (GcdMemoryMap != NULL) {
+      *GcdIoMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR), IoMap);
+      *GcdIoMapNumberOfDescriptors = NumberOfDescriptors;
+    }
   }
 
-Done:
   DEBUG ((DEBUG_INFO, "==== TestPointDumpGcd - Exit\n"));
-  return Status;
+  return ;
 }

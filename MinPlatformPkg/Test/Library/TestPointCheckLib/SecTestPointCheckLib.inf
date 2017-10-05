@@ -24,6 +24,7 @@
 [LibraryClasses]
   BaseLib
   DebugLib
+  BaseMemoryLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
@@ -32,6 +33,6 @@
 
 [Sources]
   SecTestPointCheckLib.c
-  SecDumpCpuInfo.c
+  SecCheckCpuInfo.c
 
 [Pcd]

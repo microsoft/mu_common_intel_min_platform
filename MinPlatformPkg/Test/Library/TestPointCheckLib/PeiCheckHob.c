@@ -91,7 +91,7 @@ ShortNameOfResourceType (
   }
 }
 
-EFI_STATUS
+VOID
 DumpPhitHob (
   IN VOID                        *HobList
   )
@@ -108,11 +108,9 @@ DumpPhitHob (
   DEBUG ((DEBUG_INFO, "  EfiFreeMemoryTop    - 0x%016lx\n", PhitHob->EfiFreeMemoryTop));
   DEBUG ((DEBUG_INFO, "  EfiFreeMemoryBottom - 0x%016lx\n", PhitHob->EfiFreeMemoryBottom));
   DEBUG ((DEBUG_INFO, "  EfiEndOfHobList     - 0x%lx\n", PhitHob->EfiEndOfHobList));
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 DumpCpuHob (
   IN VOID                        *HobList
   )
@@ -131,11 +129,9 @@ DumpCpuHob (
         ));
     }
   }
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 DumpResourceHob (
   IN VOID                        *HobList
   )
@@ -180,11 +176,9 @@ DumpResourceHob (
       DEBUG ((DEBUG_INFO, "\n"));
     }
   }
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 DumpFvHob (
   IN VOID                        *HobList
   )
@@ -192,9 +186,7 @@ DumpFvHob (
   EFI_PEI_HOB_POINTERS        Hob;
   EFI_HOB_FIRMWARE_VOLUME     *FirmwareVolumeHob;
   EFI_HOB_FIRMWARE_VOLUME2    *FirmwareVolume2Hob;
-  BOOLEAN                     Found;
   
-  Found = FALSE;
   DEBUG ((DEBUG_INFO, "FV HOBs\n"));
   for (Hob.Raw = HobList; !END_OF_HOB_LIST (Hob); Hob.Raw = GET_NEXT_HOB (Hob)) {
     if (GET_HOB_TYPE (Hob) == EFI_HOB_TYPE_FV) {
@@ -206,7 +198,6 @@ DumpFvHob (
         FirmwareVolumeHob->BaseAddress,
         FirmwareVolumeHob->Length
         ));
-      Found = TRUE;
     }
   }
 
@@ -223,23 +214,11 @@ DumpFvHob (
         &FirmwareVolume2Hob->FvName,
         &FirmwareVolume2Hob->FileName
         ));
-      Found = TRUE;
     }
   }
-
-  if (!Found) {
-    TestPointLibAppendErrorString (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      TEST_POINT_BYTE1_END_OF_PEI_ERROR_CODE_3 TEST_POINT_END_OF_PEI TEST_POINT_BYTE1_END_OF_PEI_ERROR_STRING_3
-      );
-    return EFI_INVALID_PARAMETER;
-  }
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 DumpMemoryAllocationHob (
   IN VOID                        *HobList
   )
@@ -286,11 +265,9 @@ DumpMemoryAllocationHob (
       DEBUG ((DEBUG_INFO, "\n"));
     }
   }
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 DumpGuidHob (
   IN VOID                        *HobList
   )
@@ -311,67 +288,92 @@ DumpGuidHob (
         ));
     }
   }
-
-  return EFI_SUCCESS;
 }
 
-EFI_STATUS
+VOID
 TestPointDumpHob (
   IN BOOLEAN  PhitHobOnly
   )
 {
   VOID                        *HobList;
-  EFI_STATUS                  Status;
-  BOOLEAN                     Result;
   
   DEBUG ((DEBUG_INFO, "==== TestPointDumpHob - Enter\n"));
   //
   // Get Hob list
   //
   HobList = GetHobList ();
-
-  Result = TRUE;
   
-  Status = DumpPhitHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpPhitHob (HobList);
 
   if (PhitHobOnly) {
     goto Done ;
   }
 
-  Status = DumpCpuHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpCpuHob (HobList);
 
-  Status = DumpResourceHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpResourceHob (HobList);
 
-  Status = DumpFvHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpFvHob (HobList);
 
-  Status = DumpMemoryAllocationHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpMemoryAllocationHob (HobList);
 
-  Status = DumpGuidHob (HobList);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
+  DumpGuidHob (HobList);
 
 Done:
   DEBUG ((DEBUG_INFO, "==== TestPointDumpHob - Exit\n"));
 
-  if (!Result) {
-    return EFI_INVALID_PARAMETER;
+  return ;
+}
+
+EFI_STATUS
+TestPointCheckMemoryResource (
+  VOID
+  )
+{
+  VOID                        *HobList;
+  EFI_PEI_HOB_POINTERS        Hob;
+  EFI_HOB_RESOURCE_DESCRIPTOR *ResourceHob;
+  EFI_PEI_HOB_POINTERS        Hob2;
+  EFI_HOB_RESOURCE_DESCRIPTOR *ResourceHob2;
+  
+  HobList = GetHobList ();
+
+  //
+  // Check overlap
+  //
+  for (Hob.Raw = HobList; !END_OF_HOB_LIST (Hob); Hob.Raw = GET_NEXT_HOB (Hob)) {
+    if (GET_HOB_TYPE (Hob) == EFI_HOB_TYPE_RESOURCE_DESCRIPTOR) {
+      ResourceHob = Hob.ResourceDescriptor;
+      switch (ResourceHob->ResourceType) {
+      case EFI_RESOURCE_SYSTEM_MEMORY:
+        if (((ResourceHob->ResourceAttribute & MEMORY_ATTRIBUTE_MASK) == TESTED_MEMORY_ATTRIBUTES) ||
+            ((ResourceHob->ResourceAttribute & MEMORY_ATTRIBUTE_MASK) == INITIALIZED_MEMORY_ATTRIBUTES)) {
+          DEBUG ((DEBUG_INFO, "Overlap Checking 0x%lx 0x%lx\n", ResourceHob->PhysicalStart, ResourceHob->ResourceLength));
+          for (Hob2.Raw = GET_NEXT_HOB (Hob); !END_OF_HOB_LIST (Hob2); Hob2.Raw = GET_NEXT_HOB (Hob2)) {
+            ResourceHob2 = Hob2.ResourceDescriptor;
+            switch (ResourceHob2->ResourceType) {
+            case EFI_RESOURCE_SYSTEM_MEMORY:
+              if (((ResourceHob2->ResourceAttribute & MEMORY_ATTRIBUTE_MASK) == TESTED_MEMORY_ATTRIBUTES) ||
+                  ((ResourceHob2->ResourceAttribute & MEMORY_ATTRIBUTE_MASK) == INITIALIZED_MEMORY_ATTRIBUTES)) {
+                if ((ResourceHob->PhysicalStart >= ResourceHob2->PhysicalStart && ResourceHob->PhysicalStart < ResourceHob2->PhysicalStart + ResourceHob2->ResourceLength) ||
+                    (ResourceHob2->PhysicalStart >= ResourceHob->PhysicalStart && ResourceHob2->PhysicalStart < ResourceHob->PhysicalStart + ResourceHob->ResourceLength)) {
+                  DEBUG ((DEBUG_INFO, "  Overlap 0x%lx 0x%lx\n", ResourceHob2->PhysicalStart, ResourceHob2->ResourceLength));
+                  return EFI_INVALID_PARAMETER;
+                }
+              }
+              break;
+            default:
+              break;
+            }
+          }
+        }
+        break;
+      default:
+        break;
+      }
+    }
   }
+
   return EFI_SUCCESS;
 }
 

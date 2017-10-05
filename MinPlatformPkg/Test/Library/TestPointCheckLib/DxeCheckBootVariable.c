@@ -21,6 +21,11 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DevicePathLib.h>
 #include <Library/MemoryAllocationLib.h>
 
+BOOLEAN
+IsDevicePathExist (
+  IN EFI_DEVICE_PATH_PROTOCOL          *DevicePath
+  );
+
 CHAR16  *mLoadOptionVariableList[] = {
   L"Boot",
   L"Driver",
@@ -67,6 +72,31 @@ DumpLoadOption (
   }
 }
 
+EFI_STATUS
+TestPointCheckLoadOption (
+  IN CHAR16           *OptionName,
+  IN EFI_LOAD_OPTION  *LoadOption,
+  IN UINTN            Size
+  )
+{
+  CHAR16                        *Description;
+  EFI_DEVICE_PATH_PROTOCOL      *FilePathList;
+
+  if (LoadOption == NULL) {
+    return EFI_INVALID_PARAMETER;
+  }
+
+  Description = (CHAR16 *)(LoadOption + 1);
+
+  FilePathList = (EFI_DEVICE_PATH_PROTOCOL *)((UINTN)Description + StrSize (Description));
+
+  if (!IsDevicePathExist (FilePathList)) {
+    DEBUG ((DEBUG_ERROR, "DevicePath not found!\n"));
+    return EFI_INVALID_PARAMETER;
+  }
+  return EFI_SUCCESS;
+}
+
 VOID
 DumpKeyOption (
   IN CHAR16           *OptionName,
@@ -86,8 +116,8 @@ DumpKeyOption (
   DEBUG ((DEBUG_INFO, "\n"));
 }
 
-VOID
-DumpLoadOptionVariable (
+EFI_STATUS
+TestPointCheckLoadOptionVariable (
   VOID
   )
 {
@@ -100,7 +130,9 @@ DumpLoadOptionVariable (
   EFI_STATUS  Status;
   CHAR16      BootOptionName[sizeof(L"PlatformRecovery####")];
   CHAR16      BootOrderName[sizeof(L"PlatformRecoveryOrder")];
+  EFI_STATUS  ReturnStatus;
 
+  ReturnStatus = EFI_SUCCESS;
   for (ListIndex = 0; ListIndex < sizeof(mLoadOptionVariableList)/sizeof(mLoadOptionVariableList[0]); ListIndex++) {
     UnicodeSPrint (BootOrderName, sizeof(BootOrderName), L"%sOrder", mLoadOptionVariableList[ListIndex]);
     Status = GetVariable2 (BootOrderName, &gEfiGlobalVariableGuid, &BootOrder, &OrderSize);
@@ -112,15 +144,28 @@ DumpLoadOptionVariable (
       Status = GetVariable2 (BootOptionName, &gEfiGlobalVariableGuid, &Variable, &Size);
       if (!EFI_ERROR(Status)) {
         DumpLoadOption (BootOptionName, Variable, Size);
+        Status = TestPointCheckLoadOption (BootOptionName, Variable, Size);
+        if (EFI_ERROR(Status)) {
+          TestPointLibAppendErrorString (
+            PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+            NULL,
+            TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_CODE \
+              TEST_POINT_READY_TO_BOOT \
+              TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_STRING
+            );
+          ReturnStatus = Status;
+        }
       } else {
         DumpLoadOption (BootOptionName, NULL, 0);
       }
     }
   }
+
+  return ReturnStatus;
 }
 
-VOID
-DumpPlatformRecoveryOptionVariable (
+EFI_STATUS
+TestPointCheckPlatformRecoveryOptionVariable (
   VOID
   )
 {
@@ -130,29 +175,45 @@ DumpPlatformRecoveryOptionVariable (
   UINTN       Index;
   EFI_STATUS  Status;
   CHAR16      PlatformRecoveryOptionName[sizeof(L"PlatformRecovery####")];
+  EFI_STATUS  ReturnStatus;
 
+  ReturnStatus = EFI_SUCCESS;
   for (ListIndex = 0; ListIndex < sizeof(mPlatformRecoveryOptionVariableList)/sizeof(mPlatformRecoveryOptionVariableList[0]); ListIndex++) {
     for (Index = 0; ; Index++) {
       UnicodeSPrint (PlatformRecoveryOptionName, sizeof(PlatformRecoveryOptionName), L"%s%04x", mPlatformRecoveryOptionVariableList[ListIndex], Index);
       Status = GetVariable2 (PlatformRecoveryOptionName, &gEfiGlobalVariableGuid, &Variable, &Size);
       if (!EFI_ERROR(Status)) {
         DumpLoadOption (PlatformRecoveryOptionName, Variable, Size);
+        Status = TestPointCheckLoadOption (PlatformRecoveryOptionName, Variable, Size);
+        if (EFI_ERROR(Status)) {
+          ReturnStatus = Status;
+          TestPointLibAppendErrorString (
+            PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+            NULL,
+            TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_CODE \
+              TEST_POINT_READY_TO_BOOT \
+              TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_STRING
+            );
+        }
       } else {
         break;
       }
     }
   }
+
+  return ReturnStatus;
 }
 
-VOID
-DumpOsRecoveryOptionVariable (
+EFI_STATUS
+TestPointCheckOsRecoveryOptionVariable (
   VOID
   )
 {
+  return EFI_SUCCESS;
 }
 
-VOID
-DumpKeyOptionVariable (
+EFI_STATUS
+TestPointCheckKeyOptionVariable (
   VOID
   )
 {
@@ -174,22 +235,38 @@ DumpKeyOptionVariable (
       }
     }
   }
+
+  return EFI_SUCCESS;
 }
 
 EFI_STATUS
-TestPointDumpBootVariable (
+TestPointCheckBootVariable (
   VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpBootVariable - Enter\n"));
+  EFI_STATUS   Status;
+  EFI_STATUS   ReturnStatus;
 
-  DumpLoadOptionVariable ();
-  DumpPlatformRecoveryOptionVariable ();
-  DumpOsRecoveryOptionVariable ();
-  DumpKeyOptionVariable ();
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckBootVariable - Enter\n"));
 
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpBootVariable - Exit\n"));
+  Status = TestPointCheckLoadOptionVariable ();
+  if (EFI_ERROR(Status)) {
+    ReturnStatus = Status;
+  }
+  Status = TestPointCheckPlatformRecoveryOptionVariable ();
+  if (EFI_ERROR(Status)) {
+    ReturnStatus = Status;
+  }
+  Status = TestPointCheckOsRecoveryOptionVariable ();
+  if (EFI_ERROR(Status)) {
+    ReturnStatus = Status;
+  }
+  Status = TestPointCheckKeyOptionVariable ();
+  if (EFI_ERROR(Status)) {
+    ReturnStatus = Status;
+  }
 
-  // Check - TBD
-  return EFI_SUCCESS;
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckBootVariable - Exit\n"));
+
+  return ReturnStatus;
 }

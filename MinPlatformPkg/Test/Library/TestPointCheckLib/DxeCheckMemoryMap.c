@@ -20,6 +20,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/PrintLib.h>
 #include <Library/UefiLib.h>
 #include <Library/BaseMemoryLib.h>
+#include <Library/MemoryAllocationLib.h>
 
 CHAR8 *mMemoryTypeShortName[] = {
   "Reserved  ",
@@ -64,7 +65,7 @@ ShortNameOfMemoryType(
   @param  DescriptorSize         Size, in bytes, of an individual EFI_MEMORY_DESCRIPTOR.
 **/
 VOID
-DumpMemoryMap (
+TestPointDumpMemoryMap (
   IN EFI_MEMORY_DESCRIPTOR  *MemoryMap,
   IN UINTN                  MemoryMapSize,
   IN UINTN                  DescriptorSize
@@ -115,7 +116,7 @@ DumpMemoryMap (
 }
 
 BOOLEAN
-IsGoodMemoryMap (
+TestPointCheckUefiMemoryMapEntry (
   IN EFI_MEMORY_DESCRIPTOR  *MemoryMap,
   IN UINTN                  MemoryMapSize,
   IN UINTN                  DescriptorSize
@@ -136,6 +137,18 @@ IsGoodMemoryMap (
     }
     Entry = NEXT_MEMORY_DESCRIPTOR (Entry, DescriptorSize);
   }
+  if (EntryCount[EfiRuntimeServicesCode] > 1) {
+    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesCode entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
+  }
+  if (EntryCount[EfiRuntimeServicesData] > 1) {
+    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
+  }
+  if (EntryCount[EfiACPIMemoryNVS] > 1) {
+    DEBUG ((DEBUG_ERROR, "EfiACPIMemoryNVS entry - %d\n", EntryCount[EfiACPIMemoryNVS]));
+  }
+  if (EntryCount[EfiACPIReclaimMemory] > 1) {
+    DEBUG ((DEBUG_ERROR, "EfiACPIReclaimMemory entry - %d\n", EntryCount[EfiACPIReclaimMemory]));
+  }
   if ((EntryCount[EfiRuntimeServicesCode] > 1) ||
       (EntryCount[EfiRuntimeServicesData] > 1) ||
       (EntryCount[EfiACPIReclaimMemory] > 1) ||
@@ -146,8 +159,78 @@ IsGoodMemoryMap (
   }
 }
 
+VOID
+TestPointDumpUefiMemoryMap (
+  OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
+  OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
+  OUT UINTN                 *UefiDescriptorSize OPTIONAL
+  )
+{
+  EFI_STATUS            Status;
+  UINTN                 MapKey;
+  UINT32                DescriptorVersion;
+  EFI_MEMORY_DESCRIPTOR *MemoryMap;
+  UINTN                 MemoryMapSize;
+  UINTN                 DescriptorSize;
+  
+  if (UefiMemoryMap != NULL) {
+    *UefiMemoryMap = NULL;
+    *UefiMemoryMapSize = 0;
+    *UefiDescriptorSize = 0;
+  }
+
+  DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Enter\n"));
+  MemoryMapSize = 0;
+  MemoryMap = NULL;
+  Status = gBS->GetMemoryMap (
+                  &MemoryMapSize,
+                  MemoryMap,
+                  &MapKey,
+                  &DescriptorSize,
+                  &DescriptorVersion
+                  );
+  ASSERT (Status == EFI_BUFFER_TOO_SMALL);
+
+  do {
+    Status = gBS->AllocatePool (EfiBootServicesData, MemoryMapSize, (VOID **)&MemoryMap);
+    ASSERT (MemoryMap != NULL);
+    if (MemoryMap == NULL) {
+      goto Done ;
+    }
+
+    Status = gBS->GetMemoryMap (
+                    &MemoryMapSize,
+                    MemoryMap,
+                    &MapKey,
+                    &DescriptorSize,
+                    &DescriptorVersion
+                    );
+    if (EFI_ERROR (Status)) {
+      gBS->FreePool (MemoryMap);
+      MemoryMap = NULL;
+    }
+  } while (Status == EFI_BUFFER_TOO_SMALL);
+
+  if (MemoryMap == NULL) {
+    goto Done ;
+  }
+  
+  TestPointDumpMemoryMap (MemoryMap, MemoryMapSize, DescriptorSize);
+
+  if (UefiMemoryMap != NULL) {
+    *UefiMemoryMap = AllocateCopyPool (MemoryMapSize, MemoryMap);
+    *UefiMemoryMapSize = MemoryMapSize;
+    *UefiDescriptorSize = DescriptorSize;
+  }
+  gBS->FreePool (MemoryMap);
+
+Done:
+  DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Exit\n"));
+  return ;
+}
+
 EFI_STATUS
-TestPointDumpMemMap (
+TestPointCheckUefiMemoryMap (
   VOID
   )
 {
@@ -159,7 +242,7 @@ TestPointDumpMemMap (
   UINTN                 UefiDescriptorSize;
   BOOLEAN               Result;
   
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpMemMap - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckUefiMemoryMap - Enter\n"));
   UefiMemoryMapSize = 0;
   MemoryMap = NULL;
   Status = gBS->GetMemoryMap (
@@ -196,15 +279,15 @@ TestPointDumpMemMap (
     Status = EFI_OUT_OF_RESOURCES;
     goto Done ;
   }
-  
-  DumpMemoryMap (MemoryMap, UefiMemoryMapSize, UefiDescriptorSize);
 
-  Result = IsGoodMemoryMap (MemoryMap, UefiMemoryMapSize, UefiDescriptorSize);
+  Result = TestPointCheckUefiMemoryMapEntry (MemoryMap, UefiMemoryMapSize, UefiDescriptorSize);
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_END_OF_DXE_ERROR_CODE_2 TEST_POINT_END_OF_DXE TEST_POINT_BYTE2_END_OF_DXE_ERROR_STRING_2
+      TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_STRING
       );
     Status = EFI_INVALID_PARAMETER;
   } else {
@@ -214,6 +297,6 @@ TestPointDumpMemMap (
   gBS->FreePool (MemoryMap);
 
 Done:
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpMemMap - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckUefiMemoryMap - Exit\n"));
   return Status;
 }

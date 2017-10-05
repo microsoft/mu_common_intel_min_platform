@@ -19,7 +19,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/BaseMemoryLib.h>
 
 EFI_STATUS
-TestPointDumpMtrr (
+TestPointCheckMtrr (
   IN BOOLEAN   IsForDxe
   );
 
@@ -29,14 +29,59 @@ TestPointDumpHob (
   );
 
 EFI_STATUS
-TestPointDumpFvInfo (
+TestPointCheckFvInfo (
   VOID
   );
 
 EFI_STATUS
-TestPointDumpSmramHob (
+TestPointCheckMemoryResource (
   VOID
   );
+
+EFI_STATUS
+TestPointCheckSmramHob (
+  VOID
+  );
+
+EFI_STATUS
+TestPointCheckSmmInfoPei (
+  VOID
+  );
+
+EFI_STATUS
+TestPointCheckPciBusMaster (
+  VOID
+  );
+
+GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
+  PLATFORM_TEST_POINT_VERSION,
+  PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI},
+  TEST_POINT_FEATURE_SIZE,
+  {0}, // FeaturesImplemented
+  {0}, // FeaturesVerified
+  0,
+};
+
+UINT8 *
+GetFeatureImplemented (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  VOID        *TestPoint;
+  UINTN       TestPointSize;
+
+  Status = TestPointLibGetTable (
+             PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+             TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
+             &TestPoint,
+             &TestPointSize
+             );
+  ASSERT_EFI_ERROR(Status);
+
+  return (UINT8 *)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT);
+}
 
 EFI_STATUS
 EFIAPI
@@ -44,55 +89,59 @@ TestPointDebugInitDone (
   VOID
   )
 {
-  EFI_STATUS  Status;
-  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+
+  //
+  // If code can run here, always set TEMP INIT DONE here.
+  //
+  TestPointLibSetFeaturesVerified (
+    PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+    NULL,
+    0,
+    TEST_POINT_BYTE0_TEMP_INIT_DONE
+    );
+
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_DEBUG_INIT_DONE) == 0) {
+    return EFI_SUCCESS;
+  }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDebugInitDone - Enter\n"));
   DEBUG ((DEBUG_INFO, "!!! DebugInitialized !!!\n"));
 
-  Result = TRUE;
-  Status = TestPointDumpHob (TRUE);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-
-  if (Result) {
-    TestPointLibSetFeaturesVerified (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      1,
-      TEST_POINT_BYTE1_DEBUG_INIT_DONE
-      );
-  }
-
+  TestPointLibSetFeaturesVerified (
+    PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+    NULL,
+    1,
+    TEST_POINT_BYTE1_DEBUG_INIT_DONE
+    );
   DEBUG ((DEBUG_INFO, "======== TestPointDebugInitDone - Exit\n"));
   return EFI_SUCCESS;
 }
 
 EFI_STATUS
 EFIAPI
-TestPointMemoryDiscovered (
+TestPointMemoryDiscoveredMtrrFunctional (
   VOID
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
 
-  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscovered - Enter\n"));
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_MTRR_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredMtrrFunctional - Enter\n"));
+
+  TestPointDumpHob (FALSE);
+
   Result = TRUE;
-  Status = TestPointDumpMtrr (FALSE);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpHob (FALSE);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpFvInfo ();
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpSmramHob ();
+  Status = TestPointCheckMtrr (FALSE);
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
@@ -102,38 +151,34 @@ TestPointMemoryDiscovered (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       1,
-      TEST_POINT_BYTE1_MEMORY_DISCOVERED
+      TEST_POINT_BYTE1_MEMORY_DISCOVERED_MTRR_FUNCTIONAL
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscovered - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredMtrrFunctional - Exit\n"));
   return EFI_SUCCESS;
 }
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfPei (
+TestPointMemoryDiscoveredMemoryResourceFunctional (
   VOID
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPei - Enter\n"));
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_MEMORY_RESOURCE_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredMemoryResourceFunctional - Enter\n"));
   Result = TRUE;
-  Status = TestPointDumpMtrr (TRUE);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpHob (FALSE);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpFvInfo ();
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpSmramHob ();
+
+  Status = TestPointCheckMemoryResource ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
@@ -143,24 +188,160 @@ TestPointEndOfPei (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       1,
-      TEST_POINT_BYTE1_END_OF_PEI
+      TEST_POINT_BYTE1_MEMORY_DISCOVERED_MEMORY_RESOURCE_FUNCTIONAL
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPei - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredMemoryResourceFunctional - Exit\n"));
   return EFI_SUCCESS;
 }
 
-GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
-  PLATFORM_TEST_POINT_VERSION,
-  PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM},
-  TEST_POINT_FEATURE_SIZE,
-  {0}, // FeaturesRequired
-  {0}, // FeaturesImplemented
-  {0}, // FeaturesVerified
-  0,
-};
+EFI_STATUS
+EFIAPI
+TestPointMemoryDiscoveredFvInfoFunctional (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_FV_INFO_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredFvInfoFunctional - Enter\n"));
+  Result = TRUE;
+  Status = TestPointCheckFvInfo ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      1,
+      TEST_POINT_BYTE1_MEMORY_DISCOVERED_FV_INFO_FUNCTIONAL
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredFvInfoFunctional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfPeiSystemResourceFunctional (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiSystemResourceFunctional - Enter\n"));
+
+  TestPointDumpHob (FALSE);
+
+  Result = TRUE;
+  Status = TestPointCheckSmmInfoPei ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      1,
+      TEST_POINT_BYTE1_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiSystemResourceFunctional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfPeiMtrrFunctional (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiMtrrFunctional - Enter\n"));
+  Result = TRUE;
+  Status = TestPointCheckMtrr (TRUE);
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      1,
+      TEST_POINT_BYTE1_END_OF_PEI_MTRR_FUNCTIONAL
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiMtrrFunctional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfPeiPciBusMasterDisabled (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiPciBusMasterDisabled - Enter\n"));
+  Result = TRUE;
+  Status = TestPointCheckPciBusMaster ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      1,
+      TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiPciBusMasterDisabled - Exit\n"));
+  return EFI_SUCCESS;
+}
 
 /**
   Initialize feature data

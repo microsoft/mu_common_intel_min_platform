@@ -37,12 +37,13 @@ UINT32  mSmrrPhysBaseMsr = SMM_FEATURES_LIB_IA32_SMRR_PHYSBASE;
 UINT32  mSmrrPhysMaskMsr = SMM_FEATURES_LIB_IA32_SMRR_PHYSMASK;
 
 EFI_STATUS
-TestPointDumpSmrr (
+TestPointCheckSmrr (
   VOID
   )
 {
   UINT64      SmrrBase;
   UINT64      SmrrMask;
+  UINT64      Length;
   
   UINT32  RegEax;
   UINT32  RegEdx;
@@ -50,7 +51,7 @@ TestPointDumpSmrr (
   UINTN   ModelId;
   BOOLEAN Result;
   
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpSmrr - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Enter\n"));
 
   //
   // Retrieve CPU Family and Model
@@ -107,16 +108,29 @@ TestPointDumpSmrr (
     DEBUG ((DEBUG_INFO, "SMRR : Base=%016lx Make=%016lx\n", SmrrBase, SmrrMask));
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpSmrr - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Exit\n"));
   
-  // Check - TBD
   Result = TRUE;
+  if (!mSmrrSupported) {
+    Result = FALSE;
+    DEBUG ((DEBUG_ERROR, "Smrr is not supported\n"));
+  } else {
+    Length = SmrrMask & ~0xFFFull;
+    Length = ~Length + 1;
+    Length = Length & 0xFFFFF000;
+    if (Length != GetPowerOfTwo64 (Length)) {
+      Result = FALSE;
+      DEBUG ((DEBUG_ERROR, "Smrr is not aligned\n"));
+    }
+  }
   
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_SMM_READY_TO_LOCK_ERROR_CODE_2 TEST_POINT_SMM_READY_TO_LOCK TEST_POINT_BYTE2_SMM_READY_TO_LOCK_ERROR_STRING_2
+      TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_SMM_END_OF_DXE \
+        TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL_ERROR_STRING
       );
     return EFI_INVALID_PARAMETER;
   }

@@ -68,7 +68,7 @@ DumpVarProperty (
   }
 }
 
-EFI_STATUS
+VOID
 TestPointDumpVariable (
   VOID
   )
@@ -168,6 +168,5 @@ TestPointDumpVariable (
 Done:
   DEBUG ((DEBUG_INFO, "==== TestPointDumpVariable - Exit\n"));
 
-  // Check - TBD
-  return EFI_SUCCESS;
+  return ;
 }

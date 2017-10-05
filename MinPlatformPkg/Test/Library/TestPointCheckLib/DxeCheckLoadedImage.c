@@ -141,7 +141,39 @@ DumpLoadedImage (
 }
 
 EFI_STATUS
-TestPointDumpLoadedImage (
+TestPointCheckNon3rdPartyImage (
+  IN EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage,
+  IN EFI_DEVICE_PATH_PROTOCOL               *DevicePath,
+  IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
+  )
+{
+  if (LoadedImageDevicePath != NULL) {
+    // LoadedImageDevicePath should be Fv()/FvFile()
+    if (DevicePathType (LoadedImageDevicePath) == MEDIA_DEVICE_PATH &&
+        DevicePathSubType (LoadedImageDevicePath) == MEDIA_PIWG_FW_VOL_DP) {
+      return EFI_SUCCESS;
+    }
+  } else {
+    if (LoadedImage->FilePath != NULL) {
+      // LoadedImage->FilePath should be FvFile()
+      if (DevicePathType (LoadedImage->FilePath) == MEDIA_DEVICE_PATH &&
+          DevicePathSubType (LoadedImage->FilePath) == MEDIA_PIWG_FW_FILE_DP) {
+        return EFI_SUCCESS;
+      }
+    }
+    if (DevicePath != NULL) {
+      // DevicePath should be Fv()
+      if (DevicePathType (DevicePath) == MEDIA_DEVICE_PATH &&
+          DevicePathSubType (DevicePath) == MEDIA_PIWG_FW_VOL_DP) {
+        return EFI_SUCCESS;
+      }
+    }
+  }
+  return EFI_INVALID_PARAMETER;
+}
+
+EFI_STATUS
+TestPointCheckLoadedImage (
   VOID
   )
 {
@@ -152,8 +184,10 @@ TestPointDumpLoadedImage (
   UINTN                                  HandleCount;
   EFI_DEVICE_PATH_PROTOCOL               *DevicePath;
   EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath;
+  EFI_STATUS                             ReturnStatus;
   
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpLoadedImage - Enter\n"));
+  ReturnStatus = EFI_SUCCESS;
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckLoadedImage - Enter\n"));
   HandleBuf = NULL;
   Status = gBS->LocateHandleBuffer (
                   ByProtocol,
@@ -188,6 +222,19 @@ TestPointDumpLoadedImage (
     }
 
     DumpLoadedImage (Index, LoadedImage, DevicePath, LoadedImageDevicePath);
+
+    Status = TestPointCheckNon3rdPartyImage (LoadedImage, DevicePath, LoadedImageDevicePath);
+    if (EFI_ERROR(Status)) {
+      ReturnStatus = Status;
+      DEBUG ((DEBUG_ERROR, "3rd Party Image found - Index (%d)\n", Index));
+      TestPointLibAppendErrorString (
+        PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+        NULL,
+        TEST_POINT_BYTE2_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM_ERROR_CODE \
+          TEST_POINT_END_OF_DXE \
+          TEST_POINT_BYTE2_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM_ERROR_STRING
+        );
+    }
   }
 
 Done:
@@ -196,8 +243,7 @@ Done:
     FreePool (HandleBuf);
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpLoadedImage - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckLoadedImage - Exit\n"));
 
-  // Check - TBD
-  return EFI_SUCCESS;
+  return ReturnStatus;
 }

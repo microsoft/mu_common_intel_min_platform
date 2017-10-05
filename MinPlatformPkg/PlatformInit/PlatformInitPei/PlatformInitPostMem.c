@@ -189,10 +189,14 @@ PlatformInitEndOfPei (
   Status = BoardInitAfterSiliconInit ();
   ASSERT_EFI_ERROR (Status);
 
+  TestPointEndOfPeiSystemResourceFunctional ();
+
+  TestPointEndOfPeiPciBusMasterDisabled ();
+
   Status = SetCacheMtrrAfterEndOfPei ();
   ASSERT_EFI_ERROR (Status);
 
-  TestPointEndOfPei ();
+  TestPointEndOfPeiMtrrFunctional ();
 
   return Status;
 }

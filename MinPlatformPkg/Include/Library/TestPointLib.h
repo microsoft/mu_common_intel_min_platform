@@ -33,12 +33,13 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_OEM    0x00000003 
 #define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM    0x00000004  
 
+#define TEST_POINT_FEATURES_ITEM_NUMBER 2
+
 typedef struct {
   UINT32  Version;
   UINT32  Role;
   CHAR16  ImplementationID[256];
   UINT32  FeaturesSize;
-//UINT8   FeaturesRequired[];
 //UINT8   FeaturesImplemented[];
 //UINT8   FeaturesVerified[];
 //CHAR16  ErrorString[];
@@ -52,9 +53,6 @@ typedef struct {
   Publish TestPoint table in AIP protocol.
 
   One system should have only one PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE.
-
-  If the Role is NOT PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE,
-  FeaturesRequired field will be ignored.
 
   @param TestPoint      TestPoint data
   @param TestPointSize  TestPoint size

@@ -412,6 +412,10 @@ MemoryDiscoveredPpiNotifyCallback (
 
   ReportCpuHob ();
 
+  TestPointMemoryDiscoveredMtrrFunctional ();
+
+  TestPointMemoryDiscoveredMemoryResourceFunctional ();
+
   ///
   /// If S3 resume, then we are done
   ///
@@ -421,7 +425,7 @@ MemoryDiscoveredPpiNotifyCallback (
 
   ReportFv ();
 
-  TestPointMemoryDiscovered ();
+  TestPointMemoryDiscoveredFvInfoFunctional ();
   
   if (PcdGetBool (PcdStopAfterMemInit)) {
     CpuDeadLoop ();

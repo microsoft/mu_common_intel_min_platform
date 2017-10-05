@@ -16,7 +16,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 EFI_STATUS
 EFIAPI
-TestPointTempMemoryInitDone (
+TestPointTempMemoryFunction (
   IN VOID   *TempRamStart,
   IN VOID   *TempRamEnd
   )
@@ -35,7 +35,7 @@ TestPointDebugInitDone (
 
 EFI_STATUS
 EFIAPI
-TestPointMemoryDiscovered (
+TestPointMemoryDiscoveredMtrrFunctional (
   VOID
   )
 {
@@ -44,7 +44,7 @@ TestPointMemoryDiscovered (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfPei (
+TestPointMemoryDiscoveredMemoryResourceFunctional (
   VOID
   )
 {
@@ -53,7 +53,7 @@ TestPointEndOfPei (
 
 EFI_STATUS
 EFIAPI
-TestPointPciEnumerationDone (
+TestPointMemoryDiscoveredFvInfoFunctional (
   VOID
   )
 {
@@ -62,7 +62,7 @@ TestPointPciEnumerationDone (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxe (
+TestPointEndOfPeiSystemResourceFunctional (
   VOID
   )
 {
@@ -71,7 +71,7 @@ TestPointEndOfDxe (
 
 EFI_STATUS
 EFIAPI
-TestPointDxeSmmReadyToLock (
+TestPointEndOfPeiMtrrFunctional (
   VOID
   )
 {
@@ -80,7 +80,169 @@ TestPointDxeSmmReadyToLock (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBoot (
+TestPointEndOfPeiPciBusMasterDisabled (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePciBusMasterDisabled (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePciResourceAllocated (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfDxeNoThirdPartyPciOptionRom (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfDxeDmarTableFuntional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointDxeSmmReadyToLockSmramAligned (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointDxeSmmReadyToLockWsmtTableFuntional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootSmiHandlerInstrument (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootAcpiTableFuntional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootMemoryTypeInformationFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootUefiMemoryAttributeTableFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootUefiBootVariableFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootUefiConsoleVariableFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootHstiTableFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootEsrtTableFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootUefiSecureBootEnabled (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootPiSignedFvBootEnabled (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootTcgTrustedBootEnabled (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootTcgMorEnabled (
   VOID
   )
 {
@@ -98,7 +260,7 @@ TestPointExitBootServices (
 
 EFI_STATUS
 EFIAPI
-TestPointSmmEndOfDxe (
+TestPointSmmEndOfDxeSmrrFunctional (
   VOID
   )
 {
@@ -107,7 +269,7 @@ TestPointSmmEndOfDxe (
 
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToLock (
+TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   VOID
   )
 {
@@ -116,7 +278,16 @@ TestPointSmmReadyToLock (
 
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToBoot (
+TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointSmmReadyToBootSmmPageProtection (
   VOID
   )
 {

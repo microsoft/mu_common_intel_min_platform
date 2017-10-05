@@ -39,12 +39,15 @@
 
 [Sources]
   SmmTestPointCheckLib.c
-  SmmDumpMemAttribute.c
-  DxeDumpMemAttribute.c
-  DxeDumpMemMap.c
-  SmmDumpLoadedImage.c
-  DxeDumpLoadedImage.c
-  SmmDumpSmrr.c
+  SmmCheckMemoryAttribute.c
+  SmmCheckLoadedImage.c
+  SmmCheckSmrr.c
+  SmmCheckPaging.c
+  SmmCheckCommunicationBuffer.c
+  DxeCheckMemoryAttribute.c
+  DxeCheckMemoryMap.c
+  DxeCheckLoadedImage.c
+  DxeCheckGcd.c
 
 [Pcd]
   gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
@@ -57,3 +60,4 @@
   gEfiLoadedImageProtocolGuid
   gEfiLoadedImageDevicePathProtocolGuid
   gEfiDevicePathProtocolGuid
+  gEfiRuntimeArchProtocolGuid

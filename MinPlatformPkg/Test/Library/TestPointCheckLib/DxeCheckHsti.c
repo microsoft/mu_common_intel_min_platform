@@ -46,13 +46,6 @@ DumpHsti (
   DEBUG ((DEBUG_INFO, "  SecurityFeaturesSize        - 0x%08x\n", Hsti->SecurityFeaturesSize));
 
   SecurityFeatures = (UINT8 *) (Hsti + 1);
-  DEBUG ((DEBUG_INFO, "  SecurityFeaturesRequired    - "));
-  for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
-    DEBUG ((DEBUG_INFO, "%02x ", SecurityFeatures[Index]));
-  }
-  DEBUG ((DEBUG_INFO, "\n"));
-
-  SecurityFeatures = (UINT8 *) (SecurityFeatures + Hsti->SecurityFeaturesSize);
   DEBUG ((DEBUG_INFO, "  SecurityFeaturesImplemented - "));
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
     DEBUG ((DEBUG_INFO, "%02x ", SecurityFeatures[Index]));
@@ -85,7 +78,7 @@ UINT32                  mRole[] = {
 };
 
 EFI_STATUS
-TestPointDumpHsti (
+TestPointCheckHsti (
   VOID
   )
 {
@@ -96,7 +89,7 @@ TestPointDumpHsti (
   BOOLEAN     Result;
   
   Result = TRUE;
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpHsti - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckHsti - Enter\n"));
   for (Index = 0; Index < sizeof(mRole)/sizeof(mRole[0]); Index++) {
     Status = HstiLibGetTable (mRole[Index], NULL, &Hsti, &HstiSize);
     if (EFI_ERROR (Status)) {
@@ -109,13 +102,15 @@ TestPointDumpHsti (
     DumpHsti (Hsti);
     FreePool (Hsti);
   }
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpHsti - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckHsti - Exit\n"));
 
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_8 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_8
+      TEST_POINT_BYTE3_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE3_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL_ERROR_STRING
       );
     return EFI_NOT_FOUND;
   }

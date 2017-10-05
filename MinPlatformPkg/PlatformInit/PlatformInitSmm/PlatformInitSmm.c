@@ -45,7 +45,7 @@ SmmEndOfDxeEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointSmmEndOfDxe ();
+  TestPointSmmEndOfDxeSmrrFunctional ();
   return EFI_SUCCESS;
 }
 
@@ -66,7 +66,8 @@ SmmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointSmmReadyToLock ();
+  TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional ();
+  TestPointSmmReadyToLockSecureSmmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
@@ -87,7 +88,7 @@ SmmReadyToBootEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointSmmReadyToBoot ();
+  TestPointSmmReadyToBootSmmPageProtection ();
   return EFI_SUCCESS;
 }
 

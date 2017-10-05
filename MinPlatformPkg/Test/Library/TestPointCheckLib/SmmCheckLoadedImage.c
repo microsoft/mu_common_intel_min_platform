@@ -31,7 +31,7 @@ DumpLoadedImage (
   IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
   );
 
-EFI_STATUS
+VOID
 TestPointDumpSmmLoadedImage (
   VOID
   )
@@ -106,6 +106,5 @@ Done:
 
   DEBUG ((DEBUG_INFO, "==== TestPointDumpSmmLoadedImage - Exit\n"));
 
-  // Check - TBD
-  return EFI_SUCCESS;
+  return ;
 }

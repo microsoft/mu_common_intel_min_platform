@@ -107,7 +107,7 @@ DumpMemoryTypeInfoSummary (
 }
 
 EFI_STATUS
-TestPointDumpMemoryTypeInformation (
+TestPointCheckMemoryTypeInformation (
   VOID
   )
 {
@@ -117,7 +117,7 @@ TestPointDumpMemoryTypeInformation (
   VOID                    *PreviousMemoryTypeInformation;
   VOID                    *VariableMemoryTypeInformation;
   
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpMemoryTypeInformation - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMemoryTypeInformation - Enter\n"));
   CurrentMemoryTypeInformation = NULL;
   PreviousMemoryTypeInformation = NULL;
 
@@ -144,14 +144,16 @@ TestPointDumpMemoryTypeInformation (
   if ((CurrentMemoryTypeInformation != NULL) && (PreviousMemoryTypeInformation != NULL)) {
     DumpMemoryTypeInfoSummary(CurrentMemoryTypeInformation, PreviousMemoryTypeInformation);
   }
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpMemoryTypeInformation - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMemoryTypeInformation - Exit\n"));
 
 Done:
   if (EFI_ERROR(Status)) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_2 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_2
+      TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_STRING
       );
   }
   return Status;

@@ -49,6 +49,7 @@
     gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE
     gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable|FALSE
     gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable|FALSE
+    gMinPlatformModuleTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE
 
 ################################################################################
 #
@@ -181,6 +182,7 @@
   MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
+  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
 !if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE

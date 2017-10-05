@@ -18,7 +18,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/BaseMemoryLib.h>
 
 EFI_STATUS
-TestPointDumpSmrr (
+TestPointCheckSmrr (
   VOID
   );
 
@@ -28,23 +28,73 @@ TestPointDumpSmmLoadedImage (
   );
 
 EFI_STATUS
-TestPointDumpSmmMemAttribute (
+TestPointCheckSmmMemAttribute (
   VOID
   );
 
 EFI_STATUS
+TestPointCheckSmmPaging (
+  VOID
+  );
+
+EFI_STATUS
+TestPointCheckSmmCommunicationBuffer (
+  VOID
+  );
+
+VOID
+TestPointDumpGcd (
+  OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
+  OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
+  OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
+  OUT UINTN                           *GcdIoMapNumberOfDescriptors  OPTIONAL
+  );
+
+VOID
+TestPointDumpUefiMemoryMap (
+  OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
+  OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
+  OUT UINTN                 *UefiDescriptorSize OPTIONAL
+  );
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
+GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiMemoryMapSize;
+GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiDescriptorSize;
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
+GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdMemoryMapNumberOfDescriptors;
+GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdIoMapNumberOfDescriptors;
+
+GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
+  PLATFORM_TEST_POINT_VERSION,
+  PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM},
+  TEST_POINT_FEATURE_SIZE,
+  {0}, // FeaturesImplemented
+  {0}, // FeaturesVerified
+  0,
+};
+
+GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
+
+EFI_STATUS
 EFIAPI
-TestPointSmmEndOfDxe (
+TestPointSmmEndOfDxeSmrrFunctional (
   VOID
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmEndOfDxe - Enter\n"));
   
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointSmmEndOfDxeSmrrFunctional - Enter\n"));
+
   Result = TRUE;
-  Status = TestPointDumpSmmLoadedImage ();
+  Status = TestPointCheckSmrr ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
@@ -53,8 +103,8 @@ TestPointSmmEndOfDxe (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_SMM_END_OF_DXE
+      5,
+      TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );
   }
 
@@ -64,21 +114,22 @@ TestPointSmmEndOfDxe (
 
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToLock (
+TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   VOID
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
+  
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
 
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToLock - Enter\n"));
-
+  
   Result = TRUE;
-  Status = TestPointDumpSmrr ();
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  Status = TestPointDumpSmmMemAttribute ();
+  TestPointDumpSmmLoadedImage ();
+  Status = TestPointCheckSmmMemAttribute ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
@@ -87,8 +138,8 @@ TestPointSmmReadyToLock (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_SMM_READY_TO_LOCK
+      5,
+      TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
       );
   }
 
@@ -98,13 +149,77 @@ TestPointSmmReadyToLock (
 
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToBoot (
+TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBoot - Enter\n"));
+  
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
+    return EFI_SUCCESS;
+  }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBoot - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToLockSecureSmmCommunicationBuffer - Enter\n"));
+
+  //
+  // Collect information here, because it is last chance to access outside SMRAM.
+  //
+  TestPointDumpUefiMemoryMap (&mUefiMemoryMap, &mUefiMemoryMapSize, &mUefiDescriptorSize);
+  TestPointDumpGcd (&mGcdMemoryMap, &mGcdMemoryMapNumberOfDescriptors, &mGcdIoMap, &mGcdIoMapNumberOfDescriptors);
+  //
+  // Defer the validation to TestPointSmmReadyToBootSecureSmmCommunicationBuffer, because page table setup later.
+  //
+
+  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToLockSecureSmmCommunicationBuffer - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointSmmReadyToBootSmmPageProtection (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Enter\n"));
+  
+  Result = TRUE;
+  
+  Status = TestPointCheckSmmPaging ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      5,
+      TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
+      );
+  }
+  
+  if (mUefiMemoryMap != NULL) {
+    Result = TRUE;
+  
+    Status = TestPointCheckSmmCommunicationBuffer ();
+    if (EFI_ERROR(Status)) {
+      Result = FALSE;
+    }
+    if (Result) {
+      TestPointLibSetFeaturesVerified (
+        PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+        NULL,
+        5,
+        TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
+        );
+    }
+  }
+  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -119,19 +234,6 @@ TestPointSmmExitBootServices (
   DEBUG ((DEBUG_INFO, "======== TestPointSmmExitBootServices - Exit\n"));
   return EFI_SUCCESS;
 }
-
-GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
-  PLATFORM_TEST_POINT_VERSION,
-  PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM},
-  TEST_POINT_FEATURE_SIZE,
-  {0}, // FeaturesRequired
-  {0}, // FeaturesImplemented
-  {0}, // FeaturesVerified
-  0,
-};
-
-GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
 
 /**
   Initialize feature data

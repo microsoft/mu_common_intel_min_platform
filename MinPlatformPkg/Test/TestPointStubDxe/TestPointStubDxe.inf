@@ -1,26 +1,27 @@
-## @file
+### @file
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
 # This program and the accompanying materials are licensed and made available under
-# the terms and conditions of the BSD License that accompanies this distribution.
+# the terms and conditions of the BSD License which accompanies this distribution.
 # The full text of the license may be found at
-# http://opensource.org/licenses/bsd-license.php.
+# http://opensource.org/licenses/bsd-license.php
 #
 # THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
 # WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
-##
+###
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = TestPointDumpApp
-  FILE_GUID                      = C19F7B48-9D41-4975-A9CC-BC42B4DC3732
-  MODULE_TYPE                    = UEFI_APPLICATION
+  BASE_NAME                      = TestPointStubDxe
+  FILE_GUID                      = C034A2CB-1190-4638-9DDF-6F297824741E
   VERSION_STRING                 = 1.0
-  ENTRY_POINT                    = TestPointDumpAppEntrypoint
+  MODULE_TYPE                    = DXE_DRIVER
+  ENTRY_POINT                    = TestPointStubDxeEntryPoint
 
 [Sources]
-  TestPointDump.c
+  TestPointStubDxe.c
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -28,19 +29,29 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [LibraryClasses]
-  UefiApplicationEntryPoint
+  UefiDriverEntryPoint
   BaseLib
   BaseMemoryLib
   MemoryAllocationLib
   DebugLib
+  PcdLib
   UefiBootServicesTableLib
   UefiLib
-  
+  HobLib
+  TestPointLib
+
 [Guids]
   gAdapterInfoPlatformTestPointGuid
+  gEdkiiPiSmmCommunicationRegionTableGuid
+
+[Pcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderLoad
+  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderStart
 
 [Protocols]
   gEfiAdapterInformationProtocolGuid
+  gEfiSmmCommunicationProtocolGuid
+  gEfiRscHandlerProtocolGuid
 
 [Depex]
   TRUE

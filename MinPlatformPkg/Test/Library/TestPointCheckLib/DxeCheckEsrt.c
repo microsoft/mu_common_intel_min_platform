@@ -96,14 +96,14 @@ DumpEsrt (
 }
 
 EFI_STATUS
-TestPointDumpEsrt (
+TestPointCheckEsrt (
   VOID
   )
 {
   EFI_STATUS                 Status;
   EFI_SYSTEM_RESOURCE_TABLE  *Esrt;
   
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpEsrt - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckEsrt - Enter\n"));
   Status = EfiGetSystemConfigurationTable (&gEfiSystemResourceTableGuid, (VOID **)&Esrt);
   if (!EFI_ERROR(Status)) {
     DumpEsrt(Esrt);
@@ -111,10 +111,12 @@ TestPointDumpEsrt (
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_CODE_9 TEST_POINT_READY_TO_BOOT TEST_POINT_BYTE2_READY_TO_BOOT_ERROR_STRING_9
+      TEST_POINT_BYTE4_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE4_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL_ERROR_STRING
       );
   }
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpEsrt - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckEsrt - Exit\n"));
 
   return Status;
 }

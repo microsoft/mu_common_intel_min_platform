@@ -193,8 +193,8 @@ InternalTestPointIsValidTable (
     DEBUG ((EFI_D_ERROR, "TestPointSize < sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)\n"));
     return FALSE;
   }
-  if (((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / 3) < TestPoint->FeaturesSize) {
-    DEBUG ((EFI_D_ERROR, "((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / 3) < FeaturesSize\n"));
+  if (((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / TEST_POINT_FEATURES_ITEM_NUMBER) < TestPoint->FeaturesSize) {
+    DEBUG ((EFI_D_ERROR, "((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / TEST_POINT_FEATURES_ITEM_NUMBER) < FeaturesSize\n"));
     return FALSE;
   }
 
@@ -229,8 +229,8 @@ InternalTestPointIsValidTable (
     return FALSE;
   }
 
-  ErrorStringSize = TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * 3;
-  ErrorString = (CHAR16 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * 3);
+  ErrorStringSize = TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
+  ErrorString = (CHAR16 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER);
 
   //
   // basic check for ErrorString
@@ -273,9 +273,6 @@ InternalTestPointIsValidTable (
 
   One system should have only one PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE.
 
-  If the Role is NOT PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE,
-  FeaturesRequired field will be ignored.
-
   @param TestPoint      TestPoint data
   @param TestPointSize  TestPoint size
 
@@ -297,10 +294,11 @@ TestPointLibSetTable (
   EFI_ADAPTER_INFORMATION_PROTOCOL *Aip;
   UINT32                           Role;
   CHAR16                           *ImplementationID;
-  UINT32                           FeaturesSize;
-  UINT8                            *FeaturesRequired;
+
+  DEBUG ((EFI_D_ERROR, "TestPointLibSetTable\n"));
 
   if (!InternalTestPointIsValidTable (TestPoint, TestPointSize)) {
+    DEBUG ((EFI_D_ERROR, "InternalTestPointIsValidTable\n"));
     return EFI_VOLUME_CORRUPTED;
   }
 
@@ -308,6 +306,7 @@ TestPointLibSetTable (
   ImplementationID = ((ADAPTER_INFO_PLATFORM_TEST_POINT *)TestPoint)->ImplementationID;
   Aip = InternalTestPointFindAip (Role, ImplementationID, NULL, NULL);
   if (Aip != NULL) {
+    DEBUG ((EFI_D_ERROR, "Aip (0x%x, %S) is found\n", Role, ImplementationID));
     return EFI_ALREADY_STARTED;
   }
 
@@ -319,11 +318,6 @@ TestPointLibSetTable (
   if (TestPointAip->TestPoint == NULL) {
     FreePool (TestPointAip);
     return EFI_OUT_OF_RESOURCES;
-  }
-  if (Role != PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE) {
-    FeaturesRequired = (UINT8 *)TestPointAip->TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT);
-    FeaturesSize = ((ADAPTER_INFO_PLATFORM_TEST_POINT *)TestPoint)->FeaturesSize;
-    ZeroMem (FeaturesRequired, FeaturesSize);
   }
 
   TestPointAip->Signature = TEST_POINT_AIP_PRIVATE_SIGNATURE;
@@ -425,7 +419,7 @@ InternalTestPointRecordFeaturesVerified (
     return EFI_UNSUPPORTED;
   }
 
-  FeaturesVerified = (UINT8 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * 2);
+  FeaturesVerified = (UINT8 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * 1);
 
   if (Set) {
     FeaturesVerified[ByteIndex] = (UINT8)(FeaturesVerified[ByteIndex] | (Bit));
@@ -466,6 +460,7 @@ TestPointLibSetFeaturesVerified (
   IN UINT8                    BitMask
   )
 {
+  DEBUG ((DEBUG_INFO, "TestPointLibSetFeaturesVerified - Index:0x%x Mask:0x%02x\n", ByteIndex, BitMask));
   return InternalTestPointRecordFeaturesVerified (
            Role,
            ImplementationID,
@@ -499,6 +494,7 @@ TestPointLibClearFeaturesVerified (
   IN UINT8                    BitMask
   )
 {
+  DEBUG ((DEBUG_INFO, "TestPointLibClearFeaturesVerified - Index:0x%x Mask:0x%02x\n", ByteIndex, BitMask));
   return InternalTestPointRecordFeaturesVerified (
            Role,
            ImplementationID,
@@ -549,7 +545,7 @@ InternalTestPointRecordErrorString (
   if (Append) {
     Offset = TestPointSize - sizeof(CHAR16);
   } else {
-    Offset = sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * 3;
+    Offset = sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
   }
   StringSize = StrSize (ErrorString);
 
@@ -593,7 +589,7 @@ TestPointLibAppendErrorString (
   IN CHAR16                   *ErrorString
   )
 {
-  DEBUG ((DEBUG_ERROR, "TestPointLibAppendErrorString - (0x%x) %s\n", Role, ErrorString));
+  DEBUG ((DEBUG_INFO, "TestPointLibAppendErrorString - (0x%x) %s\n", Role, ErrorString));
   return InternalTestPointRecordErrorString (
            Role,
            ImplementationID,
@@ -624,7 +620,7 @@ TestPointLibSetErrorString (
   IN CHAR16                   *ErrorString
   )
 {
-  DEBUG ((DEBUG_ERROR, "TestPointLibSetErrorString - %s\n", ErrorString));
+  DEBUG ((DEBUG_INFO, "TestPointLibSetErrorString - %s\n", ErrorString));
   return InternalTestPointRecordErrorString (
            Role,
            ImplementationID,

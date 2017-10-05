@@ -30,19 +30,24 @@
   HobLib
   PrintLib
   PeiServicesLib
+  PeiServicesTablePointerLib
   TestPointLib
+  PciSegmentLib
+  PciSegmentInfoLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
   MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
   UefiCpuPkg/UefiCpuPkg.dec
 
 [Sources]
   PeiTestPointCheckLib.c
-  PeiDumpMtrr.c
-  PeiDumpHob.c
-  PeiDumpFvInfo.c
-  PeiDumpSmramHob.c
+  PeiCheckMtrr.c
+  PeiCheckHob.c
+  PeiCheckFvInfo.c
+  PeiCheckSmmInfo.c
+  PeiCheckPci.c
 
 [Pcd]
   gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
@@ -51,8 +56,8 @@
   gEfiHobMemoryAllocStackGuid
   gEfiHobMemoryAllocBspStoreGuid
   gEfiHobMemoryAllocModuleGuid
-  gEfiSmmPeiSmramMemoryReserveGuid
 
 [Ppis]
   gEfiPeiFirmwareVolumeInfoPpiGuid
   gEfiPeiFirmwareVolumeInfo2PpiGuid
+  gPeiSmmAccessPpiGuid
