@@ -210,6 +210,8 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x00, 0x07, 0x0
   gMinPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength|0x10000000|UINT32|0x0010004
   gMinPlatformModuleTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr|0x9f000|UINT32|0x30000008
 
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheck|0|UINT32|0x30000009
+
 [PcdsFeatureFlag]
   #
   # Stage 1 - enable debug (system deadloop after debug init)
