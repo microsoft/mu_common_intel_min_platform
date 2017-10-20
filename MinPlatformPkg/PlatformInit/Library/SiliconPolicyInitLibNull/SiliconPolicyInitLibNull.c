@@ -24,13 +24,13 @@ SiliconPolicyInitPreMem (
   return Policy;
 }
 
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePreMem (
   IN VOID *Policy
   )
 {
-  return EFI_SUCCESS;
+  return RETURN_SUCCESS;
 }
 
 VOID *
@@ -42,13 +42,13 @@ SiliconPolicyInitPostMem (
   return Policy;
 }
 
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePostMem (
   IN VOID *Policy
   )
 {
-  return EFI_SUCCESS;
+  return RETURN_SUCCESS;
 }
 
 VOID *
@@ -60,11 +60,11 @@ SiliconPolicyInitLate (
   return Policy;
 }
 
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDoneLate (
   IN VOID *Policy
   )
 {
-  return EFI_SUCCESS;
+  return RETURN_SUCCESS;
 }

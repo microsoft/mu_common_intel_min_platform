@@ -49,9 +49,9 @@ SiliconPolicyInitPreMem (
   
   @param[in] Policy       Pointer to policy.
 
-  @retval EFI_SUCCESS The policy is handled consumed by silicon code.
+  @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
 */
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePreMem (
   IN VOID *Policy
@@ -92,9 +92,9 @@ SiliconPolicyInitPostMem (
   
   @param[in] Policy       Pointer to policy.
 
-  @retval EFI_SUCCESS The policy is handled consumed by silicon code.
+  @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
 */
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePostMem (
   IN VOID *Policy
@@ -130,9 +130,9 @@ SiliconPolicyInitLate (
   
   @param[in] Policy       Pointer to policy.
 
-  @retval EFI_SUCCESS The policy is handled consumed by silicon code.
+  @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
 */
-EFI_STATUS
+RETURN_STATUS
 EFIAPI
 SiliconPolicyDoneLate (
   IN VOID *Policy
