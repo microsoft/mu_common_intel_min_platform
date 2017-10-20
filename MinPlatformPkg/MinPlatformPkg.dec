@@ -222,9 +222,11 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x00, 0x07, 0x0
   #
   gMinPlatformModuleTokenSpaceGuid.PcdBootStage|4|UINT8|0xF00000A0
   
-  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit  |FALSE|BOOLEAN|0xF00000A1
-  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit    |FALSE|BOOLEAN|0xF00000A2
-  gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly     |FALSE|BOOLEAN|0xF00000A3
-  gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE|BOOLEAN|0xF00000A4
-  gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable          |FALSE|BOOLEAN|0xF00000A5
-  gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable   |FALSE|BOOLEAN|0xF00000A6
+  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit     |FALSE|BOOLEAN|0xF00000A1
+  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit       |FALSE|BOOLEAN|0xF00000A2
+  gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly        |FALSE|BOOLEAN|0xF00000A3
+  gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable   |FALSE|BOOLEAN|0xF00000A4
+  gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable             |FALSE|BOOLEAN|0xF00000A5
+  gMinPlatformModuleTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE|BOOLEAN|0xF00000A6
+  gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable      |FALSE|BOOLEAN|0xF00000A7
+
