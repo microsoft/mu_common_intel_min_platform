@@ -632,6 +632,12 @@ DumpFspGraphicsDeviceInfoHob (
   }
 }
 
+EFI_PEI_PPI_DESCRIPTOR mSiliconInitializedDesc = {
+  (EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
+  &gEdkiiSiliconInitializedPpiGuid,
+  NULL
+};
+
 /**
   Post FSP-S HOB process (not Memory Resource Descriptor).
 
@@ -645,6 +651,8 @@ PostFspsHobProcess (
   IN VOID                 *FspHobList
   )
 {
+  EFI_STATUS   Status;
+
   ProcessFspHobList (FspHobList);
 
   CheckFspGraphicsDeviceInfoHob ();
@@ -657,6 +665,9 @@ PostFspsHobProcess (
     DumpFspHobList ();
     DumpFspMemoryResource ();
   DEBUG_CODE_END ();
+
+  Status = PeiServicesInstallPpi (&mSiliconInitializedDesc);
+  ASSERT_EFI_ERROR (Status);
 
   return EFI_SUCCESS;
 }

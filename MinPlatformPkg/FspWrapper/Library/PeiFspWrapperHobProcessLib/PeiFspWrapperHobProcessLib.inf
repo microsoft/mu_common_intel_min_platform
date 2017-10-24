@@ -82,3 +82,4 @@
 
 [Ppis]
   gEfiPeiCapsulePpiGuid                                   ## CONSUMES
+  gEdkiiSiliconInitializedPpiGuid                         ## PRODUCES
