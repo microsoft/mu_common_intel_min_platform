@@ -57,12 +57,14 @@ flashBase = long(data.split("FLASH_BASE")[1].split("=")[1].split()[0], 16)
 # Based on Build Target, select the section in the FlashMap file
 flashmap = data
 
-# Get FSP-S & FSP-M-T offset & calculate the base
+# Get FSP-S & FSP-M & FSP-T offset & calculate the base
 for line in flashmap.split("\n"):
   if "PcdFlashFvFspSOffset" in line:
     fspSBaseOffset = long(line.split("=")[1].split()[0], 16)
-  if "PcdFlashFvFspMTOffset" in line:
+  if "PcdFlashFvFspMOffset" in line:
     fspMBaseOffset = long(line.split("=")[1].split()[0], 16)
+  if "PcdFlashFvFspTOffset" in line:
+    fspTBaseOffset = long(line.split("=")[1].split()[0], 16)
 file.close()
 
 #
@@ -80,7 +82,7 @@ for line in FsptInfo[1].split("\n"):
 # Calculate FSP-S/M/T base address, to which re-base has to be done
 fspSBaseAddress = flashBase + fspSBaseOffset + fvOffset
 fspMBaseAddress = flashBase + fspMBaseOffset
-fspTBaseAddress = flashBase + fspMBaseOffset + fspMSize
+fspTBaseAddress = flashBase + fspTBaseOffset
 
 #
 # Re-base FSP bin file to new address and save it as fspBinFileRebased using SplitFspBin.py
