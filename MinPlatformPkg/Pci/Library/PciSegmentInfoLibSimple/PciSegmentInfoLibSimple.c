@@ -44,6 +44,10 @@ GetPciSegmentInfo (
   VOID              *Hob;
   PCI_SEGMENT_INFO  *PciSegmentInfo;
 
+  if (Count == NULL) {
+    return NULL;
+  }
+
   *Count = 1;
   Hob = GetFirstGuidHob (&mPciSegmentInfoHobGuid);
   if (Hob != NULL) {
@@ -51,6 +55,9 @@ GetPciSegmentInfo (
   } else {
     PciSegmentInfo = BuildGuidHob (&mPciSegmentInfoHobGuid, sizeof(PCI_SEGMENT_INFO));
     ASSERT(PciSegmentInfo != NULL);
+    if (PciSegmentInfo == NULL) {
+      return NULL;
+    }
     PciSegmentInfo->SegmentNumber = 0;
     PciSegmentInfo->BaseAddress = PcdGet64(PcdPciExpressBaseAddress);
     PciSegmentInfo->StartBusNumber = 0;

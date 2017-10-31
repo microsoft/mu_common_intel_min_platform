@@ -37,6 +37,9 @@ TestPointCheckPciBusMaster (
   PCI_SEGMENT_INFO  *PciSegmentInfo;
 
   PciSegmentInfo = GetPciSegmentInfo (&SegmentCount);
+  if (PciSegmentInfo == NULL) {
+    return EFI_OUT_OF_RESOURCES;
+  }
 
   Status = EFI_SUCCESS;
   for (Segment = 0; Segment < SegmentCount; Segment++) {
