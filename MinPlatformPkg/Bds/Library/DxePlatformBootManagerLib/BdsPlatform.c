@@ -977,7 +977,7 @@ PlatformBootManagerBeforeConsole (
   // We should make all UEFI memory and GCD information populated before ExitPmAuth.
   // SMM may consume these information.
   //
-  MemoryTest((EXTENDMEM_COVERAGE_LEVEL) PcdGet32 (PcdPlatformMemoryCheck));
+  MemoryTest((EXTENDMEM_COVERAGE_LEVEL) PcdGet32 (PcdPlatformMemoryCheckLevel));
 
   PERF_START_EX(NULL,"EventRec", NULL, AsmReadTsc(), 0x7020);
   ExitPmAuth ();

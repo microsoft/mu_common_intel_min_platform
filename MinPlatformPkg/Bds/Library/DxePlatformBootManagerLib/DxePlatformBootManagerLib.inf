@@ -65,7 +65,7 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoHorizontalResolution  ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoVerticalResolution    ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdConInConnectOnDemand            ## PRODUCES
-  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheck           ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheckLevel           ## CONSUMES
   gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly
 
 [Sources]

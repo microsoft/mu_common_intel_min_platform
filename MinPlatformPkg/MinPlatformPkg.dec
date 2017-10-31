@@ -210,7 +210,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x01, 0x7F, 0x3
   gMinPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength|0x10000000|UINT32|0x0010004
   gMinPlatformModuleTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr|0x9f000|UINT32|0x30000008
 
-  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheck|0|UINT32|0x30000009
+  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheckLevel|0|UINT32|0x30000009
 
 [PcdsFeatureFlag]
   #
