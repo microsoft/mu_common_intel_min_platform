@@ -26,10 +26,6 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 #include <Library/Tcg2PhysicalPresenceLib.h>
 
-#ifdef _MSC_VER
-#pragma optimize("g", off)
-#endif
-
 #include <Library/HobLib.h>
 #include <Protocol/UsbIo.h>
 
@@ -39,6 +35,25 @@ extern EFI_STATUS EfiBootManagerDispatchDeferredImages(VOID);
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_BOOT_MODE                 gBootMode;
 
 BOOLEAN                      gPPRequireUIConfirm;
+
+GLOBAL_REMOVE_IF_UNREFERENCED USB_CLASS_FORMAT_DEVICE_PATH gUsbClassKeyboardDevicePath = {
+  {
+    {
+      MESSAGING_DEVICE_PATH,
+      MSG_USB_CLASS_DP,
+      {
+        (UINT8) (sizeof (USB_CLASS_DEVICE_PATH)),
+        (UINT8) ((sizeof (USB_CLASS_DEVICE_PATH)) >> 8)
+      }
+    },
+    0xffff,           // VendorId
+    0xffff,           // ProductId
+    CLASS_HID,        // DeviceClass
+    SUBCLASS_BOOT,    // DeviceSubClass
+    PROTOCOL_KEYBOARD // DeviceProtocol
+  },
+  gEndEntire
+};
 
 //
 // Internal shell mode
@@ -51,51 +66,49 @@ GLOBAL_REMOVE_IF_UNREFERENCED UINT32         mShellVerticalResolution;
 // BDS Platform Functions
 //
 
-
-/**
-  The handle on the path we get might be not the display device.
-  We must check it.
-
-  @todo fix the parameters
-
-  @retval  TRUE         PCI class type is VGA.
-  @retval  FALSE        PCI class type isn't VGA.
-**/
 BOOLEAN
-IsVgaHandle (
-  IN EFI_HANDLE Handle
+IsMorBitSet (
+  VOID
   )
 {
-  EFI_PCI_IO_PROTOCOL *PciIo;
-  PCI_TYPE00          Pci;
-  EFI_STATUS          Status;
+  UINTN                     MorControl;
+  EFI_STATUS                Status;
+  UINTN                     DataSize;
 
-  Status = gBS->HandleProtocol (
-                  Handle,
-                  &gEfiPciIoProtocolGuid,
-                  (VOID **)&PciIo
+  //
+  // Check if the MOR bit is set.
+  //
+  DataSize = sizeof (MorControl);
+  Status = gRT->GetVariable (
+                  MEMORY_OVERWRITE_REQUEST_VARIABLE_NAME,
+                  &gEfiMemoryOverwriteControlDataGuid,
+                  NULL,
+                  &DataSize,
+                  &MorControl
                   );
-
-  if (!EFI_ERROR (Status)) {
-    Status = PciIo->Pci.Read (
-                          PciIo,
-                          EfiPciIoWidthUint32,
-                          0,
-                          sizeof (Pci) / sizeof (UINT32),
-                          &Pci
-                          );
-
-    if (!EFI_ERROR (Status)) {
-      DEBUG ((DEBUG_INFO, "  PCI CLASS CODE    = 0x%x\n", Pci.Hdr.ClassCode [2]));
-      DEBUG ((DEBUG_INFO, "  PCI SUBCLASS CODE = 0x%x\n", Pci.Hdr.ClassCode [1]));
-
-      if (IS_PCI_VGA (&Pci) || IS_PCI_OLD_VGA (&Pci)) {
-        DEBUG ((DEBUG_INFO, "  \nPCI VGA Device Found\n"));
-        return TRUE;
-      }
-    }
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_INFO, " PlatformBootMangerLib: gEfiMemoryOverwriteControlDataGuid doesn't exist!!***\n"));
+    MorControl = 0;
+  } else {
+    DEBUG ((DEBUG_INFO, " PlatformBootMangerLib: Get the gEfiMemoryOverwriteControlDataGuid = %x!!***\n", MorControl));
   }
-  return FALSE;
+
+  return (BOOLEAN) (MorControl & 0x01);
+}
+
+VOID
+DumpDevicePath (
+  IN CHAR16           *Name,
+  IN EFI_DEVICE_PATH  *DevicePath
+  )
+{
+  CHAR16 *Str;
+
+  Str = ConvertDevicePathToText(DevicePath, TRUE, TRUE);
+  DEBUG ((DEBUG_INFO, "%s: %s\n", Name, Str));
+  if (Str != NULL) {
+    FreePool (Str);
+  }
 }
 
 /**
@@ -187,18 +200,88 @@ ConnectRootBridge (
 }
 
 
+/**
+  Return whether the device is trusted console.
+
+  @param Device  The device to be tested.
+
+  @retval TRUE   The device can be trusted.
+  @retval FALSE  The device cannot be trusted.
+**/
 BOOLEAN
-IsGopDevicePath (
-  EFI_DEVICE_PATH_PROTOCOL  *DevicePath
+IsTrustedConsole (
+  IN CONSOLE_TYPE              ConsoleType,
+  IN EFI_DEVICE_PATH_PROTOCOL  *Device
   )
 {
-  while (!IsDevicePathEndType (DevicePath)) {
-    if (DevicePathType (DevicePath) == ACPI_DEVICE_PATH &&
-        DevicePathSubType (DevicePath) == ACPI_ADR_DP) {
+  VOID                      *TrustedConsoleDevicepath;
+  EFI_DEVICE_PATH_PROTOCOL  *TempDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL  *Instance;
+  UINTN                     Size;
+  EFI_DEVICE_PATH_PROTOCOL  *ConsoleDevice;
+
+  if (Device == NULL) {
+    return FALSE;
+  }
+
+  ConsoleDevice = DuplicateDevicePath(Device);
+
+  switch (ConsoleType) {
+  case ConIn:
+    TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleInputDevicePath);
+    break;
+  case ConOut:
+    //
+    // Check GOP and remove last node
+    //
+    TempDevicePath = ConsoleDevice;
+    while (!IsDevicePathEndType (TempDevicePath)) {
+      if (DevicePathType (TempDevicePath) == ACPI_DEVICE_PATH &&
+          DevicePathSubType (TempDevicePath) == ACPI_ADR_DP) {
+        SetDevicePathEndNode (TempDevicePath);
+        break;
+      }
+      TempDevicePath = NextDevicePathNode (TempDevicePath);
+    }
+
+    TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleOutputDevicePath);
+    break;
+  default:
+    ASSERT(FALSE);
+    break;
+  }
+
+  TempDevicePath = TrustedConsoleDevicepath;
+  do {
+    Instance = GetNextDevicePathInstance (&TempDevicePath, &Size);
+    if (Instance == NULL) {
+      break;
+    }
+
+    if (CompareMem (ConsoleDevice, Instance, Size - END_DEVICE_PATH_LENGTH) == 0) {
+      FreePool (Instance);
+      FreePool (ConsoleDevice);
       return TRUE;
     }
-    DevicePath = NextDevicePathNode (DevicePath);
+
+    FreePool (Instance);
+  } while (TempDevicePath != NULL);
+
+  FreePool (ConsoleDevice);
+
+  return FALSE;
+}
+
+BOOLEAN
+IsUsbShortForm (
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
+  )
+{
+  if ((DevicePathType (DevicePath) == MESSAGING_DEVICE_PATH) &&
+      ((DevicePathSubType (DevicePath) == MSG_USB_CLASS_DP) || (DevicePathSubType (DevicePath) == MSG_USB_WWID_DP)) ) {
+    return TRUE;
   }
+
   return FALSE;
 }
 
@@ -231,9 +314,7 @@ ConnectUsbShortFormDevicePath (
     return EFI_INVALID_PARAMETER;
   }
 
-  if ((DevicePathType (DevicePath) != MESSAGING_DEVICE_PATH) ||
-      ((DevicePathSubType (DevicePath) != MSG_USB_CLASS_DP) && (DevicePathSubType (DevicePath) != MSG_USB_WWID_DP))
-     ) {
+  if (!IsUsbShortForm (DevicePath)) {
     return EFI_INVALID_PARAMETER;
   }
 
@@ -278,7 +359,6 @@ ConnectUsbShortFormDevicePath (
   return AtLeastOneConnected ? EFI_SUCCESS : EFI_NOT_FOUND;
 }
 
-
 /**
   Update the ConIn variable with USB Keyboard device path,if its not already exists in ConIn
 **/
@@ -287,182 +367,100 @@ EnumUsbKeyboard (
   VOID
   )
 {
-  UINTN                     DevicePathSize;
-  EFI_DEVICE_PATH_PROTOCOL  *VarConIn;
-  EFI_DEVICE_PATH_PROTOCOL  *DevicePathInstance;
-  EFI_DEVICE_PATH_PROTOCOL  *Next;
-  BOOLEAN                   UsbKeyboard;
-
-  UsbKeyboard = FALSE;
-  GetEfiGlobalVariable2 (L"ConIn", (VOID **) &VarConIn, NULL);
-
+  DEBUG ((DEBUG_INFO, "[EnumUsbKeyboard]\n"));
+  EfiBootManagerUpdateConsoleVariable (ConIn, (EFI_DEVICE_PATH_PROTOCOL *) &gUsbClassKeyboardDevicePath, NULL);
+  
   //
-  // If ConIn variable is empty, need to enumerate USB keyboard device path
+  // Append Usb Keyboard short form DevicePath into "ConInDev"
   //
-  do {
-    DevicePathInstance = GetNextDevicePathInstance (
-                           &VarConIn,
-                           &DevicePathSize
-                           );
-
-    if (DevicePathInstance == NULL) {
-      //
-      // The instance is NULL, it means the VarConIn is null, escape the DO loop,
-      // and need to add USB keyboard dev path.
-      //
-      break;
-    }
-
-    Next = DevicePathInstance;
-    while (!IsDevicePathEndType(Next)) {
-      //
-      // Checking the device path to see the USB keyboard existance.
-      //
-      if ((Next->Type    == MESSAGING_DEVICE_PATH) &&
-          (Next->SubType == MSG_USB_CLASS_DP) &&
-          (((USB_CLASS_DEVICE_PATH *) Next)->DeviceClass == CLASS_HID) &&
-          (((USB_CLASS_DEVICE_PATH *) Next)->DeviceSubClass == SUBCLASS_BOOT) &&
-          (((USB_CLASS_DEVICE_PATH *) Next)->DeviceProtocol == PROTOCOL_KEYBOARD)) {
-        DEBUG ((DEBUG_INFO, "[EnumUsbKeyboard] USB keyboard path exists\n"));
-        UsbKeyboard = TRUE;
-
-        break;
-      }
-      Next = NextDevicePathNode (Next);
-    } // while (!IsDevicePathEndType(Next));
-
-    if (DevicePathInstance != NULL) {
-      FreePool (DevicePathInstance);
-    }
-  } while (VarConIn != NULL);
-
-  //
-  //  USB keyboard device path does not exist, So add it to the ConIn
-  //
-  if (!UsbKeyboard) {
-    DEBUG ((DEBUG_INFO, "[EnumUsbKeyboard] Adding USB keyboard device path to ConIn.\n"));
-    EfiBootManagerUpdateConsoleVariable (ConIn, (EFI_DEVICE_PATH_PROTOCOL *) &gUsbClassKeyboardDevicePath, NULL);
-  }
-
-  if (VarConIn != NULL) {
-    FreePool (VarConIn);
-  }
+  EfiBootManagerUpdateConsoleVariable (ConInDev, (EFI_DEVICE_PATH_PROTOCOL *) &gUsbClassKeyboardDevicePath, NULL);
 }
 
-/**
-  Return whether the device is trusted console.
-
-  @param Device  The device to be tested.
-
-  @retval TRUE   The device can be trusted.
-  @retval FALSE  The device cannot be trusted.
-**/
 BOOLEAN
-IsTrustedConsole (
-  EFI_DEVICE_PATH_PROTOCOL  *Device
+IsVgaHandle (
+  IN EFI_HANDLE Handle
   )
 {
+  EFI_PCI_IO_PROTOCOL *PciIo;
+  PCI_TYPE00          Pci;
+  EFI_STATUS          Status;
 
-  if(Device == NULL) {
-    return FALSE;
-  }
-
-  if (CompareMem (Device, &gPlatformIGDDevice, GetDevicePathSize ((EFI_DEVICE_PATH_PROTOCOL *) &gPlatformIGDDevice) - END_DEVICE_PATH_LENGTH) == 0) {
-    return TRUE;
-  }
-
-  if (CompareMem (Device, &gUsbClassKeyboardDevicePath, GetDevicePathSize ((EFI_DEVICE_PATH_PROTOCOL *) &gUsbClassKeyboardDevicePath) - END_DEVICE_PATH_LENGTH) == 0) {
-    return TRUE;
+  Status = gBS->HandleProtocol (
+                  Handle,
+                  &gEfiPciIoProtocolGuid,
+                  (VOID **)&PciIo
+                  );
+  if (!EFI_ERROR (Status)) {
+    Status = PciIo->Pci.Read (
+                          PciIo,
+                          EfiPciIoWidthUint32,
+                          0,
+                          sizeof (Pci) / sizeof (UINT32),
+                          &Pci
+                          );
+    if (!EFI_ERROR (Status)) {
+      if (IS_PCI_VGA (&Pci) || IS_PCI_OLD_VGA (&Pci)) {
+        return TRUE;
+      }
+    }
   }
   return FALSE;
 }
 
-/**
-  The function connects the trusted consoles.
-**/
-VOID
-ConnectTrustedConsole (
-  VOID
+EFI_HANDLE
+IsVideoController (
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
   )
 {
-  EFI_DEVICE_PATH_PROTOCOL     *Consoles;
-  EFI_DEVICE_PATH_PROTOCOL     *TempDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL     *Instance;
-  EFI_DEVICE_PATH_PROTOCOL     *Next;
-  UINTN                        Size;
-  UINTN                        Index;
-  EFI_HANDLE                   Handle;
-  EFI_STATUS                   Status;
-  CHAR16                       *ConsoleVar[] = {L"ConIn", L"ConOut"};
+  EFI_DEVICE_PATH_PROTOCOL  *DupDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL  *TempDevicePath;
+  EFI_STATUS                Status;
+  EFI_HANDLE                DeviceHandle;
 
-  for (Index = 0; Index < sizeof (ConsoleVar) / sizeof (ConsoleVar[0]); Index++) {
-    GetEfiGlobalVariable2 (ConsoleVar[Index], &Consoles, NULL);
+  DupDevicePath = DuplicateDevicePath (DevicePath);
+  ASSERT (DupDevicePath != NULL);
+  if (DupDevicePath == NULL) {
+    return NULL;
+  }
 
-    TempDevicePath = Consoles;
-    do {
-      Instance = GetNextDevicePathInstance (&TempDevicePath, &Size);
-      if (Instance == NULL) {
-        break;
-      }
-      if (IsTrustedConsole (Instance)) {
-        if ((DevicePathType (Instance) == MESSAGING_DEVICE_PATH) &&
-            ((DevicePathSubType (Instance) == MSG_USB_CLASS_DP) || (DevicePathSubType (Instance) == MSG_USB_WWID_DP))
-           ) {
-          ConnectUsbShortFormDevicePath (Instance);
-        } else {
-          for (Next = Instance; !IsDevicePathEnd (Next); Next = NextDevicePathNode (Next)) {
-            if (DevicePathType (Next) == ACPI_DEVICE_PATH && DevicePathSubType (Next) == ACPI_ADR_DP) {
-              break;
-            } else if (DevicePathType (Next) == HARDWARE_DEVICE_PATH &&
-                       DevicePathSubType (Next) == HW_CONTROLLER_DP &&
-                       DevicePathType (NextDevicePathNode (Next)) == ACPI_DEVICE_PATH &&
-                       DevicePathSubType (NextDevicePathNode (Next)) == ACPI_ADR_DP
-                       ) {
-              break;
-            }
-          }
-          if (!IsDevicePathEnd (Next)) {
-            SetDevicePathEndNode (Next);
-            Status = EfiBootManagerConnectDevicePath (Instance, &Handle);
-            if (!EFI_ERROR (Status)) {
-              gBS->ConnectController (Handle, NULL, NULL, TRUE);
-            }
-          } else {
-            EfiBootManagerConnectDevicePath (Instance, NULL);
-          }
-        }
-      }
-      FreePool (Instance);
-    } while (TempDevicePath != NULL);
+  TempDevicePath = DupDevicePath;
+  Status = gBS->LocateDevicePath (
+                  &gEfiDevicePathProtocolGuid,
+                  &TempDevicePath,
+                  &DeviceHandle
+                  );
+  FreePool (DupDevicePath);
+  if (EFI_ERROR (Status)) {
+    return NULL;
+  }
 
-    if (Consoles != NULL) {
-      FreePool (Consoles);
-    }
+  if (IsVgaHandle (DeviceHandle)) {
+    return DeviceHandle;
+  } else {
+    return NULL;
   }
 }
 
-/**
-  The function connects the trusted consoles and then call the PP processing library interface.
-**/
-VOID
-ProcessTcgPp (
-  VOID
+BOOLEAN
+IsGopDevicePath (
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
   )
 {
-  gPPRequireUIConfirm |= Tcg2PhysicalPresenceLibNeedUserConfirm();
-
-  if (gPPRequireUIConfirm) {
-    ConnectTrustedConsole ();
+  while (!IsDevicePathEndType (DevicePath)) {
+    if (DevicePathType (DevicePath) == ACPI_DEVICE_PATH &&
+        DevicePathSubType (DevicePath) == ACPI_ADR_DP) {
+      return TRUE;
+    }
+    DevicePath = NextDevicePathNode (DevicePath);
   }
-
-  Tcg2PhysicalPresenceLibProcessRequest (NULL);
+  return FALSE;
 }
 
 /**
   Remove all GOP device path instance from DevicePath and add the Gop to the DevicePath.
 **/
 EFI_DEVICE_PATH_PROTOCOL *
-UpdateDevicePath (
+UpdateGopDevicePath (
   EFI_DEVICE_PATH_PROTOCOL *DevicePath,
   EFI_DEVICE_PATH_PROTOCOL *Gop
   )
@@ -507,9 +505,301 @@ UpdateDevicePath (
   return Return;
 }
 
-#ifdef _MSC_VER
-#pragma optimize("g", off)
-#endif
+/**
+  Get Graphics Controller Handle.
+
+  @retval GraphicsController    Successfully located
+  @retval NULL                  Failed to locate
+**/
+EFI_HANDLE
+EFIAPI
+GetGraphicsController (
+  IN BOOLEAN    NeedTrustedConsole
+  )
+{
+  EFI_STATUS                Status;
+  UINTN                     Index;
+  EFI_HANDLE                *PciHandles;
+  UINTN                     PciHandlesSize;
+  EFI_DEVICE_PATH_PROTOCOL  *DevicePath;
+  VOID                      *TrustedConsoleDevicepath;
+
+  TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleOutputDevicePath);
+
+  Status = gBS->LocateHandleBuffer (
+                  ByProtocol,
+                  &gEfiPciIoProtocolGuid,
+                  NULL,
+                  &PciHandlesSize,
+                  &PciHandles
+                  );
+  if (EFI_ERROR (Status)) {
+    return NULL;
+  }
+
+  for (Index = 0; Index < PciHandlesSize; Index++) {
+    Status = gBS->HandleProtocol (
+                    PciHandles[Index],
+                    &gEfiDevicePathProtocolGuid,
+                    (VOID **) &DevicePath
+                    );
+    if (EFI_ERROR(Status)) {
+      continue;
+    }
+    if (!IsVgaHandle (PciHandles[Index])) {
+      continue;
+    }
+    if ((NeedTrustedConsole && IsTrustedConsole (ConOut, DevicePath)) ||
+        ((!NeedTrustedConsole) && (!IsTrustedConsole (ConOut, DevicePath)))) {
+      return PciHandles[Index];
+    }
+  }
+
+  return NULL;
+}
+
+VOID
+UpdateGraphicConOut (
+  IN BOOLEAN    NeedTrustedConsole
+  )
+{
+  EFI_HANDLE                          GraphicsControllerHandle;
+  EFI_DEVICE_PATH_PROTOCOL            *GopDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL            *ConOutDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL            *UpdatedConOutDevicePath;
+
+  //
+  // Update ConOut variable
+  //
+  GraphicsControllerHandle = GetGraphicsController (NeedTrustedConsole);
+  if (GraphicsControllerHandle != NULL) {
+    //
+    // Connect the GOP driver
+    //
+    gBS->ConnectController (GraphicsControllerHandle, NULL, NULL, TRUE);
+
+    //
+    // Get the GOP device path
+    // NOTE: We may get a device path that contains Controller node in it.
+    //
+    GopDevicePath = EfiBootManagerGetGopDevicePath (GraphicsControllerHandle);
+    if (GopDevicePath != NULL) {
+      GetEfiGlobalVariable2 (L"ConOut", &ConOutDevicePath, NULL);
+      UpdatedConOutDevicePath = UpdateGopDevicePath (ConOutDevicePath, GopDevicePath);
+      if (ConOutDevicePath != NULL) {
+        FreePool (ConOutDevicePath);
+      }
+      FreePool (GopDevicePath);
+      gRT->SetVariable (
+                      L"ConOut",
+                      &gEfiGlobalVariableGuid,
+                      EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_RUNTIME_ACCESS | EFI_VARIABLE_BOOTSERVICE_ACCESS,
+                      GetDevicePathSize (UpdatedConOutDevicePath),
+                      UpdatedConOutDevicePath
+                      );
+    }
+  }
+}
+
+VOID
+AddConsoleVariable (
+  IN CONSOLE_TYPE              ConsoleType,
+  IN EFI_DEVICE_PATH           *ConsoleDevicePath
+  )
+{
+  EFI_DEVICE_PATH           *TempDevicePath;
+  EFI_DEVICE_PATH           *Instance;
+  UINTN                     Size;
+  EFI_HANDLE                GraphicsControllerHandle;
+  EFI_DEVICE_PATH           *GopDevicePath;
+
+  TempDevicePath = ConsoleDevicePath;
+  do {
+    Instance = GetNextDevicePathInstance (&TempDevicePath, &Size);
+    if (Instance == NULL) {
+      break;
+    }
+    
+    switch (ConsoleType) {
+    case ConIn:
+      if (IsUsbShortForm (Instance)) {
+        //
+        // Append Usb Keyboard short form DevicePath into "ConInDev"
+        //
+        EfiBootManagerUpdateConsoleVariable (ConInDev, Instance, NULL);
+      }
+      EfiBootManagerUpdateConsoleVariable (ConsoleType, Instance, NULL);
+      break;
+    case ConOut:
+      GraphicsControllerHandle = IsVideoController (Instance);
+      if (GraphicsControllerHandle == NULL) {
+        EfiBootManagerUpdateConsoleVariable (ConsoleType, Instance, NULL);
+      } else {
+        //
+        // Connect the GOP driver
+        //
+        gBS->ConnectController (GraphicsControllerHandle, NULL, NULL, TRUE);
+        //
+        // Get the GOP device path
+        // NOTE: We may get a device path that contains Controller node in it.
+        //
+        GopDevicePath = EfiBootManagerGetGopDevicePath (GraphicsControllerHandle);
+        if (GopDevicePath != NULL) {
+          EfiBootManagerUpdateConsoleVariable (ConsoleType, GopDevicePath, NULL);
+        }
+      }
+      break;
+    default:
+      ASSERT(FALSE);
+      break;
+    }
+
+    FreePool (Instance);
+  } while (TempDevicePath != NULL);
+}
+
+/**
+  The function connects the trusted consoles.
+**/
+VOID
+ConnectTrustedConsole (
+  VOID
+  )
+{
+  EFI_DEVICE_PATH_PROTOCOL     *Consoles;
+  EFI_DEVICE_PATH_PROTOCOL     *TempDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL     *Instance;
+  EFI_DEVICE_PATH_PROTOCOL     *Next;
+  UINTN                        Size;
+  UINTN                        Index;
+  EFI_HANDLE                   Handle;
+  EFI_STATUS                   Status;
+  CHAR16                       *ConsoleVar[] = {L"ConIn", L"ConOut"};
+  VOID                         *TrustedConsoleDevicepath;
+
+  TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleInputDevicePath);
+  DumpDevicePath (L"TrustedConsoleIn", TrustedConsoleDevicepath);
+  TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleOutputDevicePath);
+  DumpDevicePath (L"TrustedConsoleOut", TrustedConsoleDevicepath);
+
+  for (Index = 0; Index < sizeof (ConsoleVar) / sizeof (ConsoleVar[0]); Index++) {
+
+    GetEfiGlobalVariable2 (ConsoleVar[Index], &Consoles, NULL);
+
+    TempDevicePath = Consoles;
+    do {
+      Instance = GetNextDevicePathInstance (&TempDevicePath, &Size);
+      if (Instance == NULL) {
+        break;
+      }
+      if (IsTrustedConsole (Index, Instance)) {
+        if (IsUsbShortForm (Instance)) {
+          ConnectUsbShortFormDevicePath (Instance);
+        } else {
+          for (Next = Instance; !IsDevicePathEnd (Next); Next = NextDevicePathNode (Next)) {
+            if (DevicePathType (Next) == ACPI_DEVICE_PATH && DevicePathSubType (Next) == ACPI_ADR_DP) {
+              break;
+            } else if (DevicePathType (Next) == HARDWARE_DEVICE_PATH &&
+                       DevicePathSubType (Next) == HW_CONTROLLER_DP &&
+                       DevicePathType (NextDevicePathNode (Next)) == ACPI_DEVICE_PATH &&
+                       DevicePathSubType (NextDevicePathNode (Next)) == ACPI_ADR_DP
+                       ) {
+              break;
+            }
+          }
+          if (!IsDevicePathEnd (Next)) {
+            SetDevicePathEndNode (Next);
+            Status = EfiBootManagerConnectDevicePath (Instance, &Handle);
+            if (!EFI_ERROR (Status)) {
+              gBS->ConnectController (Handle, NULL, NULL, TRUE);
+            }
+          } else {
+            EfiBootManagerConnectDevicePath (Instance, NULL);
+          }
+        }
+      }
+      FreePool (Instance);
+    } while (TempDevicePath != NULL);
+
+    if (Consoles != NULL) {
+      FreePool (Consoles);
+    }
+  }
+}
+
+/**
+  The function connects the trusted Storages.
+**/
+VOID
+ConnectTrustedStorage (
+  VOID
+  )
+{
+  VOID                      *TrustedStorageDevicepath;
+  EFI_DEVICE_PATH_PROTOCOL  *TempDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL  *Instance;
+  UINTN                     Size;
+  EFI_DEVICE_PATH_PROTOCOL  *TempStorageDevicePath;
+  EFI_STATUS                Status;
+  EFI_HANDLE                DeviceHandle;
+
+  TrustedStorageDevicepath = PcdGetPtr (PcdTrustedStorageDevicePath);
+  DumpDevicePath (L"TrustedStorage", TrustedStorageDevicepath);
+
+  TempDevicePath = TrustedStorageDevicepath;
+  do {
+    Instance = GetNextDevicePathInstance (&TempDevicePath, &Size);
+    if (Instance == NULL) {
+      break;
+    }
+
+    EfiBootManagerConnectDevicePath (Instance, NULL);
+
+    TempStorageDevicePath = Instance;
+
+    Status = gBS->LocateDevicePath (
+                    &gEfiDevicePathProtocolGuid,
+                    &TempStorageDevicePath,
+                    &DeviceHandle
+                    );
+    if (!EFI_ERROR (Status)) {
+      gBS->ConnectController (DeviceHandle, NULL, NULL, FALSE);
+    }
+
+    FreePool (Instance);
+  } while (TempDevicePath != NULL);
+}
+
+/**
+  The function connects the trusted consoles and then call the PP processing library interface.
+**/
+VOID
+ProcessTcgPp (
+  VOID
+  )
+{
+  gPPRequireUIConfirm |= Tcg2PhysicalPresenceLibNeedUserConfirm();
+
+  if (gPPRequireUIConfirm) {
+    ConnectTrustedConsole ();
+  }
+
+  Tcg2PhysicalPresenceLibProcessRequest (NULL);
+}
+
+/**
+  The function connects the trusted storage to perform TPerReset.
+**/
+VOID
+ProcessTcgMor (
+  VOID
+  )
+{
+  if (IsMorBitSet ()) {
+    ConnectTrustedConsole();
+    ConnectTrustedStorage();
+  }
+}
 
 /**
   Check if current BootCurrent variable is internal shell boot option.
@@ -787,69 +1077,9 @@ OnReadyToBootCallBack (
   if (BootCurrentIsInternalShell ()) {
 
     ChangeModeForInternalShell ();
-      EfiBootManagerConnectAllDefaultConsoles();
-      gDS->Dispatch ();
+    EfiBootManagerConnectAllDefaultConsoles();
+    gDS->Dispatch ();
   }
-}
-
-/**
-  Get Graphics Controller Handle.
-
-  @retval GraphicsController    Successfully located
-  @retval NULL                  Failed to locate
-**/
-EFI_HANDLE
-EFIAPI
-GetGraphicsController (
-  VOID
-  )
-{
-  EFI_STATUS              Status;
-  UINTN                   Index;
-  EFI_HANDLE              *PciHandles;
-  UINTN                   PciHandlesSize;
-  EFI_PCI_IO_PROTOCOL     *PciIo;
-  EFI_HANDLE              GraphicsController;
-  UINTN                   GraphicsPciSeg;
-  UINTN                   GraphicsPciBus;
-  UINTN                   GraphicsPciDev;
-  UINTN                   GraphicsPciFun;
-
-  GraphicsController = NULL;
-
-  Status = gBS->LocateHandleBuffer (
-                  ByProtocol,
-                  &gEfiPciIoProtocolGuid,
-                  NULL,
-                  &PciHandlesSize,
-                  &PciHandles
-                  );
-  if (!RETURN_ERROR (Status)) {
-    for (Index = 0; Index < PciHandlesSize; Index++) {
-      gBS->HandleProtocol (
-             PciHandles[Index],
-             &gEfiPciIoProtocolGuid,
-             (VOID **) &PciIo
-             );
-      Status = PciIo->GetLocation (
-                        PciIo,
-                        &GraphicsPciSeg,
-                        &GraphicsPciBus,
-                        &GraphicsPciDev,
-                        &GraphicsPciFun
-                        );
-      if (!RETURN_ERROR (Status) &&
-          (UINT16) GraphicsPciSeg == PcdGet16 (PcdGraphicsPciSeg) &&
-          (UINT8) GraphicsPciBus == PcdGet8 (PcdGraphicsPciBus) &&
-          (UINT8) GraphicsPciDev == PcdGet8 (PcdGraphicsPciDev) &&
-          (UINT8) GraphicsPciFun == PcdGet8 (PcdGraphicsPciFun)) {
-        GraphicsController = PciHandles[Index];
-        Index = PciHandlesSize;
-      }
-    }
-  }
-
-  return GraphicsController;
 }
 
 /**
@@ -863,29 +1093,13 @@ PlatformBootManagerBeforeConsole (
   )
 {
   EFI_STATUS                          Status;
-  UINTN                               Index;
   EFI_DEVICE_PATH_PROTOCOL            *VarConOut;
   EFI_DEVICE_PATH_PROTOCOL            *VarConIn;
-  EFI_DEVICE_PATH_PROTOCOL            *GopDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL            *ConOutDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL            *UpdatedConOutDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL            *Instance;
-  EFI_DEVICE_PATH_PROTOCOL            *Next;
-  EFI_HANDLE                          GraphicsControllerHandle;
   EFI_EVENT                           Event;
-  UINTN                               InstanceSize;
 
   DEBUG ((EFI_D_INFO, "PlatformBootManagerBeforeConsole\n"));
 
   Status = EFI_SUCCESS;
-  //
-  // Append Usb Keyboard short form DevicePath into "ConInDev"
-  //
-  EfiBootManagerUpdateConsoleVariable (
-    ConInDev,
-    (EFI_DEVICE_PATH_PROTOCOL *) &gUsbClassKeyboardDevicePath,
-    NULL
-    );
 
   //
   // Get user defined text mode for internal shell only once.
@@ -924,59 +1138,24 @@ PlatformBootManagerBeforeConsole (
     GetEfiGlobalVariable2 (L"ConOut", &VarConOut, NULL);   if (VarConOut != NULL) { FreePool (VarConOut); }
     GetEfiGlobalVariable2 (L"ConIn", &VarConIn, NULL);    if (VarConIn  != NULL) { FreePool (VarConIn);  }
 
+    //
+    // Only fill ConIn/ConOut when ConIn/ConOut is empty because we may drop to Full Configuration boot mode in non-first boot
+    //
     if (VarConOut == NULL || VarConIn == NULL) {
-      //
-      // Only fill ConIn/ConOut when ConIn/ConOut is empty because we may drop to Full Configuration boot mode in non-first boot
-      //
-      //
-      // Update ConOutDevicePath (just in case it is wrong at build phase)
-      // To be enabled later.
-      //
-//      PlatformPatchConOutDevicePath ();
-
-      for (Index = 0; gPlatformConsole[Index].DevicePath != NULL; Index++) {
-        //
-        // Update the console variable with the connect type
-        //
-        if ((gPlatformConsole[Index].ConnectType & CONSOLE_IN) == CONSOLE_IN) {
-          EfiBootManagerUpdateConsoleVariable (ConIn, gPlatformConsole[Index].DevicePath, NULL);
-        }
-        if ((gPlatformConsole[Index].ConnectType & CONSOLE_OUT) == CONSOLE_OUT) {
-          EfiBootManagerUpdateConsoleVariable (ConOut, gPlatformConsole[Index].DevicePath, NULL);
-        }
-        if ((gPlatformConsole[Index].ConnectType & STD_ERROR) == STD_ERROR) {
-          EfiBootManagerUpdateConsoleVariable (ErrOut, gPlatformConsole[Index].DevicePath, NULL);
-        }
+      if (PcdGetSize (PcdTrustedConsoleOutputDevicePath) >= sizeof(EFI_DEVICE_PATH_PROTOCOL)) {
+        AddConsoleVariable (ConOut, PcdGetPtr (PcdTrustedConsoleOutputDevicePath));
       }
-    }
-    else {
-      if (gBootMode == BOOT_WITH_DEFAULT_SETTINGS) {
-
-        GetEfiGlobalVariable2 (L"ConIn", &VarConIn, NULL);
-        Instance      = GetNextDevicePathInstance (&VarConIn, &InstanceSize);
-        InstanceSize -= END_DEVICE_PATH_LENGTH;
-
-        while (Instance != NULL) {
-          Next = Instance;
-          while (!IsDevicePathEndType (Next)) {
-            Next = NextDevicePathNode (Next);
-            if (DevicePathType (Next) == MESSAGING_DEVICE_PATH && DevicePathSubType (Next) == MSG_VENDOR_DP) {
-              //
-              // Restoring default serial device path
-              //
-              EfiBootManagerUpdateConsoleVariable (ConIn, NULL, Instance);
-              EfiBootManagerUpdateConsoleVariable (ConOut, NULL, Instance);
-            }
-          }
-          FreePool(Instance);
-          Instance      = GetNextDevicePathInstance (&VarConIn, &InstanceSize);
-          InstanceSize -= END_DEVICE_PATH_LENGTH;
-        }
+      if (PcdGetSize (PcdTrustedConsoleInputDevicePath) >= sizeof(EFI_DEVICE_PATH_PROTOCOL)) {
+        AddConsoleVariable (ConIn, PcdGetPtr (PcdTrustedConsoleInputDevicePath));
       }
     }
   }
 
   EnumUsbKeyboard ();
+  //
+  // For trusted console it must be handled here.
+  //
+  UpdateGraphicConOut (TRUE);
 
   //
   // Dynamically register hot key: F2/F7/Enter
@@ -984,14 +1163,10 @@ PlatformBootManagerBeforeConsole (
   RegisterDefaultBootOption ();
   RegisterStaticHotkey ();
 
-  //
-  // Connect Root Bridge to make PCI BAR resource allocated.
-  // Then exit PM auth before Legacy OPROM run.
-  //
   PERF_START_EX(NULL,"EventRec", NULL, AsmReadTsc(), 0x7010);
-  ConnectRootBridge (FALSE);
   if (PcdGetBool (PcdTpm2Enable)) {
     ProcessTcgPp ();
+    ProcessTcgMor ();
   }
   PERF_END_EX(NULL,"EventRec", NULL, AsmReadTsc(), 0x7011);
 
@@ -1011,36 +1186,9 @@ PlatformBootManagerBeforeConsole (
   EfiBootManagerDispatchDeferredImages ();
 
   //
-  // Update ConOut variable
+  // For non-trusted console it must be handled here.
   //
-  GraphicsControllerHandle = GetGraphicsController ();
-  if (GraphicsControllerHandle != NULL) {
-    //
-    // Connect the GOP driver
-    //
-    gBS->ConnectController (GraphicsControllerHandle, NULL, NULL, TRUE);
-
-    //
-    // Get the GOP device path
-    // NOTE: We may get a device path that contains Controller node in it.
-    //
-    GopDevicePath = EfiBootManagerGetGopDevicePath (GraphicsControllerHandle);
-    if (GopDevicePath != NULL) {
-      GetEfiGlobalVariable2 (L"ConOut", &ConOutDevicePath, NULL);
-      UpdatedConOutDevicePath = UpdateDevicePath (ConOutDevicePath, GopDevicePath);
-      if (ConOutDevicePath != NULL) {
-        FreePool (ConOutDevicePath);
-      }
-      FreePool (GopDevicePath);
-      Status = gRT->SetVariable (
-                      L"ConOut",
-                      &gEfiGlobalVariableGuid,
-                      EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_RUNTIME_ACCESS | EFI_VARIABLE_BOOTSERVICE_ACCESS,
-                      GetDevicePathSize (UpdatedConOutDevicePath),
-                      UpdatedConOutDevicePath
-                      );
-    }
-  }
+  UpdateGraphicConOut (FALSE);
 }
 
 
@@ -1160,11 +1308,7 @@ PlatformBootManagerAfterConsole (
 
   Print (L"Press F7 for BootMenu!\n");
 
-    EfiBootManagerRefreshAllBootOption ();
-      EfiBootManagerSortLoadOptionVariable (LoadOptionTypeBoot, CompareBootOption);
-
-
-
-
+  EfiBootManagerRefreshAllBootOption ();
+  EfiBootManagerSortLoadOptionVariable (LoadOptionTypeBoot, CompareBootOption);
 }
 

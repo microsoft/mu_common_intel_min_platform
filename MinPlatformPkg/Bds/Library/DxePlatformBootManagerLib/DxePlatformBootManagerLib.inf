@@ -67,14 +67,12 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdConInConnectOnDemand            ## PRODUCES
   gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheckLevel      ## CONSUMES
   gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly               ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciSeg                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciBus                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciDev                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciFun                ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleInputDevicePath  ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleOutputDevicePath ## CONSUMES
+  gMinPlatformModuleTokenSpaceGuid.PcdTrustedStorageDevicePath       ## CONSUMES
 
 [Sources]
   BdsPlatform.c
-  PlatformData.c
   BdsPlatform.h
   PlatformBootOption.c
   MemoryTest.c

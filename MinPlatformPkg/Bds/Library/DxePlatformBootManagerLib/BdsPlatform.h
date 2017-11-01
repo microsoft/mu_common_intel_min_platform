@@ -142,10 +142,7 @@ typedef struct {
   EFI_DEVICE_PATH_PROTOCOL        End;
 } USB_CLASS_FORMAT_DEVICE_PATH;
 
-extern BDS_CONSOLE_CONNECT_ENTRY                 gPlatformConsole[];
-extern PLATFORM_ONBOARD_CONTROLLER_DEVICE_PATH   gPlatformIGDDevice;
 extern USB_CLASS_FORMAT_DEVICE_PATH              gUsbClassKeyboardDevicePath;
-extern USB_CLASS_FORMAT_DEVICE_PATH              gUsbClassMassStorageDevice;
 
 //
 // Platform BDS Functions
