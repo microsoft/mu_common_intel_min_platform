@@ -174,6 +174,11 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x01, 0x7F, 0x3
 [PcdsDynamic]
 
 [PcdsFixedAtBuild, PcdsPatchableInModule, PcdsDynamic, PcdsDynamicEx]
+  
+  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciSeg|0x0|UINT16|0x00020000
+  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciBus|0x0|UINT8|0x00020001
+  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciDev|0x2|UINT8|0x00020002
+  gMinPlatformModuleTokenSpaceGuid.PcdGraphicsPciFun|0x0|UINT8|0x00020003
 
   ##
   ## Allocate 56 KB [0x2000..0xFFFF] of I/O space for Pci Devices

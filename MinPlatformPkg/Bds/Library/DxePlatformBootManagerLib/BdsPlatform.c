@@ -19,6 +19,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Protocol/PciRootBridgeIo.h>
 
 #include <Protocol/BlockIo.h>
+#include <Protocol/PciIo.h>
 #include <Library/IoLib.h>
 #include <Library/PciLib.h>
 #include <Guid/EventGroup.h>
@@ -792,6 +793,66 @@ OnReadyToBootCallBack (
 }
 
 /**
+  Get Graphics Controller Handle.
+
+  @retval GraphicsController    Successfully located
+  @retval NULL                  Failed to locate
+**/
+EFI_HANDLE
+EFIAPI
+GetGraphicsController (
+  VOID
+  )
+{
+  EFI_STATUS              Status;
+  UINTN                   Index;
+  EFI_HANDLE              *PciHandles;
+  UINTN                   PciHandlesSize;
+  EFI_PCI_IO_PROTOCOL     *PciIo;
+  EFI_HANDLE              GraphicsController;
+  UINTN                   GraphicsPciSeg;
+  UINTN                   GraphicsPciBus;
+  UINTN                   GraphicsPciDev;
+  UINTN                   GraphicsPciFun;
+
+  GraphicsController = NULL;
+
+  Status = gBS->LocateHandleBuffer (
+                  ByProtocol,
+                  &gEfiPciIoProtocolGuid,
+                  NULL,
+                  &PciHandlesSize,
+                  &PciHandles
+                  );
+  if (!RETURN_ERROR (Status)) {
+    for (Index = 0; Index < PciHandlesSize; Index++) {
+      gBS->HandleProtocol (
+             PciHandles[Index],
+             &gEfiPciIoProtocolGuid,
+             (VOID **) &PciIo
+             );
+      Status = PciIo->GetLocation (
+                        PciIo,
+                        &GraphicsPciSeg,
+                        &GraphicsPciBus,
+                        &GraphicsPciDev,
+                        &GraphicsPciFun
+                        );
+      if (!RETURN_ERROR (Status) &&
+          (UINT16) GraphicsPciSeg == PcdGet16 (PcdGraphicsPciSeg) &&
+          (UINT8) GraphicsPciBus == PcdGet8 (PcdGraphicsPciBus) &&
+          (UINT8) GraphicsPciDev == PcdGet8 (PcdGraphicsPciDev) &&
+          (UINT8) GraphicsPciFun == PcdGet8 (PcdGraphicsPciFun)) {
+        GraphicsController = PciHandles[Index];
+        Index = PciHandlesSize;
+      }
+    }
+  }
+
+  return GraphicsController;
+}
+
+/**
   Platform Bds init. Incude the platform firmware vendor, revision
   and so crc check.
 **/
@@ -805,13 +866,12 @@ PlatformBootManagerBeforeConsole (
   UINTN                               Index;
   EFI_DEVICE_PATH_PROTOCOL            *VarConOut;
   EFI_DEVICE_PATH_PROTOCOL            *VarConIn;
-  EFI_DEVICE_PATH_PROTOCOL            *TempDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL            *ConsoleOut;
-  EFI_DEVICE_PATH_PROTOCOL            *Temp;
+  EFI_DEVICE_PATH_PROTOCOL            *GopDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL            *ConOutDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL            *UpdatedConOutDevicePath;
   EFI_DEVICE_PATH_PROTOCOL            *Instance;
   EFI_DEVICE_PATH_PROTOCOL            *Next;
-  EFI_HANDLE                          VideoHandle;
-  BOOLEAN                             IsIgd;
+  EFI_HANDLE                          GraphicsControllerHandle;
   EFI_EVENT                           Event;
   UINTN                               InstanceSize;
 
@@ -851,44 +911,6 @@ PlatformBootManagerBeforeConsole (
   //
   ConnectRootBridge (FALSE);
 
-  //
-  // Update ConOut variable according to the PrimaryDisplay setting
-  //
-  GetEfiGlobalVariable2 (L"ConOut", &ConsoleOut, NULL);
-  //
-  // Add IGD to ConOut
-  //
-  IsIgd  = TRUE;
-  TempDevicePath = (EFI_DEVICE_PATH_PROTOCOL *) &gPlatformIGDDevice;
-  Status = gBS->LocateDevicePath (&gEfiPciIoProtocolGuid, &TempDevicePath, &VideoHandle);
-
-  if ((VideoHandle != NULL) && (IsIgd == TRUE)) {
-    //
-    // Connect the GOP driver
-    //
-    gBS->ConnectController (VideoHandle, NULL, NULL, TRUE);
-
-    //
-    // Get the GOP device path
-    // NOTE: We may get a device path that contains Controller node in it.
-    //
-    TempDevicePath = EfiBootManagerGetGopDevicePath (VideoHandle);
-    if (TempDevicePath != NULL) {
-      Temp = ConsoleOut;
-      ConsoleOut = UpdateDevicePath (ConsoleOut, TempDevicePath);
-      if (Temp != NULL) {
-        FreePool (Temp);
-      }
-      FreePool (TempDevicePath);
-      Status = gRT->SetVariable (
-                      L"ConOut",
-                      &gEfiGlobalVariableGuid,
-                      EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_RUNTIME_ACCESS | EFI_VARIABLE_BOOTSERVICE_ACCESS,
-                      GetDevicePathSize (ConsoleOut),
-                      ConsoleOut
-                      );
-    }
-  }
   //
   // Fill ConIn/ConOut in Full Configuration boot mode
   //
@@ -988,6 +1010,37 @@ PlatformBootManagerBeforeConsole (
   //
   EfiBootManagerDispatchDeferredImages ();
 
+  //
+  // Update ConOut variable
+  //
+  GraphicsControllerHandle = GetGraphicsController ();
+  if (GraphicsControllerHandle != NULL) {
+    //
+    // Connect the GOP driver
+    //
+    gBS->ConnectController (GraphicsControllerHandle, NULL, NULL, TRUE);
+
+    //
+    // Get the GOP device path
+    // NOTE: We may get a device path that contains Controller node in it.
+    //
+    GopDevicePath = EfiBootManagerGetGopDevicePath (GraphicsControllerHandle);
+    if (GopDevicePath != NULL) {
+      GetEfiGlobalVariable2 (L"ConOut", &ConOutDevicePath, NULL);
+      UpdatedConOutDevicePath = UpdateDevicePath (ConOutDevicePath, GopDevicePath);
+      if (ConOutDevicePath != NULL) {
+        FreePool (ConOutDevicePath);
+      }
+      FreePool (GopDevicePath);
+      Status = gRT->SetVariable (
+                      L"ConOut",
+                      &gEfiGlobalVariableGuid,
+                      EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_RUNTIME_ACCESS | EFI_VARIABLE_BOOTSERVICE_ACCESS,
+                      GetDevicePathSize (UpdatedConOutDevicePath),
+                      UpdatedConOutDevicePath
+                      );
+    }
+  }
 }
 
 
