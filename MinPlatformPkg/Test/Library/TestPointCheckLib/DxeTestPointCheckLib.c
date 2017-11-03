@@ -18,9 +18,16 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DebugLib.h>
 #include <Library/UefiLib.h>
 #include <Library/BaseMemoryLib.h>
+#include <Library/UefiBootServicesTableLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
+#include <Protocol/SmmCommunication.h>
+#include <Guid/PiSmmCommunicationRegionTable.h>
+
+#include "TestPointInternal.h"
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
 
 VOID
 TestPointDumpGcd (
@@ -350,6 +357,116 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFuntional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointDxeSmmReadyToBootSmmPageProtection (
+  VOID
+  )
+{
+  EFI_MEMORY_DESCRIPTOR                               *UefiMemoryMap;
+  UINTN                                               UefiMemoryMapSize;
+  UINTN                                               UefiDescriptorSize;
+  EFI_GCD_MEMORY_SPACE_DESCRIPTOR                     *GcdMemoryMap;
+  EFI_GCD_IO_SPACE_DESCRIPTOR                         *GcdIoMap;
+  UINTN                                               GcdMemoryMapNumberOfDescriptors;
+  UINTN                                               GcdIoMapNumberOfDescriptors;
+  EFI_STATUS                                          Status;
+  UINTN                                               CommSize;
+  UINT8                                               *CommBuffer;
+  EFI_SMM_COMMUNICATE_HEADER                          *CommHeader;
+  EFI_SMM_COMMUNICATION_PROTOCOL                      *SmmCommunication;
+  UINTN                                               MinimalSizeNeeded;
+  EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
+  UINT32                                              Index;
+  EFI_MEMORY_DESCRIPTOR                               *Entry;
+  UINTN                                               Size;
+  TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
+  
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmmPageProtection - Enter\n"));
+  
+  TestPointDumpUefiMemoryMap (&UefiMemoryMap, &UefiMemoryMapSize, &UefiDescriptorSize);
+  TestPointDumpGcd (&GcdMemoryMap, &GcdMemoryMapNumberOfDescriptors, &GcdIoMap, &GcdIoMapNumberOfDescriptors);
+  
+  Status = gBS->LocateProtocol(&gEfiSmmCommunicationProtocolGuid, NULL, (VOID **)&SmmCommunication);
+  if (EFI_ERROR(Status)) {
+    DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: Locate SmmCommunication protocol - %r\n", Status));
+    return EFI_SUCCESS;
+  }
+
+  MinimalSizeNeeded = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) +
+                      sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO) + 
+                      UefiMemoryMapSize + 
+                      GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR) + 
+                      GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR);
+
+  Status = EfiGetSystemConfigurationTable(
+             &gEdkiiPiSmmCommunicationRegionTableGuid,
+             (VOID **)&PiSmmCommunicationRegionTable
+             );
+  if (EFI_ERROR(Status)) {
+    DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: Get PiSmmCommunicationRegionTable - %r\n", Status));
+    return EFI_SUCCESS;
+  }
+  ASSERT(PiSmmCommunicationRegionTable != NULL);
+  Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
+  Size = 0;
+  for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
+    if (Entry->Type == EfiConventionalMemory) {
+      Size = EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages);
+      if (Size >= MinimalSizeNeeded) {
+        break;
+      }
+    }
+    Entry = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)Entry + PiSmmCommunicationRegionTable->DescriptorSize);
+  }
+  ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
+  CommBuffer = (UINT8 *)(UINTN)Entry->PhysicalStart;
+  
+  CommHeader = (EFI_SMM_COMMUNICATE_HEADER *)&CommBuffer[0];
+  CopyMem(&CommHeader->HeaderGuid, &mTestPointSmmCommunciationGuid, sizeof(mTestPointSmmCommunciationGuid));
+  CommHeader->MessageLength = MinimalSizeNeeded - OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data);
+
+  CommData = (TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO *)&CommBuffer[OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data)];
+  CommData->Header.Version      = TEST_POINT_SMM_COMMUNICATION_VERSION;
+  CommData->Header.FuncId       = TEST_POINT_SMM_COMMUNICATION_FUNC_ID_UEFI_GCD_MAP_INFO;
+  CommData->Header.Size         = CommHeader->MessageLength;
+  CommData->UefiMemoryMapOffset = sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO);
+  CommData->UefiMemoryMapSize   = UefiMemoryMapSize;
+  CommData->GcdMemoryMapOffset  = CommData->UefiMemoryMapOffset + CommData->UefiMemoryMapSize;
+  CommData->GcdMemoryMapSize    = GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR);
+  CommData->GcdIoMapOffset      = CommData->GcdMemoryMapOffset + CommData->GcdMemoryMapSize;
+  CommData->GcdIoMapSize        = GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR);
+  CopyMem (
+    (VOID *)((UINTN)CommData + CommData->UefiMemoryMapOffset),
+    UefiMemoryMap,
+    CommData->UefiMemoryMapSize
+    );
+  CopyMem (
+    (VOID *)((UINTN)CommData + CommData->GcdMemoryMapOffset),
+    GcdMemoryMap,
+    CommData->GcdMemoryMapSize
+    );
+  CopyMem (
+    (VOID *)((UINTN)CommData + CommData->GcdIoMapOffset),
+    GcdIoMap,
+    CommData->GcdIoMapSize
+    );
+
+  CommSize = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) + CommHeader->MessageLength;
+  Status = SmmCommunication->Communicate(SmmCommunication, CommBuffer, &CommSize);
+  if (EFI_ERROR(Status)) {
+    DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: SmmCommunication - %r\n", Status));
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmmPageProtection - Exit\n"));
   return EFI_SUCCESS;
 }
 

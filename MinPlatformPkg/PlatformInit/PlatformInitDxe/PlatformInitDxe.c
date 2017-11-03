@@ -152,6 +152,8 @@ OnReadyToBoot (
 
   Status = BoardInitReadyToBoot ();
   ASSERT_EFI_ERROR(Status);
+
+  TestPointDxeSmmReadyToBootSmmPageProtection ();
 }
 
 /**

@@ -29,6 +29,7 @@
   MemoryAllocationLib
   DevicePathLib
   PeCoffGetEntryPointLib
+  SmmMemLib
   TestPointLib
 
 [Packages]
@@ -48,6 +49,7 @@
   DxeCheckMemoryMap.c
   DxeCheckLoadedImage.c
   DxeCheckGcd.c
+  TestPointHelp.c
 
 [Pcd]
   gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature

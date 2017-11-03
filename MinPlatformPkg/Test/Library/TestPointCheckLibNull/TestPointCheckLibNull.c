@@ -143,6 +143,15 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
 
 EFI_STATUS
 EFIAPI
+TestPointDxeSmmReadyToBootSmmPageProtection (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
 TestPointReadyToBootSmiHandlerInstrument (
   VOID
   )

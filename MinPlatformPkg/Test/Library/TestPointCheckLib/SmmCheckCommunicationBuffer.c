@@ -58,7 +58,9 @@ IsUefiPageNotPresent (
 
 EFI_STATUS
 TestPointCheckSmmCommunicationBuffer (
-  VOID
+  IN EFI_MEMORY_DESCRIPTOR *UefiMemoryMap,
+  IN UINTN                 UefiMemoryMapSize,
+  IN UINTN                 UefiDescriptorSize
   )
 {
   EFI_STATUS            ReturnStatus;
@@ -70,8 +72,8 @@ TestPointCheckSmmCommunicationBuffer (
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmCommunicationBuffer - Enter\n"));
 
   ReturnStatus = EFI_SUCCESS;
-  MemoryMapEntryCount = mUefiMemoryMapSize/mUefiDescriptorSize;
-  MemoryMap = mUefiMemoryMap;
+  MemoryMapEntryCount = UefiMemoryMapSize/UefiDescriptorSize;
+  MemoryMap = UefiMemoryMap;
   for (Index = 0; Index < MemoryMapEntryCount; Index++) {
     if (IsUefiPageNotPresent(MemoryMap)) {
       DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE(MemoryMap->NumberOfPages)));
@@ -85,7 +87,7 @@ TestPointCheckSmmCommunicationBuffer (
         ReturnStatus = Status;
       }
     }
-    MemoryMap = NEXT_MEMORY_DESCRIPTOR(MemoryMap, mUefiDescriptorSize);
+    MemoryMap = NEXT_MEMORY_DESCRIPTOR(MemoryMap, UefiDescriptorSize);
   }
   
   if (EFI_ERROR (ReturnStatus)) {
