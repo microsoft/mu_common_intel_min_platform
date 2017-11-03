@@ -91,7 +91,7 @@ OnEndOfDxe (
 
   TestPointEndOfDxeNoThirdPartyPciOptionRom ();
   
-  TestPointEndOfDxeDmarTableFuntional ();
+  TestPointEndOfDxeDmaAcpiTableFuntional ();
 }
 
 /**
@@ -306,7 +306,7 @@ PlatformInitStatusCodeListener (
       TestPointReadyToBootUefiBootVariableFunctional ();
       TestPointReadyToBootUefiConsoleVariableFunctional ();
       TestPointReadyToBootHstiTableFunctional ();
-      TestPointReadyToBootSmiHandlerInstrument ();
+      TestPointDxeSmmReadyToBootSmiHandlerInstrument ();
 
       TestPointReadyToBootUefiSecureBootEnabled ();
       TestPointReadyToBootPiSignedFvBootEnabled ();

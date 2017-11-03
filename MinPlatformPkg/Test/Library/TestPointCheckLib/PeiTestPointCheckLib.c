@@ -103,7 +103,7 @@ TestPointDebugInitDone (
     TEST_POINT_BYTE0_TEMP_INIT_DONE
     );
 
-  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_DEBUG_INIT_DONE) == 0) {
+  if ((FeatureImplemented[0] & TEST_POINT_BYTE0_DEBUG_INIT_DONE) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -113,8 +113,8 @@ TestPointDebugInitDone (
   TestPointLibSetFeaturesVerified (
     PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
     NULL,
-    1,
-    TEST_POINT_BYTE1_DEBUG_INIT_DONE
+    0,
+    TEST_POINT_BYTE0_DEBUG_INIT_DONE
     );
   DEBUG ((DEBUG_INFO, "======== TestPointDebugInitDone - Exit\n"));
   return EFI_SUCCESS;
@@ -244,7 +244,7 @@ TestPointEndOfPeiSystemResourceFunctional (
 
   FeatureImplemented = GetFeatureImplemented ();
   
-  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL) == 0) {
+  if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -262,8 +262,8 @@ TestPointEndOfPeiSystemResourceFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      1,
-      TEST_POINT_BYTE1_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL
+      2,
+      TEST_POINT_BYTE2_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL
       );
   }
 
@@ -283,7 +283,7 @@ TestPointEndOfPeiMtrrFunctional (
 
   FeatureImplemented = GetFeatureImplemented ();
   
-  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
+  if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -298,8 +298,8 @@ TestPointEndOfPeiMtrrFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      1,
-      TEST_POINT_BYTE1_END_OF_PEI_MTRR_FUNCTIONAL
+      2,
+      TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL
       );
   }
 
@@ -319,7 +319,7 @@ TestPointEndOfPeiPciBusMasterDisabled (
 
   FeatureImplemented = GetFeatureImplemented ();
   
-  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED) == 0) {
+  if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -334,8 +334,8 @@ TestPointEndOfPeiPciBusMasterDisabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      1,
-      TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED
+      2,
+      TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED
       );
   }
 

@@ -65,9 +65,9 @@ TestPointCheckPciBusMaster (
               TestPointLibAppendErrorString (
                 PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
                 NULL,
-                TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_CODE \
+                TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_CODE \
                   TEST_POINT_END_OF_PEI \
-                  TEST_POINT_BYTE1_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_STRING
+                  TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_STRING
                 );
               Status = EFI_INVALID_PARAMETER;
             }

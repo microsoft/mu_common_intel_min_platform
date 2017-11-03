@@ -161,7 +161,7 @@ TestPointPciEnumerationDonePciBusMasterDisabled (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_PCI_ENUMERATION_DONE_PCI_BUS_MASTER_DISABLED) == 0) {
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -177,8 +177,8 @@ TestPointPciEnumerationDonePciBusMasterDisabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_PCI_ENUMERATION_DONE_PCI_BUS_MASTER_DISABLED
+      3,
+      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED
       );
   }
 
@@ -195,7 +195,7 @@ TestPointPciEnumerationDonePciResourceAllocated (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED) == 0) {
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -211,8 +211,8 @@ TestPointPciEnumerationDonePciResourceAllocated (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED
+      3,
+      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED
       );
   }
 
@@ -222,7 +222,7 @@ TestPointPciEnumerationDonePciResourceAllocated (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxeDmarTableFuntional (
+TestPointEndOfDxeDmaAcpiTableFuntional (
   VOID
   )
 {
@@ -230,11 +230,11 @@ TestPointEndOfDxeDmarTableFuntional (
   BOOLEAN     Result;
   UINT32      Signature;
   
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_DXE_DMAT_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmarTableFuntional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Enter\n"));
   
   Signature = EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE;
   Result = TRUE;
@@ -247,12 +247,12 @@ TestPointEndOfDxeDmarTableFuntional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_END_OF_DXE_DMAT_TABLE_FUNCTIONAL
+      3,
+      TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmarTableFuntional - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -265,7 +265,7 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM) == 0) {
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -281,8 +281,8 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM
+      3,
+      TEST_POINT_BYTE3_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM
       );
   }
 
@@ -299,7 +299,7 @@ TestPointDxeSmmReadyToLockSmramAligned (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED) == 0) {
+  if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -315,8 +315,8 @@ TestPointDxeSmmReadyToLockSmramAligned (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED
+      7,
+      TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED
       );
   }
 
@@ -334,7 +334,7 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
   BOOLEAN     Result;
   UINT32      Signature;
   
-  if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -351,8 +351,8 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      2,
-      TEST_POINT_BYTE2_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL
+      7,
+      TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL
       );
   }
 
@@ -385,7 +385,7 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   UINTN                                               Size;
   TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -472,18 +472,18 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootSmiHandlerInstrument (
+TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   VOID
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_SMI_HANDLER_INSTRUMENT) == 0) {
+  if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_BOOT_SMI_HANDLER_INSTRUMENT) == 0) {
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootSmiHandlerInstrument - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmiHandlerInstrument - Enter\n"));
   
   Result = TRUE;
   Status = TestPointCheckSmiHandlerInstrument ();
@@ -495,12 +495,12 @@ TestPointReadyToBootSmiHandlerInstrument (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_SMI_HANDLER_INSTRUMENT
+      7,
+      TEST_POINT_BYTE7_DXE_SMM_READY_TO_BOOT_SMI_HANDLER_INSTRUMENT
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootSmiHandlerInstrument - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmiHandlerInstrument - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -513,7 +513,7 @@ TestPointReadyToBootAcpiTableFuntional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -529,8 +529,8 @@ TestPointReadyToBootAcpiTableFuntional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL
       );
   }
 
@@ -547,7 +547,7 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -568,8 +568,8 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL
       );
   }
 
@@ -586,7 +586,7 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -604,8 +604,8 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
       );
   }
 
@@ -622,7 +622,7 @@ TestPointReadyToBootUefiBootVariableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -640,8 +640,8 @@ TestPointReadyToBootUefiBootVariableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL
       );
   }
 
@@ -658,7 +658,7 @@ TestPointReadyToBootUefiConsoleVariableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -676,8 +676,8 @@ TestPointReadyToBootUefiConsoleVariableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL
       );
   }
 
@@ -694,7 +694,7 @@ TestPointReadyToBootHstiTableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[8] & TEST_POINT_BYTE8_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -710,8 +710,8 @@ TestPointReadyToBootHstiTableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      3,
-      TEST_POINT_BYTE3_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL
+      8,
+      TEST_POINT_BYTE8_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL
       );
   }
 
@@ -728,7 +728,7 @@ TestPointReadyToBootEsrtTableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[8] & TEST_POINT_BYTE8_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -744,8 +744,8 @@ TestPointReadyToBootEsrtTableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      4,
-      TEST_POINT_BYTE4_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL
+      8,
+      TEST_POINT_BYTE8_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL
       );
   }
 
@@ -762,7 +762,7 @@ TestPointReadyToBootUefiSecureBootEnabled (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED) == 0) {
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -778,8 +778,8 @@ TestPointReadyToBootUefiSecureBootEnabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      4,
-      TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED
+      5,
+      TEST_POINT_BYTE5_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED
       );
   }
 
@@ -796,7 +796,7 @@ TestPointReadyToBootPiSignedFvBootEnabled (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED) == 0) {
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -812,8 +812,8 @@ TestPointReadyToBootPiSignedFvBootEnabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      4,
-      TEST_POINT_BYTE4_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED
+      5,
+      TEST_POINT_BYTE5_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED
       );
   }
 
@@ -830,7 +830,7 @@ TestPointReadyToBootTcgTrustedBootEnabled (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED) == 0) {
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -846,8 +846,8 @@ TestPointReadyToBootTcgTrustedBootEnabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      4,
-      TEST_POINT_BYTE4_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED
+      5,
+      TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED
       );
   }
 
@@ -864,7 +864,7 @@ TestPointReadyToBootTcgMorEnabled (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_TCG_MOR_ENABLED) == 0) {
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_TCG_MOR_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -880,8 +880,8 @@ TestPointReadyToBootTcgMorEnabled (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      4,
-      TEST_POINT_BYTE4_READY_TO_BOOT_TCG_MOR_ENABLED
+      5,
+      TEST_POINT_BYTE5_READY_TO_BOOT_TCG_MOR_ENABLED
       );
   }
 

@@ -116,7 +116,7 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxeDmarTableFuntional (
+TestPointEndOfDxeDmaAcpiTableFuntional (
   VOID
   )
 {
@@ -152,7 +152,7 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootSmiHandlerInstrument (
+TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   VOID
   )
 {

@@ -96,7 +96,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[5] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -113,7 +113,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       5,
-      TEST_POINT_BYTE5_SMM_END_OF_DXE_SMRR_FUNCTIONAL
+      TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );
   }
 
@@ -130,7 +130,7 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -147,8 +147,8 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      5,
-      TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
+      6,
+      TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
       );
   }
 
@@ -163,7 +163,7 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   )
 {
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -191,7 +191,7 @@ TestPointSmmReadyToBootSmmPageProtection (
   EFI_STATUS  Status;
   BOOLEAN     Result;
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -207,8 +207,8 @@ TestPointSmmReadyToBootSmmPageProtection (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      5,
-      TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
+      6,
+      TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
       );
   }
   
@@ -223,8 +223,8 @@ TestPointSmmReadyToBootSmmPageProtection (
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        5,
-        TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
+        6,
+        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     }
   }
@@ -255,7 +255,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
   TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
   UINTN                                               TempCommBufferSize;
   
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -318,15 +318,15 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        5,
-        TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
+        6,
+        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     } else {
       TestPointLibClearFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        5,
-        TEST_POINT_BYTE5_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
+        6,
+        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     }
   }
