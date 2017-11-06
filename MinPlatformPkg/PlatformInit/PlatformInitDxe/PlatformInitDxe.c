@@ -92,6 +92,8 @@ OnEndOfDxe (
   TestPointEndOfDxeNoThirdPartyPciOptionRom ();
   
   TestPointEndOfDxeDmaAcpiTableFuntional ();
+
+  TestPointEndOfDxeDmaProtectionEnabled ();
 }
 
 /**

@@ -356,3 +356,24 @@ TestPointCheckAcpi (
 
   return Status;
 }
+
+VOID *
+TestPointGetAcpi (
+  IN UINT32  Signature
+  )
+{
+  EFI_STATUS  Status;
+  VOID        *Table;
+
+  Status = DumpAcpiWithGuid (&gEfiAcpi20TableGuid, &Signature, &Table);
+  if (Status == EFI_NOT_FOUND) {
+    Status = DumpAcpiWithGuid (&gEfiAcpi10TableGuid, &Signature, &Table);
+  }
+
+  if (EFI_ERROR(Status)) {
+    return NULL;
+  }
+
+  return Table;
+}
+

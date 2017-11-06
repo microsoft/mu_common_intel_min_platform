@@ -40,6 +40,7 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   UefiCpuPkg/UefiCpuPkg.dec
+  IntelSiliconPkg/IntelSiliconPkg.dec
 
 [Sources]
   PeiTestPointCheckLib.c
@@ -48,6 +49,7 @@
   PeiCheckFvInfo.c
   PeiCheckSmmInfo.c
   PeiCheckPci.c
+  PeiCheckDmaProtection.c
 
 [Pcd]
   gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
@@ -61,3 +63,4 @@
   gEfiPeiFirmwareVolumeInfoPpiGuid
   gEfiPeiFirmwareVolumeInfo2PpiGuid
   gPeiSmmAccessPpiGuid
+  gEdkiiVTdInfoPpiGuid

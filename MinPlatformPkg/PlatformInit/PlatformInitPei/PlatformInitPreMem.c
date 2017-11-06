@@ -426,6 +426,8 @@ MemoryDiscoveredPpiNotifyCallback (
   ReportFv ();
 
   TestPointMemoryDiscoveredFvInfoFunctional ();
+
+  TestPointMemoryDiscoveredDmaProtectionEnabled ();
   
   if (PcdGetBool (PcdStopAfterMemInit)) {
     CpuDeadLoop ();

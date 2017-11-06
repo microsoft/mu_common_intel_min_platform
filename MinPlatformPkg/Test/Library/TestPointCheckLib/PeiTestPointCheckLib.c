@@ -53,6 +53,11 @@ TestPointCheckPciBusMaster (
   VOID
   );
 
+EFI_STATUS
+TestPointVtdEngine (
+  VOID
+  );
+
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
   PLATFORM_TEST_POINT_VERSION,
   PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -229,6 +234,43 @@ TestPointMemoryDiscoveredFvInfoFunctional (
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredFvInfoFunctional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointMemoryDiscoveredDmaProtectionEnabled (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+  
+  if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_DMA_PROTECTION_ENABLED) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredDmaProtectionEnabled - Enter\n"));
+  
+  Result = TRUE;
+  Status = TestPointVtdEngine ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+  
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      1,
+      TEST_POINT_BYTE1_MEMORY_DISCOVERED_DMA_PROTECTION_ENABLED
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredDmaProtectionEnabled - Exit\n"));
   return EFI_SUCCESS;
 }
 

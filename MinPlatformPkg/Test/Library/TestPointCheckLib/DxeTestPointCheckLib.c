@@ -140,6 +140,11 @@ TestPointCheckTcgMor (
   VOID
   );
 
+EFI_STATUS
+TestPointVtdEngine (
+  VOID
+  );
+
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
   PLATFORM_TEST_POINT_VERSION,
   PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -253,6 +258,40 @@ TestPointEndOfDxeDmaAcpiTableFuntional (
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointEndOfDxeDmaProtectionEnabled (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_DMA_PROTECTION_ENABLED) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaProtectionEnabled - Enter\n"));
+  
+  Result = TRUE;
+  Status = TestPointVtdEngine ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+  
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      3,
+      TEST_POINT_BYTE3_END_OF_DXE_DMA_PROTECTION_ENABLED
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaProtectionEnabled - Exit\n"));
   return EFI_SUCCESS;
 }
 

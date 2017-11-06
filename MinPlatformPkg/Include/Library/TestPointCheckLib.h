@@ -61,6 +61,12 @@ TestPointMemoryDiscoveredFvInfoFunctional (
 
 EFI_STATUS
 EFIAPI
+TestPointMemoryDiscoveredDmaProtectionEnabled (
+  VOID
+  );
+
+EFI_STATUS
+EFIAPI
 TestPointEndOfPeiSystemResourceFunctional (
   VOID
   );
@@ -91,13 +97,19 @@ TestPointPciEnumerationDonePciResourceAllocated (
 
 EFI_STATUS
 EFIAPI
+TestPointEndOfDxeNoThirdPartyPciOptionRom (
+  VOID
+  );
+
+EFI_STATUS
+EFIAPI
 TestPointEndOfDxeDmaAcpiTableFuntional (
   VOID
   );
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxeNoThirdPartyPciOptionRom (
+TestPointEndOfDxeDmaProtectionEnabled (
   VOID
   );
 
