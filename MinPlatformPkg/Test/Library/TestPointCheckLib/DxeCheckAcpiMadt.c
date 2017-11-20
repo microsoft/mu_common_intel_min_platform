@@ -32,6 +32,13 @@ DumpAcpiTableHeader (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   );
 
+BOOLEAN
+IsMmioExit (
+  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
+  IN UINT64                Length,
+  IN BOOLEAN               CheckAllocated
+  );
+
 typedef struct {
   UINT8                 Type;
   UINT8                 Length;
@@ -66,7 +73,7 @@ ShortNameOfMadtType(
   }
 }
 
-EFI_STATUS
+VOID
 DumpAcpiMadt (
   IN EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
   )
@@ -232,6 +239,91 @@ DumpAcpiMadt (
       DEBUG ((DEBUG_INFO, " "));
       DEBUG ((DEBUG_INFO, ShortNameOfMadtType(ApicStructHeader->Type)));
       DEBUG ((DEBUG_INFO, "\n"));
+      break;
+    }
+    ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);
+    MadtLen         -= ApicStructHeader->Length;
+  }
+}
+
+EFI_STATUS
+CheckAcpiMadt (
+  IN EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
+  )
+{
+
+  APIC_STRUCT_HEADER                                    *ApicStructHeader;
+  INTN                                                  MadtLen;
+  EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE           *ProcessorLocalApic;
+  EFI_ACPI_4_0_IO_APIC_STRUCTURE                        *IOApic;
+  EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE      *InterruptSourceOverride;
+  EFI_ACPI_4_0_NON_MASKABLE_INTERRUPT_SOURCE_STRUCTURE  *NonMaskableInterruptSource;
+  EFI_ACPI_4_0_LOCAL_APIC_NMI_STRUCTURE                 *LocalApicNMI;
+  EFI_ACPI_4_0_LOCAL_APIC_ADDRESS_OVERRIDE_STRUCTURE    *LocalApicAddressOverride;
+  EFI_ACPI_4_0_IO_SAPIC_STRUCTURE                       *IOSapic;
+  EFI_ACPI_4_0_PROCESSOR_LOCAL_SAPIC_STRUCTURE          *ProcessorLocalSapic;
+  EFI_ACPI_4_0_PLATFORM_INTERRUPT_SOURCES_STRUCTURE     *PlatformInterruptSource;
+  EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE         *ProcessorLocalX2Apic;
+  EFI_ACPI_4_0_LOCAL_X2APIC_NMI_STRUCTURE               *LocalX2ApicNmi;
+
+  if (!IsMmioExit (Madt->LocalApicAddress, SIZE_4KB, TRUE)) {
+    DEBUG ((DEBUG_ERROR, "MADT resource (0x%x) is not reported correctly.\n", Madt->LocalApicAddress));
+    return EFI_NOT_STARTED;
+  }
+
+  //
+  // Sub table
+  //
+  MadtLen  = Madt->Header.Length - sizeof(EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER);
+  ApicStructHeader = (APIC_STRUCT_HEADER *)(Madt + 1);
+  while (MadtLen > 0) {
+    switch (ApicStructHeader->Type) {
+    case EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC:
+      ProcessorLocalApic = (EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_IO_APIC:
+      IOApic = (EFI_ACPI_4_0_IO_APIC_STRUCTURE *)ApicStructHeader;
+      if (!IsMmioExit (IOApic->IoApicAddress, SIZE_4KB, TRUE)) {
+        DEBUG ((DEBUG_ERROR, "MADT.IOAPIC resource (0x%x) is not reported correctly.\n", IOApic->IoApicAddress));
+        return EFI_NOT_STARTED;
+      }
+      break;
+    case EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE:
+      InterruptSourceOverride = (EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_NON_MASKABLE_INTERRUPT_SOURCE:
+      NonMaskableInterruptSource = (EFI_ACPI_4_0_NON_MASKABLE_INTERRUPT_SOURCE_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_LOCAL_APIC_NMI:
+      LocalApicNMI = (EFI_ACPI_4_0_LOCAL_APIC_NMI_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_LOCAL_APIC_ADDRESS_OVERRIDE:
+      LocalApicAddressOverride = (EFI_ACPI_4_0_LOCAL_APIC_ADDRESS_OVERRIDE_STRUCTURE *)ApicStructHeader;
+      if (!IsMmioExit (LocalApicAddressOverride->LocalApicAddress, SIZE_4KB, TRUE)) {
+        DEBUG ((DEBUG_ERROR, "MADT.LocalApicOverride resource (0x%x) is not reported correctly.\n", LocalApicAddressOverride->LocalApicAddress));
+        return EFI_NOT_STARTED;
+      }
+      break;
+    case EFI_ACPI_4_0_IO_SAPIC:
+      IOSapic = (EFI_ACPI_4_0_IO_SAPIC_STRUCTURE *)ApicStructHeader;
+      if (!IsMmioExit (IOSapic->IoSapicAddress, SIZE_4KB, TRUE)) {
+        DEBUG ((DEBUG_ERROR, "MADT.IOSAPIC resource (0x%x) is not reported correctly.\n", IOSapic->IoSapicAddress));
+        return EFI_NOT_STARTED;
+      }
+      break;
+    case EFI_ACPI_4_0_LOCAL_SAPIC:
+      ProcessorLocalSapic = (EFI_ACPI_4_0_PROCESSOR_LOCAL_SAPIC_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_PLATFORM_INTERRUPT_SOURCES:
+      PlatformInterruptSource = (EFI_ACPI_4_0_PLATFORM_INTERRUPT_SOURCES_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC:
+      ProcessorLocalX2Apic = (EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE *)ApicStructHeader;
+      break;
+    case EFI_ACPI_4_0_LOCAL_X2APIC_NMI:
+      LocalX2ApicNmi = (EFI_ACPI_4_0_LOCAL_X2APIC_NMI_STRUCTURE *)ApicStructHeader;
+      break;
+    default:
       break;
     }
     ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);

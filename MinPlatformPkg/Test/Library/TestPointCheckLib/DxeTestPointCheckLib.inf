@@ -62,6 +62,7 @@
   DxeCheckAcpiHpet.c
   DxeCheckAcpiDmar.c
   DxeCheckAcpiWsmt.c
+  DxeCheckAcpiTpm.c
   DxeCheckHsti.c
   DxeCheckEsrt.c
   DxeCheckLoadedImage.c

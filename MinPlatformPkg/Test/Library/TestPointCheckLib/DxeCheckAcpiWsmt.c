@@ -33,7 +33,7 @@ DumpAcpiTableHeader (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   );
 
-EFI_STATUS
+VOID
 DumpAcpiWsmt (
   IN EFI_ACPI_WSMT_TABLE  *Wsmt
   )
@@ -41,5 +41,4 @@ DumpAcpiWsmt (
   DumpAcpiTableHeader (&Wsmt->Header);
   DEBUG ((DEBUG_INFO, "         "));
   DEBUG ((DEBUG_INFO, " ProtectionFlags=0x%08x\n", Wsmt->ProtectionFlags));
-  return EFI_SUCCESS;
 }

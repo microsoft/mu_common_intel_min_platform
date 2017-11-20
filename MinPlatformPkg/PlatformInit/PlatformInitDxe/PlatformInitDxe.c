@@ -303,6 +303,7 @@ PlatformInitStatusCodeListener (
   if (Value == (EFI_SOFTWARE_DXE_BS_DRIVER | EFI_SW_DXE_BS_PC_READY_TO_BOOT_EVENT)) {
     if (!Tested) {
       TestPointReadyToBootAcpiTableFuntional ();
+      TestPointReadyToBootGcdResourceFuntional ();
       TestPointReadyToBootMemoryTypeInformationFunctional ();
       TestPointReadyToBootUefiMemoryAttributeTableFunctional ();
       TestPointReadyToBootUefiBootVariableFunctional ();

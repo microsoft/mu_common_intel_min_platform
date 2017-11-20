@@ -56,14 +56,16 @@ TestPointDumpGcd (
   OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
   OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
   OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
-  OUT UINTN                           *GcdIoMapNumberOfDescriptors  OPTIONAL
+  OUT UINTN                           *GcdIoMapNumberOfDescriptors,  OPTIONAL
+  IN  BOOLEAN                         DumpPrint
   );
 
 VOID
 TestPointDumpUefiMemoryMap (
   OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
   OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
-  OUT UINTN                 *UefiDescriptorSize OPTIONAL
+  OUT UINTN                 *UefiDescriptorSize, OPTIONAL
+  IN  BOOLEAN               DumpPrint
   );
 
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
@@ -172,8 +174,8 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   //
   // Collect information here, because it is last chance to access outside SMRAM.
   //
-  TestPointDumpUefiMemoryMap (&mUefiMemoryMap, &mUefiMemoryMapSize, &mUefiDescriptorSize);
-  TestPointDumpGcd (&mGcdMemoryMap, &mGcdMemoryMapNumberOfDescriptors, &mGcdIoMap, &mGcdIoMapNumberOfDescriptors);
+  TestPointDumpUefiMemoryMap (&mUefiMemoryMap, &mUefiMemoryMapSize, &mUefiDescriptorSize, TRUE);
+  TestPointDumpGcd (&mGcdMemoryMap, &mGcdMemoryMapNumberOfDescriptors, &mGcdIoMap, &mGcdIoMapNumberOfDescriptors, TRUE);
   //
   // Defer the validation to TestPointSmmReadyToBootSecureSmmCommunicationBuffer, because page table setup later.
   //

@@ -33,7 +33,14 @@ DumpAcpiTableHeader (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   );
 
-EFI_STATUS
+BOOLEAN
+IsMmioExit (
+  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
+  IN UINT64                Length,
+  IN BOOLEAN               CheckAllocated
+  );
+
+VOID
 DumpAcpiHpet (
   IN EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER  *Hpet
   )
@@ -48,5 +55,16 @@ DumpAcpiHpet (
   DEBUG ((DEBUG_INFO, " MinClockTick=0x%04x", Hpet->MainCounterMinimumClockTickInPeriodicMode));
   DEBUG ((DEBUG_INFO, " PageProtection=0x%02x", Hpet->PageProtectionAndOemAttribute));
   DEBUG ((DEBUG_INFO, "\n"));
+}
+
+EFI_STATUS
+CheckAcpiHpet (
+  IN EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER  *Hpet
+  )
+{
+  if (!IsMmioExit (Hpet->BaseAddressLower32Bit.Address, SIZE_4KB, TRUE)) {
+    DEBUG ((DEBUG_ERROR, "HPET resource (0x%x) is not reported correctly.\n", Hpet->BaseAddressLower32Bit.Address));
+    return EFI_NOT_STARTED;
+  }
   return EFI_SUCCESS;
 }

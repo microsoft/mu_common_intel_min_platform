@@ -24,6 +24,11 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/Vtd.h>
 
+VOID *
+TestPointGetAcpi (
+  IN UINT32  Signature
+  );
+
 EFI_STATUS
 CheckDrhd (
   IN EFI_ACPI_DMAR_HEADER  *Dmar
@@ -63,11 +68,6 @@ CheckDrhd (
 
   return EFI_SUCCESS;
 }
-
-VOID *
-TestPointGetAcpi (
-  IN UINT32  Signature
-  );
 
 EFI_STATUS
 TestPointVtdEngine (

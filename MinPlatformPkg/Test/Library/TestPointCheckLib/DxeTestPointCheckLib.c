@@ -34,14 +34,16 @@ TestPointDumpGcd (
   OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
   OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
   OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
-  OUT UINTN                           *GcdIoMapNumberOfDescriptors  OPTIONAL
+  OUT UINTN                           *GcdIoMapNumberOfDescriptors,  OPTIONAL
+  IN  BOOLEAN                         DumpPrint
   );
 
 VOID
 TestPointDumpUefiMemoryMap (
   OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
   OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
-  OUT UINTN                 *UefiDescriptorSize OPTIONAL
+  OUT UINTN                 *UefiDescriptorSize, OPTIONAL
+  IN  BOOLEAN               DumpPrint
   );
 
 EFI_STATUS
@@ -81,7 +83,12 @@ TestPointCheckMemoryTypeInformation (
 
 EFI_STATUS
 TestPointCheckAcpi (
-  IN UINT32  *Signature OPTIONAL
+  VOID
+  );
+
+EFI_STATUS
+TestPointCheckAcpiGcdResource (
+  VOID
   );
 
 EFI_STATUS
@@ -143,6 +150,11 @@ TestPointCheckTcgMor (
 EFI_STATUS
 TestPointVtdEngine (
   VOID
+  );
+
+VOID *
+TestPointGetAcpi (
+  IN UINT32  Signature
   );
 
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
@@ -232,8 +244,7 @@ TestPointEndOfDxeDmaAcpiTableFuntional (
   )
 {
   EFI_STATUS  Status;
-  BOOLEAN     Result;
-  UINT32      Signature;
+  VOID        *Acpi;
   
   if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
@@ -241,24 +252,29 @@ TestPointEndOfDxeDmaAcpiTableFuntional (
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Enter\n"));
   
-  Signature = EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE;
-  Result = TRUE;
-  Status = TestPointCheckAcpi (&Signature);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  
-  if (Result) {
+  Acpi = TestPointGetAcpi (EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE);
+  if (Acpi == NULL) {
+    DEBUG ((DEBUG_ERROR, "No DMAR table\n"));
+    TestPointLibAppendErrorString (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_END_OF_DXE \
+        TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL_ERROR_STRING
+      );
+    Status = EFI_INVALID_PARAMETER;
+  } else {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       3,
       TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL
       );
+    Status = EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Exit\n"));
-  return EFI_SUCCESS;
+  return Status;
 }
 
 EFI_STATUS
@@ -370,8 +386,7 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
   )
 {
   EFI_STATUS  Status;
-  BOOLEAN     Result;
-  UINT32      Signature;
+  VOID        *Acpi;
   
   if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
@@ -379,24 +394,29 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFuntional - Enter\n"));
   
-  Result = TRUE;
-  Signature = EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE;
-  Status = TestPointCheckAcpi (&Signature);
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-  
-  if (Result) {
+  Acpi = TestPointGetAcpi (EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE);
+  if (Acpi == NULL) {
+    DEBUG ((DEBUG_ERROR, "No WSMT table\n"));
+    TestPointLibAppendErrorString (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_DXE_SMM_READY_TO_LOCK \
+        TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL_ERROR_STRING
+      );
+    Status = EFI_INVALID_PARAMETER;
+  } else {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       7,
       TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL
       );
+    Status = EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFuntional - Exit\n"));
-  return EFI_SUCCESS;
+  return Status;
 }
 
 EFI_STATUS
@@ -430,8 +450,8 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmmPageProtection - Enter\n"));
   
-  TestPointDumpUefiMemoryMap (&UefiMemoryMap, &UefiMemoryMapSize, &UefiDescriptorSize);
-  TestPointDumpGcd (&GcdMemoryMap, &GcdMemoryMapNumberOfDescriptors, &GcdIoMap, &GcdIoMapNumberOfDescriptors);
+  TestPointDumpUefiMemoryMap (&UefiMemoryMap, &UefiMemoryMapSize, &UefiDescriptorSize, FALSE);
+  TestPointDumpGcd (&GcdMemoryMap, &GcdMemoryMapNumberOfDescriptors, &GcdIoMap, &GcdIoMapNumberOfDescriptors, FALSE);
   
   Status = gBS->LocateProtocol(&gEfiSmmCommunicationProtocolGuid, NULL, (VOID **)&SmmCommunication);
   if (EFI_ERROR(Status)) {
@@ -559,7 +579,7 @@ TestPointReadyToBootAcpiTableFuntional (
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFuntional - Enter\n"));
   
   Result = TRUE;
-  Status = TestPointCheckAcpi (NULL);
+  Status = TestPointCheckAcpi ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
@@ -574,6 +594,40 @@ TestPointReadyToBootAcpiTableFuntional (
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFuntional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootGcdResourceFuntional (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  
+  if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFuntional - Enter\n"));
+  
+  Result = TRUE;
+  Status = TestPointCheckAcpiGcdResource ();
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+  
+  if (Result) {
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      4,
+      TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFuntional - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -597,7 +651,7 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  TestPointDumpUefiMemoryMap (NULL, NULL, NULL);
+  TestPointDumpUefiMemoryMap (NULL, NULL, NULL, TRUE);
   Status = TestPointCheckUefiMemoryMap ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
@@ -632,8 +686,8 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootUefiMemoryAttributeTableFunctional - Enter\n"));
   
   Result = TRUE;
-  TestPointDumpUefiMemoryMap (NULL, NULL, NULL);
-  TestPointDumpGcd (NULL, NULL, NULL, NULL);
+  TestPointDumpUefiMemoryMap (NULL, NULL, NULL, TRUE);
+  TestPointDumpGcd (NULL, NULL, NULL, NULL, TRUE);
   Status = TestPointCheckUefiMemAttribute ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;

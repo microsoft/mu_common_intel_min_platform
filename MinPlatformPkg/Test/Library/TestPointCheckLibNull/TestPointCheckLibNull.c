@@ -188,6 +188,15 @@ TestPointReadyToBootAcpiTableFuntional (
 
 EFI_STATUS
 EFIAPI
+TestPointReadyToBootGcdResourceFuntional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+EFIAPI
 TestPointReadyToBootMemoryTypeInformationFunctional (
   VOID
   )

@@ -33,6 +33,13 @@ DumpAcpiTableHeader (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   );
 
+BOOLEAN
+IsMmioExit (
+  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
+  IN UINT64                Length,
+  IN BOOLEAN               CheckAllocated
+  );
+
 EFI_STATUS
 DumpAcpiMcfg (
   IN EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER  *Mcfg
@@ -57,6 +64,28 @@ DumpAcpiMcfg (
       Struct->EndBusNumber
       ));
     DEBUG ((DEBUG_INFO, "\n"));
+    Struct++;
+  }
+  return EFI_SUCCESS;
+}
+
+EFI_STATUS
+CheckAcpiMcfg (
+  IN EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER  *Mcfg
+  )
+{
+  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE   *Struct;
+  UINTN                                                                                   Count;
+  UINTN                                                                                   Index;
+
+  Count = Mcfg->Header.Length - sizeof(EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER);
+  Count = Count / sizeof(EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE);
+  Struct = (VOID *)(Mcfg + 1);
+  for (Index = 0; Index < Count; Index++) {
+    if (!IsMmioExit (Struct->BaseAddress, (Struct->EndBusNumber - Struct->StartBusNumber + 1) * SIZE_1MB, TRUE)) {
+      DEBUG ((DEBUG_ERROR, "MCFG resource (0x%x) is not reported correctly.\n", Struct->BaseAddress));
+      return EFI_NOT_STARTED;
+    }
     Struct++;
   }
   return EFI_SUCCESS;

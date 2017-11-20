@@ -33,6 +33,13 @@ DumpAcpiTableHeader (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   );
 
+BOOLEAN
+IsMmioExit (
+  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
+  IN UINT64                Length,
+  IN BOOLEAN               CheckAllocated
+  );
+
 CHAR8 *mDmarTypeString[] = {
   "DRHD  ",
   "RMRR  ",
@@ -110,7 +117,7 @@ DumpDmarDeviceScope (
   }
 }
 
-EFI_STATUS
+VOID
 DumpAcpiDmar (
   IN EFI_ACPI_DMAR_HEADER  *Dmar
   )
@@ -201,6 +208,34 @@ DumpAcpiDmar (
       DEBUG ((DEBUG_INFO, " "));
       DEBUG ((DEBUG_INFO, ShortNameOfDmarType(DmarStructHeader->Type)));
       DEBUG ((DEBUG_INFO, "\n"));
+      break;
+    }
+    DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)((UINT8 *)DmarStructHeader + DmarStructHeader->Length);
+    DmarLen         -= DmarStructHeader->Length;
+  }
+}
+
+EFI_STATUS
+CheckAcpiDmar (
+  IN EFI_ACPI_DMAR_HEADER  *Dmar
+  )
+{
+  EFI_ACPI_DMAR_STRUCTURE_HEADER        *DmarStructHeader;
+  INTN                                  DmarLen;
+  EFI_ACPI_DMAR_DRHD_HEADER             *Drhd;
+    
+  DmarLen  = Dmar->Header.Length - sizeof(EFI_ACPI_DMAR_HEADER);
+  DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)(Dmar + 1);
+  while (DmarLen > 0) {
+    switch (DmarStructHeader->Type) {
+    case EFI_ACPI_DMAR_TYPE_DRHD:
+      Drhd = (EFI_ACPI_DMAR_DRHD_HEADER *)DmarStructHeader;
+      if (!IsMmioExit (Drhd->RegisterBaseAddress, SIZE_4KB, TRUE)) {
+        DEBUG ((DEBUG_ERROR, "DMAR.DRHD resource (0x%x) is not reported correctly.\n", Drhd->RegisterBaseAddress));
+        return EFI_NOT_STARTED;
+      }
+      break;
+    default:
       break;
     }
     DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)((UINT8 *)DmarStructHeader + DmarStructHeader->Length);

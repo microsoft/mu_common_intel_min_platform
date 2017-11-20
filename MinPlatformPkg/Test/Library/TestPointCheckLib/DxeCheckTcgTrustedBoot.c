@@ -21,6 +21,12 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/MemoryAllocationLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Protocol/Tcg2Protocol.h>
+#include <IndustryStandard/Tpm2Acpi.h>
+
+VOID *
+TestPointGetAcpi (
+  IN UINT32  Signature
+  );
 
 EFI_STATUS
 EFIAPI
@@ -31,6 +37,7 @@ TestPointCheckTcgTrustedBoot (
   EFI_STATUS                       Status;
   EFI_TCG2_PROTOCOL                *Tcg2;
   EFI_TCG2_BOOT_SERVICE_CAPABILITY ProtocolCapability;
+  VOID                             *Acpi;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckTcgTrustedBoot - Enter\n"));
 
@@ -62,6 +69,13 @@ TestPointCheckTcgTrustedBoot (
   }
 
   if (!ProtocolCapability.TPMPresentFlag) {
+    DEBUG ((DEBUG_ERROR, "Tcg2 TPMPresentFlag FALSE\n"));
+    Status = EFI_NOT_FOUND;
+  }
+
+  Acpi = TestPointGetAcpi (EFI_ACPI_5_0_TRUSTED_COMPUTING_PLATFORM_2_TABLE_SIGNATURE);
+  if (Acpi == NULL) {
+    DEBUG ((DEBUG_ERROR, "Tcg2 TPM2 table not found\n"));
     Status = EFI_NOT_FOUND;
   }
 

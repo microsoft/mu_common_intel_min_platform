@@ -163,7 +163,8 @@ VOID
 TestPointDumpUefiMemoryMap (
   OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
   OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
-  OUT UINTN                 *UefiDescriptorSize OPTIONAL
+  OUT UINTN                 *UefiDescriptorSize, OPTIONAL
+  IN  BOOLEAN               DumpPrint
   )
 {
   EFI_STATUS            Status;
@@ -178,8 +179,10 @@ TestPointDumpUefiMemoryMap (
     *UefiMemoryMapSize = 0;
     *UefiDescriptorSize = 0;
   }
-
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Enter\n"));
+  
+  if (DumpPrint) {
+    DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Enter\n"));
+  }
   MemoryMapSize = 0;
   MemoryMap = NULL;
   Status = gBS->GetMemoryMap (
@@ -215,7 +218,9 @@ TestPointDumpUefiMemoryMap (
     goto Done ;
   }
   
-  TestPointDumpMemoryMap (MemoryMap, MemoryMapSize, DescriptorSize);
+  if (DumpPrint) {
+    TestPointDumpMemoryMap (MemoryMap, MemoryMapSize, DescriptorSize);
+  }
 
   if (UefiMemoryMap != NULL) {
     *UefiMemoryMap = AllocateCopyPool (MemoryMapSize, MemoryMap);
@@ -225,7 +230,9 @@ TestPointDumpUefiMemoryMap (
   gBS->FreePool (MemoryMap);
 
 Done:
-  DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Exit\n"));
+  if (DumpPrint) {
+    DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Exit\n"));
+  }
   return ;
 }
 
