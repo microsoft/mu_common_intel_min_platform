@@ -42,15 +42,10 @@
 
 [Sources]
   PlatformInitDxe.c
-  
-[Pcd]
-  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderLoad
-  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderStart
 
 [Protocols]
   gEfiPciEnumerationCompleteProtocolGuid
   gEfiDxeSmmReadyToLockProtocolGuid
-  gEfiRscHandlerProtocolGuid
 
 [Guids]
   gEfiEventExitBootServicesGuid

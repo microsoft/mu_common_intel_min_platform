@@ -44,14 +44,9 @@
   gAdapterInfoPlatformTestPointGuid
   gEdkiiPiSmmCommunicationRegionTableGuid
 
-[Pcd]
-  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderLoad
-  gEfiMdeModulePkgTokenSpaceGuid.PcdProgressCodeOsLoaderStart
-
 [Protocols]
   gEfiAdapterInformationProtocolGuid
   gEfiSmmCommunicationProtocolGuid
-  gEfiRscHandlerProtocolGuid
 
 [Depex]
   TRUE

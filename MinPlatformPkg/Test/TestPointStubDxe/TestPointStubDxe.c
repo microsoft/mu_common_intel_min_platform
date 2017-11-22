@@ -23,18 +23,9 @@
 #include <Protocol/AdapterInformation.h>
 #include <Protocol/SmmCommunication.h>
 #include <Guid/PiSmmCommunicationRegionTable.h>
-#include <Protocol/ReportStatusCodeHandler.h>
-
-EFI_STATUS
-TestPointStubUnRegisterRscHandler (
-  VOID
-  );
 
 UINTN  mSmmTestPointDatabaseSize;
 VOID   *mSmmTestPointDatabase;
-
-EFI_EVENT                   mRscNotifyEvent = NULL;
-EFI_RSC_HANDLER_PROTOCOL    *mRscHandlerProtocol = NULL;
 
 VOID
 PublishPeiTestPoint (
@@ -256,132 +247,62 @@ PublishSmmTestPoint (
 }
 
 /**
-  Report status code listener
-  for OsLoaderLoadImageStart and OsLoaderStartImageStart.
+  Notification function of EVT_GROUP_READY_TO_BOOT event group.
+  It runs after most ReadyToBoot event signaled.
 
-  @param[in]  CodeType            Indicates the type of status code being reported.
-  @param[in]  Value               Describes the current status of a hardware or software entity.
-                                  This included information about the class and subclass that is used to
-                                  classify the entity as well as an operation.
-  @param[in]  Instance            The enumeration of a hardware or software entity within
-                                  the system. Valid instance numbers start with 1.
-  @param[in]  CallerId            This optional parameter may be used to identify the caller.
-                                  This parameter allows the status code driver to apply different rules to
-                                  different callers.
-  @param[in]  Data                This optional parameter may be used to pass additional data.
+  This is a notification function registered on EVT_GROUP_READY_TO_BOOT event group.
+  When the Boot Manager is about to load and execute a boot option, it reclaims variable
+  storage if free size is below the threshold.
 
-  @retval EFI_SUCCESS             Status code is what we expected.
-  @retval EFI_UNSUPPORTED         Status code not supported.
+  @param[in] Event        Event whose notification function is being invoked.
+  @param[in] Context      Pointer to the notification function's context.
 
-**/
-EFI_STATUS
-EFIAPI
-TestPointStubStatusCodeListener (
-  IN EFI_STATUS_CODE_TYPE     CodeType,
-  IN EFI_STATUS_CODE_VALUE    Value,
-  IN UINT32                   Instance,
-  IN EFI_GUID                 *CallerId,
-  IN EFI_STATUS_CODE_DATA     *Data
-  )
-{
-  EFI_STATUS  Status;
-  STATIC BOOLEAN     Published = FALSE;
-
-  //
-  // Check whether status code is what we are interested in.
-  //
-  if ((CodeType & EFI_STATUS_CODE_TYPE_MASK) != EFI_PROGRESS_CODE) {
-    return EFI_UNSUPPORTED;
-  }
-
-  Status = EFI_SUCCESS;
-  if (Value == (EFI_SOFTWARE_DXE_BS_DRIVER | EFI_SW_DXE_BS_PC_READY_TO_BOOT_EVENT)) {
-    if (!Published) {
-      PublishSmmTestPoint ();
-      Published = TRUE;
-    }
-  } else if (Value == PcdGet32 (PcdProgressCodeOsLoaderLoad)) {
-  } else if (Value == PcdGet32 (PcdProgressCodeOsLoaderStart)) {
-  } else if (Value == (EFI_SOFTWARE_EFI_BOOT_SERVICE | EFI_SW_BS_PC_EXIT_BOOT_SERVICES)) {
-    TestPointStubUnRegisterRscHandler ();
-  } else if (Value == (EFI_SOFTWARE_DXE_BS_DRIVER | EFI_SW_DXE_BS_PC_LEGACY_BOOT_EVENT)) {
-  } else {
-    //
-    // Ignore else progress code.
-    //
-    Status = EFI_UNSUPPORTED;
-  }
-
-  return Status;
-}
-
-/**
-  RscHandler Protocol notification event handler.
-
-  @param[in] Event    Event whose notification function is being invoked.
-  @param[in] Context  Pointer to the notification function's context.
 **/
 VOID
 EFIAPI
-OnRscHandlerInstalled (
+OnReadyToBootLater (
   IN EFI_EVENT  Event,
   IN VOID       *Context
   )
 {
-  EFI_STATUS          Status;
+  gBS->CloseEvent (Event);
+
+  PublishSmmTestPoint ();
+}
+
+/**
+  Notification function of EVT_GROUP_READY_TO_BOOT event group.
+
+  This is a notification function registered on EVT_GROUP_READY_TO_BOOT event group.
+  When the Boot Manager is about to load and execute a boot option, it reclaims variable
+  storage if free size is below the threshold.
+
+  @param[in] Event        Event whose notification function is being invoked.
+  @param[in] Context      Pointer to the notification function's context.
+
+**/
+VOID
+EFIAPI
+OnReadyToBoot (
+  IN EFI_EVENT  Event,
+  IN VOID       *Context
+  )
+{
+  EFI_STATUS                        Status;
+  EFI_EVENT                         ReadyToBootLaterEvent;
+
+  gBS->CloseEvent (Event);
   
-  Status = gBS->LocateProtocol (
-                  &gEfiRscHandlerProtocolGuid,
+  Status = gBS->CreateEvent (
+                  EVT_NOTIFY_SIGNAL,
+                  TPL_CALLBACK,
+                  OnReadyToBootLater,
                   NULL,
-                  &mRscHandlerProtocol
+                  &ReadyToBootLaterEvent
                   );
-  if (EFI_ERROR (Status)) {
-    return ;
-  }
-  
-  //
-  // Register report status code listener for OS Loader load and start.
-  //
-  Status = mRscHandlerProtocol->Register (TestPointStubStatusCodeListener, TPL_HIGH_LEVEL);
   ASSERT_EFI_ERROR (Status);
-
-  gBS->CloseEvent (mRscNotifyEvent);
-  mRscNotifyEvent = NULL;
-}
-
-EFI_STATUS
-TestPointStubRegisterRscHandler (
-  VOID
-  )
-{
-  VOID       *Registration;
-
-  mRscNotifyEvent = EfiCreateProtocolNotifyEvent (
-                      &gEfiRscHandlerProtocolGuid,
-                      TPL_CALLBACK,
-                      OnRscHandlerInstalled,
-                      NULL,
-                      &Registration
-                      );
-  ASSERT (mRscNotifyEvent != NULL);
   
-  return EFI_SUCCESS;
-}
-
-EFI_STATUS
-TestPointStubUnRegisterRscHandler (
-  VOID
-  )
-{
-  if (mRscHandlerProtocol != NULL) {
-    mRscHandlerProtocol->Unregister (TestPointStubStatusCodeListener);
-    mRscHandlerProtocol = NULL;
-  }
-  if (mRscNotifyEvent != NULL) {
-    gBS->CloseEvent (mRscNotifyEvent);
-    mRscNotifyEvent = NULL;
-  }
-  return EFI_SUCCESS;
+  gBS->SignalEvent (ReadyToBootLaterEvent);
 }
 
 VOID
@@ -389,7 +310,16 @@ TestPointStubForSmm (
   VOID
   )
 {
-  TestPointStubRegisterRscHandler ();
+  EFI_STATUS Status;
+  EFI_EVENT  ReadyToBootEvent;
+
+  Status = EfiCreateEventReadyToBootEx (
+             TPL_CALLBACK,
+             OnReadyToBoot,
+             NULL,
+             &ReadyToBootEvent
+             );
+  ASSERT_EFI_ERROR (Status);
 }
 
 /**
