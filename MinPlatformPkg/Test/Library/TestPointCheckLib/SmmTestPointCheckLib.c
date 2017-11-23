@@ -17,8 +17,10 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/MemoryAllocationLib.h>
+#include <Library/UefiLib.h>
 #include <Library/SmmMemLib.h>
 #include <Library/SmmServicesTableLib.h>
+#include <Guid/MemoryAttributesTable.h>
 
 #include "TestPointInternal.h"
 
@@ -46,9 +48,10 @@ TestPointCheckSmmPaging (
 
 EFI_STATUS
 TestPointCheckSmmCommunicationBuffer (
-  IN EFI_MEMORY_DESCRIPTOR *UefiMemoryMap,
-  IN UINTN                 UefiMemoryMapSize,
-  IN UINTN                 UefiDescriptorSize
+  IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
+  IN UINTN                        UefiMemoryMapSize,
+  IN UINTN                        UefiDescriptorSize,
+  IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
   );
 
 VOID
@@ -76,6 +79,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdMemoryMapNumberOfDescriptors;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdIoMapNumberOfDescriptors;
+
+EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
 
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
   PLATFORM_TEST_POINT_VERSION,
@@ -164,7 +169,10 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   VOID
   )
 {
-  
+  EFI_STATUS                   Status;
+  EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable;
+  UINTN                        MemoryAttributesTableSize;
+
   if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
     return EFI_SUCCESS;
   }
@@ -176,6 +184,13 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   //
   TestPointDumpUefiMemoryMap (&mUefiMemoryMap, &mUefiMemoryMapSize, &mUefiDescriptorSize, TRUE);
   TestPointDumpGcd (&mGcdMemoryMap, &mGcdMemoryMapNumberOfDescriptors, &mGcdIoMap, &mGcdIoMapNumberOfDescriptors, TRUE);
+
+  Status = EfiGetSystemConfigurationTable (&gEfiMemoryAttributesTableGuid, &MemoryAttributesTable);
+  if (!EFI_ERROR (Status)) {
+    MemoryAttributesTableSize = sizeof(EFI_MEMORY_ATTRIBUTES_TABLE) + MemoryAttributesTable->DescriptorSize * MemoryAttributesTable->NumberOfEntries;
+    mUefiMemoryAttributesTable = AllocateCopyPool (MemoryAttributesTableSize, MemoryAttributesTable);
+    ASSERT (mUefiMemoryAttributesTable != NULL);
+  }
   //
   // Defer the validation to TestPointSmmReadyToBootSecureSmmCommunicationBuffer, because page table setup later.
   //
@@ -217,7 +232,7 @@ TestPointSmmReadyToBootSmmPageProtection (
   if (mUefiMemoryMap != NULL) {
     Result = TRUE;
   
-    Status = TestPointCheckSmmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize);
+    Status = TestPointCheckSmmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
     if (EFI_ERROR(Status)) {
       Result = FALSE;
     }
@@ -284,7 +299,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryMapOffset invalid!\n"));
     goto Done;
   }
-  if (CommData->UefiMemoryMapSize > TempCommBufferSize - CommData->UefiMemoryMapOffset) {
+  if (CommData->UefiMemoryMapSize >= TempCommBufferSize - CommData->UefiMemoryMapOffset) {
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryMapSize invalid!\n"));
     goto Done;
   }
@@ -292,7 +307,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdMemoryMapOffset invalid!\n"));
     goto Done;
   }
-  if (CommData->GcdMemoryMapSize > TempCommBufferSize - CommData->GcdMemoryMapOffset) {
+  if (CommData->GcdMemoryMapSize >= TempCommBufferSize - CommData->GcdMemoryMapOffset) {
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdMemoryMapSize invalid!\n"));
     goto Done;
   }
@@ -300,8 +315,16 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdIoMapOffset invalid!\n"));
     goto Done;
   }
-  if (CommData->GcdIoMapSize != TempCommBufferSize - CommData->GcdIoMapOffset) {
+  if (CommData->GcdIoMapSize >= TempCommBufferSize - CommData->GcdIoMapOffset) {
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdIoMapSize invalid!\n"));
+    goto Done;
+  }
+  if (CommData->UefiMemoryAttributeTableOffset != CommData->GcdIoMapOffset + CommData->GcdIoMapSize) {
+    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryAttributeTableOffset invalid!\n"));
+    goto Done;
+  }
+  if (CommData->UefiMemoryAttributeTableSize != TempCommBufferSize - CommData->UefiMemoryAttributeTableOffset) {
+    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryAttributeTableSize invalid!\n"));
     goto Done;
   }
 
@@ -311,7 +334,8 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
     Status = TestPointCheckSmmCommunicationBuffer (
                (EFI_MEMORY_DESCRIPTOR *)((UINTN)CommData + CommData->UefiMemoryMapOffset),
                (UINTN)CommData->UefiMemoryMapSize,
-               mUefiDescriptorSize
+               mUefiDescriptorSize,
+               (CommData->UefiMemoryAttributeTableSize != 0) ? (EFI_MEMORY_ATTRIBUTES_TABLE *)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset) : NULL
                );
     if (EFI_ERROR(Status)) {
       Result = FALSE;

@@ -36,6 +36,8 @@ typedef struct {
   UINT64                               GcdMemoryMapSize;
   UINT64                               GcdIoMapOffset;
   UINT64                               GcdIoMapSize;
+  UINT64                               UefiMemoryAttributeTableOffset;
+  UINT64                               UefiMemoryAttributeTableSize;
 } TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO;
 
 #define TEST_POINT_SMM_COMMUNICATION_GUID { \

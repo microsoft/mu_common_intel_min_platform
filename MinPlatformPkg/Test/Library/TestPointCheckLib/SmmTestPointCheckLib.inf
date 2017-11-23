@@ -29,6 +29,7 @@
   MemoryAllocationLib
   DevicePathLib
   PeCoffGetEntryPointLib
+  UefiLib
   SmmMemLib
   TestPointLib
 

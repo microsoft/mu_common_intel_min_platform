@@ -16,6 +16,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
 #include <Library/DebugLib.h>
+#include <Guid/MemoryAttributesTable.h>
 
 #define NEXT_MEMORY_DESCRIPTOR(MemoryDescriptor, Size) \
   ((EFI_MEMORY_DESCRIPTOR *)((UINT8 *)(MemoryDescriptor) + (Size)))
@@ -58,9 +59,10 @@ IsUefiPageNotPresent (
 
 EFI_STATUS
 TestPointCheckSmmCommunicationBuffer (
-  IN EFI_MEMORY_DESCRIPTOR *UefiMemoryMap,
-  IN UINTN                 UefiMemoryMapSize,
-  IN UINTN                 UefiDescriptorSize
+  IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
+  IN UINTN                        UefiMemoryMapSize,
+  IN UINTN                        UefiDescriptorSize,
+  IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
   )
 {
   EFI_STATUS            ReturnStatus;
@@ -68,6 +70,7 @@ TestPointCheckSmmCommunicationBuffer (
   EFI_MEMORY_DESCRIPTOR *MemoryMap;
   UINTN                 MemoryMapEntryCount;
   UINTN                 Index;
+  EFI_MEMORY_DESCRIPTOR *Entry;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmCommunicationBuffer - Enter\n"));
 
@@ -89,7 +92,28 @@ TestPointCheckSmmCommunicationBuffer (
     }
     MemoryMap = NEXT_MEMORY_DESCRIPTOR(MemoryMap, UefiDescriptorSize);
   }
-  
+
+  if (MemoryAttributesTable != NULL) {
+    Entry = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
+    for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
+      if (Entry->Type == EfiRuntimeServicesCode || Entry->Type == EfiRuntimeServicesData) {
+        if ((Entry->Attribute & EFI_MEMORY_RO) != 0) {
+          DEBUG ((DEBUG_INFO, "UEFI MemoryAttributeTable Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE(Entry->NumberOfPages)));
+          Status = TestPointCheckPageTable (
+                     Entry->PhysicalStart,
+                     EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages),
+                     FALSE,
+                     TRUE
+                     );
+          if (EFI_ERROR(Status)) {
+            ReturnStatus = Status;
+          }
+        }
+      }
+      Entry = NEXT_MEMORY_DESCRIPTOR (Entry, MemoryAttributesTable->DescriptorSize);
+    }
+  }
+
   if (EFI_ERROR (ReturnStatus)) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,

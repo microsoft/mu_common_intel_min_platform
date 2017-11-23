@@ -23,6 +23,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
 #include <Protocol/SmmCommunication.h>
+#include <Guid/MemoryAttributesTable.h>
 #include <Guid/PiSmmCommunicationRegionTable.h>
 
 #include "TestPointInternal.h"
@@ -432,6 +433,8 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   EFI_GCD_IO_SPACE_DESCRIPTOR                         *GcdIoMap;
   UINTN                                               GcdMemoryMapNumberOfDescriptors;
   UINTN                                               GcdIoMapNumberOfDescriptors;
+  EFI_MEMORY_ATTRIBUTES_TABLE                         *MemoryAttributesTable;
+  UINTN                                               MemoryAttributesTableSize;
   EFI_STATUS                                          Status;
   UINTN                                               CommSize;
   UINT8                                               *CommBuffer;
@@ -452,7 +455,14 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   
   TestPointDumpUefiMemoryMap (&UefiMemoryMap, &UefiMemoryMapSize, &UefiDescriptorSize, FALSE);
   TestPointDumpGcd (&GcdMemoryMap, &GcdMemoryMapNumberOfDescriptors, &GcdIoMap, &GcdIoMapNumberOfDescriptors, FALSE);
-  
+
+  MemoryAttributesTable = NULL;
+  MemoryAttributesTableSize = 0;
+  Status = EfiGetSystemConfigurationTable (&gEfiMemoryAttributesTableGuid, &MemoryAttributesTable);
+  if (!EFI_ERROR (Status)) {
+    MemoryAttributesTableSize = sizeof(EFI_MEMORY_ATTRIBUTES_TABLE) + MemoryAttributesTable->DescriptorSize * MemoryAttributesTable->NumberOfEntries;
+  }
+
   Status = gBS->LocateProtocol(&gEfiSmmCommunicationProtocolGuid, NULL, (VOID **)&SmmCommunication);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: Locate SmmCommunication protocol - %r\n", Status));
@@ -463,7 +473,8 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
                       sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO) + 
                       UefiMemoryMapSize + 
                       GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR) + 
-                      GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR);
+                      GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR) +
+                      MemoryAttributesTableSize;
 
   Status = EfiGetSystemConfigurationTable(
              &gEdkiiPiSmmCommunicationRegionTableGuid,
@@ -502,6 +513,9 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   CommData->GcdMemoryMapSize    = GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR);
   CommData->GcdIoMapOffset      = CommData->GcdMemoryMapOffset + CommData->GcdMemoryMapSize;
   CommData->GcdIoMapSize        = GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR);
+  CommData->UefiMemoryAttributeTableOffset = CommData->GcdIoMapOffset + CommData->GcdIoMapSize;
+  CommData->UefiMemoryAttributeTableSize   = MemoryAttributesTableSize;
+
   CopyMem (
     (VOID *)((UINTN)CommData + CommData->UefiMemoryMapOffset),
     UefiMemoryMap,
@@ -516,6 +530,11 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
     (VOID *)((UINTN)CommData + CommData->GcdIoMapOffset),
     GcdIoMap,
     CommData->GcdIoMapSize
+    );
+  CopyMem (
+    (VOID *)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset),
+    MemoryAttributesTable,
+    CommData->UefiMemoryAttributeTableSize
     );
 
   CommSize = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) + CommHeader->MessageLength;
