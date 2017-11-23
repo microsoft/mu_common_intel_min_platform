@@ -103,7 +103,7 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxeDmaAcpiTableFuntional (
+TestPointEndOfDxeDmaAcpiTableFunctional (
   VOID
   );
 
@@ -121,7 +121,7 @@ TestPointDxeSmmReadyToLockSmramAligned (
 
 EFI_STATUS
 EFIAPI
-TestPointDxeSmmReadyToLockWsmtTableFuntional (
+TestPointDxeSmmReadyToLockWsmtTableFunctional (
   VOID
   );
 
@@ -133,13 +133,13 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootAcpiTableFuntional (
+TestPointReadyToBootAcpiTableFunctional (
   VOID
   );
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootGcdResourceFuntional (
+TestPointReadyToBootGcdResourceFunctional (
   VOID
   );
 

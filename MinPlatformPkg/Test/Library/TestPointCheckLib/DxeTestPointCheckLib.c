@@ -239,7 +239,7 @@ TestPointPciEnumerationDonePciResourceAllocated (
 
 EFI_STATUS
 EFIAPI
-TestPointEndOfDxeDmaAcpiTableFuntional (
+TestPointEndOfDxeDmaAcpiTableFunctional (
   VOID
   )
 {
@@ -250,7 +250,7 @@ TestPointEndOfDxeDmaAcpiTableFuntional (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFunctional - Enter\n"));
   
   Acpi = TestPointGetAcpi (EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE);
   if (Acpi == NULL) {
@@ -273,7 +273,7 @@ TestPointEndOfDxeDmaAcpiTableFuntional (
     Status = EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFuntional - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFunctional - Exit\n"));
   return Status;
 }
 
@@ -381,7 +381,7 @@ TestPointDxeSmmReadyToLockSmramAligned (
 
 EFI_STATUS
 EFIAPI
-TestPointDxeSmmReadyToLockWsmtTableFuntional (
+TestPointDxeSmmReadyToLockWsmtTableFunctional (
   VOID
   )
 {
@@ -392,7 +392,7 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFuntional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFunctional - Enter\n"));
   
   Acpi = TestPointGetAcpi (EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE);
   if (Acpi == NULL) {
@@ -415,7 +415,7 @@ TestPointDxeSmmReadyToLockWsmtTableFuntional (
     Status = EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFuntional - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFunctional - Exit\n"));
   return Status;
 }
 
@@ -565,7 +565,7 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootAcpiTableFuntional (
+TestPointReadyToBootAcpiTableFunctional (
   VOID
   )
 {
@@ -576,7 +576,7 @@ TestPointReadyToBootAcpiTableFuntional (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFuntional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFunctional - Enter\n"));
   
   Result = TRUE;
   Status = TestPointCheckAcpi ();
@@ -593,13 +593,13 @@ TestPointReadyToBootAcpiTableFuntional (
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFuntional - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFunctional - Exit\n"));
   return EFI_SUCCESS;
 }
 
 EFI_STATUS
 EFIAPI
-TestPointReadyToBootGcdResourceFuntional (
+TestPointReadyToBootGcdResourceFunctional (
   VOID
   )
 {
@@ -610,7 +610,7 @@ TestPointReadyToBootGcdResourceFuntional (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFuntional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFunctional - Enter\n"));
   
   Result = TRUE;
   Status = TestPointCheckAcpiGcdResource ();
@@ -627,7 +627,7 @@ TestPointReadyToBootGcdResourceFuntional (
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFuntional - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFunctional - Exit\n"));
   return EFI_SUCCESS;
 }
 

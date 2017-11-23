@@ -82,7 +82,7 @@ OnEndOfDxe (
 
   TestPointEndOfDxeNoThirdPartyPciOptionRom ();
   
-  TestPointEndOfDxeDmaAcpiTableFuntional ();
+  TestPointEndOfDxeDmaAcpiTableFunctional ();
 
   TestPointEndOfDxeDmaProtectionEnabled ();
 }
@@ -118,7 +118,7 @@ OnDxeSmmReadyToLock (
 
   TestPointDxeSmmReadyToLockSmramAligned ();
 
-  TestPointDxeSmmReadyToLockWsmtTableFuntional ();
+  TestPointDxeSmmReadyToLockWsmtTableFunctional ();
 }
 
 /**
@@ -149,8 +149,8 @@ OnReadyToBootLater (
   TestPointReadyToBootUefiBootVariableFunctional ();
   TestPointReadyToBootUefiConsoleVariableFunctional ();
   TestPointReadyToBootHstiTableFunctional ();
-  TestPointReadyToBootAcpiTableFuntional ();
-  TestPointReadyToBootGcdResourceFuntional ();
+  TestPointReadyToBootAcpiTableFunctional ();
+  TestPointReadyToBootGcdResourceFunctional ();
 
   TestPointDxeSmmReadyToBootSmiHandlerInstrument ();
   TestPointDxeSmmReadyToBootSmmPageProtection ();
