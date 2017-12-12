@@ -532,6 +532,8 @@ BootOptionPriority (
 
     case MSG_SATA_DP:
     case MSG_ATAPI_DP:
+    case MSG_UFS_DP:
+    case MSG_NVME_NAMESPACE_DP:
       return 4;
 
     case MSG_USB_DP:
