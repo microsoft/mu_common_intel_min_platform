@@ -13,7 +13,7 @@
 #
 ##
 
-!if gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable == TRUE
+!if gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable == TRUE
 INF  SecurityPkg/Tcg/Tcg2Config/Tcg2ConfigPei.inf
 INF  SecurityPkg/Tcg/Tcg2Pei/Tcg2Pei.inf
 !endif

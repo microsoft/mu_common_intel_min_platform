@@ -69,8 +69,8 @@
   gIntelFsp2WrapperTokenSpaceGuid.PcdPeiMinMemSize              ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdPeiRecoveryMinMemSize      ## CONSUMES
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength
-  gMinPlatformModuleTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
+  gMinPlatformPkgTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr
 
 [Guids]
   gFspReservedMemoryResourceHobGuid                       ## CONSUMES ## HOB

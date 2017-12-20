@@ -32,7 +32,7 @@ Include
 gEdkiiSiliconInitializedPpiGuid = {0x82a72dc8, 0x61ec, 0x403e, {0xb1, 0x5a, 0x8d, 0x7a, 0x3a, 0x71, 0x84, 0x98}}
 
 [Guids]
-gMinPlatformModuleTokenSpaceGuid         =  {0x69d13bf0, 0xaf91, 0x4d96, {0xaa, 0x9f, 0x21, 0x84, 0xc5, 0xce, 0x3b, 0xc0}}
+gMinPlatformPkgTokenSpaceGuid         =  {0x69d13bf0, 0xaf91, 0x4d96, {0xaa, 0x9f, 0x21, 0x84, 0xc5, 0xce, 0x3b, 0xc0}}
 
 gAdapterInfoPlatformTestPointGuid = {0x5381e3ea, 0xb77, 0x4580, {0xad, 0xdf, 0xa9, 0x1c, 0x8, 0x3b, 0xf2, 0x97}}
 
@@ -78,71 +78,71 @@ TestPointCheckLib|Include/Library/TestPointCheckLib.h
 ## The Flash relevant PCD are ineffective and will be patched basing on FDF definitions during build.
 ## Set all of them to 0 here to prevent from confusion.
 ##
-gMinPlatformModuleTokenSpaceGuid.PcdFlashAreaBaseAddress|0xFF800000|UINT32|0x10000001
-gMinPlatformModuleTokenSpaceGuid.PcdFlashAreaSize|0x00800000|UINT32|0x10000002
+gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress|0xFF800000|UINT32|0x10000001
+gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize|0x00800000|UINT32|0x10000002
 
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvMicrocodeBase|0xFFE60000|UINT32|0x30000004
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvMicrocodeSize|0x000A0000|UINT32|0x30000005
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvMicrocodeOffset|0x00660000|UINT32|0x30000006
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeBase|0xFFE60000|UINT32|0x30000004
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeSize|0x000A0000|UINT32|0x30000005
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeOffset|0x00660000|UINT32|0x30000006
 
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPreMemoryBase|0x00000000|UINT32|0x20000004
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPreMemorySize|0x00000000|UINT32|0x20000005
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPreMemoryOffset|0x00000000|UINT32|0x20000006
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemoryBase|0x00000000|UINT32|0x20000007
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemorySize|0x00000000|UINT32|0x20000008
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvPostMemoryOffset|0x00000000|UINT32|0x20000009
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootBase|0x00000000|UINT32|0x2000000A
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootSize|0x00000000|UINT32|0x2000000B
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvUefiBootOffset|0x00000000|UINT32|0x2000000C
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootBase|0x00000000|UINT32|0x2000000D
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootSize|0x00000000|UINT32|0x2000000E
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvOsBootOffset|0x00000000|UINT32|0x2000000F
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvSecurityBase|0x00000000|UINT32|0x20000010
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvSecuritySize|0x00000000|UINT32|0x20000011
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvSecurityOffset|0x00000000|UINT32|0x20000012
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvAdvancedBase|0x00000000|UINT32|0x20000013
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvAdvancedSize|0x00000000|UINT32|0x20000014
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvAdvancedOffset|0x00000000|UINT32|0x20000015
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemoryBase|0x00000000|UINT32|0x20000004
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemorySize|0x00000000|UINT32|0x20000005
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemoryOffset|0x00000000|UINT32|0x20000006
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryBase|0x00000000|UINT32|0x20000007
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemorySize|0x00000000|UINT32|0x20000008
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryOffset|0x00000000|UINT32|0x20000009
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootBase|0x00000000|UINT32|0x2000000A
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootSize|0x00000000|UINT32|0x2000000B
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootOffset|0x00000000|UINT32|0x2000000C
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootBase|0x00000000|UINT32|0x2000000D
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootSize|0x00000000|UINT32|0x2000000E
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootOffset|0x00000000|UINT32|0x2000000F
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase|0x00000000|UINT32|0x20000010
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize|0x00000000|UINT32|0x20000011
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityOffset|0x00000000|UINT32|0x20000012
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase|0x00000000|UINT32|0x20000013
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize|0x00000000|UINT32|0x20000014
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedOffset|0x00000000|UINT32|0x20000015
 
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageBase|0x00000000|UINT32|0x20000016
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageSize|0x00000000|UINT32|0x20000017
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageOffset|0x00000000|UINT32|0x20000018
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageVariableOffset|0x00000000|UINT32|0x20000019
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageFtwSpareOffset|0x00000000|UINT32|0x2000001A
-gMinPlatformModuleTokenSpaceGuid.PcdFlashNvStorageFtwWorkingOffset|0x00000000|UINT32|0x2000001B
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageBase|0x00000000|UINT32|0x20000016
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageSize|0x00000000|UINT32|0x20000017
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageOffset|0x00000000|UINT32|0x20000018
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageVariableOffset|0x00000000|UINT32|0x20000019
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareOffset|0x00000000|UINT32|0x2000001A
+gMinPlatformPkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingOffset|0x00000000|UINT32|0x2000001B
 
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspTBase|0x00000000|UINT32|0x20000021
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspTSize|0x00000000|UINT32|0x20000022
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspTOffset|0x00000000|UINT32|0x20000023
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspMBase|0x00000000|UINT32|0x20000024
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspMSize|0x00000000|UINT32|0x20000025
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspMOffset|0x00000000|UINT32|0x20000026
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspSBase|0x00000000|UINT32|0x20000027
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspSSize|0x00000000|UINT32|0x20000028
-gMinPlatformModuleTokenSpaceGuid.PcdFlashFvFspSOffset|0x00000000|UINT32|0x20000029
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspTBase|0x00000000|UINT32|0x20000021
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspTSize|0x00000000|UINT32|0x20000022
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspTOffset|0x00000000|UINT32|0x20000023
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMBase|0x00000000|UINT32|0x20000024
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMSize|0x00000000|UINT32|0x20000025
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMOffset|0x00000000|UINT32|0x20000026
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase|0x00000000|UINT32|0x20000027
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize|0x00000000|UINT32|0x20000028
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSOffset|0x00000000|UINT32|0x20000029
 
-gMinPlatformModuleTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
-gMinPlatformModuleTokenSpaceGuid.PcdFspReservedSizeOnStackTop|0x00000040|UINT32|0x80000001
-gMinPlatformModuleTokenSpaceGuid.PcdPeiPhaseStackTop|0x00000000|UINT32|0x80000002
+gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
+gMinPlatformPkgTokenSpaceGuid.PcdFspReservedSizeOnStackTop|0x00000040|UINT32|0x80000001
+gMinPlatformPkgTokenSpaceGuid.PcdPeiPhaseStackTop|0x00000000|UINT32|0x80000002
 
-gMinPlatformModuleTokenSpaceGuid.PcdApicLocalAddress|0xFEE00000|UINT64|0x9000000B
-gMinPlatformModuleTokenSpaceGuid.PcdApicLocalMmioSize|0x1000|UINT32|0x9000000C
+gMinPlatformPkgTokenSpaceGuid.PcdApicLocalAddress|0xFEE00000|UINT64|0x9000000B
+gMinPlatformPkgTokenSpaceGuid.PcdApicLocalMmioSize|0x1000|UINT32|0x9000000C
 
-gMinPlatformModuleTokenSpaceGuid.PcdApicIoAddress|0xFEC00000|UINT64|0x9000000D
-gMinPlatformModuleTokenSpaceGuid.PcdApicIoMmioSize|0x1000|UINT32|0x9000000E
+gMinPlatformPkgTokenSpaceGuid.PcdApicIoAddress|0xFEC00000|UINT64|0x9000000D
+gMinPlatformPkgTokenSpaceGuid.PcdApicIoMmioSize|0x1000|UINT32|0x9000000E
 
-gMinPlatformModuleTokenSpaceGuid.PcdAcpiEnableSwSmi|0xF0|UINT8|0x90000012
-gMinPlatformModuleTokenSpaceGuid.PcdAcpiDisableSwSmi|0xF1|UINT8|0x90000013
+gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi|0xF0|UINT8|0x90000012
+gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi|0xF1|UINT8|0x90000013
 
-gMinPlatformModuleTokenSpaceGuid.PcdApicIoIdPch|0x02|UINT8|0x9000001E
+gMinPlatformPkgTokenSpaceGuid.PcdApicIoIdPch|0x02|UINT8|0x9000001E
 
-gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize|0x65|UINT32|0x20000500
-gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize|0x30|UINT32|0x20000501
-gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiReservedMemorySize|0x402|UINT32|0x20000502
-gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize|0x4b|UINT32|0x20000503
-gMinPlatformModuleTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize|0x25|UINT32|0x20000504
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize|0x65|UINT32|0x20000500
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize|0x30|UINT32|0x20000501
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiReservedMemorySize|0x402|UINT32|0x20000502
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize|0x4b|UINT32|0x20000503
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize|0x25|UINT32|0x20000504
 
-gMinPlatformModuleTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
+gMinPlatformPkgTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
 
 #
 # The PCDs are used to control the Windows SMM Security Mitigations Table - Protection Flags
@@ -153,11 +153,11 @@ gMinPlatformModuleTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
 # BIT2: Firmware setting this bit is an indication that it will not allow reconfiguration of system resources via non-architectural mechanisms.
 # BIT3-31: Reserved
 #
-gMinPlatformModuleTokenSpaceGuid.PcdWsmtProtectionFlags|0|UINT32|0x10001006
+gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags|0|UINT32|0x10001006
 
-gMinPlatformModuleTokenSpaceGuid.PcdPreferredPmProfile|0x0|UINT8|0x00100205
+gMinPlatformPkgTokenSpaceGuid.PcdPreferredPmProfile|0x0|UINT8|0x00100205
 
-gMinPlatformModuleTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x00100206
+gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x00100206
 
 #
 # See HstiIbvFeatureBit.h for the definition
@@ -166,7 +166,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x0010
 #
 #   It means BYTE<X> BIT<Y> is for feature <AAA>.
 #
-gMinPlatformModuleTokenSpaceGuid.PcdHstiIbvPlatformFeature|{0x00, 0x00, 0x00}|VOID*|0x00100301
+gMinPlatformPkgTokenSpaceGuid.PcdHstiIbvPlatformFeature|{0x00, 0x00, 0x00}|VOID*|0x00100301
 
 #
 # See TestPointCheckLib.h for the definition
@@ -181,7 +181,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdHstiIbvPlatformFeature|{0x00, 0x00, 0x00}|VO
 #   Stage OS boot:                                              {0x03, 0x07, 0x03, 0x05, 0x3F, 0x00, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 #   Stage Secure boot:                                          {0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 #   Stage Advanced:                                             {0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}|VOID*|0x00100302
+gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}|VOID*|0x00100302
 
 [PcdsDynamic]
 
@@ -191,38 +191,38 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x0
   ## Allocate 56 KB [0x2000..0xFFFF] of I/O space for Pci Devices
   ## If PcdPciReservedMemLimit =0  Pci Reserved default  MMIO Limit is PciExpressBase else use PcdPciReservedMemLimit .
   ##
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedIobase           |0x2000     |UINT16|0x40010041
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedIoLimit          |0xFFFF     |UINT16|0x40010042
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedMemBase          |0x90000000 |UINT32|0x40010043
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedMemLimit         |0x00000000 |UINT32|0x40010044
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedMemAbove4GBBase  |0xFFFFFFFFFFFFFFFF |UINT64|0x40010045
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit |0x0000000000000000 |UINT64|0x40010046 
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedPMemBase         |0xFFFFFFFF |UINT32|0x40010047
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedPMemLimit        |0x00000000 |UINT32|0x40010048
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedPMemAbove4GBBase |0xFFFFFFFFFFFFFFFF |UINT64|0x40010049
-  gMinPlatformModuleTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit|0x0000000000000000 |UINT64|0x4001004A 
-  gMinPlatformModuleTokenSpaceGuid.PcdPciDmaAbove4G               |FALSE|BOOLEAN|0x4001004B
-  gMinPlatformModuleTokenSpaceGuid.PcdPciNoExtendedConfigSpace    |FALSE|BOOLEAN|0x4001004C
-  gMinPlatformModuleTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedIobase           |0x2000     |UINT16|0x40010041
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedIoLimit          |0xFFFF     |UINT16|0x40010042
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemBase          |0x90000000 |UINT32|0x40010043
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemLimit         |0x00000000 |UINT32|0x40010044
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBBase  |0xFFFFFFFFFFFFFFFF |UINT64|0x40010045
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit |0x0000000000000000 |UINT64|0x40010046 
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemBase         |0xFFFFFFFF |UINT32|0x40010047
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemLimit        |0x00000000 |UINT32|0x40010048
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBBase |0xFFFFFFFFFFFFFFFF |UINT64|0x40010049
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit|0x0000000000000000 |UINT64|0x4001004A 
+  gMinPlatformPkgTokenSpaceGuid.PcdPciDmaAbove4G               |FALSE|BOOLEAN|0x4001004B
+  gMinPlatformPkgTokenSpaceGuid.PcdPciNoExtendedConfigSpace    |FALSE|BOOLEAN|0x4001004C
+  gMinPlatformPkgTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
 
-  gMinPlatformModuleTokenSpaceGuid.PcdLowPowerS0Idle|0|UINT8|0x40000006
-  gMinPlatformModuleTokenSpaceGuid.PcdTenSecondPowerButtonEnable|0|UINT8|0x40000008
-  gMinPlatformModuleTokenSpaceGuid.PcdPciExpNative|0|UINT8|0x40000004
-  gMinPlatformModuleTokenSpaceGuid.PcdNativeAspmEnable|1|UINT8|0x40000005
+  gMinPlatformPkgTokenSpaceGuid.PcdLowPowerS0Idle|0|UINT8|0x40000006
+  gMinPlatformPkgTokenSpaceGuid.PcdTenSecondPowerButtonEnable|0|UINT8|0x40000008
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpNative|0|UINT8|0x40000004
+  gMinPlatformPkgTokenSpaceGuid.PcdNativeAspmEnable|1|UINT8|0x40000005
 
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress|0x1804|UINT16|0x0001037
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress|0x0000|UINT16|0x00010038
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress|0x1850|UINT16|0x00010039
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPmTimerBlockAddress|0x1808|UINT16|0x0001003A
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiGpe0BlockAddress|0x1880|UINT16|0x0001003B
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiGpe1BlockAddress|0x0000|UINT16|0x0001003C
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress|0x1804|UINT16|0x0001037
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress|0x0000|UINT16|0x00010038
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress|0x1850|UINT16|0x00010039
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPmTimerBlockAddress|0x1808|UINT16|0x0001003A
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress|0x1880|UINT16|0x0001003B
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress|0x0000|UINT16|0x0001003C
 
-  gMinPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength|0x10000000|UINT32|0x0010004
-  gMinPlatformModuleTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr|0x9f000|UINT32|0x30000008
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength|0x10000000|UINT32|0x0010004
+  gMinPlatformPkgTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr|0x9f000|UINT32|0x30000008
 
-  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheckLevel|0|UINT32|0x30000009
+  gMinPlatformPkgTokenSpaceGuid.PcdPlatformMemoryCheckLevel|0|UINT32|0x30000009
 
   ## This PCD is to control which device is the potential trusted console input device.<BR><BR>
   # For example:<BR>
@@ -231,7 +231,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x0
   #     {0x03, 0x0F, 0x0B, 0x00,  0xFF, 0xFF, 0xFF, 0xFF, 0x03, 0x01,    0x01,<BR>
   #   //Header<BR>
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleInputDevicePath|{0x03, 0x0F, 0x0B, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x03, 0x01, 0x01, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x300000A
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedConsoleInputDevicePath|{0x03, 0x0F, 0x0B, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x03, 0x01, 0x01, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x300000A
 
   ## This PCD is to control which device is the potential trusted console output device.<BR><BR>
   # For example:<BR>
@@ -242,7 +242,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x0
   #      0x01, 0x01, 0x06, 0x00,  0x00, 0x02,
   #   //Header<BR>
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleOutputDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00,  0x00, 0x02, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x300000C
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedConsoleOutputDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00,  0x00, 0x02, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x300000C
 
   ## This PCD is to control which device is the potential trusted storage device.<BR><BR>
   # For example:<BR>
@@ -253,7 +253,7 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x0
   #      0x01, 0x01, 0x06, 0x00,  0x00, 0x17,
   #   //Header<BR>
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedStorageDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x17, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x3000010
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedStorageDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x17, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x3000010
 
 [PcdsFeatureFlag]
   #
@@ -263,13 +263,13 @@ gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x0
   # Stage 4 - boot to OS
   # Stage 5 - boot to OS with security boot enabled
   #
-  gMinPlatformModuleTokenSpaceGuid.PcdBootStage|4|UINT8|0xF00000A0
+  gMinPlatformPkgTokenSpaceGuid.PcdBootStage|4|UINT8|0xF00000A0
   
-  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterDebugInit     |FALSE|BOOLEAN|0xF00000A1
-  gMinPlatformModuleTokenSpaceGuid.PcdStopAfterMemInit       |FALSE|BOOLEAN|0xF00000A2
-  gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly        |FALSE|BOOLEAN|0xF00000A3
-  gMinPlatformModuleTokenSpaceGuid.PcdUefiSecureBootEnable   |FALSE|BOOLEAN|0xF00000A4
-  gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable             |FALSE|BOOLEAN|0xF00000A5
-  gMinPlatformModuleTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE|BOOLEAN|0xF00000A6
-  gMinPlatformModuleTokenSpaceGuid.PcdPerformanceEnable      |FALSE|BOOLEAN|0xF00000A7
+  gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit     |FALSE|BOOLEAN|0xF00000A1
+  gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit       |FALSE|BOOLEAN|0xF00000A2
+  gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly        |FALSE|BOOLEAN|0xF00000A3
+  gMinPlatformPkgTokenSpaceGuid.PcdUefiSecureBootEnable   |FALSE|BOOLEAN|0xF00000A4
+  gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable             |FALSE|BOOLEAN|0xF00000A5
+  gMinPlatformPkgTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE|BOOLEAN|0xF00000A6
+  gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable      |FALSE|BOOLEAN|0xF00000A7
 

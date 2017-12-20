@@ -52,7 +52,7 @@
   PeiCheckDmaProtection.c
 
 [Pcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
 
 [Guids]
   gEfiHobMemoryAllocStackGuid

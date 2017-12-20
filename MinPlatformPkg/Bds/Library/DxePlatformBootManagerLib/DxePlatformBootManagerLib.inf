@@ -54,7 +54,7 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Pcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdTpm2Enable                    ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable                    ## CONSUMES
   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut                   ## PRODUCES
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution       ## PRODUCES
   gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution         ## PRODUCES
@@ -65,11 +65,11 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoHorizontalResolution  ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdSetupVideoVerticalResolution    ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdConInConnectOnDemand            ## PRODUCES
-  gMinPlatformModuleTokenSpaceGuid.PcdPlatformMemoryCheckLevel      ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdBootToShellOnly               ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleInputDevicePath  ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedConsoleOutputDevicePath ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdTrustedStorageDevicePath       ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdPlatformMemoryCheckLevel      ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly               ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedConsoleInputDevicePath  ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedConsoleOutputDevicePath ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdTrustedStorageDevicePath       ## CONSUMES
 
 [Sources]
   BdsPlatform.c

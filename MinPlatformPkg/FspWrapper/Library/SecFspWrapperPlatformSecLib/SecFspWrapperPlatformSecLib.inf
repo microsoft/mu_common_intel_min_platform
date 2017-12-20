@@ -90,7 +90,7 @@
   gUefiCpuPkgTokenSpaceGuid.PcdPeiTemporaryRamStackSize               ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFsptBaseAddress                  ## CONSUMES
   gIntelFsp2PkgTokenSpaceGuid.PcdFspTemporaryRamSize                  ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdSecSerialPortDebugEnable        ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable        ## CONSUMES
 
 [FixedPcd]
   gIntelFsp2WrapperTokenSpaceGuid.PcdCpuMicrocodePatchAddress         ## CONSUMES
@@ -98,7 +98,7 @@
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashMicrocodeOffset             ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheAddress            ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheSize               ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvSecurityBase                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvSecuritySize                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvAdvancedBase                ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvAdvancedSize                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize                ## CONSUMES

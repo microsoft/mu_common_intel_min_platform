@@ -110,4 +110,4 @@
   gEfiSmmUsbDispatch2ProtocolGuid
 
 [Pcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

@@ -38,8 +38,8 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Pcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiEnableSwSmi        ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiDisableSwSmi       ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi        ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi       ## CONSUMES
 
 [Sources]
   AcpiSmm.h

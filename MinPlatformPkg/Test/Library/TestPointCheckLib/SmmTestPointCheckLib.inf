@@ -53,7 +53,7 @@
   TestPointHelp.c
 
 [Pcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
 
 [Guids]
   gEdkiiPiSmmMemoryAttributesTableGuid

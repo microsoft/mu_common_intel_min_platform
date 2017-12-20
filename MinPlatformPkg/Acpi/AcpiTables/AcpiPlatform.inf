@@ -56,30 +56,30 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId     ## CONSUMES
   gPcAtChipsetPkgTokenSpaceGuid.PcdHpetBaseAddress
 
-  gMinPlatformModuleTokenSpaceGuid.PcdPreferredPmProfile
-  gMinPlatformModuleTokenSpaceGuid.PcdLowPowerS0Idle
-  gMinPlatformModuleTokenSpaceGuid.PcdTenSecondPowerButtonEnable
-  gMinPlatformModuleTokenSpaceGuid.PcdPciExpNative
-  gMinPlatformModuleTokenSpaceGuid.PcdNativeAspmEnable
+  gMinPlatformPkgTokenSpaceGuid.PcdPreferredPmProfile
+  gMinPlatformPkgTokenSpaceGuid.PcdLowPowerS0Idle
+  gMinPlatformPkgTokenSpaceGuid.PcdTenSecondPowerButtonEnable
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpNative
+  gMinPlatformPkgTokenSpaceGuid.PcdNativeAspmEnable
 
 [FixedPcd]
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiPmTimerBlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiGpe0BlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiGpe1BlockAddress
-  gMinPlatformModuleTokenSpaceGuid.PcdPciExpressRegionLength
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPmTimerBlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
 
-  gMinPlatformModuleTokenSpaceGuid.PcdApicLocalAddress ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdApicIoAddress    ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiEnableSwSmi  ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdAcpiDisableSwSmi ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdApicIoIdPch      ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdApicLocalAddress ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdApicIoAddress    ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi  ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdApicIoIdPch      ## CONSUMES
 
-  gMinPlatformModuleTokenSpaceGuid.PcdWsmtProtectionFlags
+  gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags
 
 [Protocols]
   gEfiAcpiTableProtocolGuid                     ## CONSUMES

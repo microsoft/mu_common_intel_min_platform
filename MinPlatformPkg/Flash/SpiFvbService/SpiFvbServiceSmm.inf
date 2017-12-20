@@ -50,8 +50,8 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize   ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize   ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvMicrocodeBase          ## CONSUMES
-  gMinPlatformModuleTokenSpaceGuid.PcdFlashFvMicrocodeSize          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeBase          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeSize          ## CONSUMES
 
 [Sources]
   Common/SpiFvbServiceCommon.c
