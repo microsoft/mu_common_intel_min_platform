@@ -71,37 +71,11 @@ PEI_SEC_PERFORMANCE_PPI  mSecPerformancePpi = {
   SecGetPerformance
 };
 
-EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mFvSecurityInfoPpi = {
-  EFI_FIRMWARE_FILE_SYSTEM2_GUID,
-  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvSecurityBase),
-  FixedPcdGet32 (PcdFlashFvSecuritySize),
-  NULL,
-  NULL,
-};
-
-EFI_PEI_FIRMWARE_VOLUME_INFO_PPI mFvAdvancedInfoPpi = {
-  EFI_FIRMWARE_FILE_SYSTEM2_GUID,
-  (VOID *)(UINTN) FixedPcdGet32 (PcdFlashFvAdvancedBase),
-  FixedPcdGet32 (PcdFlashFvAdvancedSize),
-  NULL,
-  NULL
-};
-
 EFI_PEI_PPI_DESCRIPTOR  mPeiSecPlatformPpi[] = {
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI,
     &gTopOfTemporaryRamPpiGuid,
     NULL // To be patched later.
-  },
-  {
-    EFI_PEI_PPI_DESCRIPTOR_PPI,
-    &gEfiPeiFirmwareVolumeInfoPpiGuid,
-    &mFvSecurityInfoPpi
-  },
-  {
-    EFI_PEI_PPI_DESCRIPTOR_PPI,
-    &gEfiPeiFirmwareVolumeInfoPpiGuid,
-    &mFvAdvancedInfoPpi
   },
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST,

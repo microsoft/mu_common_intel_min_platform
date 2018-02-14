@@ -54,6 +54,8 @@
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gUefiCpuPkgTokenSpaceGuid.PcdCpuSmmBlockStartupThisAp
+  gUefiCpuPkgTokenSpaceGuid.PcdCpuHotPlugSupport
 
 [Guids]
   gEdkiiPiSmmMemoryAttributesTableGuid

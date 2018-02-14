@@ -27,8 +27,6 @@
   Fadt/Fadt.c
   Facs/Facs.c
   Hpet/Hpet.c
-  Madt/Madt.c
-  Mcfg/Mcfg.c
   Wsmt/Wsmt.c
 
 [Packages]
@@ -48,21 +46,35 @@
   UefiRuntimeServicesTableLib
   BaseMemoryLib
   HobLib
+  PciSegmentInfoLib
   AslUpdateLib
   BoardAcpiTableLib
 
 [Pcd]
-  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress ## CONSUMES
-  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId     ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemId
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision
+
+  gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable
+  gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicCount
+  gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicIdBase
+  gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicAddressBase
+  gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicInterruptBase
+  gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuThreadCount
+  gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuCoreCount
+  gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuSocketCount
+
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags
+
   gPcAtChipsetPkgTokenSpaceGuid.PcdHpetBaseAddress
-
-  gMinPlatformPkgTokenSpaceGuid.PcdPreferredPmProfile
-  gMinPlatformPkgTokenSpaceGuid.PcdLowPowerS0Idle
-  gMinPlatformPkgTokenSpaceGuid.PcdTenSecondPowerButtonEnable
-  gMinPlatformPkgTokenSpaceGuid.PcdPciExpNative
-  gMinPlatformPkgTokenSpaceGuid.PcdNativeAspmEnable
-
-[FixedPcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdHpetTimerBlockId
+  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress
@@ -71,13 +83,13 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPmTimerBlockAddress
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress
-  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
 
-  gMinPlatformPkgTokenSpaceGuid.PcdApicLocalAddress ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdApicIoAddress    ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi  ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdApicIoIdPch      ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdLocalApicAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdIoApicAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdIoApicId
+
+  gUefiCpuPkgTokenSpaceGuid.PcdCpuMaxLogicalProcessorNumber
+  gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuSocketCount
 
   gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags
 

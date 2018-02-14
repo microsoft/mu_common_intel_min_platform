@@ -1,7 +1,7 @@
 ## @file
-# Instance of PCI SegmentInfo Library.
+#  UEFI Decompress Library implementation.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#  Copyright (c) 2007 - 2014, Intel Corporation. All rights reserved.<BR>
 #
 #  This program and the accompanying materials
 #  are licensed and made available under the terms and conditions of the BSD License
@@ -15,30 +15,27 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = PciSegmentInfoLibSimple
-  FILE_GUID                      = ACA4E371-3D0E-47BE-8000-5030F97CF9E7
-  MODULE_TYPE                    = PEIM
+  BASE_NAME                      = CompressLib
+  FILE_GUID                      = d9249b61-30a7-456d-a3a1-23d24fed17aa
+  MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = PciSegmentInfoLib
+  LIBRARY_CLASS                  = CompressLib
 
-#
-# The following information is for reference only and not required by the build tools.
+
 #
 #  VALID_ARCHITECTURES           = IA32 X64 IPF EBC
 #
 
 [Sources]
-  PciSegmentInfoLibSimple.c
+  CompressLib.c
+
 
 [Packages]
   MdePkg/MdePkg.dec
-  MinPlatformPkg/MinPlatformPkg.dec
+
 
 [LibraryClasses]
-  PcdLib
+  BaseLib
   DebugLib
-  HobLib
+  BaseMemoryLib
 
-[Pcd]
-  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
-  gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength

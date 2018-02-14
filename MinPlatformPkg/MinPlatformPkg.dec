@@ -1,5 +1,6 @@
 ## @file
-# Module describe the entire platform configuration.
+# This package provides the modules that build for a minimal platform.
+# This MinPlatformPkg should only depend on EDKII Core packages.
 #
 # The DEC files are used by the utilities that parse DSC and
 # INF files to generate AutoGen.c and AutoGen.h files
@@ -30,6 +31,9 @@ Include
 
 [Ppis]
 gEdkiiSiliconInitializedPpiGuid = {0x82a72dc8, 0x61ec, 0x403e, {0xb1, 0x5a, 0x8d, 0x7a, 0x3a, 0x71, 0x84, 0x98}}
+
+gPeiBaseMemoryTestPpiGuid       = { 0xb6ec423c, 0x21d2, 0x490d, { 0x85, 0xc6, 0xdd, 0x58, 0x64, 0xea, 0xa6, 0x74 } }
+gPeiPlatformMemorySizePpiGuid   = { 0x9a7ef41e, 0xc140, 0x4bd1, { 0xb8, 0x84, 0x1e, 0x11, 0x24, 0x0b, 0x4c, 0xe6 } }
 
 [Guids]
 gMinPlatformPkgTokenSpaceGuid         =  {0x69d13bf0, 0xaf91, 0x4d96, {0xaa, 0x9f, 0x21, 0x84, 0xc5, 0xce, 0x3b, 0xc0}}
@@ -72,8 +76,85 @@ SecBoardInitLib|Include/Library/SecBoardInitLib.h
 TestPointLib|Include/Library/TestPointLib.h
 TestPointCheckLib|Include/Library/TestPointCheckLib.h
 
-[PcdsFixedAtBuild]
+[PcdsFixedAtBuild, PcdsPatchableInModule]
 
+gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode|FALSE|BOOLEAN|0x80000008
+
+gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
+gMinPlatformPkgTokenSpaceGuid.PcdFspReservedSizeOnStackTop|0x00000040|UINT32|0x80000001
+gMinPlatformPkgTokenSpaceGuid.PcdPeiPhaseStackTop|0x00000000|UINT32|0x80000002
+
+gMinPlatformPkgTokenSpaceGuid.PcdLocalApicAddress|0xFEE00000|UINT32|0x9000000B
+gMinPlatformPkgTokenSpaceGuid.PcdLocalApicMmioSize|0x1000|UINT32|0x9000000C
+
+gMinPlatformPkgTokenSpaceGuid.PcdIoApicAddress|0xFEC00000|UINT32|0x9000000D
+gMinPlatformPkgTokenSpaceGuid.PcdIoApicMmioSize|0x1000|UINT32|0x9000000E
+gMinPlatformPkgTokenSpaceGuid.PcdIoApicId|0x02|UINT8|0x90000014
+
+gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi|0xF0|UINT8|0x90000012
+gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi|0xF1|UINT8|0x90000013
+
+gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicCount|0|UINT8|0x90000015
+gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicIdBase|0x09|UINT8|0x90000016
+gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicAddressBase|0xFEC01000|UINT32|0x90000017
+gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicInterruptBase|24|UINT32|0x90000018
+
+gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuThreadCount|2|UINT32|0x90000021
+gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuCoreCount|8|UINT32|0x90000022
+gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuSocketCount|4|UINT32|0x90000023
+
+gMinPlatformPkgTokenSpaceGuid.PcdHpetTimerBlockId|0x8086A201|UINT32|0x90000024
+
+gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
+gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
+gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
+
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize|0x65|UINT32|0x20000500
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize|0x30|UINT32|0x20000501
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiReservedMemorySize|0x402|UINT32|0x20000502
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize|0x4b|UINT32|0x20000503
+gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize|0x25|UINT32|0x20000504
+
+gMinPlatformPkgTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
+
+#
+# The PCDs are used to control the Windows SMM Security Mitigations Table - Protection Flags
+#
+# BIT0: If set, expresses that for all synchronous SMM entries,SMM will validate that input and output buffers lie entirely within the expected fixed memory regions.
+# BIT1: If set, expresses that for all synchronous SMM entries, SMM will validate that input and output pointers embedded within the fixed communication buffer only refer to address ranges \
+#       that lie entirely within the expected fixed memory regions.
+# BIT2: Firmware setting this bit is an indication that it will not allow reconfiguration of system resources via non-architectural mechanisms.
+# BIT3-31: Reserved
+#
+gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags|0|UINT32|0x10001006
+
+gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x00100206
+
+#
+# See HstiIbvFeatureBit.h for the definition
+#
+#   #define HSTI_BYTE<X>_<AAA>  BIT<Y>
+#
+#   It means BYTE<X> BIT<Y> is for feature <AAA>.
+#
+gMinPlatformPkgTokenSpaceGuid.PcdHstiIbvPlatformFeature|{0x00, 0x00, 0x00}|VOID*|0x00100301
+
+#
+# See TestPointCheckLib.h for the definition
+#
+#   #define TEST_POINT_BYTE<X>_<AAA>  BIT<Y>
+#
+#   It means BYTE<X> BIT<Y> is for feature <AAA>.
+#                                                               BYTE0 BYTE1 BYTE2 BYTE3 BYTE4 BYTE5 BYTE6 BYTE7 BYTE8
+#   Stage debug:                                                {0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#   Stage memory:                                               {0x03, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#   Stage UEFI boot:                                            {0x03, 0x07, 0x03, 0x05, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#   Stage OS boot:                                              {0x03, 0x07, 0x03, 0x05, 0x3F, 0x00, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#   Stage Secure boot:                                          {0x03, 0x0F, 0x03, 0x1D, 0x3F, 0x0F, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#   Stage Advanced:                                             {0x03, 0x0F, 0x03, 0x1D, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x03, 0x1D, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}|VOID*|0x00100302
+
+[PcdsPatchableInModule]
 ##
 ## The Flash relevant PCD are ineffective and will be patched basing on FDF definitions during build.
 ## Set all of them to 0 here to prevent from confusion.
@@ -120,70 +201,12 @@ gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMOffset|0x00000000|UINT32|0x20000026
 gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase|0x00000000|UINT32|0x20000027
 gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize|0x00000000|UINT32|0x20000028
 gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSOffset|0x00000000|UINT32|0x20000029
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUBase|0x00000000|UINT32|0x2000002A
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUSize|0x00000000|UINT32|0x2000002B
+gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUOffset|0x00000000|UINT32|0x2000002C
 
-gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
-gMinPlatformPkgTokenSpaceGuid.PcdFspReservedSizeOnStackTop|0x00000040|UINT32|0x80000001
-gMinPlatformPkgTokenSpaceGuid.PcdPeiPhaseStackTop|0x00000000|UINT32|0x80000002
-
-gMinPlatformPkgTokenSpaceGuid.PcdApicLocalAddress|0xFEE00000|UINT64|0x9000000B
-gMinPlatformPkgTokenSpaceGuid.PcdApicLocalMmioSize|0x1000|UINT32|0x9000000C
-
-gMinPlatformPkgTokenSpaceGuid.PcdApicIoAddress|0xFEC00000|UINT64|0x9000000D
-gMinPlatformPkgTokenSpaceGuid.PcdApicIoMmioSize|0x1000|UINT32|0x9000000E
-
-gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi|0xF0|UINT8|0x90000012
-gMinPlatformPkgTokenSpaceGuid.PcdAcpiDisableSwSmi|0xF1|UINT8|0x90000013
-
-gMinPlatformPkgTokenSpaceGuid.PcdApicIoIdPch|0x02|UINT8|0x9000001E
-
-gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize|0x65|UINT32|0x20000500
-gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize|0x30|UINT32|0x20000501
-gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiReservedMemorySize|0x402|UINT32|0x20000502
-gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize|0x4b|UINT32|0x20000503
-gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize|0x25|UINT32|0x20000504
-
-gMinPlatformPkgTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
-
-#
-# The PCDs are used to control the Windows SMM Security Mitigations Table - Protection Flags
-#
-# BIT0: If set, expresses that for all synchronous SMM entries,SMM will validate that input and output buffers lie entirely within the expected fixed memory regions.
-# BIT1: If set, expresses that for all synchronous SMM entries, SMM will validate that input and output pointers embedded within the fixed communication buffer only refer to address ranges \
-#       that lie entirely within the expected fixed memory regions.
-# BIT2: Firmware setting this bit is an indication that it will not allow reconfiguration of system resources via non-architectural mechanisms.
-# BIT3-31: Reserved
-#
-gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags|0|UINT32|0x10001006
-
-gMinPlatformPkgTokenSpaceGuid.PcdPreferredPmProfile|0x0|UINT8|0x00100205
-
-gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable|TRUE|BOOLEAN|0x00100206
-
-#
-# See HstiIbvFeatureBit.h for the definition
-#
-#   #define HSTI_BYTE<X>_<AAA>  BIT<Y>
-#
-#   It means BYTE<X> BIT<Y> is for feature <AAA>.
-#
-gMinPlatformPkgTokenSpaceGuid.PcdHstiIbvPlatformFeature|{0x00, 0x00, 0x00}|VOID*|0x00100301
-
-#
-# See TestPointCheckLib.h for the definition
-#
-#   #define TEST_POINT_BYTE<X>_<AAA>  BIT<Y>
-#
-#   It means BYTE<X> BIT<Y> is for feature <AAA>.
-#                                                               BYTE0 BYTE1 BYTE2 BYTE3 BYTE4 BYTE5 BYTE6 BYTE7 BYTE8
-#   Stage debug:                                                {0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#   Stage memory:                                               {0x03, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#   Stage UEFI boot:                                            {0x03, 0x07, 0x03, 0x05, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#   Stage OS boot:                                              {0x03, 0x07, 0x03, 0x05, 0x3F, 0x00, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#   Stage Secure boot:                                          {0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#   Stage Advanced:                                             {0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x07, 0x1F, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}|VOID*|0x00100302
-
-[PcdsDynamic]
+[PcdsDynamic, PcdsDynamicEx]
+gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
 
 [PcdsFixedAtBuild, PcdsPatchableInModule, PcdsDynamic, PcdsDynamicEx]
 
@@ -204,11 +227,6 @@ gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x07, 
   gMinPlatformPkgTokenSpaceGuid.PcdPciDmaAbove4G               |FALSE|BOOLEAN|0x4001004B
   gMinPlatformPkgTokenSpaceGuid.PcdPciNoExtendedConfigSpace    |FALSE|BOOLEAN|0x4001004C
   gMinPlatformPkgTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
-
-  gMinPlatformPkgTokenSpaceGuid.PcdLowPowerS0Idle|0|UINT8|0x40000006
-  gMinPlatformPkgTokenSpaceGuid.PcdTenSecondPowerButtonEnable|0|UINT8|0x40000008
-  gMinPlatformPkgTokenSpaceGuid.PcdPciExpNative|0|UINT8|0x40000004
-  gMinPlatformPkgTokenSpaceGuid.PcdNativeAspmEnable|1|UINT8|0x40000005
 
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036

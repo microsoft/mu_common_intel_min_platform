@@ -26,6 +26,8 @@
 
 EFI_GUID  mPciSegmentInfoHobGuid = PCI_SEGMENT_INFO_HOB_GUID;
 
+volatile PCI_SEGMENT_INFO  mPciSegmentInfo;
+
 /**
   Return an array of PCI_SEGMENT_INFO holding the segment information.
 
@@ -52,15 +54,27 @@ GetPciSegmentInfo (
   if (Hob != NULL) {
     PciSegmentInfo = GET_GUID_HOB_DATA(Hob);
   } else {
-    PciSegmentInfo = BuildGuidHob (&mPciSegmentInfoHobGuid, sizeof(PCI_SEGMENT_INFO));
-    ASSERT(PciSegmentInfo != NULL);
-    if (PciSegmentInfo == NULL) {
-      return NULL;
+    mPciSegmentInfo.SegmentNumber  = 0;
+    mPciSegmentInfo.BaseAddress    = PcdGet64(PcdPciExpressBaseAddress);
+    mPciSegmentInfo.StartBusNumber = 0;
+    mPciSegmentInfo.EndBusNumber   = (UINT8)((PcdGet32 (PcdPciExpressRegionLength) / 0x100000) - 1);
+
+    DEBUG ((DEBUG_INFO, "mPciSegmentInfo.BaseAddress - 0x%x\n", mPciSegmentInfo.BaseAddress));
+
+    if (mPciSegmentInfo.BaseAddress == 0) {
+      // Premem phase
+      PciSegmentInfo = BuildGuidHob (&mPciSegmentInfoHobGuid, sizeof(PCI_SEGMENT_INFO));
+      ASSERT(PciSegmentInfo != NULL);
+      if (PciSegmentInfo == NULL) {
+        return NULL;
+      }
+      PciSegmentInfo->SegmentNumber  = 0;
+      PciSegmentInfo->BaseAddress    = PcdGet64(PcdPciExpressBaseAddress);
+      PciSegmentInfo->StartBusNumber = 0;
+      PciSegmentInfo->EndBusNumber   = (UINT8)((PcdGet32 (PcdPciExpressRegionLength) / 0x100000) - 1);
+    } else {
+      PciSegmentInfo = (VOID *)&mPciSegmentInfo;
     }
-    PciSegmentInfo->SegmentNumber = 0;
-    PciSegmentInfo->BaseAddress = PcdGet64(PcdPciExpressBaseAddress);
-    PciSegmentInfo->StartBusNumber = 0;
-    PciSegmentInfo->EndBusNumber = 0xFF;
   }
   return PciSegmentInfo;
 }

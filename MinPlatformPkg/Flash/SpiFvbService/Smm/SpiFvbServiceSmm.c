@@ -127,6 +127,15 @@ FvbInitialize (
   UINT32                                BytesWritten;
   UINTN                                 BytesErased;
 
+  mPlatformFvBaseAddress[0].FvBase = PcdGet32(PcdFlashNvStorageVariableBase);
+  mPlatformFvBaseAddress[0].FvSize = PcdGet32(PcdFlashNvStorageVariableSize);
+  mPlatformFvBaseAddress[1].FvBase = PcdGet32(PcdFlashFvMicrocodeBase);
+  mPlatformFvBaseAddress[1].FvSize = PcdGet32(PcdFlashFvMicrocodeSize);
+  mPlatformDefaultBaseAddress[0].FvBase = PcdGet32(PcdFlashNvStorageVariableBase);
+  mPlatformDefaultBaseAddress[0].FvSize = PcdGet32(PcdFlashNvStorageVariableSize);
+  mPlatformDefaultBaseAddress[1].FvBase = PcdGet32(PcdFlashFvMicrocodeBase);
+  mPlatformDefaultBaseAddress[1].FvSize = PcdGet32(PcdFlashFvMicrocodeSize);
+
   //
   // We will only continue with FVB installation if the
   // SPI is the active BIOS state

@@ -16,7 +16,15 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 // Statements that include other files
 //
 
-#include "Wsmt.h"
+#include <IndustryStandard/Acpi.h>
+#include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
+#include <Library/PcdLib.h>
+
+//
+// WSMT Definitions
+//
+
+#define EFI_ACPI_OEM_WSMT_REVISION                      0x00000001
 
 EFI_ACPI_WSMT_TABLE Wsmt = {
   {

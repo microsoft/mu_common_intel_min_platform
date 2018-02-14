@@ -56,4 +56,8 @@
 [Depex]
   gEfiPeiMemoryDiscoveredPpiGuid
 
-[FixedPcd]
+[Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBBase
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBBase
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit

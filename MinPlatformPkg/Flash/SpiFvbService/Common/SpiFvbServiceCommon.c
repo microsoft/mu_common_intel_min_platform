@@ -26,14 +26,14 @@ FVB_GLOBAL   mFvbModuleGlobal;
 // Now we only provide FVs on Variable region and MicorCode region for performance issue.
 //
 FV_INFO mPlatformFvBaseAddress[] = {
-  {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
-  {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
+  {0, 0}, // {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
+  {0, 0}, // {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
   {0, 0}
 };
 
 FV_INFO mPlatformDefaultBaseAddress[] = {
-  {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
-  {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
+  {0, 0}, // {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
+  {0, 0}, // {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
   {0, 0}
 };
 

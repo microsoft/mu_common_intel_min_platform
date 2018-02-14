@@ -24,7 +24,7 @@ INF  MdeModulePkg/Core/PiSmmCore/PiSmmIpl.inf
 INF  MdeModulePkg/Core/PiSmmCore/PiSmmCore.inf
 INF  MdeModulePkg/Universal/ReportStatusCodeRouter/Smm/ReportStatusCodeRouterSmm.inf
 INF  MdeModulePkg/Universal/StatusCodeHandler/Smm/StatusCodeHandlerSmm.inf
-INF  UefiCpuPkg/PiSmmCpuDxeSmm/PiSmmCpuDxeSmm.inf
+#INF  UefiCpuPkg/PiSmmCpuDxeSmm/PiSmmCpuDxeSmm.inf
 INF  UefiCpuPkg/CpuIo2Smm/CpuIo2Smm.inf
 INF  MdeModulePkg/Universal/SmmCommunicationBufferDxe/SmmCommunicationBufferDxe.inf
 !endif

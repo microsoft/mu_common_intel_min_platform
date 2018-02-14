@@ -32,6 +32,8 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/BoardInitLib.h>
 #include <Library/TestPointCheckLib.h>
 #include <Guid/MemoryTypeInformation.h>
+#include <Ppi/PlatformMemorySize.h>
+#include <Ppi/BaseMemoryTest.h>
 
 EFI_STATUS
 EFIAPI
@@ -47,6 +49,40 @@ MemoryDiscoveredPpiNotifyCallback (
   IN CONST EFI_PEI_SERVICES      **PeiServices,
   IN EFI_PEI_NOTIFY_DESCRIPTOR   *NotifyDescriptor,
   IN VOID                        *Ppi
+  );
+
+EFI_STATUS
+EFIAPI
+GetPlatformMemorySize (
+  IN      EFI_PEI_SERVICES                       **PeiServices,
+  IN      PEI_PLATFORM_MEMORY_SIZE_PPI           *This,
+  IN OUT  UINT64                                 *MemorySize
+  );
+
+/**
+
+  This function checks the memory range in PEI. 
+
+  @param PeiServices     Pointer to PEI Services.
+  @param This            Pei memory test PPI pointer.
+  @param BeginAddress    Beginning of the memory address to be checked.
+  @param MemoryLength    Bytes of memory range to be checked.
+  @param Operation       Type of memory check operation to be performed.
+  @param ErrorAddress    Return the address of the error memory address.
+    
+  @retval EFI_SUCCESS         The operation completed successfully.
+  @retval EFI_DEVICE_ERROR    Memory test failed. It's not safe to use this range of memory.
+
+**/
+EFI_STATUS
+EFIAPI
+BaseMemoryTest (
+  IN  EFI_PEI_SERVICES                   **PeiServices,
+  IN  PEI_BASE_MEMORY_TEST_PPI           *This,
+  IN  EFI_PHYSICAL_ADDRESS               BeginAddress,
+  IN  UINT64                             MemoryLength,
+  IN  PEI_MEMORY_TEST_OP                 Operation,
+  OUT EFI_PHYSICAL_ADDRESS               *ErrorAddress
   );
 
 static EFI_PEI_NOTIFY_DESCRIPTOR mPreMemNotifyList = {
@@ -71,6 +107,23 @@ GLOBAL_REMOVE_IF_UNREFERENCED EFI_PEI_PPI_DESCRIPTOR mPpiBootMode = {
   (EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEfiPeiMasterBootModePpiGuid,
   NULL
+};
+
+static PEI_BASE_MEMORY_TEST_PPI     mPeiBaseMemoryTestPpi = { BaseMemoryTest };
+
+static PEI_PLATFORM_MEMORY_SIZE_PPI mMemoryMemorySizePpi  = { GetPlatformMemorySize };
+
+static EFI_PEI_PPI_DESCRIPTOR       mMemPpiList[] = {
+  {
+    EFI_PEI_PPI_DESCRIPTOR_PPI,
+    &gPeiBaseMemoryTestPpiGuid,
+    &mPeiBaseMemoryTestPpi
+  },
+  {
+    (EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
+    &gPeiPlatformMemorySizePpiGuid,
+    &mMemoryMemorySizePpi
+  },
 };
 
 ///
@@ -131,6 +184,160 @@ BuildMemoryTypeInformation (
     );
 }
 
+EFI_STATUS
+EFIAPI
+GetPlatformMemorySize (
+  IN      EFI_PEI_SERVICES                       **PeiServices,
+  IN      PEI_PLATFORM_MEMORY_SIZE_PPI           *This,
+  IN OUT  UINT64                                 *MemorySize
+  )
+{
+  EFI_STATUS                      Status;
+  EFI_PEI_READ_ONLY_VARIABLE2_PPI *Variable;
+  UINTN                           DataSize;
+  EFI_MEMORY_TYPE_INFORMATION     MemoryData[EfiMaxMemoryType + 1];
+  UINTN                           Index;
+  EFI_BOOT_MODE                   BootMode;
+  UINTN                           IndexNumber;
+
+#define PEI_MIN_MEMORY_SIZE             (EFI_PHYSICAL_ADDRESS) ((320 * 0x100000))
+
+  *MemorySize = PEI_MIN_MEMORY_SIZE;
+  Status = PeiServicesLocatePpi (
+             &gEfiPeiReadOnlyVariable2PpiGuid,
+             0,
+             NULL,
+             (VOID **)&Variable
+             );
+
+  ASSERT_EFI_ERROR (Status);
+
+  Status = PeiServicesGetBootMode (&BootMode);
+  ASSERT_EFI_ERROR (Status);
+
+  DataSize = sizeof (MemoryData);
+
+  Status = Variable->GetVariable (
+                      Variable,
+                      EFI_MEMORY_TYPE_INFORMATION_VARIABLE_NAME,
+                      &gEfiMemoryTypeInformationGuid,
+                      NULL,
+                      &DataSize,
+                      &MemoryData
+                      );
+  IndexNumber = sizeof (mDefaultMemoryTypeInformation) / sizeof (EFI_MEMORY_TYPE_INFORMATION);
+
+  //
+  // Accumulate maximum amount of memory needed
+  //
+  
+  DEBUG((EFI_D_ERROR, "PEI_MIN_MEMORY_SIZE:%dKB \n", DivU64x32(*MemorySize,1024)));
+  DEBUG((EFI_D_ERROR, "IndexNumber:%d MemoryDataNumber%d \n", IndexNumber,DataSize/ sizeof (EFI_MEMORY_TYPE_INFORMATION)));
+  if (EFI_ERROR (Status)) {
+    //
+    // Start with minimum memory
+    //
+    for (Index = 0; Index < IndexNumber; Index++) {
+      DEBUG((EFI_D_ERROR, "Index[%d].Type = %d .NumberOfPages=0x%x\n", Index,mDefaultMemoryTypeInformation[Index].Type,mDefaultMemoryTypeInformation[Index].NumberOfPages));
+      *MemorySize += mDefaultMemoryTypeInformation[Index].NumberOfPages * EFI_PAGE_SIZE;
+    }
+    DEBUG((EFI_D_ERROR, "No memory type,  Total platform memory:%dKB \n", DivU64x32(*MemorySize,1024)));
+  } else {
+    //
+    // Start with at least 0x200 pages of memory for the DXE Core and the DXE Stack
+    //
+    for (Index = 0; Index < IndexNumber; Index++) {
+      DEBUG((EFI_D_ERROR, "Index[%d].Type = %d .NumberOfPages=0x%x\n", Index,MemoryData[Index].Type,MemoryData[Index].NumberOfPages));
+      *MemorySize += MemoryData[Index].NumberOfPages * EFI_PAGE_SIZE;
+      
+    }
+    DEBUG((EFI_D_ERROR, "has memory type,  Total platform memory:%dKB \n", DivU64x32(*MemorySize,1024)));
+  }
+
+  return EFI_SUCCESS;
+}
+
+/**
+
+  This function checks the memory range in PEI. 
+
+  @param PeiServices     Pointer to PEI Services.
+  @param This            Pei memory test PPI pointer.
+  @param BeginAddress    Beginning of the memory address to be checked.
+  @param MemoryLength    Bytes of memory range to be checked.
+  @param Operation       Type of memory check operation to be performed.
+  @param ErrorAddress    Return the address of the error memory address.
+    
+  @retval EFI_SUCCESS         The operation completed successfully.
+  @retval EFI_DEVICE_ERROR    Memory test failed. It's not safe to use this range of memory.
+
+**/
+EFI_STATUS
+EFIAPI
+BaseMemoryTest (
+  IN  EFI_PEI_SERVICES                   **PeiServices,
+  IN  PEI_BASE_MEMORY_TEST_PPI           *This,
+  IN  EFI_PHYSICAL_ADDRESS               BeginAddress,
+  IN  UINT64                             MemoryLength,
+  IN  PEI_MEMORY_TEST_OP                 Operation,
+  OUT EFI_PHYSICAL_ADDRESS               *ErrorAddress
+  )
+{
+  UINT32                TestPattern;
+  UINT32                SpanSize;
+  EFI_PHYSICAL_ADDRESS  TempAddress;
+
+#define MEMORY_TEST_PATTERN     0x5A5A5A5A
+#define MEMORY_TEST_COVER_SPAN  0x40000
+
+  TestPattern = MEMORY_TEST_PATTERN;
+  SpanSize    = 0;
+
+  //
+  // Make sure we don't try and test anything above the max physical address range
+  //
+  ASSERT (BeginAddress + MemoryLength < MAX_ADDRESS);
+
+  switch (Operation) {
+  case Extensive:
+    SpanSize = 0x4;
+    break;
+
+  case Sparse:
+  case Quick:
+    SpanSize = MEMORY_TEST_COVER_SPAN;
+    break;
+
+  case Ignore:
+    goto Done;
+    break;
+  }
+  //
+  // Write the test pattern into memory range
+  //
+  TempAddress = BeginAddress;
+  while (TempAddress < BeginAddress + MemoryLength) {
+    (*(UINT32 *) (UINTN) TempAddress) = TestPattern;
+    TempAddress += SpanSize;
+  }
+  //
+  // Read pattern from memory and compare it
+  //
+  TempAddress = BeginAddress;
+  while (TempAddress < BeginAddress + MemoryLength) {
+    if ((*(UINT32 *) (UINTN) TempAddress) != TestPattern) {
+      *ErrorAddress = TempAddress;
+      return EFI_DEVICE_ERROR;
+    }
+
+    TempAddress += SpanSize;
+  }
+
+Done:
+
+  return EFI_SUCCESS;
+}
+
 /**
   Set Cache Mtrr.
 **/
@@ -160,8 +367,8 @@ SetCacheMtrr (
   ///
   Status = MtrrSetMemoryAttributeInMtrrSettings (
                 &MtrrSetting,
-                (UINTN) FixedPcdGet32 (PcdFlashAreaBaseAddress),
-                (UINTN) FixedPcdGet32 (PcdFlashAreaSize),
+                (UINTN) PcdGet32 (PcdFlashAreaBaseAddress),
+                (UINTN) PcdGet32 (PcdFlashAreaSize),
                 CacheWriteProtected
                 );
   ASSERT_EFI_ERROR (Status);
@@ -314,7 +521,43 @@ ReportCpuHob (
 }
 
 VOID
-ReportFv (
+ReportPreMemFv (
+  VOID
+  )
+{
+  if (!PcdGetBool(PcdFspWrapperBootMode)) {
+    DEBUG ((DEBUG_INFO, "Install FlashFvFspM - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspMBase), PcdGet32 (PcdFlashFvFspMSize)));
+    PeiServicesInstallFvInfo2Ppi (
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspMBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspMBase),
+      PcdGet32 (PcdFlashFvFspMSize),
+      NULL,
+      NULL,
+      0
+      );
+  }
+  DEBUG ((DEBUG_INFO, "Install FlashFvSecurity - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvSecurityBase), PcdGet32 (PcdFlashFvSecuritySize)));
+  PeiServicesInstallFvInfo2Ppi (
+    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvSecurityBase))->FileSystemGuid),
+    (VOID *) (UINTN) PcdGet32 (PcdFlashFvSecurityBase),
+    PcdGet32 (PcdFlashFvSecuritySize),
+    NULL,
+    NULL,
+    0
+    );
+  DEBUG ((DEBUG_INFO, "Install FlashFvAdvanced - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvAdvancedBase), PcdGet32 (PcdFlashFvAdvancedSize)));
+  PeiServicesInstallFvInfo2Ppi (
+    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase))->FileSystemGuid),
+    (VOID *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase),
+    PcdGet32 (PcdFlashFvAdvancedSize),
+    NULL,
+    NULL,
+    0
+    );
+}
+
+VOID
+ReportPostMemFv (
   VOID
   )
 {
@@ -332,27 +575,49 @@ ReportFv (
     /// Prepare the recovery service
     ///
   } else {
-
+    DEBUG ((DEBUG_INFO, "Install FlashFvPostMemory - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvPostMemoryBase), PcdGet32 (PcdFlashFvPostMemorySize)));
     PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvPostMemoryBase))->FileSystemGuid),
-      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvPostMemoryBase),
-      FixedPcdGet32 (PcdFlashFvPostMemorySize),
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvPostMemoryBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvPostMemoryBase),
+      PcdGet32 (PcdFlashFvPostMemorySize),
       NULL,
       NULL,
       0
       );
+    if (!PcdGetBool(PcdFspWrapperBootMode)) {
+      DEBUG ((DEBUG_INFO, "Install FlashFvFspS - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspSBase), PcdGet32 (PcdFlashFvFspSSize)));
+      PeiServicesInstallFvInfo2Ppi (
+        &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspSBase))->FileSystemGuid),
+        (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspSBase),
+        PcdGet32 (PcdFlashFvFspSSize),
+        NULL,
+        NULL,
+        0
+        );
+      DEBUG ((DEBUG_INFO, "Install FlashFvFspU - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspUBase), PcdGet32 (PcdFlashFvFspUSize)));
+      PeiServicesInstallFvInfo2Ppi (
+        &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspUBase))->FileSystemGuid),
+        (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspUBase),
+        PcdGet32 (PcdFlashFvFspUSize),
+        NULL,
+        NULL,
+        0
+        );
+    }
+    DEBUG ((DEBUG_INFO, "Install FlashFvUefiBoot - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvUefiBootBase), PcdGet32 (PcdFlashFvUefiBootSize)));
     PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvUefiBootBase))->FileSystemGuid),
-      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvUefiBootBase),
-      FixedPcdGet32 (PcdFlashFvUefiBootSize),
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvUefiBootBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvUefiBootBase),
+      PcdGet32 (PcdFlashFvUefiBootSize),
       NULL,
       NULL,
       0
       );
+    DEBUG ((DEBUG_INFO, "Install FlashFvOsBoot - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvOsBootBase), PcdGet32 (PcdFlashFvOsBootSize)));
     PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) FixedPcdGet32 (PcdFlashFvOsBootBase))->FileSystemGuid),
-      (VOID *) (UINTN) FixedPcdGet32 (PcdFlashFvOsBootBase),
-      FixedPcdGet32 (PcdFlashFvOsBootSize),
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase),
+      PcdGet32 (PcdFlashFvOsBootSize),
       NULL,
       NULL,
       0
@@ -367,18 +632,13 @@ ReportFv (
     (EFI_RESOURCE_ATTRIBUTE_PRESENT    |
     EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
     EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE),
-    (UINTN) FixedPcdGet32 (PcdFlashAreaBaseAddress),
-    (UINTN) FixedPcdGet32 (PcdFlashAreaSize)
+    (UINTN) PcdGet32 (PcdFlashAreaBaseAddress),
+    (UINTN) PcdGet32 (PcdFlashAreaSize)
     );
   BuildMemoryAllocationHob (
-    (UINTN) FixedPcdGet32 (PcdFlashAreaBaseAddress),
-    (UINTN) FixedPcdGet32 (PcdFlashAreaSize),
+    (UINTN) PcdGet32 (PcdFlashAreaBaseAddress),
+    (UINTN) PcdGet32 (PcdFlashAreaSize),
     EfiMemoryMappedIO
-    );
-
-  BuildFvHob (
-    (UINTN) FixedPcdGet32 (PcdFlashAreaBaseAddress),
-    (UINTN) FixedPcdGet32 (PcdFlashAreaSize)
     );
 }
 
@@ -423,7 +683,7 @@ MemoryDiscoveredPpiNotifyCallback (
     return EFI_SUCCESS;
   }
 
-  ReportFv ();
+  ReportPostMemFv ();
 
   TestPointMemoryDiscoveredFvInfoFunctional ();
 
@@ -488,6 +748,11 @@ PlatformInitPreMem (
   
   BuildMemoryTypeInformation ();
 
+  if (!PcdGetBool(PcdFspWrapperBootMode)) {
+    Status = PeiServicesInstallPpi (mMemPpiList);
+    ASSERT_EFI_ERROR (Status);
+  }
+  
   Status = BoardInitBeforeMemoryInit ();
   ASSERT_EFI_ERROR (Status);
 
@@ -512,6 +777,8 @@ PlatformInitPreMemEntryPoint (
   )
 {
   EFI_STATUS Status;
+
+  ReportPreMemFv ();
 
   ///
   /// Performing PlatformInitPreMem after PeiReadOnlyVariable2 PPI produced

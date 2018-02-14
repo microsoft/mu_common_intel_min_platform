@@ -18,6 +18,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DebugLib.h>
 #include <Library/SmmServicesTableLib.h>
 #include <Library/BaseMemoryLib.h>
+#include <Library/MemoryAllocationLib.h>
 #include <Guid/MemoryAttributesTable.h>
 #include <Register/SmramSaveStateMap.h>
 #include <Register/StmApi.h>
@@ -200,17 +201,68 @@ GetSmBaseOnCurrentProcessor (
   SmBaseBuffer->Valid = TRUE;
 }
 
-BOOLEAN
-IsSmmSaveState (
-  IN EFI_PHYSICAL_ADDRESS   BaseAddress
+UINT64  *mSmBaseBuffer;
+
+VOID
+SetupSmBaseBuffer (
+  VOID
   )
 {
   volatile SMBASE_SHARED_BUFFER      SmBaseBuffer;
   EFI_STATUS                         Status;
   UINTN                              Index;
+  UINTN                              Base = 0;
+  UINTN                              Delta = 0;
+
+  if (mSmBaseBuffer != NULL) {
+    return ;
+  }
+
+  mSmBaseBuffer = AllocatePool (sizeof(UINT64) * gSmst->NumberOfCpus);
+  ASSERT(mSmBaseBuffer != NULL);
+
+  for (Index = 0; Index < gSmst->NumberOfCpus; Index++) {
+    ZeroMem ((VOID *)&SmBaseBuffer, sizeof(SmBaseBuffer));
+    if (Index == gSmst->CurrentlyExecutingCpu) {
+      GetSmBaseOnCurrentProcessor ((VOID *)&SmBaseBuffer);
+      DEBUG ((DEBUG_INFO, "SmbaseBsp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
+    } else {
+      Status = gSmst->SmmStartupThisAp (GetSmBaseOnCurrentProcessor, Index, (VOID *)&SmBaseBuffer);
+      if (!FeaturePcdGet (PcdCpuHotPlugSupport)) {
+        ASSERT_EFI_ERROR (Status);
+      }
+      if (EFI_ERROR(Status)) {
+        SmBaseBuffer.SmBase = Base + Delta * Index;
+        DEBUG ((DEBUG_INFO, "SmbaseAp(%d) - unknown, guess - 0x%x\n", Index, SmBaseBuffer.SmBase));
+      } else {
+        while (!SmBaseBuffer.Valid) {
+          CpuPause ();
+        }
+        DEBUG ((DEBUG_INFO, "SmbaseAp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
+      }
+    }
+    mSmBaseBuffer[Index] = SmBaseBuffer.SmBase;
+    if (Base == 0) {
+      Base = (UINTN)SmBaseBuffer.SmBase;
+      DEBUG ((DEBUG_INFO, "-- Base - 0x%x\n", Base));
+    } else if (Delta == 0) {
+      Delta = (UINTN)(SmBaseBuffer.SmBase - Base);
+      DEBUG ((DEBUG_INFO, "-- Delta - 0x%x\n", Delta));
+    }
+  }
+}
+
+BOOLEAN
+IsSmmSaveState (
+  IN EFI_PHYSICAL_ADDRESS   BaseAddress
+  )
+{
+  UINTN                              Index;
   UINTN                              TileCodeSize;
   UINTN                              TileDataSize;
   UINTN                              TileSize;
+
+  SetupSmBaseBuffer ();
 
   TileCodeSize = SIZE_4KB; // BUGBUG: Assume 4KB
   TileCodeSize = ALIGN_VALUE(TileCodeSize, SIZE_4KB);
@@ -220,23 +272,11 @@ IsSmmSaveState (
   TileSize = 2 * GetPowerOfTwo32 ((UINT32)TileSize);
 
   for (Index = 0; Index < gSmst->NumberOfCpus; Index++) {
-    ZeroMem ((VOID *)&SmBaseBuffer, sizeof(SmBaseBuffer));
-    if (Index == gSmst->CurrentlyExecutingCpu) {
-      GetSmBaseOnCurrentProcessor ((VOID *)&SmBaseBuffer);
-      DEBUG ((DEBUG_INFO, "SmbaseBsp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
-    } else {
-      Status = gSmst->SmmStartupThisAp (GetSmBaseOnCurrentProcessor, Index, (VOID *)&SmBaseBuffer);
-      ASSERT_EFI_ERROR (Status);
-      while (!SmBaseBuffer.Valid) {
-        CpuPause ();
-      }
-      DEBUG ((DEBUG_INFO, "SmbaseAp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
-    }
     if (Index == gSmst->NumberOfCpus - 1) {
       TileSize = SIZE_32KB;
     }
-    if ((BaseAddress >= SmBaseBuffer.SmBase + SMM_HANDLER_OFFSET + TileCodeSize) &&
-        (BaseAddress <  SmBaseBuffer.SmBase + SMM_HANDLER_OFFSET + TileSize)) {
+    if ((BaseAddress >= mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileCodeSize) &&
+        (BaseAddress <  mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileSize)) {
       return TRUE;
     }
   }

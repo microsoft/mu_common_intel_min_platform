@@ -157,6 +157,30 @@ SetCacheMtrrAfterEndOfPei (
     MemoryLength -= Power2Length;
   }
 
+  DEBUG ((DEBUG_INFO, "PcdPciReservedMemAbove4GBLimit - 0x%lx\n", PcdGet64 (PcdPciReservedMemAbove4GBLimit)));
+  DEBUG ((DEBUG_INFO, "PcdPciReservedMemAbove4GBBase - 0x%lx\n", PcdGet64 (PcdPciReservedMemAbove4GBBase)));
+  if (PcdGet64 (PcdPciReservedMemAbove4GBLimit) > PcdGet64 (PcdPciReservedMemAbove4GBBase)) {
+    Status = MtrrSetMemoryAttributeInMtrrSettings (
+                           &MtrrSetting,
+                           PcdGet64 (PcdPciReservedMemAbove4GBBase),
+                           PcdGet64 (PcdPciReservedMemAbove4GBLimit) - PcdGet64 (PcdPciReservedMemAbove4GBBase) + 1,
+                           CacheUncacheable
+                           );
+    ASSERT_EFI_ERROR ( Status);
+  }
+
+  DEBUG ((DEBUG_INFO, "PcdPciReservedPMemAbove4GBLimit - 0x%lx\n", PcdGet64 (PcdPciReservedPMemAbove4GBLimit)));
+  DEBUG ((DEBUG_INFO, "PcdPciReservedPMemAbove4GBBase - 0x%lx\n", PcdGet64 (PcdPciReservedPMemAbove4GBBase)));
+  if (PcdGet64 (PcdPciReservedPMemAbove4GBLimit) > PcdGet64 (PcdPciReservedPMemAbove4GBBase)) {
+    Status = MtrrSetMemoryAttributeInMtrrSettings (
+                           &MtrrSetting,
+                           PcdGet64 (PcdPciReservedPMemAbove4GBBase),
+                           PcdGet64 (PcdPciReservedPMemAbove4GBLimit) - PcdGet64 (PcdPciReservedPMemAbove4GBBase) + 1,
+                           CacheUncacheable
+                           );
+    ASSERT_EFI_ERROR ( Status);
+  }
+
   //
   // Update MTRR setting from MTRR buffer
   //

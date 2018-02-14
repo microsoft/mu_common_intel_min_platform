@@ -16,16 +16,7 @@
   #
   # Generic EDKII Driver
   #
-    
-  #
-  # FSP wrapper SEC Core
-  #
-  UefiCpuPkg/SecCore/SecCore.inf {
-    <LibraryClasses>
-      #PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
-      PcdLib|MdePkg/Library/PeiPcdLib/PeiPcdLib.inf
-  }
-  
+
   MdeModulePkg/Core/Pei/PeiMain.inf
 
   MdeModulePkg/Universal/PCD/Pei/Pcd.inf {

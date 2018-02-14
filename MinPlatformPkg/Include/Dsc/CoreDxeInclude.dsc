@@ -64,17 +64,17 @@
 
   MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
 
-  UefiCpuPkg/CpuDxe/CpuDxe.inf
+  #UefiCpuPkg/CpuDxe/CpuDxe.inf
 
   MdeModulePkg/Universal/ResetSystemRuntimeDxe/ResetSystemRuntimeDxe.inf
   PcAtChipsetPkg/HpetTimerDxe/HpetTimerDxe.inf
 
-  MdeModulePkg/Bus/Pci/PciHostBridgeDxe/PciHostBridgeDxe.inf
+  #MdeModulePkg/Bus/Pci/PciHostBridgeDxe/PciHostBridgeDxe.inf
   MdeModulePkg/Bus/Pci/PciBusDxe/PciBusDxe.inf
 
-  MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
-  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
-  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
+  #MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
+  #MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+  #MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
   MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
   MdeModulePkg/Bus/Pci/EhciDxe/EhciDxe.inf
   MdeModulePkg/Bus/Pci/UhciDxe/UhciDxe.inf
@@ -87,7 +87,7 @@
   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
   FatBinPkg/EnhancedFatDxe/Fat.inf
 
-  MdeModulePkg/Universal/Console/GraphicsOutputDxe/GraphicsOutputDxe.inf
+  #MdeModulePkg/Universal/Console/GraphicsOutputDxe/GraphicsOutputDxe.inf
   MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
 
   MdeModulePkg/Universal/Console/ConPlatformDxe/ConPlatformDxe.inf
@@ -102,8 +102,17 @@
 
   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
 
-  MdeModulePkg/Application/UiApp/UiApp.inf
-  MdeModulePkg/Application/BootManagerMenuApp/BootManagerMenuApp.inf
+  MdeModulePkg/Application/UiApp/UiApp.inf {
+    <LibraryClasses>
+      PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
+      NULL|MdeModulePkg/Library/DeviceManagerUiLib/DeviceManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootManagerUiLib/BootManagerUiLib.inf
+      NULL|MdeModulePkg/Library/BootMaintenanceManagerUiLib/BootMaintenanceManagerUiLib.inf
+  }
+  MdeModulePkg/Application/BootManagerMenuApp/BootManagerMenuApp.inf {
+    <LibraryClasses>
+      PcdLib|MdePkg/Library/DxePcdLib/DxePcdLib.inf
+  }
 
 !if gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly == FALSE
   MdeModulePkg/Core/PiSmmCore/PiSmmIpl.inf
@@ -112,7 +121,7 @@
   MdeModulePkg/Universal/ReportStatusCodeRouter/Smm/ReportStatusCodeRouterSmm.inf
   MdeModulePkg/Universal/StatusCodeHandler/Smm/StatusCodeHandlerSmm.inf
 
-  UefiCpuPkg/PiSmmCpuDxeSmm/PiSmmCpuDxeSmm.inf
+  #UefiCpuPkg/PiSmmCpuDxeSmm/PiSmmCpuDxeSmm.inf
 
   UefiCpuPkg/CpuIo2Smm/CpuIo2Smm.inf
   MdeModulePkg/Universal/SmmCommunicationBufferDxe/SmmCommunicationBufferDxe.inf
@@ -142,6 +151,6 @@
 !endif
 
 !if gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable == TRUE
-  PerformancePkg/Dp_App/Dp.inf
+  ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf
 !endif
 

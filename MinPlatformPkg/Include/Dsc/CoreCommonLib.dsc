@@ -77,7 +77,13 @@
   # Generic Modules
   #
   UefiUsbLib|MdePkg/Library/UefiUsbLib/UefiUsbLib.inf
-
+  UefiScsiLib|MdePkg/Library/UefiScsiLib/UefiScsiLib.inf
+  NetLib|MdeModulePkg/Library/DxeNetLib/DxeNetLib.inf
+  IpIoLib|MdeModulePkg/Library/DxeIpIoLib/DxeIpIoLib.inf
+  UdpIoLib|MdeModulePkg/Library/DxeUdpIoLib/DxeUdpIoLib.inf
+  TcpIoLib|MdeModulePkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
+  DpcLib|MdeModulePkg/Library/DxeDpcLib/DxeDpcLib.inf
+  TcpIoLib|MdeModulePkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
   OemHookStatusCodeLib|MdeModulePkg/Library/OemHookStatusCodeLibNull/OemHookStatusCodeLibNull.inf
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
 
@@ -92,6 +98,10 @@
 
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
   CustomizedDisplayLib|MdeModulePkg/Library/CustomizedDisplayLib/CustomizedDisplayLib.inf
+
+  ShellLib|ShellPkg/Library/UefiShellLib/UefiShellLib.inf
+  FileHandleLib|MdePkg/Library/UefiFileHandleLib/UefiFileHandleLib.inf
+  SortLib|MdeModulePkg/Library/UefiSortLib/UefiSortLib.inf
 
   #
   # CPU
@@ -148,4 +158,11 @@
   Tpm12CommandLib|SecurityPkg/Library/Tpm12CommandLib/Tpm12CommandLib.inf
   Tpm2CommandLib|SecurityPkg/Library/Tpm2CommandLib/Tpm2CommandLib.inf
   Tpm2DeviceLib|SecurityPkg/Library/Tpm2DeviceLibDTpm/Tpm2DeviceLibDTpm.inf
+  Tcg2PhysicalPresenceLib|SecurityPkg/Library/DxeTcg2PhysicalPresenceLib/DxeTcg2PhysicalPresenceLib.inf
   Tcg2PpVendorLib|SecurityPkg/Library/Tcg2PpVendorLibNull/Tcg2PpVendorLibNull.inf
+
+  LockBoxLib|MdeModulePkg/Library/LockBoxNullLib/LockBoxNullLib.inf
+
+  SmmMemLib|MdePkg/Library/SmmMemLib/SmmMemLib.inf
+
+  SmbusLib|MdePkg/Library/BaseSmbusLibNull/BaseSmbusLibNull.inf

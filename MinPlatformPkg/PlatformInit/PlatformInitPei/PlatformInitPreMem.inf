@@ -41,14 +41,25 @@
   UefiCpuPkg/UefiCpuPkg.dec
 
 [Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode
   gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress        ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize               ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMBase          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMSize          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryBase          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemorySize          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUBase          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUSize          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootBase         ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootSize         ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootBase           ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootSize           ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase           ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize           ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase           ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize           ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit
   
@@ -67,6 +78,8 @@
   gEfiPeiMasterBootModePpiGuid                  ## PRODUCES
   gEfiPeiBootInRecoveryModePpiGuid              ## PRODUCES
   gEfiPeiReadOnlyVariable2PpiGuid
+  gPeiBaseMemoryTestPpiGuid
+  gPeiPlatformMemorySizePpiGuid
 
 [Guids]
   gEfiMemoryTypeInformationGuid

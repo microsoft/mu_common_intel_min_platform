@@ -98,7 +98,3 @@
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashMicrocodeOffset             ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheAddress            ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheSize               ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase                ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize                ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase                ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize                ## CONSUMES

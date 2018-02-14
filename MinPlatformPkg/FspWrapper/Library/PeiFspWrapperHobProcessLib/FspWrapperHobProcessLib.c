@@ -166,6 +166,8 @@ PostFspmHobProcess (
   PeiServicesGetBootMode (&BootMode);
 
   PeiMemBase = 0;
+  PeiMemSize = 0;
+  RequiredMemSize = 0;
   ResourceLength = 0;
   //
   // Parse the hob list from fsp

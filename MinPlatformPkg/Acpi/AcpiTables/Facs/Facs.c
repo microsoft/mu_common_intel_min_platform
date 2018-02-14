@@ -18,7 +18,23 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 // Statements that include other files
 //
 
-#include "Facs.h"
+#include <IndustryStandard/Acpi.h>
+
+//
+// FACS Definitions
+//
+#define EFI_ACPI_FIRMWARE_WAKING_VECTOR 0x00000000
+#define EFI_ACPI_GLOBAL_LOCK            0x00000000
+
+//
+// Firmware Control Structure Feature Flags are defined in AcpiX.0.h
+//
+#define EFI_ACPI_FIRMWARE_CONTROL_STRUCTURE_FLAGS 0x00000000
+
+#define EFI_ACPI_X_FIRMWARE_WAKING_VECTOR         0x0000000000000000
+
+#define EFI_ACPI_OSPM_FLAGS                       0x00000000
+
 
 //
 // Firmware ACPI Control Structure
@@ -44,7 +60,7 @@ EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE Facs = {
     EFI_ACPI_RESERVED_BYTE,
     EFI_ACPI_RESERVED_BYTE
   },
-  EFI_ACPI_RESERVED_DWORD, //EFI_ACPI_5_0_OSPM_64BIT_WAKE_F
+  EFI_ACPI_OSPM_FLAGS,
   {
     EFI_ACPI_RESERVED_BYTE,
     EFI_ACPI_RESERVED_BYTE,

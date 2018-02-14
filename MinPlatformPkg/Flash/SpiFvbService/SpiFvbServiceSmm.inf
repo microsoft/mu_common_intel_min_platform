@@ -45,7 +45,7 @@
   MdeModulePkg/MdeModulePkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
 
-[FixedPcd]
+[Pcd]
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase   ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize   ## CONSUMES
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize ## CONSUMES
