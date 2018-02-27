@@ -102,6 +102,8 @@ TestPointCheckSmrr (
     }
   }
 
+  SmrrMask = 0;
+
   if (mSmrrSupported) {
     SmrrBase = AsmReadMsr64 (mSmrrPhysBaseMsr);
     SmrrMask = AsmReadMsr64 (mSmrrPhysMaskMsr);
