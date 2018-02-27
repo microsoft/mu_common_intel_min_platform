@@ -31,7 +31,6 @@ GetAllSmmTestPointData (
   EFI_ADAPTER_INFORMATION_PROTOCOL  *AipCandidate;
   VOID                              *InformationBlock;
   UINTN                             InformationBlockSize;
-  ADAPTER_INFO_PLATFORM_TEST_POINT  *TestPoint;
   UINTN                             TotalSize;
   EFI_STATUS                        RetStatus;
 
@@ -69,8 +68,7 @@ GetAllSmmTestPointData (
   NoHandles = HandleBufSize / sizeof(EFI_HANDLE);
 
   RetStatus = EFI_SUCCESS;
-  
-  TestPoint = NULL;
+
   Aip = NULL;
   InformationBlock = NULL;
   InformationBlockSize = 0;
