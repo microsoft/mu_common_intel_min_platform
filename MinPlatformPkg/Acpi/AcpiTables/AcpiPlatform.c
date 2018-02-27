@@ -429,7 +429,11 @@ UpdateLocalTable (
   EFI_ACPI_TABLE_PROTOCOL       *AcpiTable;
   UINTN                         Index;
 
-  Status = gBS->LocateProtocol (&gEfiAcpiTableProtocolGuid, NULL, &AcpiTable);
+  Status = gBS->LocateProtocol (
+                  &gEfiAcpiTableProtocolGuid,
+                  NULL,
+                  (VOID **)&AcpiTable
+                  );
 
   for (Index = 0; Index < sizeof(mLocalTable)/sizeof(mLocalTable[0]); Index++) {
     CurrentTable = mLocalTable[Index];
