@@ -293,7 +293,7 @@ TestPointCheckUefiMemoryAttributesTable (
   Status = gBS->LocateProtocol (
                   &gEfiRuntimeArchProtocolGuid,
                   NULL,
-                  &RuntimeArch
+                  (VOID **)&RuntimeArch
                   );
   if (EFI_ERROR (Status)) {
     return EFI_SUCCESS;
@@ -325,7 +325,7 @@ TestPointCheckUefiMemAttribute (
   VOID        *MemoryAttributesTable;
   
   DEBUG ((DEBUG_INFO, "==== TestPointCheckUefiMemAttribute - Enter\n"));
-  Status = EfiGetSystemConfigurationTable (&gEfiMemoryAttributesTableGuid, &MemoryAttributesTable);
+  Status = EfiGetSystemConfigurationTable (&gEfiMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
   if (!EFI_ERROR (Status)) {
     TestPointDumpMemoryAttributesTable(MemoryAttributesTable);
     Status = TestPointCheckUefiMemoryAttributesTable(MemoryAttributesTable);

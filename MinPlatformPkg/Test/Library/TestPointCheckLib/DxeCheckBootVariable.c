@@ -135,7 +135,7 @@ TestPointCheckLoadOptionVariable (
   ReturnStatus = EFI_SUCCESS;
   for (ListIndex = 0; ListIndex < sizeof(mLoadOptionVariableList)/sizeof(mLoadOptionVariableList[0]); ListIndex++) {
     UnicodeSPrint (BootOrderName, sizeof(BootOrderName), L"%sOrder", mLoadOptionVariableList[ListIndex]);
-    Status = GetVariable2 (BootOrderName, &gEfiGlobalVariableGuid, &BootOrder, &OrderSize);
+    Status = GetVariable2 (BootOrderName, &gEfiGlobalVariableGuid, (VOID **)&BootOrder, &OrderSize);
     if (EFI_ERROR(Status)) {
       continue;
     }

@@ -183,7 +183,7 @@ DumpAcpiTableHeader (
   DEBUG ((DEBUG_INFO, "  "));
   DumpCharArray ((CHAR8 *)&Table->Signature, sizeof(Table->Signature));
   DEBUG ((DEBUG_INFO, "  : (0x%016lx) 0x%02x \'", Table, Table->Revision));
-  DumpCharArray (Table->OemId, sizeof(Table->OemId));
+  DumpCharArray ((CHAR8 *)Table->OemId, sizeof(Table->OemId));
   DEBUG ((DEBUG_INFO, "\' \'"));
   DumpCharArray ((CHAR8 *)&Table->OemTableId, sizeof(Table->OemTableId));
   DEBUG ((DEBUG_INFO, "\' 0x%08x \'", Table->OemRevision));
@@ -717,7 +717,7 @@ DumpAcpiRsdp (
   if (DumpPrint) {
     DumpCharArray ((CHAR8 *)&Rsdp->Signature, sizeof(Rsdp->Signature));
     DEBUG ((DEBUG_INFO, ": (0x%016lx) 0x%02x \'", Rsdp, Rsdp->Revision));
-    DumpCharArray (Rsdp->OemId, sizeof(Rsdp->OemId));
+    DumpCharArray ((CHAR8 *)Rsdp->OemId, sizeof(Rsdp->OemId));
     DEBUG ((DEBUG_INFO, "\'\n"));
     DEBUG ((DEBUG_INFO, "         "));
     DEBUG ((DEBUG_INFO, " RSDT=0x%08x XSDT=0x%016lx\n", Rsdp->RsdtAddress, Rsdp->XsdtAddress));
