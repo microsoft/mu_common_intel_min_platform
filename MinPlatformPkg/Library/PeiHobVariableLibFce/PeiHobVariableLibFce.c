@@ -370,10 +370,10 @@ CreateDefaultVariableHob (
   DefaultFileIsFound = FALSE;
   FvInstance         = 0;
   FfsHeader          = NULL;
-  while (((*PeiServices)->FfsFindNextVolume (PeiServices, FvInstance, &FvHeader) == EFI_SUCCESS) &&
+  while (((*PeiServices)->FfsFindNextVolume (PeiServices, FvInstance, (VOID **)&FvHeader) == EFI_SUCCESS) &&
          (!DefaultFileIsFound)) {
     FfsHeader = NULL;
-    while ((*PeiServices)->FfsFindNextFile (PeiServices, EFI_FV_FILETYPE_FREEFORM, FvHeader, &FfsHeader) == EFI_SUCCESS) {
+    while ((*PeiServices)->FfsFindNextFile (PeiServices, EFI_FV_FILETYPE_FREEFORM, FvHeader, (VOID **)&FfsHeader) == EFI_SUCCESS) {
       if (CompareGuid ((EFI_GUID *) FfsHeader, &gDefaultDataFileGuid)) {
         DefaultFileIsFound = TRUE;
         break;
