@@ -332,10 +332,10 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
     Result = TRUE;
   
     Status = TestPointCheckSmmCommunicationBuffer (
-               (EFI_MEMORY_DESCRIPTOR *)((UINTN)CommData + CommData->UefiMemoryMapOffset),
+               (EFI_MEMORY_DESCRIPTOR *)(UINTN)((UINTN)CommData + CommData->UefiMemoryMapOffset),
                (UINTN)CommData->UefiMemoryMapSize,
                mUefiDescriptorSize,
-               (CommData->UefiMemoryAttributeTableSize != 0) ? (EFI_MEMORY_ATTRIBUTES_TABLE *)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset) : NULL
+               (CommData->UefiMemoryAttributeTableSize != 0) ? (EFI_MEMORY_ATTRIBUTES_TABLE *)(UINTN)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset) : NULL
                );
     if (EFI_ERROR(Status)) {
       Result = FALSE;

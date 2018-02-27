@@ -517,24 +517,24 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   CommData->UefiMemoryAttributeTableSize   = MemoryAttributesTableSize;
 
   CopyMem (
-    (VOID *)((UINTN)CommData + CommData->UefiMemoryMapOffset),
+    (VOID *)(UINTN)((UINTN)CommData + CommData->UefiMemoryMapOffset),
     UefiMemoryMap,
-    CommData->UefiMemoryMapSize
+    (UINTN)CommData->UefiMemoryMapSize
     );
   CopyMem (
-    (VOID *)((UINTN)CommData + CommData->GcdMemoryMapOffset),
+    (VOID *)(UINTN)((UINTN)CommData + CommData->GcdMemoryMapOffset),
     GcdMemoryMap,
-    CommData->GcdMemoryMapSize
+    (UINTN)CommData->GcdMemoryMapSize
     );
   CopyMem (
-    (VOID *)((UINTN)CommData + CommData->GcdIoMapOffset),
+    (VOID *)(UINTN)((UINTN)CommData + CommData->GcdIoMapOffset),
     GcdIoMap,
-    CommData->GcdIoMapSize
+    (UINTN)CommData->GcdIoMapSize
     );
   CopyMem (
-    (VOID *)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset),
+    (VOID *)(UINTN)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset),
     MemoryAttributesTable,
-    CommData->UefiMemoryAttributeTableSize
+    (UINTN)CommData->UefiMemoryAttributeTableSize
     );
 
   CommSize = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) + CommHeader->MessageLength;
