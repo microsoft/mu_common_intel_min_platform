@@ -57,6 +57,7 @@ GetMemorySizeInMemoryTypeInformation (
 
   MemoryData = NULL;
   Status     = (*PeiServices)->GetHobList ((CONST EFI_PEI_SERVICES**)PeiServices, (VOID **) &Hob.Raw);
+  ASSERT_EFI_ERROR (Status);
   while (!END_OF_HOB_LIST (Hob)) {
     if (Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION &&
       CompareGuid (&Hob.Guid->Name, &gEfiMemoryTypeInformationGuid)) {
@@ -301,6 +302,7 @@ PostFspmHobProcess (
 
       if (Status == EFI_SUCCESS) {
         Status = PeiServicesGetHobList ((void**)&Hob.Raw);
+        ASSERT_EFI_ERROR (Status);
         while ((Hob.Raw = GetNextHob (EFI_HOB_TYPE_RESOURCE_DESCRIPTOR, Hob.Raw)) != NULL) {
           if ((Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
                && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)
