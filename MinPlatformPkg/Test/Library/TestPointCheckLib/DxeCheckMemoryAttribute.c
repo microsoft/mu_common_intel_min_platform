@@ -139,10 +139,8 @@ TestPointCheckImageMemoryAttribute (
   EFI_IMAGE_DOS_HEADER                 *DosHdr;
   UINT32                               PeCoffHeaderOffset;
   UINT32                               SectionAlignment;
-  UINT16                               ImageType;
   EFI_IMAGE_SECTION_HEADER             *Section;
   EFI_IMAGE_OPTIONAL_HEADER_PTR_UNION  Hdr;
-  UINT16                               Magic;
   UINT8                                *Name;
   UINTN                                Index;
   CHAR8                                *PdbPointer;
@@ -180,19 +178,13 @@ TestPointCheckImageMemoryAttribute (
   if (Hdr.Pe32->FileHeader.Machine == IMAGE_FILE_MACHINE_IA64 && Hdr.Pe32->OptionalHeader.Magic == EFI_IMAGE_NT_OPTIONAL_HDR32_MAGIC) {
     //
     // NOTE: Some versions of Linux ELILO for Itanium have an incorrect magic value 
-    //       in the PE/COFF Header. If the MachineType is Itanium(IA64) and the 
-    //       Magic value in the OptionalHeader is EFI_IMAGE_NT_OPTIONAL_HDR32_MAGIC
-    //       then override the magic value to EFI_IMAGE_NT_OPTIONAL_HDR64_MAGIC
+    //       in the PE/COFF Header.
     //
-    Magic = EFI_IMAGE_NT_OPTIONAL_HDR64_MAGIC;
-    ImageType         = Hdr.Pe32->OptionalHeader.Subsystem;
     SectionAlignment  = Hdr.Pe32->OptionalHeader.SectionAlignment;
   } else {
     //
-    // Get the magic value from the PE/COFF Optional Header
+    // Get the section alignment value from the PE/COFF Optional Header
     //
-    Magic = Hdr.Pe32->OptionalHeader.Magic;
-    ImageType         = Hdr.Pe32Plus->OptionalHeader.Subsystem;
     SectionAlignment  = Hdr.Pe32Plus->OptionalHeader.SectionAlignment;
   }
 
