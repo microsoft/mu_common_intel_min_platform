@@ -29,8 +29,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/HobLib.h>
 #include <Protocol/UsbIo.h>
 
-
-extern EFI_STATUS EfiBootManagerDispatchDeferredImages(VOID);
+#include <Library/UefiBootManagerLib.h>
 
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_BOOT_MODE                 gBootMode;
 
