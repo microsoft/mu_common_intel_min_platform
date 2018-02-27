@@ -280,6 +280,7 @@ BoardNotificationInitEntryPoint (
                           NULL,
                           &SmmReadyToLockRegistration
                           );
+  ASSERT (SmmReadyToLockEvent != NULL);
 
   Status = EfiCreateEventReadyToBootEx (
              TPL_CALLBACK,
