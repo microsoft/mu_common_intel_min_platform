@@ -302,7 +302,7 @@ TestPointLibSetTable (
   }
 
   TestPointAip->Signature = TEST_POINT_AIP_PRIVATE_SIGNATURE;
-  CopyMem (&TestPointAip->Aip, &mAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
+  CopyMem (&TestPointAip->Aip, &mDxeAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
   TestPointAip->TestPointSize = TestPointSize;
   TestPointAip->TestPointMaxSize = TestPointSize;
   

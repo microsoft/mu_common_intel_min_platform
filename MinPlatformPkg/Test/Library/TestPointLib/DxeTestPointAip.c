@@ -168,7 +168,7 @@ TestPointAipGetSupportedTypes (
   return EFI_SUCCESS;
 }
 
-EFI_ADAPTER_INFORMATION_PROTOCOL mAdapterInformationProtocol = {
+EFI_ADAPTER_INFORMATION_PROTOCOL mDxeAdapterInformationProtocol = {
   TestPointAipGetInfo,
   TestPointAipSetInfo,
   TestPointAipGetSupportedTypes,

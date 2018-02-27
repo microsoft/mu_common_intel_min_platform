@@ -43,7 +43,7 @@ typedef struct {
       TEST_POINT_AIP_PRIVATE_SIGNATURE \
       )
 
-extern EFI_ADAPTER_INFORMATION_PROTOCOL mAdapterInformationProtocol;
+extern EFI_ADAPTER_INFORMATION_PROTOCOL mSmmAdapterInformationProtocol;
 
 /**
   Return if input TestPoint data is valid.
