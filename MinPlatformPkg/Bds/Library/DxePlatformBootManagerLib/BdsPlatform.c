@@ -979,8 +979,12 @@ ChangeModeForInternalShell (
                   //
                   // Update text mode PCD.
                   //
-                  PcdSet32S (PcdConOutColumn, mShellModeColumn);
-                  PcdSet32S (PcdConOutRow, mShellModeRow);
+                  Status = PcdSet32S (PcdConOutColumn, mShellModeColumn);
+                  ASSERT_EFI_ERROR (Status);
+
+                  Status = PcdSet32S (PcdConOutRow, mShellModeRow);
+                  ASSERT_EFI_ERROR (Status);
+
                   FreePool (Info);
                   return EFI_SUCCESS;
                 }
@@ -1006,10 +1010,17 @@ ChangeModeForInternalShell (
             // Set PCD to restart GraphicsConsole and Consplitter to change video resolution
             // and produce new text mode based on new resolution.
             //
-            PcdSet32S (PcdVideoHorizontalResolution, mShellHorizontalResolution);
-            PcdSet32S (PcdVideoVerticalResolution, mShellVerticalResolution);
-            PcdSet32S (PcdConOutColumn, mShellModeColumn);
-            PcdSet32S (PcdConOutRow, mShellModeRow);
+            Status = PcdSet32S (PcdVideoHorizontalResolution, mShellHorizontalResolution);
+            ASSERT_EFI_ERROR (Status);
+
+            Status = PcdSet32S (PcdVideoVerticalResolution, mShellVerticalResolution);
+            ASSERT_EFI_ERROR (Status);
+
+            Status = PcdSet32S (PcdConOutColumn, mShellModeColumn);
+            ASSERT_EFI_ERROR (Status);
+
+            Status = PcdSet32S (PcdConOutRow, mShellModeRow);
+            ASSERT_EFI_ERROR (Status);
 
             Status = gBS->LocateHandleBuffer (
                              ByProtocol,
