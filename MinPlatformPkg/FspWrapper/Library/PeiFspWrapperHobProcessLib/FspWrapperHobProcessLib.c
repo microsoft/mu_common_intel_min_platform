@@ -417,7 +417,7 @@ CheckFspGraphicsDeviceInfoHob (
   EFI_PEI_GRAPHICS_DEVICE_INFO_HOB *FspGraphicsDeviceInfo = NULL;
   EFI_PEI_GRAPHICS_DEVICE_INFO_HOB GraphicsDeviceInfo;
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
     if (Hob.Raw != NULL) {
       if ((Hob.Raw = GetNextGuidHob (&gEfiGraphicsInfoHobGuid, Hob.Raw)) != NULL) {
@@ -429,7 +429,7 @@ CheckFspGraphicsDeviceInfoHob (
     return ;
   }
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
     if (Hob.Raw != NULL) {
       if ((Hob.Raw = GetNextGuidHob (&gEfiGraphicsDeviceInfoHobGuid, Hob.Raw)) != NULL) {
@@ -507,7 +507,8 @@ DumpFspHobList (
   EFI_PEI_HOB_POINTERS Hob;
   EFI_STATUS           Status;
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
+  ASSERT_EFI_ERROR (Status);
   while (!END_OF_HOB_LIST (Hob)) {
     if (Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION) {
       DEBUG ((DEBUG_INFO, "FSP Extended    GUID HOB: {%g}\n", &(Hob.Guid->Name)));
@@ -534,7 +535,8 @@ DumpFspMemoryResource (
   EFI_PEI_HOB_POINTERS Hob;
   EFI_STATUS           Status;
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
+  ASSERT_EFI_ERROR (Status);
   DEBUG ((DEBUG_INFO, "\nFSP Memory Resource\n"));
   DEBUG ((DEBUG_INFO, "         Resource Range           Type    Attribute                   Owner\n"));
   DEBUG ((DEBUG_INFO, "================================= ==== ================ ====================================\n"));
@@ -573,7 +575,7 @@ DumpFspGraphicsInfoHob (
   EFI_STATUS                Status;
   EFI_PEI_GRAPHICS_INFO_HOB *FspGraphicsInfo = NULL;
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
     if (Hob.Raw != NULL) {
       if ((Hob.Raw = GetNextGuidHob (&gEfiGraphicsInfoHobGuid, Hob.Raw)) != NULL) {
@@ -612,7 +614,7 @@ DumpFspGraphicsDeviceInfoHob (
   EFI_STATUS                       Status;
   EFI_PEI_GRAPHICS_DEVICE_INFO_HOB *FspGraphicsDeviceInfo = NULL;
 
-  Status = PeiServicesGetHobList (&Hob.Raw);
+  Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
     if (Hob.Raw != NULL) {
       if ((Hob.Raw = GetNextGuidHob (&gEfiGraphicsDeviceInfoHobGuid, Hob.Raw)) != NULL) {
