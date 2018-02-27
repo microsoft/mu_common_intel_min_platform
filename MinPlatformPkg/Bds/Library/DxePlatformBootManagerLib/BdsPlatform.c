@@ -522,9 +522,6 @@ GetGraphicsController (
   EFI_HANDLE                *PciHandles;
   UINTN                     PciHandlesSize;
   EFI_DEVICE_PATH_PROTOCOL  *DevicePath;
-  VOID                      *TrustedConsoleDevicepath;
-
-  TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleOutputDevicePath);
 
   Status = gBS->LocateHandleBuffer (
                   ByProtocol,
@@ -817,16 +814,14 @@ BootCurrentIsInternalShell (
   CHAR16                        BootOptionName[16];
   UINT8                         *BootOption;
   UINT8                         *Ptr;
-  EFI_DEVICE_PATH_PROTOCOL      *BootDevicePath;
   BOOLEAN                       Result;
   EFI_STATUS                    Status;
   EFI_DEVICE_PATH_PROTOCOL      *TempDevicePath;
   EFI_DEVICE_PATH_PROTOCOL      *LastDeviceNode;
   EFI_GUID                      *GuidPoint;
 
-  BootOption     = NULL;
-  BootDevicePath = NULL;
-  Result         = FALSE;
+  BootOption = NULL;
+  Result     = FALSE;
 
   //
   // Get BootCurrent variable

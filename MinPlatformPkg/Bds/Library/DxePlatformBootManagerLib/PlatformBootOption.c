@@ -290,13 +290,10 @@ PlatformBootManagerWaitCallback (
   UINT16          TimeoutRemain
   )
 {
-  UINT16                        Timeout;
   EFI_STATUS                    Status;
   EFI_SIMPLE_TEXT_INPUT_EX_PROTOCOL  *TxtInEx;
   EFI_KEY_DATA                  KeyData;
   BOOLEAN                       PausePressed;
-
-  Timeout = PcdGet16 (PcdPlatformBootTimeOut);
 
   //
   // Pause on PAUSE key
@@ -345,9 +342,11 @@ RegisterDefaultBootOption (
   VOID
   )
 {
+#if 0
   EFI_DEVICE_PATH_PROTOCOL           *DevicePath;
   EFI_LOADED_IMAGE_PROTOCOL          *LoadedImage;
   MEDIA_FW_VOL_FILEPATH_DEVICE_PATH  FileNode;
+#endif
   UINT16                             *ShellData;
   UINT32                             ShellDataSize;
 
@@ -363,7 +362,7 @@ RegisterDefaultBootOption (
   if (mBootMenuOptionNumber == LoadOptionNumberUnassigned) {
     DEBUG ((DEBUG_INFO, "BootMenuOptionNumber (%d) should not be same to LoadOptionNumberUnassigned(%d).\n", mBootMenuOptionNumber, LoadOptionNumberUnassigned));
   }
-
+#if 0
   //
   // Boot Manager Menu
   //
@@ -375,6 +374,7 @@ RegisterDefaultBootOption (
          (VOID **) &LoadedImage
          );
   DevicePath = AppendDevicePathNode (DevicePathFromHandle (LoadedImage->DeviceHandle), (EFI_DEVICE_PATH_PROTOCOL *) &FileNode);
+#endif
 
 }
 
