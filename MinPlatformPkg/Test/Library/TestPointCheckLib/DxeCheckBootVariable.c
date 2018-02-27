@@ -249,6 +249,8 @@ TestPointCheckBootVariable (
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckBootVariable - Enter\n"));
 
+  ReturnStatus = EFI_SUCCESS;
+
   Status = TestPointCheckLoadOptionVariable ();
   if (EFI_ERROR(Status)) {
     ReturnStatus = Status;

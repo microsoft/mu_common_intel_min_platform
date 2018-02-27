@@ -76,10 +76,14 @@ IsRuntimeImage (
       Magic = Hdr.Pe32->OptionalHeader.Magic;
     }
 
+    Subsystem = 0;
+
     if (Magic == EFI_IMAGE_NT_OPTIONAL_HDR32_MAGIC) {
       Subsystem = Hdr.Pe32->OptionalHeader.Subsystem;
     } else if (Hdr.Pe32->OptionalHeader.Magic == EFI_IMAGE_NT_OPTIONAL_HDR64_MAGIC) {
       Subsystem = Hdr.Pe32Plus->OptionalHeader.Subsystem;
+    } else {
+      ASSERT (FALSE);
     }
     if (Subsystem == EFI_IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER) {
       return TRUE;
