@@ -36,7 +36,6 @@ EFI_GUID  mPciSegmentInfoHobGuid = PCI_SEGMENT_INFO_HOB_GUID;
   @retval A callee owned array holding the segment information.
 **/
 PCI_SEGMENT_INFO *
-EFIAPI
 GetPciSegmentInfo (
   OUT UINTN  *Count
   )
