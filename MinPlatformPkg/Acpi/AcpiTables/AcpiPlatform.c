@@ -81,9 +81,7 @@ PlatformUpdateTables (
   EFI_ACPI_DESCRIPTION_HEADER                 *TableHeader;
   UINT8                                       *CurrPtr;
   UINT8                                       *EndPtr;
-  UINT8                                       *TempPtr;
   EFI_ACPI_1_0_PROCESSOR_LOCAL_APIC_STRUCTURE *ApicPtr;
-  UINT8                                       CurrProcessor;
   EFI_STATUS                                  Status;
   EFI_MP_SERVICES_PROTOCOL                    *MpService;
   UINTN                                       NumberOfCPUs;
@@ -94,8 +92,6 @@ PlatformUpdateTables (
   CurrPtr           = NULL;
   EndPtr            = NULL;
   ApicPtr           = NULL;
-  TempPtr           = NULL;
-  CurrProcessor     = 0;
   NumberOfCPUs      = 1;
   LocalApicCounter  = 0;
   
@@ -497,16 +493,7 @@ InstallAcpiPlatform (
   )
 {
   EFI_STATUS                    Status;
-  INTN                          Instance;
-  EFI_ACPI_COMMON_HEADER        *CurrentTable;
-  UINTN                         TableHandle;
-  EFI_HANDLE                    Handle;
   EFI_EVENT                     EndOfDxeEvent;
-
-  Instance      = 0;
-  CurrentTable  = NULL;
-  TableHandle   = 0;
-  Handle        = NULL;
 
   //
   // Create an End of DXE event.
@@ -551,7 +538,6 @@ SortCpuLocalApicInTable (
   )
 {
   EFI_PROCESSOR_INFORMATION                 *MpContext;
-  UINTN                                     BufferSize;
   INTN                                      Index2;
   UINTN                                     Index1;
   UINTN                                     Index;
@@ -563,7 +549,6 @@ SortCpuLocalApicInTable (
   UINT8                                     MaxCpuCore;
   UINT8                                     MaxCpuThread;
 
-  BufferSize                    = 0;
   MpContext                     = NULL;
   MaxCpuPackage                 = 0;
   MaxCpuCore                    = 0;
