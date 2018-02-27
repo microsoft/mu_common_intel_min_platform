@@ -146,23 +146,23 @@ ASM_PFX(ProtectedModeEntryPoint):
   # Find the fsp info header
   movl PcdGet32(PcdFsptBaseAddress), %edi
 
-  movl $FVH_SIGINATURE_OFFSET(%edi), %eax
+  movl FVH_SIGINATURE_OFFSET(%edi), %eax
   cmp  $FVH_SIGINATURE_VALID_VALUE, %eax
   jnz  FspHeaderNotFound
 
   xorl %eax, %eax
-  movw $FVH_EXTHEADER_OFFSET_OFFSET(%edi), %ax
+  movw FVH_EXTHEADER_OFFSET_OFFSET(%edi), %ax
   cmp  $0x00, %ax
   jnz  FspFvExtHeaderExist
 
   xorl %eax, %eax
-  movw $FVH_HEADER_LENGTH_OFFSET(%edi), %ax   # Bypass Fv Header
+  movw FVH_HEADER_LENGTH_OFFSET(%edi), %ax   # Bypass Fv Header
   addl %eax, %edi
   jmp  FspCheckFfsHeader
 
 FspFvExtHeaderExist:
   addl %eax, %edi
-  movl $FVH_EXTHEADER_SIZE_OFFSET(%edi), %eax  # Bypass Ext Fv Header
+  movl FVH_EXTHEADER_SIZE_OFFSET(%edi), %eax  # Bypass Ext Fv Header
   addl %eax, %edi
 
   # Round up to 8 byte alignment
@@ -194,7 +194,7 @@ FspCheckFfsHeader:
   add  $FFS_HEADER_SIZE_VALUE, %edi        # Bypass the ffs header
 
   # Check the section type as raw section
-  movb $SECTION_HEADER_TYPE_OFFSET(%edi), %al
+  movb SECTION_HEADER_TYPE_OFFSET(%edi), %al
   cmp  $0x19, %al
   jnz  FspHeaderNotFound
 
@@ -206,8 +206,8 @@ FspHeaderNotFound:
 
 FspHeaderFound:
   # Get the fsp TempRamInit Api address
-  movl $FSP_HEADER_IMAGEBASE_OFFSET(%edi), %eax
-  addl $FSP_HEADER_TEMPRAMINIT_OFFSET(%edi), %eax
+  movl FSP_HEADER_IMAGEBASE_OFFSET(%edi), %eax
+  addl FSP_HEADER_TEMPRAMINIT_OFFSET(%edi), %eax
 
   # Setup the hardcode stack
   movl $TempRamInitStack, %esp
