@@ -59,7 +59,7 @@ PeiGetVariable (
              &gEfiPeiReadOnlyVariable2PpiGuid,
              0,
              NULL,
-             &VariableServices
+             (VOID **)&VariableServices
              );
   ASSERT_EFI_ERROR (Status);
   if (EFI_ERROR(Status)) {
