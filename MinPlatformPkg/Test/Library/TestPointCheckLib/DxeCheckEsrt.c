@@ -39,7 +39,7 @@ CHAR8 *mLastAttemptStatusString[] = {
   "Error: Power Event Battery",
 };
 
-CHAR8 mUnknownStr[11];
+STATIC CHAR8 mUnknownStr[11];
 
 CHAR8 *
 FwTypeToString(

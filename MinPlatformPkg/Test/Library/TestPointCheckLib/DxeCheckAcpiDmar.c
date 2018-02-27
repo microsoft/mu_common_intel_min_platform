@@ -48,7 +48,7 @@ CHAR8 *mDmarTypeString[] = {
   "ANDD  ",
 };
 
-CHAR8 mUnknownStr[11];
+STATIC CHAR8 mUnknownStr[11];
 
 CHAR8 *
 ShortNameOfDmarType(

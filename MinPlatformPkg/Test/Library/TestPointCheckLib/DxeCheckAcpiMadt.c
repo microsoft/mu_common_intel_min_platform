@@ -58,7 +58,7 @@ CHAR8 *mMadtTypeString[] = {
   "X2APIC_NMI",
 };
 
-CHAR8 mUnknownStr[11];
+STATIC CHAR8 mUnknownStr[11];
 
 CHAR8 *
 ShortNameOfMadtType(

@@ -63,7 +63,7 @@ CHAR8 *mResourceTypeShortName[] = {
   "Reserved I/O",
 };
 
-CHAR8 mUnknownStr[11];
+STATIC CHAR8 mUnknownStr[11];
 
 CHAR8 *
 ShortNameOfMemoryType (
