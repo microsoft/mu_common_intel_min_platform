@@ -581,7 +581,7 @@ UpdateGraphicConOut (
     //
     GopDevicePath = EfiBootManagerGetGopDevicePath (GraphicsControllerHandle);
     if (GopDevicePath != NULL) {
-      GetEfiGlobalVariable2 (L"ConOut", &ConOutDevicePath, NULL);
+      GetEfiGlobalVariable2 (L"ConOut", (VOID **)&ConOutDevicePath, NULL);
       UpdatedConOutDevicePath = UpdateGopDevicePath (ConOutDevicePath, GopDevicePath);
       if (ConOutDevicePath != NULL) {
         FreePool (ConOutDevicePath);
@@ -681,7 +681,7 @@ ConnectTrustedConsole (
 
   for (Index = 0; Index < sizeof (ConsoleVar) / sizeof (ConsoleVar[0]); Index++) {
 
-    GetEfiGlobalVariable2 (ConsoleVar[Index], &Consoles, NULL);
+    GetEfiGlobalVariable2 (ConsoleVar[Index], (VOID **)&Consoles, NULL);
 
     TempDevicePath = Consoles;
     do {
@@ -1130,8 +1130,8 @@ PlatformBootManagerBeforeConsole (
       gBootMode == BOOT_WITH_FULL_CONFIGURATION_PLUS_DIAGNOSTICS ||
       gBootMode == BOOT_IN_RECOVERY_MODE) {
 
-    GetEfiGlobalVariable2 (L"ConOut", &VarConOut, NULL);   if (VarConOut != NULL) { FreePool (VarConOut); }
-    GetEfiGlobalVariable2 (L"ConIn", &VarConIn, NULL);    if (VarConIn  != NULL) { FreePool (VarConIn);  }
+    GetEfiGlobalVariable2 (L"ConOut", (VOID **)&VarConOut, NULL);   if (VarConOut != NULL) { FreePool (VarConOut); }
+    GetEfiGlobalVariable2 (L"ConIn", (VOID **)&VarConIn, NULL);    if (VarConIn  != NULL) { FreePool (VarConIn);  }
 
     //
     // Only fill ConIn/ConOut when ConIn/ConOut is empty because we may drop to Full Configuration boot mode in non-first boot
