@@ -225,6 +225,8 @@ IsTrustedConsole (
 
   ConsoleDevice = DuplicateDevicePath(Device);
 
+  TrustedConsoleDevicepath = NULL;
+
   switch (ConsoleType) {
   case ConIn:
     TrustedConsoleDevicepath = PcdGetPtr (PcdTrustedConsoleInputDevicePath);
