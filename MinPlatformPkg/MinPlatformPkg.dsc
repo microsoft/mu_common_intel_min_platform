@@ -42,7 +42,7 @@
 # Pcd Section - list of all EDK II PCD Entries defined by this Platform
 #
 ################################################################################
-  
+
 [PcdsFeatureFlag]
   # configuration
     gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly|FALSE
@@ -70,7 +70,7 @@
   PciSegmentInfoLib|MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
   PlatformBootManagerLib|MinPlatformPkg/Bds/Library/DxePlatformBootManagerLib/DxePlatformBootManagerLib.inf
   AslUpdateLib|MinPlatformPkg/Acpi/Library/DxeAslUpdateLib/DxeAslUpdateLib.inf
-  
+
   #
   # Misc
   #
@@ -88,7 +88,7 @@
   SiliconPolicyUpdateLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
 
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
-  
+
 [LibraryClasses.common.SEC]
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
 
@@ -156,7 +156,7 @@
   MinPlatformPkg/FspWrapper/Library/SecFspWrapperPlatformSecLib/SecFspWrapperPlatformSecLib.inf
   MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
   MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformLib/DxeFspWrapperPlatformLib.inf
-  
+
   MinPlatformPkg/Hsti/HstiIbvPlatformDxe/HstiIbvPlatformDxe.inf
 
   MinPlatformPkg/Pci/Library/PciHostBridgeLibSimple/PciHostBridgeLibSimple.inf
@@ -174,6 +174,8 @@
   MinPlatformPkg/PlatformInit/SiliconPolicyDxe/SiliconPolicyDxe.inf
   MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
   MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
+
+  MinPlatformPkg/Services/StallServicePei/StallServicePei.inf
 
   MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
