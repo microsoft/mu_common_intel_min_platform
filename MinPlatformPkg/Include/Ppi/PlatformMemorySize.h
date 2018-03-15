@@ -1,26 +1,15 @@
-//
-// This file contains 'Framework Code' and is licensed as such 
-// under the terms of your license agreement with Intel or your
-// vendor.  This file may not be modified, except as allowed by
-// additional terms of your license agreement.                 
-//
 /**
-
-Copyright (c)  1999 - 2003 Intel Corporation. All rights reserved
-This software and associated documentation (if any) is furnished
-under a license and may only be used or copied in accordance
-with the terms of the license. Except as permitted by such
-license, no part of this software or documentation may be
-reproduced, stored in a retrieval system, or transmitted in any
-form or by any means without the express written consent of
-Intel Corporation.
-
-  @file PlatformMemorySize.h
-
-  Platform Memory Size PPI as defined in Tiano
-
   PPI for describing the minimum platform memory size in order to successfully
   pass control into DXE
+
+Copyright (c) 2018, Intel Corporation. All rights reserved.<BR>
+This program and the accompanying materials are licensed and made available under
+the terms and conditions of the BSD License that accompanies this distribution.
+The full text of the license may be found at
+http://opensource.org/licenses/bsd-license.php.
+
+THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 **/
 
