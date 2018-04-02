@@ -140,7 +140,8 @@ VOID DetectApicIdMap(VOID)
   DEBUG ((DEBUG_INFO, "CoreCount - %d\n", CoreCount));
 
   //DEBUG((EFI_D_ERROR, ":: Default to use Map A @ %08X FusedCoreCount: %02d, sktlevel: %d\n",mApicIdMap, FusedCoreCount, mNumOfBitShift));
-  ASSERT (CoreCount != 0);
+  // Dont assert for single core, single thread system.
+  //ASSERT (CoreCount != 0);
 
   if(CoreCount <= 16) {
 
