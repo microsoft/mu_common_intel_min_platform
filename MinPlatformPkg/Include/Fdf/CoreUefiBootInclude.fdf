@@ -20,7 +20,6 @@ INF  MdeModulePkg/Universal/ReportStatusCodeRouter/RuntimeDxe/ReportStatusCodeRo
 INF  MdeModulePkg/Universal/StatusCodeHandler/RuntimeDxe/StatusCodeHandlerRuntimeDxe.inf
 
 INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
-INF  PcAtChipsetPkg/8259InterruptControllerDxe/8259.inf
 INF  MdeModulePkg/Universal/Metronome/Metronome.inf
 INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
 INF  PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
