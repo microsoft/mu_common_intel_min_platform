@@ -48,5 +48,4 @@
 
 [Depex]
   gEfiVariableArchProtocolGuid        AND
-  gEfiVariableWriteArchProtocolGuid   AND
-  gEfiResetArchProtocolGuid
+  gEfiVariableWriteArchProtocolGuid
