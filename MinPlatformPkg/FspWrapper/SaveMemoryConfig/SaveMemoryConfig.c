@@ -116,7 +116,7 @@ SaveMemoryConfigEntryPoint (
         ASSERT_EFI_ERROR(Status);
       }
 
-      (gBS->FreePool)(VariableData);
+      FreePool (VariableData);
     } else {
       DEBUG((DEBUG_INFO, "Memory save size is %d\n", DataSize));
     }
