@@ -127,5 +127,5 @@ SaveMemoryConfigEntryPoint (
   //
   // This driver does not produce any protocol services, so always unload it.
   //
-  return EFI_UNSUPPORTED;
+  return EFI_REQUEST_UNLOAD_IMAGE;
 }
