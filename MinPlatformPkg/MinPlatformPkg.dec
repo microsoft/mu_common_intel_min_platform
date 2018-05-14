@@ -115,8 +115,6 @@ gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiReservedMemorySize|0x402|UINT32|0x20
 gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtDataMemorySize|0x4b|UINT32|0x20000503
 gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiRtCodeMemorySize|0x25|UINT32|0x20000504
 
-gMinPlatformPkgTokenSpaceGuid.PcdFspTemporaryRamSize|0x1000|UINT32|0x10001003
-
 #
 # The PCDs are used to control the Windows SMM Security Mitigations Table - Protection Flags
 #
