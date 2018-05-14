@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -52,6 +52,19 @@ TestTempRam (
   }
 }
 
+/**
+  This service tests temporary memory functionality.
+
+  Test subject: Temporary Memory
+  Test overview: Reads/writes results on the stack and heap.
+  Reporting mechanism: PPI
+
+  @param[in]  TempRamStart    A pointer to the start of temporary memory.
+  @param[in]  TempRamEnd      A pointer to the end of temporary memory.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointTempMemoryFunction (

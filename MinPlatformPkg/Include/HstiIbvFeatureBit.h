@@ -2,7 +2,7 @@
   This file contains various definitions for IBV HSTI implementation
   including error string definitions
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 -2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -16,7 +16,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #ifndef __HSTI_IBV_FEATURE_BIT_H__
 #define __HSTI_IBV_FEATURE_BIT_H__
 
-#define HSTI_IMPLEMENTATION_ID_PLATFORM  L"Intel MinPlatform"
+#define HSTI_IMPLEMENTATION_ID_PLATFORM  L"Minimum Platform"
 
 #define HSTI_SECURITY_FEATURE_SIZE        3
 

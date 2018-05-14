@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -17,6 +17,12 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DebugLib.h>
 #include <Library/PeiServicesLib.h>
 
+/**
+  This board service detects the board type.
+
+  @retval EFI_SUCCESS   The board was detected successfully.
+  @retval EFI_NOT_FOUND The board could not be detected.
+**/
 EFI_STATUS
 EFIAPI
 BoardDetect (
@@ -44,6 +50,12 @@ BoardDetect (
   return EFI_SUCCESS;
 }
 
+/**
+  This board service initializes board-specific debug devices.
+
+  @retval EFI_SUCCESS   Board-specific debug initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardDebugInit (
@@ -67,6 +79,12 @@ BoardDebugInit (
   return EFI_SUCCESS;
 }
 
+/**
+  This board service detects the boot mode.
+
+  @retval EFI_BOOT_MODE The boot mode.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_BOOT_MODE
 EFIAPI
 BoardBootModeDetect (
@@ -90,6 +108,12 @@ BoardBootModeDetect (
   return BOOT_WITH_FULL_CONFIGURATION;
 }
 
+/**
+  A hook for board-specific initialization prior to memory initialization.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitBeforeMemoryInit (
@@ -113,6 +137,12 @@ BoardInitBeforeMemoryInit (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific initialization after memory initialization.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitAfterMemoryInit (
@@ -136,6 +166,12 @@ BoardInitAfterMemoryInit (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific initialization prior to disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitBeforeTempRamExit (
@@ -159,6 +195,12 @@ BoardInitBeforeTempRamExit (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific initialization after disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitAfterTempRamExit (
@@ -182,6 +224,12 @@ BoardInitAfterTempRamExit (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific initialization prior to silicon initialization.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitBeforeSiliconInit (
@@ -205,6 +253,12 @@ BoardInitBeforeSiliconInit (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific initialization after silicon initialization.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitAfterSiliconInit (

@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -88,6 +88,16 @@ GetFeatureImplemented (
   return (UINT8 *)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT);
 }
 
+/**
+  This service tests debug configuration after debug device initialization.
+
+  Test subject: Debug Capability
+  Test overview: Dumps a struct of debug configuration parameters to the debug log.
+  Reporting mechanism: Serial port shows the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointDebugInitDone (
@@ -125,6 +135,19 @@ TestPointDebugInitDone (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies MTRR settings after memory is discovered.
+
+  Test subject: MTRRs after memory is discovered.
+  Test overview: Verifies MTRR settings.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  Examples of settings verified: No MTRR overlap, PEI data memory is writeback, and flash region is WP, MMIO is UC, etc.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointMemoryDiscoveredMtrrFunctional (
@@ -136,7 +159,7 @@ TestPointMemoryDiscoveredMtrrFunctional (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_MTRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -164,6 +187,17 @@ TestPointMemoryDiscoveredMtrrFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies discovered memory resources after memory is discovered.
+
+  Test subject: Resource description HOBs.
+  Test overview: No memory resource overlap.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointMemoryDiscoveredMemoryResourceFunctional (
@@ -175,7 +209,7 @@ TestPointMemoryDiscoveredMemoryResourceFunctional (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_MEMORY_RESOURCE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -201,6 +235,17 @@ TestPointMemoryDiscoveredMemoryResourceFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of published firmware volume resources.
+
+  Test subject: FV HOB and FV Info PPI.
+  Test overview: FV HOB and FV Info PPI.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointMemoryDiscoveredFvInfoFunctional (
@@ -212,7 +257,7 @@ TestPointMemoryDiscoveredFvInfoFunctional (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_FV_INFO_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -237,6 +282,16 @@ TestPointMemoryDiscoveredFvInfoFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies DMA protection configuration in PEI after memory is discovered.
+
+  Test subject: DMA protection.
+  Test overview: DMA protection in PEI.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointMemoryDiscoveredDmaProtectionEnabled (
@@ -248,19 +303,19 @@ TestPointMemoryDiscoveredDmaProtectionEnabled (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[1] & TEST_POINT_BYTE1_MEMORY_DISCOVERED_DMA_PROTECTION_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredDmaProtectionEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointVtdEngine ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -274,6 +329,17 @@ TestPointMemoryDiscoveredDmaProtectionEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies system resources at the end of PEI.
+
+  Test subject: Resource HOB and SMRAM HOB.
+  Test overview: SMRAM configuration and no system resource overlap.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfPeiSystemResourceFunctional (
@@ -285,7 +351,7 @@ TestPointEndOfPeiSystemResourceFunctional (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -313,6 +379,19 @@ TestPointEndOfPeiSystemResourceFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies MTRR settings at the end of PEI.
+
+  Test subject: MTRRs after end of PEI.
+  Test overview: Verifies MTRR settings.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  Examples of settings verified: No MTRR overlap, DXE data memory is writeback, flash region may be UC, MMIO is UC, etc.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfPeiMtrrFunctional (
@@ -324,7 +403,7 @@ TestPointEndOfPeiMtrrFunctional (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -349,6 +428,17 @@ TestPointEndOfPeiMtrrFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies bus master enable (BME) is disabled at the end of PEI.
+
+  Test subject: PCI device BME.
+  Test overview: Verify BME is cleared.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfPeiPciBusMasterDisabled (
@@ -360,7 +450,7 @@ TestPointEndOfPeiPciBusMasterDisabled (
   UINT8       *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
-  
+
   if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED) == 0) {
     return EFI_SUCCESS;
   }
@@ -386,7 +476,9 @@ TestPointEndOfPeiPciBusMasterDisabled (
 }
 
 /**
-  Initialize feature data
+  Initialize feature data.
+
+  @param[in]  Role    The test point role being requested.
 **/
 VOID
 InitData (
@@ -414,6 +506,14 @@ InitData (
   }
 }
 
+/**
+  The library constructor.
+
+  @param  ImageHandle   The firmware allocated handle for the EFI image.
+  @param  SystemTable   A pointer to the EFI System Table.
+
+  @retval EFI_SUCCESS   The function always return EFI_SUCCESS.
+**/
 EFI_STATUS
 EFIAPI
 PeiTestPointCheckLibConstructor (

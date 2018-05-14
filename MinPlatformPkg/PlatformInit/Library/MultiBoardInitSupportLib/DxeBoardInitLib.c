@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -17,6 +17,12 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/DebugLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 
+/**
+  A hook for board-specific initialization after PCI enumeration.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitAfterPciEnumeration (
@@ -39,6 +45,12 @@ BoardInitAfterPciEnumeration (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific functionality for the ReadyToBoot event.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitReadyToBoot (
@@ -61,6 +73,12 @@ BoardInitReadyToBoot (
   return EFI_SUCCESS;
 }
 
+/**
+  A hook for board-specific functionality for the ExitBootServices event.
+
+  @retval EFI_SUCCESS   The board initialization was successful.
+  @retval EFI_NOT_READY The board has not been detected yet.
+**/
 EFI_STATUS
 EFIAPI
 BoardInitEndOfFirmware (

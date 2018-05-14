@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -170,6 +170,17 @@ GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPoin
 
 GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
 
+/**
+  This service verifies bus master enable (BME) is disabled after PCI enumeration.
+
+  Test subject: PCI device BME.
+  Test overview: Verify BME is cleared.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointPciEnumerationDonePciBusMasterDisabled (
@@ -190,7 +201,7 @@ TestPointPciEnumerationDonePciBusMasterDisabled (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -204,6 +215,17 @@ TestPointPciEnumerationDonePciBusMasterDisabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies PCI device resource assignment after PCI enumeration.
+
+  Test subject: PCI device resources.
+  Test overview: Verify all PCI devices have been assigned proper resources.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps PCI resource assignments to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointPciEnumerationDonePciResourceAllocated (
@@ -212,7 +234,7 @@ TestPointPciEnumerationDonePciResourceAllocated (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED) == 0) {
     return EFI_SUCCESS;
   }
@@ -224,7 +246,7 @@ TestPointPciEnumerationDonePciResourceAllocated (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -238,6 +260,17 @@ TestPointPciEnumerationDonePciResourceAllocated (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the DMA ACPI table is reported at the end of DXE.
+
+  Test subject: DMA protection.
+  Test overview: DMA ACPI table is reported.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the DMA ACPI table to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfDxeDmaAcpiTableFunctional (
@@ -246,13 +279,13 @@ TestPointEndOfDxeDmaAcpiTableFunctional (
 {
   EFI_STATUS  Status;
   VOID        *Acpi;
-  
+
   if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFunctional - Enter\n"));
-  
+
   Acpi = TestPointGetAcpi (EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE);
   if (Acpi == NULL) {
     DEBUG ((DEBUG_ERROR, "No DMAR table\n"));
@@ -278,6 +311,17 @@ TestPointEndOfDxeDmaAcpiTableFunctional (
   return Status;
 }
 
+/**
+  This service verifies DMA protection configuration at the end of DXE.
+
+  Test subject: DMA protection.
+  Test overview: DMA protection in DXE.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the DMA ACPI table to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfDxeDmaProtectionEnabled (
@@ -286,19 +330,19 @@ TestPointEndOfDxeDmaProtectionEnabled (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_DMA_PROTECTION_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaProtectionEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointVtdEngine ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -312,6 +356,17 @@ TestPointEndOfDxeDmaProtectionEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies no 3rd party PCI option ROMs (OPROMs) were dispatched prior to the end of DXE.
+
+  Test subject: 3rd party OPROMs.
+  Test overview: Verify no 3rd party PCI OPROMs were .
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps PCI resource assignments to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointEndOfDxeNoThirdPartyPciOptionRom (
@@ -320,19 +375,19 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeNoThirdPartyPciOptionRom - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckLoadedImage ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -346,6 +401,17 @@ TestPointEndOfDxeNoThirdPartyPciOptionRom (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of System Management RAM (SMRAM) alignment at SMM Ready To Lock.
+
+  Test subject: SMRAM Information.
+  Test overview: SMRAM is aligned.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the SMRAM region table to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointDxeSmmReadyToLockSmramAligned (
@@ -354,19 +420,19 @@ TestPointDxeSmmReadyToLockSmramAligned (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockSmramAligned - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckSmmInfo ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -380,6 +446,18 @@ TestPointDxeSmmReadyToLockSmramAligned (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the Windows SMM Security Mitigation Table (WSMT) at SMM Ready To Lock.
+
+  Test subject: Windows Security SMM Mitigation Table.
+  Test overview: The table is reported in compliance with the Windows SMM Security Mitigations Table
+                 ACPI table specification.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the WSMT to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointDxeSmmReadyToLockWsmtTableFunctional (
@@ -388,13 +466,13 @@ TestPointDxeSmmReadyToLockWsmtTableFunctional (
 {
   EFI_STATUS  Status;
   VOID        *Acpi;
-  
+
   if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_WSMT_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToLockWsmtTableFunctional - Enter\n"));
-  
+
   Acpi = TestPointGetAcpi (EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE);
   if (Acpi == NULL) {
     DEBUG ((DEBUG_ERROR, "No WSMT table\n"));
@@ -420,6 +498,17 @@ TestPointDxeSmmReadyToLockWsmtTableFunctional (
   return Status;
 }
 
+/**
+  This service verifies the validity of the SMM page table at Ready To Boot.
+
+  Test subject: SMM page table.
+  Test overview: The SMM page table settings matches the SmmMemoryAttribute table.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Reports an error if verification fails.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointDxeSmmReadyToBootSmmPageProtection (
@@ -446,13 +535,13 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   EFI_MEMORY_DESCRIPTOR                               *Entry;
   UINTN                                               Size;
   TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
-  
+
   if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmmPageProtection - Enter\n"));
-  
+
   TestPointDumpUefiMemoryMap (&UefiMemoryMap, &UefiMemoryMapSize, &UefiDescriptorSize, FALSE);
   TestPointDumpGcd (&GcdMemoryMap, &GcdMemoryMapNumberOfDescriptors, &GcdIoMap, &GcdIoMapNumberOfDescriptors, FALSE);
 
@@ -470,9 +559,9 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   }
 
   MinimalSizeNeeded = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) +
-                      sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO) + 
-                      UefiMemoryMapSize + 
-                      GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR) + 
+                      sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO) +
+                      UefiMemoryMapSize +
+                      GcdMemoryMapNumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR) +
                       GcdIoMapNumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR) +
                       MemoryAttributesTableSize;
 
@@ -498,7 +587,7 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   }
   ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
   CommBuffer = (UINT8 *)(UINTN)Entry->PhysicalStart;
-  
+
   CommHeader = (EFI_SMM_COMMUNICATE_HEADER *)&CommBuffer[0];
   CopyMem(&CommHeader->HeaderGuid, &mTestPointSmmCommunciationGuid, sizeof(mTestPointSmmCommunciationGuid));
   CommHeader->MessageLength = MinimalSizeNeeded - OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data);
@@ -548,6 +637,17 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies SMI handler profiling.
+
+  Test subject: SMI handler profiling.
+  Test overview:
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the SMI handler profile.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointDxeSmmReadyToBootSmiHandlerInstrument (
@@ -556,19 +656,19 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[7] & TEST_POINT_BYTE7_DXE_SMM_READY_TO_BOOT_SMI_HANDLER_INSTRUMENT) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointDxeSmmReadyToBootSmiHandlerInstrument - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckSmiHandlerInstrument ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -582,6 +682,17 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   return EFI_SUCCESS;
 }
 
+/**
+  This services verifies the validity of installed ACPI tables at Ready To Boot.
+
+  Test subject: ACPI tables.
+  Test overview: The ACPI table settings are valid.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the installed ACPI tables.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootAcpiTableFunctional (
@@ -590,19 +701,19 @@ TestPointReadyToBootAcpiTableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootAcpiTableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckAcpi ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -616,6 +727,17 @@ TestPointReadyToBootAcpiTableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This services verifies ACPI table resources are in the GCD.
+
+  Test subject: ACPI memory resources.
+  Test overview: Memory resources are in both ACPI and GCD.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the installed ACPI tables and GCD.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootGcdResourceFunctional (
@@ -624,19 +746,19 @@ TestPointReadyToBootGcdResourceFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootGcdResourceFunctional - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckAcpiGcdResource ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -650,6 +772,18 @@ TestPointReadyToBootGcdResourceFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the memory type information settings.
+
+  Test subject: Memory type information.
+  Test overview: Inspect an verify memory type information is correct.
+                 Confirm no fragmentation exists in the ACPI/Reserved/Runtime regions.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the memory type information settings to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootMemoryTypeInformationFunctional (
@@ -658,13 +792,13 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMemoryTypeInformationFunctional - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckMemoryTypeInformation ();
   if (EFI_ERROR(Status)) {
@@ -675,7 +809,7 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -689,6 +823,18 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the memory type information settings.
+
+  Test subject: Memory type information.
+  Test overview: Inspect an verify memory type information is correct.
+                 Confirm no fragmentation exists in the ACPI/Reserved/Runtime regions.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the memory type information settings to the debug log.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootUefiMemoryAttributeTableFunctional (
@@ -697,13 +843,13 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootUefiMemoryAttributeTableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   TestPointDumpUefiMemoryMap (NULL, NULL, NULL, TRUE);
   TestPointDumpGcd (NULL, NULL, NULL, NULL, TRUE);
@@ -711,7 +857,7 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -725,6 +871,17 @@ TestPointReadyToBootUefiMemoryAttributeTableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the UEFI memory attribute table.
+
+  Test subject: UEFI memory attribute table.
+  Test overview: The UEFI memeory attribute table is reported. The image code/data is consistent with the table.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the UEFI image information and the UEFI memory attribute table.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootUefiBootVariableFunctional (
@@ -733,13 +890,13 @@ TestPointReadyToBootUefiBootVariableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootUefiBootVariableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   TestPointDumpDevicePath ();
   TestPointDumpVariable ();
@@ -747,7 +904,7 @@ TestPointReadyToBootUefiBootVariableFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -761,6 +918,17 @@ TestPointReadyToBootUefiBootVariableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the consle variable information.
+
+  Test subject: Console.
+  Test overview: Inspect and verify the console variable information is correct.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the console variable information.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootUefiConsoleVariableFunctional (
@@ -769,13 +937,13 @@ TestPointReadyToBootUefiConsoleVariableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[4] & TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootUefiConsoleVariableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   TestPointDumpDevicePath ();
   TestPointDumpVariable ();
@@ -783,7 +951,7 @@ TestPointReadyToBootUefiConsoleVariableFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -797,6 +965,17 @@ TestPointReadyToBootUefiConsoleVariableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the HSTI table.
+
+  Test subject: HSTI table.
+  Test overview: Verify the HSTI table is reported.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the HSTI table.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootHstiTableFunctional (
@@ -805,19 +984,19 @@ TestPointReadyToBootHstiTableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[8] & TEST_POINT_BYTE8_READY_TO_BOOT_HSTI_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootHstiTableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckHsti ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -831,6 +1010,17 @@ TestPointReadyToBootHstiTableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the ESRT table.
+
+  Test subject: ESRT table.
+  Test overview: Verify the ESRT table is reported.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the ESRT table.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootEsrtTableFunctional (
@@ -839,19 +1029,19 @@ TestPointReadyToBootEsrtTableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[8] & TEST_POINT_BYTE8_READY_TO_BOOT_ESRT_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootEsrtTableFunctional - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckEsrt ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -865,6 +1055,17 @@ TestPointReadyToBootEsrtTableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies UEFI Secure Boot is enabled.
+
+  Test subject: UEFI Secure Boot.
+  Test overview: Verify the SecureBoot variable is set.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the SecureBoot variable.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootUefiSecureBootEnabled (
@@ -873,19 +1074,19 @@ TestPointReadyToBootUefiSecureBootEnabled (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootUefiSecureBootEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckUefiSecureBoot ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -899,6 +1100,16 @@ TestPointReadyToBootUefiSecureBootEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies Platform Initialization (PI) Signed FV Boot is enabled.
+
+  Test subject: PI Signed FV Boot.
+  Test overview: Verify PI signed FV boot is enabled.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootPiSignedFvBootEnabled (
@@ -907,19 +1118,19 @@ TestPointReadyToBootPiSignedFvBootEnabled (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootPiSignedFvBootEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckPiSignedFvBoot ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -933,6 +1144,17 @@ TestPointReadyToBootPiSignedFvBootEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies TCG Trusted Boot is enabled.
+
+  Test subject: TCG Trusted Boot.
+  Test overview: Verify the TCG protocol is installed.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the TCG protocol capability.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootTcgTrustedBootEnabled (
@@ -941,19 +1163,19 @@ TestPointReadyToBootTcgTrustedBootEnabled (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootTcgTrustedBootEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckTcgTrustedBoot ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -967,6 +1189,17 @@ TestPointReadyToBootTcgTrustedBootEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies TCG Memory Overwrite Request (MOR) is enabled.
+
+  Test subject: TCG MOR.
+  Test overview: Verify the MOR UEFI variable is set.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the MOR UEFI variable.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointReadyToBootTcgMorEnabled (
@@ -975,19 +1208,19 @@ TestPointReadyToBootTcgMorEnabled (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[5] & TEST_POINT_BYTE5_READY_TO_BOOT_TCG_MOR_ENABLED) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootTcgMorEnabled - Enter\n"));
-  
+
   Result = TRUE;
   Status = TestPointCheckTcgMor ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -1001,6 +1234,11 @@ TestPointReadyToBootTcgMorEnabled (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the system state after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
 EFI_STATUS
 EFIAPI
 TestPointExitBootServices (
@@ -1015,7 +1253,9 @@ TestPointExitBootServices (
 }
 
 /**
-  Initialize feature data
+  Initialize feature data.
+
+  @param[in]  Role    The test point role being requested.
 **/
 VOID
 InitData (
@@ -1040,6 +1280,14 @@ InitData (
   }
 }
 
+/**
+  The library constructor.
+
+  @param  ImageHandle   The firmware allocated handle for the EFI image.
+  @param  SystemTable   A pointer to the EFI System Table.
+
+  @retval EFI_SUCCESS   The function always return EFI_SUCCESS.
+**/
 EFI_STATUS
 EFIAPI
 DxeTestPointCheckLibConstructor (

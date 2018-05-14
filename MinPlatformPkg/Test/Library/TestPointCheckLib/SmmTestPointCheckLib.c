@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -94,6 +94,17 @@ GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPoin
 
 GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
 
+/**
+  This service verifies SMRR configuration at the End of DXE.
+
+  Test subject: SMRR.
+  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps SMRR and SMRAM_INFO.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointSmmEndOfDxeSmrrFunctional (
@@ -102,7 +113,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[5] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
@@ -114,7 +125,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -128,6 +139,19 @@ TestPointSmmEndOfDxeSmrrFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the SMM memory atttribute table at SMM Ready To Lock.
+
+  Test subject: SMM memory attribute table.
+  Test overview: Verify the SMM memory attribute table is reported.
+                 Verify image code/data is consistent with the SMM memory attribute table.
+                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the SMM memory attribute table and SMM image information.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
@@ -136,20 +160,20 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToLock - Enter\n"));
-  
+
   Result = TRUE;
   TestPointDumpSmmLoadedImage ();
   Status = TestPointCheckSmmMemAttribute ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-  
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -163,6 +187,16 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the security of SMM communication buffers at SMM Ready To Lock.
+
+  Test subject: SMM communication buffer.
+  Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
+  Reporting mechanism: Dumps the memory map and GCD map at SmmReadyToLock and checks at SmmReadyToBoot.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
@@ -199,6 +233,17 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the validity of the SMM page table at SMM Ready To Boot.
+
+  Test subject: SMM page table.
+  Test overview: Verify the SMM page table matches the SMM memory attribute table.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Reports an error message upon checking.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
 EFI_STATUS
 EFIAPI
 TestPointSmmReadyToBootSmmPageProtection (
@@ -207,15 +252,15 @@ TestPointSmmReadyToBootSmmPageProtection (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  
+
   if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Enter\n"));
-  
+
   Result = TRUE;
-  
+
   Status = TestPointCheckSmmPaging ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
@@ -228,10 +273,10 @@ TestPointSmmReadyToBootSmmPageProtection (
       TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
       );
   }
-  
+
   if (mUefiMemoryMap != NULL) {
     Result = TRUE;
-  
+
     Status = TestPointCheckSmmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
     if (EFI_ERROR(Status)) {
       Result = FALSE;
@@ -271,7 +316,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
   BOOLEAN     Result;
   TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
   UINTN                                               TempCommBufferSize;
-  
+
   if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
@@ -279,7 +324,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtectionHandler - Enter\n"));
 
   TempCommBufferSize = *CommBufferSize;
-  
+
   if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO)) {
     DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: SMM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
@@ -330,7 +375,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
 
   if (CommData->UefiMemoryMapSize != 0) {
     Result = TRUE;
-  
+
     Status = TestPointCheckSmmCommunicationBuffer (
                (EFI_MEMORY_DESCRIPTOR *)(UINTN)((UINTN)CommData + CommData->UefiMemoryMapOffset),
                (UINTN)CommData->UefiMemoryMapSize,
@@ -398,7 +443,7 @@ TestPointSmmHandler (
   }
 
   TempCommBufferSize = *CommBufferSize;
-  
+
   if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_HEADER)) {
     DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
@@ -415,6 +460,11 @@ TestPointSmmHandler (
   return EFI_SUCCESS;
 }
 
+/**
+  This service verifies the system state within SMM after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
 EFI_STATUS
 EFIAPI
 TestPointSmmExitBootServices (
@@ -447,7 +497,9 @@ RegisterSmmTestPointHandler (
 }
 
 /**
-  Initialize feature data
+  Initialize feature data.
+
+  @param[in]  Role    The test point role being requested.
 **/
 VOID
 InitData (
@@ -472,6 +524,17 @@ InitData (
   }
 }
 
+/**
+  The library constructuor.
+
+  The function does the necessary initialization work for this library
+  instance.
+
+  @param[in]  ImageHandle       The firmware allocated handle for the UEFI image.
+  @param[in]  SystemTable       A pointer to the EFI system table.
+
+  @retval     EFI_SUCCESS       The function always return EFI_SUCCESS.
+**/
 EFI_STATUS
 EFIAPI
 SmmTestPointCheckLibConstructor (
