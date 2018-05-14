@@ -41,7 +41,6 @@ SaveMemoryConfigEntryPoint (
   )
 {
   EFI_STATUS        Status;
-  VOID              *HobList;
   EFI_HOB_GUID_TYPE *GuidHob;
   VOID              *HobData;
   VOID              *VariableData;
@@ -52,20 +51,13 @@ SaveMemoryConfigEntryPoint (
   DataSize     = 0;
   VariableData = NULL;
   GuidHob      = NULL;
-  HobList      = NULL;
   HobData      = NULL;
-
-  //
-  // Get the HOB list.  If it is not present, then ASSERT.
-  //
-  HobList = GetHobList ();
-  ASSERT (HobList != NULL);
 
   //
   // Search for the Memory Configuration GUID HOB.  If it is not present, then
   // there's nothing we can do. It may not exist on the update path.
   //
-  GuidHob = GetNextGuidHob (&gFspNonVolatileStorageHobGuid, HobList);
+  GuidHob = GetFirstGuidHob (&gFspNonVolatileStorageHobGuid);
   if (GuidHob != NULL) {
     HobData  = GET_GUID_HOB_DATA (GuidHob);
     DataSize = GET_GUID_HOB_DATA_SIZE(GuidHob);
