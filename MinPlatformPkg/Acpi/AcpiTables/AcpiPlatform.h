@@ -26,12 +26,14 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <IndustryStandard/HighPrecisionEventTimerTable.h>
 #include <IndustryStandard/MemoryMappedConfigurationSpaceAccessTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
+#include <Register/Hpet.h>
 #include <Guid/EventGroup.h>
 #include <Guid/GlobalVariable.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/DebugLib.h>
+#include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/IoLib.h>
 #include <Library/PcdLib.h>

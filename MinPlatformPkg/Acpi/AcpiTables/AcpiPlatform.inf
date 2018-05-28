@@ -70,7 +70,6 @@
   gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags
 
   gPcAtChipsetPkgTokenSpaceGuid.PcdHpetBaseAddress
-  gMinPlatformPkgTokenSpaceGuid.PcdHpetTimerBlockId
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiEnableSwSmi

@@ -1221,6 +1221,10 @@ PlatformUpdateTables (
   UINT64                                    TempOemTableId;
   EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *HpetTable;
+  UINT32                                           HpetBaseAddress;
+  EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_BLOCK_ID     HpetBlockId;
+  UINT32                                           HpetCapabilitiesData;
+  HPET_GENERAL_CAPABILITIES_ID_REGISTER            HpetCapabilities;
 
   TableHeader             = NULL;
 
@@ -1324,9 +1328,21 @@ PlatformUpdateTables (
 
   case EFI_ACPI_3_0_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
     HpetTable = (EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *)Table;
-    HpetTable->BaseAddressLower32Bit.Address = PcdGet32 (PcdHpetBaseAddress);
+    HpetBaseAddress = PcdGet32 (PcdHpetBaseAddress);
+    HpetTable->BaseAddressLower32Bit.Address = HpetBaseAddress;
     HpetTable->BaseAddressLower32Bit.RegisterBitWidth = 0;
-    HpetTable->EventTimerBlockId = PcdGet32 (PcdHpetTimerBlockId);
+    HpetCapabilitiesData     = MmioRead32 (HpetBaseAddress + HPET_GENERAL_CAPABILITIES_ID_OFFSET);
+    HpetCapabilities.Uint64  = HpetCapabilitiesData;
+    HpetCapabilitiesData     = MmioRead32 (HpetBaseAddress + HPET_GENERAL_CAPABILITIES_ID_OFFSET + 4);
+    HpetCapabilities.Uint64 |= LShiftU64 (HpetCapabilitiesData, 32);
+    HpetBlockId.Bits.Revision       = HpetCapabilities.Bits.Revision;
+    HpetBlockId.Bits.NumberOfTimers = HpetCapabilities.Bits.NumberOfTimers;
+    HpetBlockId.Bits.CounterSize    = HpetCapabilities.Bits.CounterSize;
+    HpetBlockId.Bits.Reserved       = 0;
+    HpetBlockId.Bits.LegacyRoute    = HpetCapabilities.Bits.LegacyRoute;
+    HpetBlockId.Bits.VendorId       = HpetCapabilities.Bits.VendorId;
+    HpetTable->EventTimerBlockId    = HpetBlockId.Uint32;
+    HpetTable->MainCounterMinimumClockTickInPeriodicMode = (UINT16)HpetCapabilities.Bits.CounterClockPeriod;
     DEBUG(( EFI_D_ERROR, "ACPI HPET table @ address 0x%x\n", Table ));
     DEBUG(( EFI_D_ERROR, "  HPET base 0x%x\n", PcdGet32 (PcdHpetBaseAddress) ));
     break;
