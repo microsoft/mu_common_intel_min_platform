@@ -103,8 +103,6 @@ gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuThreadCount|2|UINT32|0x90000021
 gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuCoreCount|8|UINT32|0x90000022
 gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuSocketCount|4|UINT32|0x90000023
 
-gMinPlatformPkgTokenSpaceGuid.PcdHpetTimerBlockId|0x8086A201|UINT32|0x90000024
-
 gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
 gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
 gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
