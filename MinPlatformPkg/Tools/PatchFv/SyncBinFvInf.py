@@ -423,7 +423,7 @@ class FileChecker:
                         if (cmp (splitLine[0], "FIXED") == 0) or (cmp (splitLine[0], "PATCH") == 0):
                             SplitLine = splitLine[1].strip()[1:].split(")", 1)
                             Type = SplitLine[0]
-                            Value = SplitLine[1].strip()[1:].strip()
+                            Value = SplitLine[1].strip()[1:].strip().split()[0]
                             print "  Type - (" + Type + "), Value - (" + Value + ")"
                             return [Value, Type]
         return ["", ""]
