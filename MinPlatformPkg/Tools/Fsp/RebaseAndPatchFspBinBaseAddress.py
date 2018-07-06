@@ -71,7 +71,8 @@ file.close()
 # Get FSP-M Size, in order to calculate the FSP-T Base. Used SplitFspBin.py script 
 # to dump the header, and get the ImageSize in FSP-M section
 #
-Process = subprocess.Popen("python edk2\IntelFsp2Pkg\Tools\SplitFspBin.py info -f" + fspBinFilePath, stdout=subprocess.PIPE)
+pythontool = os.environ['PYTHON_HOME'] + '\python.exe'
+Process = subprocess.Popen(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py info -f" + fspBinFilePath, stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit("FSP_M", 1);
 for line in FsptInfo[1].split("\n"):
@@ -88,13 +89,13 @@ fspTBaseAddress = flashBase + fspTBaseOffset
 # Re-base FSP bin file to new address and save it as fspBinFileRebased using SplitFspBin.py
 #
 rebaseArguments = fspBinFilePath + " -c s m t -b " + str(hex(fspSBaseAddress).rstrip("L")) + " " + str(hex(fspMBaseAddress).rstrip("L")) + " " + str(hex(fspTBaseAddress).rstrip("L")) + " -o" + fspBinPath + " -n " + fspBinFileRebased
-os.system("python edk2\IntelFsp2Pkg\Tools\SplitFspBin.py rebase -f" + rebaseArguments)
+os.system(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py rebase -f" + rebaseArguments)
 
 #
 # Split FSP bin to FSP-S/M/T segments
 #
 splitArguments = fspBinPath +"\\" + fspBinFileRebased + " -o " + fspBinPath + " -n Fsp_Rebased.fd"
-os.system("python edk2\IntelFsp2Pkg\Tools\SplitFspBin.py split -f" + splitArguments)
+os.system(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py split -f" + splitArguments)
 
 #
 # Patch dsc file with the re-based FSP-S/M/T address, so internally build will use the same.
