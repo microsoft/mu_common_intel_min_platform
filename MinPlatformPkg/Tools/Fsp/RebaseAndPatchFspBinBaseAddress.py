@@ -71,7 +71,9 @@ file.close()
 # Get FSP-M Size, in order to calculate the FSP-T Base. Used SplitFspBin.py script 
 # to dump the header, and get the ImageSize in FSP-M section
 #
-pythontool = os.environ['PYTHON_HOME'] + '\python.exe'
+pythontool = 'python'
+if 'PYTHON_HOME' in os.environ:
+    pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
 Process = subprocess.Popen(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py info -f" + fspBinFilePath, stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit("FSP_M", 1);
