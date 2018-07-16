@@ -269,7 +269,8 @@ gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
   gMinPlatformPkgTokenSpaceGuid.PcdTrustedStorageDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x17, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x3000010
 
-[PcdsFeatureFlag]
+[PcdsFixedAtBuild]
+
   #
   # Stage 1 - enable debug (system deadloop after debug init)
   # Stage 2 - mem init (system deadloop after mem init)
@@ -278,7 +279,9 @@ gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
   # Stage 5 - boot to OS with security boot enabled
   #
   gMinPlatformPkgTokenSpaceGuid.PcdBootStage|4|UINT8|0xF00000A0
-  
+
+[PcdsFeatureFlag]
+
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit     |FALSE|BOOLEAN|0xF00000A1
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit       |FALSE|BOOLEAN|0xF00000A2
   gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly        |FALSE|BOOLEAN|0xF00000A3
