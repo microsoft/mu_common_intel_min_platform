@@ -1319,3 +1319,15 @@ PlatformBootManagerAfterConsole (
   EfiBootManagerSortLoadOptionVariable (LoadOptionTypeBoot, CompareBootOption);
 }
 
+/**
+  The function is called at the end of BdsEntry when there is nothing to boot.
+
+  @param   None.
+**/
+VOID
+EFIAPI
+PlatformBootManagerUnableToBoot (
+  VOID
+  )
+{
+}
