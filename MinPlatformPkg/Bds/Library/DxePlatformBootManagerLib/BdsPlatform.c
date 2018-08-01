@@ -35,6 +35,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED EFI_BOOT_MODE                 gBootMode;
 
 BOOLEAN                      gPPRequireUIConfirm;
 
+extern UINTN                                      mBootMenuOptionNumber;
+
 GLOBAL_REMOVE_IF_UNREFERENCED USB_CLASS_FORMAT_DEVICE_PATH gUsbClassKeyboardDevicePath = {
   {
     {
@@ -1320,9 +1322,11 @@ PlatformBootManagerAfterConsole (
 }
 
 /**
-  The function is called at the end of BdsEntry when there is nothing to boot.
+  The function is called when no boot option could be launched,
+  including platform recovery options and options pointing to applications
+  built into firmware volumes.
 
-  @param   None.
+  If this function returns, BDS attempts to enter an infinite loop.
 **/
 VOID
 EFIAPI
@@ -1330,4 +1334,19 @@ PlatformBootManagerUnableToBoot (
   VOID
   )
 {
+  EFI_STATUS                   Status;
+  EFI_BOOT_MANAGER_LOAD_OPTION BootDeviceList;
+  CHAR16                       OptionName[sizeof ("Boot####")];
+
+  if (mBootMenuOptionNumber == LoadOptionNumberUnassigned) {
+    return;
+  }
+  UnicodeSPrint (OptionName, sizeof (OptionName), L"Boot%04x", mBootMenuOptionNumber);
+  Status = EfiBootManagerVariableToLoadOption (OptionName, &BootDeviceList);
+  if (EFI_ERROR (Status)) {
+    return;
+  }
+  for (;;) {
+    EfiBootManagerBoot (&BootDeviceList);
+  }
 }
