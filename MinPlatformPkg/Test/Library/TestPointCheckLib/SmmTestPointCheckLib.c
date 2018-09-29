@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <PiSmm.h>
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
+#include <Library/BaseLib.h>
 #include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/MemoryAllocationLib.h>
@@ -374,6 +375,12 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
   }
 
   if (CommData->UefiMemoryMapSize != 0) {
+    //
+    // The AsmLfence() call here is to ensure the previous range/content checks
+    // for the CommBuffer (copied in to CommData) have been completed before
+    // calling into TestPointCheckSmmCommunicationBuffer().
+    //
+    AsmLfence ();
     Result = TRUE;
 
     Status = TestPointCheckSmmCommunicationBuffer (
