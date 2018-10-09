@@ -1,7 +1,7 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 #
 # This program and the accompanying materials are licensed and made available under
 # the terms and conditions of the BSD License which accompanies this distribution.
@@ -97,6 +97,7 @@
   # PEI phase common
   #
   FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
+  ReportFvLib|MinPlatformPkg/PlatformInit/Library/PeiReportFvLib/PeiReportFvLib.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
 
@@ -161,6 +162,7 @@
 
   MinPlatformPkg/Pci/Library/PciHostBridgeLibSimple/PciHostBridgeLibSimple.inf
 
+  MinPlatformPkg/PlatformInit/ReportFv/ReportFvPei.inf
   MinPlatformPkg/PlatformInit/PlatformInitPei/PlatformInitPreMem.inf
   MinPlatformPkg/PlatformInit/PlatformInitPei/PlatformInitPostMem.inf
   MinPlatformPkg/PlatformInit/PlatformInitDxe/PlatformInitDxe.inf

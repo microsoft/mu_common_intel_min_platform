@@ -1,7 +1,7 @@
 /** @file
   Source code file for Platform Init Pre-Memory PEI module
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -22,6 +22,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/BaseMemoryLib.h>
 #include <Library/PeiServicesLib.h>
 #include <Library/MtrrLib.h>
+#include <Library/ReportFvLib.h>
 #include <Ppi/ReadOnlyVariable2.h>
 #include <Ppi/MemoryDiscovered.h>
 #include <Ppi/FirmwareVolumeInfo.h>
@@ -34,14 +35,6 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Guid/MemoryTypeInformation.h>
 #include <Ppi/PlatformMemorySize.h>
 #include <Ppi/BaseMemoryTest.h>
-
-EFI_STATUS
-EFIAPI
-PlatformInitPreMem (
-  IN CONST EFI_PEI_SERVICES      **PeiServices,
-  IN EFI_PEI_NOTIFY_DESCRIPTOR   *NotifyDescriptor,
-  IN VOID                        *Ppi
-  );
 
 EFI_STATUS
 EFIAPI
@@ -61,7 +54,7 @@ GetPlatformMemorySize (
 
 /**
 
-  This function checks the memory range in PEI. 
+  This function checks the memory range in PEI.
 
   @param PeiServices     Pointer to PEI Services.
   @param This            Pei memory test PPI pointer.
@@ -69,7 +62,7 @@ GetPlatformMemorySize (
   @param MemoryLength    Bytes of memory range to be checked.
   @param Operation       Type of memory check operation to be performed.
   @param ErrorAddress    Return the address of the error memory address.
-    
+
   @retval EFI_SUCCESS         The operation completed successfully.
   @retval EFI_DEVICE_ERROR    Memory test failed. It's not safe to use this range of memory.
 
@@ -84,12 +77,6 @@ BaseMemoryTest (
   IN  PEI_MEMORY_TEST_OP                 Operation,
   OUT EFI_PHYSICAL_ADDRESS               *ErrorAddress
   );
-
-static EFI_PEI_NOTIFY_DESCRIPTOR mPreMemNotifyList = {
-  (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
-  &gEfiPeiReadOnlyVariable2PpiGuid,
-  (EFI_PEIM_NOTIFY_ENTRY_POINT) PlatformInitPreMem
-};
 
 static EFI_PEI_NOTIFY_DESCRIPTOR mMemDiscoveredNotifyList = {
   (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
@@ -148,7 +135,7 @@ BuildMemoryTypeInformation (
   EFI_PEI_READ_ONLY_VARIABLE2_PPI *VariableServices;
   UINTN                           DataSize;
   EFI_MEMORY_TYPE_INFORMATION     MemoryData[EfiMaxMemoryType + 1];
-  
+
   //
   // Locate system configuration variable
   //
@@ -230,7 +217,7 @@ GetPlatformMemorySize (
   //
   // Accumulate maximum amount of memory needed
   //
-  
+
   DEBUG((EFI_D_ERROR, "PEI_MIN_MEMORY_SIZE:%dKB \n", DivU64x32(*MemorySize,1024)));
   DEBUG((EFI_D_ERROR, "IndexNumber:%d MemoryDataNumber%d \n", IndexNumber,DataSize/ sizeof (EFI_MEMORY_TYPE_INFORMATION)));
   if (EFI_ERROR (Status)) {
@@ -249,7 +236,7 @@ GetPlatformMemorySize (
     for (Index = 0; Index < IndexNumber; Index++) {
       DEBUG((EFI_D_ERROR, "Index[%d].Type = %d .NumberOfPages=0x%x\n", Index,MemoryData[Index].Type,MemoryData[Index].NumberOfPages));
       *MemorySize += MemoryData[Index].NumberOfPages * EFI_PAGE_SIZE;
-      
+
     }
     DEBUG((EFI_D_ERROR, "has memory type,  Total platform memory:%dKB \n", DivU64x32(*MemorySize,1024)));
   }
@@ -259,7 +246,7 @@ GetPlatformMemorySize (
 
 /**
 
-  This function checks the memory range in PEI. 
+  This function checks the memory range in PEI.
 
   @param PeiServices     Pointer to PEI Services.
   @param This            Pei memory test PPI pointer.
@@ -267,7 +254,7 @@ GetPlatformMemorySize (
   @param MemoryLength    Bytes of memory range to be checked.
   @param Operation       Type of memory check operation to be performed.
   @param ErrorAddress    Return the address of the error memory address.
-    
+
   @retval EFI_SUCCESS         The operation completed successfully.
   @retval EFI_DEVICE_ERROR    Memory test failed. It's not safe to use this range of memory.
 
@@ -520,128 +507,6 @@ ReportCpuHob (
   BuildCpuHob (PhysicalAddressBits, 16);
 }
 
-VOID
-ReportPreMemFv (
-  VOID
-  )
-{
-  if (!PcdGetBool(PcdFspWrapperBootMode)) {
-    DEBUG ((DEBUG_INFO, "Install FlashFvFspM - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspMBase), PcdGet32 (PcdFlashFvFspMSize)));
-    PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspMBase))->FileSystemGuid),
-      (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspMBase),
-      PcdGet32 (PcdFlashFvFspMSize),
-      NULL,
-      NULL,
-      0
-      );
-  }
-  DEBUG ((DEBUG_INFO, "Install FlashFvSecurity - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvSecurityBase), PcdGet32 (PcdFlashFvSecuritySize)));
-  PeiServicesInstallFvInfo2Ppi (
-    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvSecurityBase))->FileSystemGuid),
-    (VOID *) (UINTN) PcdGet32 (PcdFlashFvSecurityBase),
-    PcdGet32 (PcdFlashFvSecuritySize),
-    NULL,
-    NULL,
-    0
-    );
-  DEBUG ((DEBUG_INFO, "Install FlashFvAdvanced - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvAdvancedBase), PcdGet32 (PcdFlashFvAdvancedSize)));
-  PeiServicesInstallFvInfo2Ppi (
-    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase))->FileSystemGuid),
-    (VOID *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase),
-    PcdGet32 (PcdFlashFvAdvancedSize),
-    NULL,
-    NULL,
-    0
-    );
-}
-
-VOID
-ReportPostMemFv (
-  VOID
-  )
-{
-  EFI_STATUS                    Status;
-  EFI_BOOT_MODE                 BootMode;
-
-  Status = PeiServicesGetBootMode (&BootMode);
-  ASSERT_EFI_ERROR (Status);
-
-  ///
-  /// Build HOB for DXE
-  ///
-  if (BootMode == BOOT_IN_RECOVERY_MODE) {
-    ///
-    /// Prepare the recovery service
-    ///
-  } else {
-    DEBUG ((DEBUG_INFO, "Install FlashFvPostMemory - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvPostMemoryBase), PcdGet32 (PcdFlashFvPostMemorySize)));
-    PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvPostMemoryBase))->FileSystemGuid),
-      (VOID *) (UINTN) PcdGet32 (PcdFlashFvPostMemoryBase),
-      PcdGet32 (PcdFlashFvPostMemorySize),
-      NULL,
-      NULL,
-      0
-      );
-    if (!PcdGetBool(PcdFspWrapperBootMode)) {
-      DEBUG ((DEBUG_INFO, "Install FlashFvFspS - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspSBase), PcdGet32 (PcdFlashFvFspSSize)));
-      PeiServicesInstallFvInfo2Ppi (
-        &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspSBase))->FileSystemGuid),
-        (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspSBase),
-        PcdGet32 (PcdFlashFvFspSSize),
-        NULL,
-        NULL,
-        0
-        );
-      DEBUG ((DEBUG_INFO, "Install FlashFvFspU - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspUBase), PcdGet32 (PcdFlashFvFspUSize)));
-      PeiServicesInstallFvInfo2Ppi (
-        &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspUBase))->FileSystemGuid),
-        (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspUBase),
-        PcdGet32 (PcdFlashFvFspUSize),
-        NULL,
-        NULL,
-        0
-        );
-    }
-    DEBUG ((DEBUG_INFO, "Install FlashFvUefiBoot - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvUefiBootBase), PcdGet32 (PcdFlashFvUefiBootSize)));
-    PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvUefiBootBase))->FileSystemGuid),
-      (VOID *) (UINTN) PcdGet32 (PcdFlashFvUefiBootBase),
-      PcdGet32 (PcdFlashFvUefiBootSize),
-      NULL,
-      NULL,
-      0
-      );
-    DEBUG ((DEBUG_INFO, "Install FlashFvOsBoot - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvOsBootBase), PcdGet32 (PcdFlashFvOsBootSize)));
-    PeiServicesInstallFvInfo2Ppi (
-      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase))->FileSystemGuid),
-      (VOID *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase),
-      PcdGet32 (PcdFlashFvOsBootSize),
-      NULL,
-      NULL,
-      0
-      );
-  }
-
-  //
-  // Report resource HOB for flash FV
-  //
-  BuildResourceDescriptorHob (
-    EFI_RESOURCE_MEMORY_MAPPED_IO,
-    (EFI_RESOURCE_ATTRIBUTE_PRESENT    |
-    EFI_RESOURCE_ATTRIBUTE_INITIALIZED |
-    EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE),
-    (UINTN) PcdGet32 (PcdFlashAreaBaseAddress),
-    (UINTN) PcdGet32 (PcdFlashAreaSize)
-    );
-  BuildMemoryAllocationHob (
-    (UINTN) PcdGet32 (PcdFlashAreaBaseAddress),
-    (UINTN) PcdGet32 (PcdFlashAreaSize),
-    EfiMemoryMappedIO
-    );
-}
-
 /**
   Install Firmware Volume Hob's once there is main memory
 
@@ -661,7 +526,7 @@ MemoryDiscoveredPpiNotifyCallback (
 {
   EFI_STATUS                    Status;
   EFI_BOOT_MODE                 BootMode;
-  
+
   Status = BoardInitAfterMemoryInit ();
   ASSERT_EFI_ERROR (Status);
 
@@ -683,16 +548,12 @@ MemoryDiscoveredPpiNotifyCallback (
     return EFI_SUCCESS;
   }
 
-  ReportPostMemFv ();
-
-  TestPointMemoryDiscoveredFvInfoFunctional ();
-
   TestPointMemoryDiscoveredDmaProtectionEnabled ();
-  
+
   if (PcdGetBool (PcdStopAfterMemInit)) {
     CpuDeadLoop ();
   }
-  
+
   return Status;
 }
 
@@ -701,9 +562,6 @@ MemoryDiscoveredPpiNotifyCallback (
   This function handles PlatformInit task after PeiReadOnlyVariable2 PPI produced
 
   @param[in]  PeiServices  Pointer to PEI Services Table.
-  @param[in]  NotifyDesc   Pointer to the descriptor for the Notification event that
-                           caused this function to execute.
-  @param[in]  Ppi          Pointer to the PPI data associated with this function.
 
   @retval     EFI_SUCCESS  The function completes successfully
   @retval     others
@@ -711,9 +569,7 @@ MemoryDiscoveredPpiNotifyCallback (
 EFI_STATUS
 EFIAPI
 PlatformInitPreMem (
-  IN CONST EFI_PEI_SERVICES     **PeiServices,
-  IN EFI_PEI_NOTIFY_DESCRIPTOR  *NotifyDescriptor,
-  IN VOID                       *Ppi
+  IN CONST EFI_PEI_SERVICES     **PeiServices
   )
 {
   EFI_STATUS                        Status;
@@ -731,7 +587,7 @@ PlatformInitPreMem (
   if (PcdGetBool (PcdStopAfterDebugInit)) {
     CpuDeadLoop ();
   }
-  
+
   BootMode = BoardBootModeDetect ();
   Status = PeiServicesSetBootMode (BootMode);
   ASSERT_EFI_ERROR (Status);
@@ -745,14 +601,14 @@ PlatformInitPreMem (
   ///
   Status = PeiServicesInstallPpi (&mPpiBootMode);
   ASSERT_EFI_ERROR (Status);
-  
+
   BuildMemoryTypeInformation ();
 
   if (!PcdGetBool(PcdFspWrapperBootMode)) {
     Status = PeiServicesInstallPpi (mMemPpiList);
     ASSERT_EFI_ERROR (Status);
   }
-  
+
   Status = BoardInitBeforeMemoryInit ();
   ASSERT_EFI_ERROR (Status);
 
@@ -778,12 +634,7 @@ PlatformInitPreMemEntryPoint (
 {
   EFI_STATUS Status;
 
-  ReportPreMemFv ();
-
-  ///
-  /// Performing PlatformInitPreMem after PeiReadOnlyVariable2 PPI produced
-  ///
-  Status = PeiServicesNotifyPpi (&mPreMemNotifyList);
+  Status = PlatformInitPreMem (PeiServices);
 
   ///
   /// After code reorangized, memorycallback will run because the PPI is already
