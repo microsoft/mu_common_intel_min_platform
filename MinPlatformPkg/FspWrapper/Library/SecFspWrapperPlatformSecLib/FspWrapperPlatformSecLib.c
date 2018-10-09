@@ -23,6 +23,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <Library/LocalApicLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
+#include <Library/IoLib.h>
 
 /**
   This interface conveys state information out of the Security (SEC) phase into PEI.
@@ -84,6 +85,32 @@ EFI_PEI_PPI_DESCRIPTOR  mPeiSecPlatformPpi[] = {
   },
 };
 
+#define LEGACY_8259_MASK_REGISTER_MASTER                  0x21
+#define LEGACY_8259_MASK_REGISTER_SLAVE                   0xA1
+#define LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_MASTER  0x4D0
+#define LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_SLAVE   0x4D1
+
+/**
+  Write to mask and edge/level triggered registers of master and slave 8259 PICs.
+
+  @param[in]  Mask       low byte for master PIC mask register,
+                         high byte for slave PIC mask register.
+  @param[in]  EdgeLevel  low byte for master PIC edge/level triggered register,
+                         high byte for slave PIC edge/level triggered register.
+
+**/
+VOID
+Interrupt8259WriteMask (
+  IN UINT16  Mask,
+  IN UINT16  EdgeLevel
+  )
+{
+  IoWrite8 (LEGACY_8259_MASK_REGISTER_MASTER, (UINT8) Mask);
+  IoWrite8 (LEGACY_8259_MASK_REGISTER_SLAVE, (UINT8) (Mask >> 8));
+  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_MASTER, (UINT8) EdgeLevel);
+  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_SLAVE, (UINT8) (EdgeLevel >> 8));
+}
+
 /**
   A developer supplied function to perform platform specific operations.
 
@@ -119,6 +146,11 @@ SecPlatformMain (
   DEBUG ((DEBUG_INFO, "FSP Wrapper StackSize              - 0x%x\n", SecCoreData->StackSize));
 
   InitializeApicTimer (0, (UINT32) -1, TRUE, 5);
+
+  //
+  // Set all 8259 interrupts to edge triggered and disabled
+  //
+  Interrupt8259WriteMask (0xFFFF, 0x0000);
 
   //
   // Use middle of Heap as temp buffer, it will be copied by caller.
