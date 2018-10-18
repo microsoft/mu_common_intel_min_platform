@@ -84,7 +84,7 @@
   MdeModulePkg/Universal/Disk/DiskIoDxe/DiskIoDxe.inf
   MdeModulePkg/Universal/Disk/PartitionDxe/PartitionDxe.inf
   MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
-  FatBinPkg/EnhancedFatDxe/Fat.inf
+  FatPkg/EnhancedFatDxe/Fat.inf
 
   #MdeModulePkg/Universal/Console/GraphicsOutputDxe/GraphicsOutputDxe.inf
   MdeModulePkg/Universal/Console/GraphicsConsoleDxe/GraphicsConsoleDxe.inf
