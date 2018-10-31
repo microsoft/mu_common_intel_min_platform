@@ -1,7 +1,7 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 #
 # This program and the accompanying materials are licensed and made available under
 # the terms and conditions of the BSD License which accompanies this distribution.
@@ -83,7 +83,6 @@
   UdpIoLib|MdeModulePkg/Library/DxeUdpIoLib/DxeUdpIoLib.inf
   TcpIoLib|MdeModulePkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
   DpcLib|MdeModulePkg/Library/DxeDpcLib/DxeDpcLib.inf
-  TcpIoLib|MdeModulePkg/Library/DxeTcpIoLib/DxeTcpIoLib.inf
   OemHookStatusCodeLib|MdeModulePkg/Library/OemHookStatusCodeLibNull/OemHookStatusCodeLibNull.inf
   CapsuleLib|MdeModulePkg/Library/DxeCapsuleLibNull/DxeCapsuleLibNull.inf
 
