@@ -253,11 +253,11 @@ SmmTestPointSmiHandlerGetDataByOffset (
   }
 
   //
-  // The AsmLfence() call here is to ensure the previous range/content checks
-  // for the CommBuffer have been completed before calling into
+  // The SpeculationBarrier() call here is to ensure the previous range/content
+  // checks for the CommBuffer have been completed before calling into
   // SmiHandlerTestPointCopyData().
   //
-  AsmLfence ();
+  SpeculationBarrier ();
   SmiHandlerTestPointCopyData (
     Data,
     DataSize,

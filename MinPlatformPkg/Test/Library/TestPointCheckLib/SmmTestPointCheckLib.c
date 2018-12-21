@@ -376,11 +376,11 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
 
   if (CommData->UefiMemoryMapSize != 0) {
     //
-    // The AsmLfence() call here is to ensure the previous range/content checks
-    // for the CommBuffer (copied in to CommData) have been completed before
+    // The SpeculationBarrier() call here is to ensure the previous range/content
+    // checks for the CommBuffer (copied in to CommData) have been completed before
     // calling into TestPointCheckSmmCommunicationBuffer().
     //
-    AsmLfence ();
+    SpeculationBarrier ();
     Result = TRUE;
 
     Status = TestPointCheckSmmCommunicationBuffer (
