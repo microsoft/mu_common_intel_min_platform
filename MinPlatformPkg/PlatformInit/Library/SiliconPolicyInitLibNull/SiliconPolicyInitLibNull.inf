@@ -1,7 +1,7 @@
 ## @file
 # Component information file for Silicon Init Library
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # This program and the accompanying materials are licensed and made available under
 # the terms and conditions of the BSD License which accompanies this distribution.
@@ -15,11 +15,11 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = SiliconInitLibNull
+  BASE_NAME                      = SiliconPolicyInitLibNull
   FILE_GUID                      = 81B55810-E3DE-4E3E-8477-B8768232193A
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = SiliconInitLib
+  LIBRARY_CLASS                  = SiliconPolicyInitLib
 
 [LibraryClasses]
   BaseLib
