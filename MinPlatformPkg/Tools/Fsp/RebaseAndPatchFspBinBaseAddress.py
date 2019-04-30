@@ -1,23 +1,18 @@
 ## @ RebaseAndPatchFspBinBaseAddress.py
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
-# This program and the accompanying materials are licensed and made available under
-# the terms and conditions of the BSD License that accompanies this distribution.
-# The full text of the license may be found at
-# http://opensource.org/licenses/bsd-license.php.
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# SPDX-License-Identifier: BSD-2-Clause-Patent
 #
-# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
-# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-#
-##
+
 import os
 import sys
 import re
 import subprocess
 
-if len(sys.argv) != 6:
+if len(sys.argv) not in [6,7]:
   print "RebaseAndPatchFspBinBaseAddress.py - Error in number of arguments received"
-  print "Usage - RebaseAndPatchFspBinBaseAddress.py <FlashMap file path> <FspBinPkg Folder> <Fsp.fd file name> <Dsc file path to be patched> <pad_offset for Fsp-S Base Address>"
+  print "Usage - RebaseAndPatchFspBinBaseAddress.py <FlashMap file path> <FspBinPkg Folder> <Fsp.fd file name>\
+  <Dsc file path to be patched> <pad_offset for Fsp-S Base Address> <OPTIONAL SplitFspBin.py tool path>"
   exit(1)
 
 flashMapName      = sys.argv[1]
@@ -26,6 +21,10 @@ fspBinFile        = sys.argv[3]
 targetDscFile     = sys.argv[4]
 fvOffset          = long(sys.argv[5], 16)
 fspBinFileRebased = "Fsp_Rebased.fd"
+splitFspBinPath   = os.path.join("edk2","IntelFsp2Pkg","Tools","SplitFspBin.py")
+
+if len(sys.argv) == 7:
+  splitFspBinPath   = sys.argv[6]
 
 #
 # Make sure argument passed or valid
@@ -33,7 +32,7 @@ fspBinFileRebased = "Fsp_Rebased.fd"
 if not os.path.exists(flashMapName):
   print "WARNING!  " + str(flashMapName) + " is not found."
   exit(1)
-fspBinFilePath = fspBinPath + "\\" + fspBinFile
+fspBinFilePath = fspBinPath + os.sep + fspBinFile
 if not os.path.exists(fspBinFilePath):
   print "WARNING!  " + str(fspBinFilePath) + " is not found."
   exit(1)
@@ -43,6 +42,9 @@ if not os.path.exists(targetDscFile):
 ext_file = str(os.path.splitext(targetDscFile)[-1]).lower()
 if ext_file != ".dsc":
   print "WARNING!  " + str(targetDscFile) + " is not a dsc file"
+  exit(1)
+if not os.path.exists(splitFspBinPath):
+  print "WARNING!  " + str(splitFspBinPath) + " is not found."
   exit(1)
 
 #
@@ -74,7 +76,7 @@ file.close()
 pythontool = 'python'
 if 'PYTHON_HOME' in os.environ:
     pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
-Process = subprocess.Popen(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py info -f" + fspBinFilePath, stdout=subprocess.PIPE)
+Process = subprocess.Popen(pythontool + " " + splitFspBinPath + " info -f" + fspBinFilePath, stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit("FSP_M", 1);
 for line in FsptInfo[1].split("\n"):
@@ -91,13 +93,13 @@ fspTBaseAddress = flashBase + fspTBaseOffset
 # Re-base FSP bin file to new address and save it as fspBinFileRebased using SplitFspBin.py
 #
 rebaseArguments = fspBinFilePath + " -c s m t -b " + str(hex(fspSBaseAddress).rstrip("L")) + " " + str(hex(fspMBaseAddress).rstrip("L")) + " " + str(hex(fspTBaseAddress).rstrip("L")) + " -o" + fspBinPath + " -n " + fspBinFileRebased
-os.system(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py rebase -f" + rebaseArguments)
+os.system(pythontool + " " + splitFspBinPath + " rebase -f" + rebaseArguments)
 
 #
 # Split FSP bin to FSP-S/M/T segments
 #
-splitArguments = fspBinPath +"\\" + fspBinFileRebased + " -o " + fspBinPath + " -n Fsp_Rebased.fd"
-os.system(pythontool + " edk2\IntelFsp2Pkg\Tools\SplitFspBin.py split -f" + splitArguments)
+splitArguments = fspBinPath + os.sep + fspBinFileRebased + " -o " + fspBinPath + " -n Fsp_Rebased.fd"
+os.system(pythontool + " " + splitFspBinPath + " split -f" + splitArguments)
 
 #
 # Patch dsc file with the re-based FSP-S/M/T address, so internally build will use the same.
