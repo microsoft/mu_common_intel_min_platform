@@ -1,7 +1,7 @@
 /** @file
   Provide FSP wrapper hob process related function.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -653,8 +653,21 @@ PostFspsHobProcess (
 {
   EFI_STATUS   Status;
 
-  ProcessFspHobList (FspHobList);
-
+  if (PcdGet8 (PcdFspModeSelection) == 1) {
+    //
+    // Only in FSP API mode the wrapper has to build hobs basing on FSP output data.
+    //
+    ASSERT (FspHobList != NULL);
+    ProcessFspHobList (FspHobList);
+  } else {
+    //
+    // Only in FSP Dispatch mode, FSP-S should be reported to DXE dispatcher.
+    //
+    BuildFvHob (
+      (EFI_PHYSICAL_ADDRESS) (UINTN) PcdGet32 (PcdFlashFvFspSBase),
+      PcdGet32 (PcdFlashFvFspSSize)
+      );
+  }
   CheckFspGraphicsDeviceInfoHob ();
   DEBUG_CODE_BEGIN ();
     DumpFspSmbiosMemoryInfoHob ();

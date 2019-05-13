@@ -1,7 +1,7 @@
 ## @file
 #  Provide FSP wrapper hob process related function.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -65,6 +65,9 @@
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength
   gMinPlatformPkgTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr
+  gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize
 
 [Guids]
   gFspReservedMemoryResourceHobGuid                       ## CONSUMES ## HOB
