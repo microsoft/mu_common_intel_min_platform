@@ -1,7 +1,7 @@
 /** @file
-  SA PciHostBridge Library
+  PciHostBridge Library
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 This program and the accompanying materials are licensed and made available under
 the terms and conditions of the BSD License that accompanies this distribution.
 The full text of the license may be found at
@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include <IndustryStandard/Pci.h>
 #include <Protocol/PciHostBridgeResourceAllocation.h>
 #include <Library/BaseLib.h>
+#include <Library/BaseMemoryLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/PcdLib.h>
@@ -28,7 +29,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 GLOBAL_REMOVE_IF_UNREFERENCED CHAR16 *mPciHostBridgeLibAcpiAddressSpaceTypeStr[] = {
   L"Mem", L"I/O", L"Bus"
 };
-ACPI_HID_DEVICE_PATH mRootBridgeDeviceNode = {
+ACPI_HID_DEVICE_PATH mRootBridgeDeviceNodeTemplate = {
   {
     ACPI_DEVICE_PATH,
     ACPI_DP,
@@ -41,7 +42,7 @@ ACPI_HID_DEVICE_PATH mRootBridgeDeviceNode = {
   0
 };
 
-PCI_ROOT_BRIDGE mRootBridge = {
+PCI_ROOT_BRIDGE mRootBridgeTemplate = {
   0,
   EFI_PCI_ATTRIBUTE_ISA_MOTHERBOARD_IO |
   EFI_PCI_ATTRIBUTE_IDE_PRIMARY_IO |
@@ -66,41 +67,67 @@ PCI_ROOT_BRIDGE mRootBridge = {
   NULL // DevicePath;
 };
 
+/**
+  Return all the root bridge instances.
+
+  @param Count  Return the count of root bridge instances.
+
+  @return All the root bridge instances, it will be NULL if system has insufficient memory
+          resources available and count will be zero.
+**/
+
 PCI_ROOT_BRIDGE *
 EFIAPI
 PciHostBridgeGetRootBridges (
   UINTN                                 *Count
   )
 {
-  mRootBridge.Mem.Base = PcdGet32 (PcdPciReservedMemBase);
+  UINT8 Index;
+  PCI_ROOT_BRIDGE *RootBridge;
+
+  RootBridge = AllocateZeroPool (sizeof (PCI_ROOT_BRIDGE) * PcdGet8 (PcdPciSegmentCount));
+  if (RootBridge == NULL) {
+    DEBUG ((DEBUG_ERROR, "PciHostBridge: Out of resource\n"));
+    *Count = 0;
+    return RootBridge;
+  }
+
+  mRootBridgeTemplate.Mem.Base = PcdGet32 (PcdPciReservedMemBase);
   if (PcdGet32(PcdPciReservedMemLimit) != 0) {
-    mRootBridge.Mem.Limit = PcdGet32 (PcdPciReservedMemLimit);
+    mRootBridgeTemplate.Mem.Limit = PcdGet32 (PcdPciReservedMemLimit);
   } else {
-    mRootBridge.Mem.Limit = (UINT32)PcdGet64 (PcdPciExpressBaseAddress);
+    mRootBridgeTemplate.Mem.Limit = (UINT32) PcdGet64 (PcdPciExpressBaseAddress);
   }
 
-  mRootBridge.MemAbove4G.Base = PcdGet64 (PcdPciReservedMemAbove4GBBase);
-  mRootBridge.MemAbove4G.Limit = PcdGet64 (PcdPciReservedMemAbove4GBLimit);
+  mRootBridgeTemplate.MemAbove4G.Base = PcdGet64 (PcdPciReservedMemAbove4GBBase);
+  mRootBridgeTemplate.MemAbove4G.Limit = PcdGet64 (PcdPciReservedMemAbove4GBLimit);
   
-  mRootBridge.PMem.Base = PcdGet32 (PcdPciReservedPMemBase);
-  mRootBridge.PMem.Limit = PcdGet32 (PcdPciReservedPMemLimit);
-  mRootBridge.PMemAbove4G.Base = PcdGet64 (PcdPciReservedPMemAbove4GBBase);
-  mRootBridge.PMemAbove4G.Limit = PcdGet64 (PcdPciReservedPMemAbove4GBLimit);
+  mRootBridgeTemplate.PMem.Base = PcdGet32 (PcdPciReservedPMemBase);
+  mRootBridgeTemplate.PMem.Limit = PcdGet32 (PcdPciReservedPMemLimit);
+  mRootBridgeTemplate.PMemAbove4G.Base = PcdGet64 (PcdPciReservedPMemAbove4GBBase);
+  mRootBridgeTemplate.PMemAbove4G.Limit = PcdGet64 (PcdPciReservedPMemAbove4GBLimit);
 
-  if (mRootBridge.MemAbove4G.Base < mRootBridge.MemAbove4G.Limit) {
-    mRootBridge.AllocationAttributes |= EFI_PCI_HOST_BRIDGE_MEM64_DECODE;
+  if (mRootBridgeTemplate.MemAbove4G.Base < mRootBridgeTemplate.MemAbove4G.Limit) {
+    mRootBridgeTemplate.AllocationAttributes |= EFI_PCI_HOST_BRIDGE_MEM64_DECODE;
   }
 
-  mRootBridge.Io.Base = PcdGet16 (PcdPciReservedIobase);
-  mRootBridge.Io.Limit = PcdGet16 (PcdPciReservedIoLimit);
+  mRootBridgeTemplate.Io.Base = PcdGet16 (PcdPciReservedIobase);
+  mRootBridgeTemplate.Io.Limit = PcdGet16 (PcdPciReservedIoLimit);
 
-  mRootBridge.DmaAbove4G = PcdGetBool (PcdPciDmaAbove4G);
-  mRootBridge.NoExtendedConfigSpace = PcdGetBool (PcdPciNoExtendedConfigSpace);
-  mRootBridge.ResourceAssigned = PcdGetBool (PcdPciResourceAssigned);
+  mRootBridgeTemplate.DmaAbove4G = PcdGetBool (PcdPciDmaAbove4G);
+  mRootBridgeTemplate.NoExtendedConfigSpace = PcdGetBool (PcdPciNoExtendedConfigSpace);
+  mRootBridgeTemplate.ResourceAssigned = PcdGetBool (PcdPciResourceAssigned);
 
-  mRootBridge.DevicePath = AppendDevicePathNode (NULL, &mRootBridgeDeviceNode.Header);
-  *Count = 1;
-  return &mRootBridge;
+  for (Index = 0; Index < PcdGet8 (PcdPciSegmentCount); Index ++) {
+    mRootBridgeDeviceNodeTemplate.UID = Index;
+    mRootBridgeTemplate.Segment = Index;
+    mRootBridgeTemplate.DevicePath = NULL;
+    mRootBridgeTemplate.DevicePath = AppendDevicePathNode (NULL, &mRootBridgeDeviceNodeTemplate.Header);
+    CopyMem (RootBridge + Index, &mRootBridgeTemplate, sizeof (PCI_ROOT_BRIDGE));
+  }
+
+  *Count = PcdGet8 (PcdPciSegmentCount);
+  return RootBridge;
 }
 
 VOID
@@ -110,7 +137,7 @@ PciHostBridgeFreeRootBridges (
   UINTN           Count
   )
 {
-  ASSERT (Count == 1);
+  ASSERT (Count <= PcdGet8 (PcdPciSegmentCount));
   FreePool (Bridges->DevicePath);
 }
 
@@ -136,20 +163,20 @@ PciHostBridgeResourceConflict (
 {
   EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *Descriptor;
   UINTN                             RootBridgeIndex;
-  DEBUG ((EFI_D_ERROR, "PciHostBridge: Resource conflict happens!\n"));
+  DEBUG ((DEBUG_ERROR, "PciHostBridge: Resource conflict happens!\n"));
 
   RootBridgeIndex = 0;
   Descriptor = (EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *) Configuration;
   while (Descriptor->Desc == ACPI_ADDRESS_SPACE_DESCRIPTOR) {
-    DEBUG ((EFI_D_ERROR, "RootBridge[%d]:\n", RootBridgeIndex++));
+    DEBUG ((DEBUG_ERROR, "RootBridge[%d]:\n", RootBridgeIndex++));
     for (; Descriptor->Desc == ACPI_ADDRESS_SPACE_DESCRIPTOR; Descriptor++) {
       ASSERT (Descriptor->ResType <
               sizeof (mPciHostBridgeLibAcpiAddressSpaceTypeStr) / sizeof (mPciHostBridgeLibAcpiAddressSpaceTypeStr[0])
               );
-      DEBUG ((EFI_D_ERROR, " %s: Length/Alignment = 0x%lx / 0x%lx\n",
+      DEBUG ((DEBUG_ERROR, " %s: Length/Alignment = 0x%lx / 0x%lx\n",
               mPciHostBridgeLibAcpiAddressSpaceTypeStr[Descriptor->ResType], Descriptor->AddrLen, Descriptor->AddrRangeMax));
       if (Descriptor->ResType == ACPI_ADDRESS_SPACE_TYPE_MEM) {
-        DEBUG ((EFI_D_ERROR, "     Granularity/SpecificFlag = %ld / %02x%s\n",
+        DEBUG ((DEBUG_ERROR, "     Granularity/SpecificFlag = %ld / %02x%s\n",
                 Descriptor->AddrSpaceGranularity, Descriptor->SpecificFlag,
                 ((Descriptor->SpecificFlag & EFI_ACPI_MEMORY_RESOURCE_SPECIFIC_FLAG_CACHEABLE_PREFETCHABLE) != 0) ? L" (Prefetchable)" : L""
                 ));
