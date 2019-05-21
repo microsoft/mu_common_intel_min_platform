@@ -1,28 +1,28 @@
-;; @file
-; This is the code that goes from real-mode to protected mode.
-; It consumes the reset vector, calls TempRamInit API from FSP binary.
+;------------------------------------------------------------------------------
 ;
-; Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+; Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
 ; SPDX-License-Identifier: BSD-2-Clause-Patent
+; Module Name:
 ;
-;;
+;  SecEntry.nasm
+;
+; Abstract:
+;
+;  This is the code that goes from real-mode to protected mode.
+;  It consumes the reset vector, calls TempRamInit API from FSP binary.
+;
+;------------------------------------------------------------------------------
 
 #include "Fsp.h"
 
-.686p
-.xmm
-.model small, c
+SECTION .text
 
-EXTRN   CallPeiCoreEntryPoint:NEAR
-EXTRN   BoardBeforeTempRamInit:NEAR
-EXTRN   FsptUpdDataPtr:FAR
-
+extern   ASM_PFX(CallPeiCoreEntryPoint)
+extern   ASM_PFX(FsptUpdDataPtr)
+extern   ASM_PFX(BoardBeforeTempRamInit)
 ; Pcds
-EXTRN   PcdGet32 (PcdFsptBaseAddress):DWORD
-EXTRN   PcdGet32(PcdFspTemporaryRamSize):DWORD
-
-_TEXT_REALMODE      SEGMENT PARA PUBLIC USE16 'CODE'
-                    ASSUME  CS:_TEXT_REALMODE, DS:_TEXT_REALMODE
+extern   ASM_PFX(PcdGet32 (PcdFspTemporaryRamSize))
+extern   ASM_PFX(PcdGet32 (PcdFsptBaseAddress))
 
 ;----------------------------------------------------------------------------
 ;
@@ -53,8 +53,10 @@ _TEXT_REALMODE      SEGMENT PARA PUBLIC USE16 'CODE'
 ;
 ;----------------------------------------------------------------------------
 
+BITS 16
 align 4
-_ModuleEntryPoint PROC NEAR C PUBLIC
+global ASM_PFX(_ModuleEntryPoint)
+ASM_PFX(_ModuleEntryPoint):
   fninit                                ; clear any pending Floating point exceptions
   ;
   ; Store the BIST value in mm0
@@ -70,6 +72,7 @@ _ModuleEntryPoint PROC NEAR C PUBLIC
   cmp al, 04h
   jnz NotWarmStart
 
+
   ;
   ; @note Issue warm reset, since if CPU only reset is issued not all MSRs are restored to their defaults
   ;
@@ -78,7 +81,6 @@ _ModuleEntryPoint PROC NEAR C PUBLIC
   out dx, al
 
 NotWarmStart:
-
   ;
   ; Save time-stamp counter value
   ; rdtsc load 64bit time-stamp counter to EDX:EAX
@@ -90,9 +92,9 @@ NotWarmStart:
   ;
   ; Load the GDT table in GdtDesc
   ;
-  mov     esi,  OFFSET GdtDesc
+  mov     esi,  GdtDesc
   DB      66h
-  lgdt    fword ptr cs:[si]
+  lgdt    [cs:si]
 
   ;
   ; Transition to 16 bit protected mode
@@ -120,14 +122,8 @@ NotWarmStart:
   ; Transition to Flat 32 bit protected mode
   ; The jump to a far pointer causes the transition to 32 bit mode
   ;
-  mov esi, offset ProtectedModeEntryLinearAddress
-  jmp     fword ptr cs:[si]
-
-_ModuleEntryPoint   ENDP
-_TEXT_REALMODE      ENDS
-
-_TEXT_PROTECTED_MODE      SEGMENT PARA PUBLIC USE32 'CODE'
-                          ASSUME  CS:_TEXT_PROTECTED_MODE, DS:_TEXT_PROTECTED_MODE
+  mov esi, ProtectedModeEntryLinearAddress
+  jmp   dword far  [cs:si]
 
 ;----------------------------------------------------------------------------
 ;
@@ -149,69 +145,69 @@ _TEXT_PROTECTED_MODE      SEGMENT PARA PUBLIC USE32 'CODE'
 ;
 ;----------------------------------------------------------------------------
 
+BITS 32
 align 4
-ProtectedModeEntryPoint PROC NEAR PUBLIC
-
-        ;
-        ; Early board hooks
-        ;
-        mov     esp, BoardBeforeTempRamInitRet
-        jmp     BoardBeforeTempRamInit
+ProtectedModeEntryPoint:
+  ;
+  ; Early board hooks
+  ;
+  mov     esp, BoardBeforeTempRamInitRet
+  jmp     ASM_PFX(BoardBeforeTempRamInit)
 
 BoardBeforeTempRamInitRet:
 
   ; Find the fsp info header
-  mov  edi, PcdGet32 (PcdFsptBaseAddress)
+  mov  edi, [ASM_PFX(PcdGet32 (PcdFsptBaseAddress))]
 
-  mov  eax, dword ptr [edi + FVH_SIGINATURE_OFFSET]
+  mov  eax, dword [edi + FVH_SIGINATURE_OFFSET]
   cmp  eax, FVH_SIGINATURE_VALID_VALUE
   jnz  FspHeaderNotFound
 
   xor  eax, eax
-  mov  ax, word ptr [edi + FVH_EXTHEADER_OFFSET_OFFSET]
+  mov  ax, word [edi + FVH_EXTHEADER_OFFSET_OFFSET]
   cmp  ax, 0
   jnz  FspFvExtHeaderExist
 
   xor  eax, eax
-  mov  ax, word ptr [edi + FVH_HEADER_LENGTH_OFFSET]   ; Bypass Fv Header
+  mov  ax, word [edi + FVH_HEADER_LENGTH_OFFSET]   ; Bypass Fv Header
   add  edi, eax
   jmp  FspCheckFfsHeader
 
 FspFvExtHeaderExist:
   add  edi, eax
-  mov  eax, dword ptr [edi + FVH_EXTHEADER_SIZE_OFFSET]  ; Bypass Ext Fv Header
+  mov  eax, dword [edi + FVH_EXTHEADER_SIZE_OFFSET]  ; Bypass Ext Fv Header
   add  edi, eax
 
   ; Round up to 8 byte alignment
   mov  eax, edi
   and  al,  07h
-  jz FspCheckFfsHeader
+  jz   FspCheckFfsHeader
 
   and  edi, 0FFFFFFF8h
   add  edi, 08h
 
 FspCheckFfsHeader:
   ; Check the ffs guid
-  mov  eax, dword ptr [edi]
+  mov  eax, dword [edi]
   cmp  eax, FSP_HEADER_GUID_DWORD1
-  jnz FspHeaderNotFound
+  jnz  FspHeaderNotFound
 
-  mov  eax, dword ptr [edi + 4]
+  mov  eax, dword [edi + 4]
   cmp  eax, FSP_HEADER_GUID_DWORD2
-  jnz FspHeaderNotFound
+  jnz  FspHeaderNotFound
 
-  mov  eax, dword ptr [edi + 8]
+  mov  eax, dword [edi + 8]
   cmp  eax, FSP_HEADER_GUID_DWORD3
-  jnz FspHeaderNotFound
+  jnz  FspHeaderNotFound
 
-  mov  eax, dword ptr [edi + 0Ch]
+  mov  eax, dword [edi + 0Ch]
   cmp  eax, FSP_HEADER_GUID_DWORD4
-  jnz FspHeaderNotFound
+  jnz  FspHeaderNotFound
 
   add  edi, FFS_HEADER_SIZE_VALUE       ; Bypass the ffs header
 
   ; Check the section type as raw section
-  mov  al, byte ptr [edi + SECTION_HEADER_TYPE_OFFSET]
+  mov  al, byte [edi + SECTION_HEADER_TYPE_OFFSET]
   cmp  al, 019h
   jnz FspHeaderNotFound
 
@@ -223,11 +219,11 @@ FspHeaderNotFound:
 
 FspHeaderFound:
   ; Get the fsp TempRamInit Api address
-  mov eax, dword ptr [edi + FSP_HEADER_IMAGEBASE_OFFSET]
-  add eax, dword ptr [edi + FSP_HEADER_TEMPRAMINIT_OFFSET]
+  mov eax, dword [edi + FSP_HEADER_IMAGEBASE_OFFSET]
+  add eax, dword [edi + FSP_HEADER_TEMPRAMINIT_OFFSET]
 
   ; Setup the hardcode stack
-  mov esp, OFFSET TempRamInitStack
+  mov esp, TempRamInitStack
 
   ; Call the fsp TempRamInit Api
   jmp eax
@@ -242,7 +238,7 @@ TempRamInitDone:
   ;   ECX: start of range
   ;   EDX: end of range
 CallSecFspInit:
-  sub     edx, PcdGet32 (PcdFspTemporaryRamSize) ; TemporaryRam for FSP
+  sub     edx, [ASM_PFX(PcdGet32 (PcdFspTemporaryRamSize))] ; TemporaryRam for FSP
   xor     eax, eax
   mov     esp, edx
 
@@ -253,30 +249,29 @@ CallSecFspInit:
   push    edx
   push    ecx
   push    eax ; zero - no hob list yet
-  call    CallPeiCoreEntryPoint
+  call    ASM_PFX(CallPeiCoreEntryPoint)
 
 FspApiFailed:
   jmp $
 
 align 10h
 TempRamInitStack:
-    DD  OFFSET TempRamInitDone
-    DD  OFFSET FsptUpdDataPtr ; TempRamInitParams
-
-ProtectedModeEntryPoint ENDP
+    DD  TempRamInitDone
+    DD  ASM_PFX(FsptUpdDataPtr); TempRamInitParams
 
 ;
 ; ROM-based Global-Descriptor Table for the Tiano PEI Phase
 ;
 align 16
-PUBLIC  BootGdtTable
+global  ASM_PFX(BootGdtTable)
 
 ;
 ; GDT[0]: 0x00: Null entry, never used.
 ;
 NULL_SEL            EQU $ - GDT_BASE    ; Selector [0]
 GDT_BASE:
-BootGdtTable        DD  0
+ASM_PFX(BootGdtTable):
+                    DD  0
                     DD  0
 ;
 ; Linear data segment descriptor
@@ -350,20 +345,17 @@ SPARE5_SEL          EQU $ - GDT_BASE    ; Selector [0x38]
     DB  0                               ; present, ring 0, data, expand-up, writable
     DB  0                               ; page-granular, 32-bit
     DB  0
-GDT_SIZE            EQU $ - BootGdtTable    ; Size, in bytes
+GDT_SIZE            EQU $ - GDT_BASE    ; Size, in bytes
 
 ;
 ; GDT Descriptor
 ;
 GdtDesc:                                ; GDT descriptor
     DW  GDT_SIZE - 1                    ; GDT limit
-    DD  OFFSET BootGdtTable             ; GDT base address
+    DD  GDT_BASE                        ; GDT base address
 
 
-ProtectedModeEntryLinearAddress   LABEL   FWORD
-ProtectedModeEntryLinearOffset    LABEL   DWORD
-  DD      OFFSET ProtectedModeEntryPoint  ; Offset of our 32 bit code
+ProtectedModeEntryLinearAddress:
+ProtectedModeEntryLinear:
+  DD      ProtectedModeEntryPoint  ; Offset of our 32 bit code
   DW      LINEAR_CODE_SEL
-
-_TEXT_PROTECTED_MODE    ENDS
-END

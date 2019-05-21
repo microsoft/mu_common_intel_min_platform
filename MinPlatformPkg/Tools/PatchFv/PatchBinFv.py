@@ -1,6 +1,6 @@
 ## @ PatchBinFv.py
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 ##
@@ -107,7 +107,7 @@ class FileChecker:
         return
 
     def ProcessFvInf(self, fvName):
-        sourceFileName = os.path.join(self.sourceRoot,fvName+"\\"+self.target+"\\"+fvName+".inf")
+        sourceFileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".inf")
         print "\nprocessing - " + sourceFileName
         fileGuid = self.GetInfFileGuid (sourceFileName)
         print "FV NAME GUID - " + fileGuid
@@ -137,7 +137,7 @@ class FileChecker:
         self.PrintPcdList(self.InfPcdList)
 
     def PatchFv(self, fvName):
-        sourceFileName = os.path.join(self.sourceRoot,fvName+"\\"+self.target+"\\"+fvName+".fv")
+        sourceFileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".Fv")
         print "patching - " + sourceFileName
 
         try :
@@ -161,7 +161,7 @@ class FileChecker:
                     print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+2]) + " <= " + binascii.hexlify(h)
                     data[offset:offset+2] = h
                 elif (cmp (pcd[4], "UINT32") == 0):
-                    l = struct.pack("L", int(pcd[3],16))
+                    l = struct.pack("I", int(pcd[3],16))
                     print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+4]) + " <= " + binascii.hexlify(l)
                     data[offset:offset+4] = l
                 elif (cmp (pcd[4], "UINT64") == 0):

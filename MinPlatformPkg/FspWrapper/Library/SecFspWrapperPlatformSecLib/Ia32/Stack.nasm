@@ -1,14 +1,14 @@
-;; @file
-; Switch the stack from temporary memory to permenent memory.
+;------------------------------------------------------------------------------
 ;
-; Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+; Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
 ; SPDX-License-Identifier: BSD-2-Clause-Patent
+; Abstract:
 ;
-;;
+;   Switch the stack from temporary memory to permanent memory.
+;
+;------------------------------------------------------------------------------
 
-    .586p
-    .model  flat,C
-    .code
+    SECTION .text
 
 ;------------------------------------------------------------------------------
 ; VOID
@@ -18,7 +18,8 @@
 ;   UINT32   PermanentMemoryBase
 ;   );
 ;------------------------------------------------------------------------------
-SecSwitchStack   PROC
+global ASM_PFX(SecSwitchStack)
+ASM_PFX(SecSwitchStack):
     ;
     ; Save three register: eax, ebx, ecx
     ;
@@ -43,16 +44,16 @@ SecSwitchStack   PROC
     mov   eax, esp
     sub   eax, ebx
     add   eax, ecx
-    mov   edx, dword ptr [esp]         ; copy pushed register's value to permanent memory
-    mov   dword ptr [eax], edx
-    mov   edx, dword ptr [esp + 4]
-    mov   dword ptr [eax + 4], edx
-    mov   edx, dword ptr [esp + 8]
-    mov   dword ptr [eax + 8], edx
-    mov   edx, dword ptr [esp + 12]
-    mov   dword ptr [eax + 12], edx
-    mov   edx, dword ptr [esp + 16]    ; Update this function's return address into permanent memory
-    mov   dword ptr [eax + 16], edx
+    mov   edx, dword [esp]         ; copy pushed register's value to permanent memory
+    mov   dword [eax], edx
+    mov   edx, dword [esp + 4]
+    mov   dword [eax + 4], edx
+    mov   edx, dword [esp + 8]
+    mov   dword [eax + 8], edx
+    mov   edx, dword [esp + 12]
+    mov   dword [eax + 12], edx
+    mov   edx, dword [esp + 16]    ; Update this function's return address into permanent memory
+    mov   dword [eax + 16], edx
     mov   esp, eax                     ; From now, esp is pointed to permanent memory
 
     ;
@@ -68,6 +69,4 @@ SecSwitchStack   PROC
     pop   ebx
     pop   eax
     ret
-SecSwitchStack   ENDP
 
-    END

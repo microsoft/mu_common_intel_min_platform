@@ -1,9 +1,8 @@
 ## @ PatchBinFv.py
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
-##
 
 import os
 import re
@@ -541,7 +540,7 @@ class FileChecker:
         print "PCD: " + pcd[0] + "|" + pcd[3] + " <== " + pcd[1] + "(" + pcd[2] + ")"
 
     def RebaseFv(self, fvName, rebasePcd):
-        sourceFileName = os.path.join(self.sourceRoot,fvName+"\\"+self.target+"\\"+fvName+".fv")
+        sourceFileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".Fv")
         print "rebasing(FV) - " + sourceFileName
 
         try :
@@ -617,7 +616,7 @@ class FileChecker:
             if not line:
                 break
 
-            newline = line[:-1]
+            newline = line[:-1].replace('\r','')
 
             if (cmp (newline, TargetPkg) == 0):
                 FoundPkg = True
@@ -645,7 +644,7 @@ class FileChecker:
     def GetOldFvBase (self, fvName, PcdName):
         ParseBase = False
         Value = ""
-        fileName = os.path.join(self.sourceRoot,fvName+"\\"+self.target+"\\"+fvName+".inf")
+        fileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".inf")
         try :
             file = open(fileName)
         except Exception:
@@ -657,7 +656,7 @@ class FileChecker:
                 if not line:
                     break
 
-                newline = line[:-1]
+                newline = line[:-1].replace('\r','')
 
                 if cmp (newline, "") == 0:
                     continue
@@ -681,7 +680,7 @@ class FileChecker:
         return Value
 
     def SetNewFvBase (self, fvName, PcdName, OldFvBase, NewFvBase):
-        fileName = os.path.join(self.sourceRoot,fvName+"\\"+self.target+"\\"+fvName+".inf")
+        fileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".inf")
         print "update - " + fileName
         try :
             file = open(fileName, "r")
@@ -698,7 +697,7 @@ class FileChecker:
                 if not line:
                     break
 
-                newline = line[:-1]
+                newline = line[:-1].strip()
 
                 if cmp (newline, "") == 0:
                     continue
