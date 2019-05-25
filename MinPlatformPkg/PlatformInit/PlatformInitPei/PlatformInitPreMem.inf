@@ -24,7 +24,7 @@
   MemoryAllocationLib
   PeimEntryPoint
   PeiServicesLib
-  ReportFvLib
+  #ReportFvLib #MSCHANGE - remove unsued lib requirement.
   TestPointCheckLib
   TimerLib
   SetCacheMtrrLib
