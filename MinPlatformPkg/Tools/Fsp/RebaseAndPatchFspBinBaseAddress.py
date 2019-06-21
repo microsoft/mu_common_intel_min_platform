@@ -10,16 +10,16 @@ import re
 import subprocess
 
 if len(sys.argv) not in [6,7]:
-  print "RebaseAndPatchFspBinBaseAddress.py - Error in number of arguments received"
-  print "Usage - RebaseAndPatchFspBinBaseAddress.py <FlashMap file path> <FspBinPkg Folder> <Fsp.fd file name>\
-  <Dsc file path to be patched> <pad_offset for Fsp-S Base Address> <OPTIONAL SplitFspBin.py tool path>"
+  print ("RebaseAndPatchFspBinBaseAddress.py - Error in number of arguments received")
+  print ("Usage - RebaseAndPatchFspBinBaseAddress.py <FlashMap file path> <FspBinPkg Folder> <Fsp.fd file name>\
+  <Dsc file path to be patched> <pad_offset for Fsp-S Base Address> <OPTIONAL SplitFspBin.py tool path>")
   exit(1)
 
 flashMapName      = sys.argv[1]
 fspBinPath        = sys.argv[2]
 fspBinFile        = sys.argv[3]
 targetDscFile     = sys.argv[4]
-fvOffset          = long(sys.argv[5], 16)
+fvOffset          = int(sys.argv[5], 16)
 fspBinFileRebased = "Fsp_Rebased.fd"
 splitFspBinPath   = os.path.join("edk2","IntelFsp2Pkg","Tools","SplitFspBin.py")
 
@@ -30,21 +30,21 @@ if len(sys.argv) == 7:
 # Make sure argument passed or valid
 #
 if not os.path.exists(flashMapName):
-  print "WARNING!  " + str(flashMapName) + " is not found."
+  print ("WARNING!  " + str(flashMapName) + " is not found.")
   exit(1)
 fspBinFilePath = fspBinPath + os.sep + fspBinFile
 if not os.path.exists(fspBinFilePath):
-  print "WARNING!  " + str(fspBinFilePath) + " is not found."
+  print ("WARNING!  " + str(fspBinFilePath) + " is not found.")
   exit(1)
 if not os.path.exists(targetDscFile):
-  print "WARNING!  " + str(targetDscFile) + " is not found."
+  print ("WARNING!  " + str(targetDscFile) + " is not found.")
   exit(1)
 ext_file = str(os.path.splitext(targetDscFile)[-1]).lower()
 if ext_file != ".dsc":
-  print "WARNING!  " + str(targetDscFile) + " is not a dsc file"
+  print ("WARNING!  " + str(targetDscFile) + " is not a dsc file")
   exit(1)
 if not os.path.exists(splitFspBinPath):
-  print "WARNING!  " + str(splitFspBinPath) + " is not found."
+  print ("WARNING!  " + str(splitFspBinPath) + " is not found.")
   exit(1)
 
 #
@@ -54,7 +54,7 @@ file = open (flashMapName, "r")
 data = file.read ()
 
 # Get the Flash Base Address
-flashBase = long(data.split("FLASH_BASE")[1].split("=")[1].split()[0], 16)
+flashBase = int(data.split("FLASH_BASE")[1].split("=")[1].split()[0], 16)
 
 # Based on Build Target, select the section in the FlashMap file
 flashmap = data
@@ -62,11 +62,11 @@ flashmap = data
 # Get FSP-S & FSP-M & FSP-T offset & calculate the base
 for line in flashmap.split("\n"):
   if "PcdFlashFvFspSOffset" in line:
-    fspSBaseOffset = long(line.split("=")[1].split()[0], 16)
+    fspSBaseOffset = int(line.split("=")[1].split()[0], 16)
   if "PcdFlashFvFspMOffset" in line:
-    fspMBaseOffset = long(line.split("=")[1].split()[0], 16)
+    fspMBaseOffset = int(line.split("=")[1].split()[0], 16)
   if "PcdFlashFvFspTOffset" in line:
-    fspTBaseOffset = long(line.split("=")[1].split()[0], 16)
+    fspTBaseOffset = int(line.split("=")[1].split()[0], 16)
 file.close()
 
 #
@@ -78,10 +78,10 @@ if 'PYTHON_HOME' in os.environ:
     pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
 Process = subprocess.Popen([pythontool, splitFspBinPath, "info","-f",fspBinFilePath], stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
-FsptInfo = Output.rsplit("FSP_M", 1);
-for line in FsptInfo[1].split("\n"):
-  if "ImageSize" in line:
-    fspMSize = long(line.split("=")[1], 16)
+FsptInfo = Output.rsplit(b"FSP_M", 1);
+for line in FsptInfo[1].split(b"\n"):
+  if b"ImageSize" in line:
+    fspMSize = int(line.split(b"=")[1], 16)
     break
 
 # Calculate FSP-S/M/T base address, to which re-base has to be done
