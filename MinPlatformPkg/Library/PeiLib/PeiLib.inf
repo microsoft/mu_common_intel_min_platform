@@ -1,7 +1,7 @@
 ## @file
 # Component information file for Board Init Test Library
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = PeiLib
-  FILE_GUID                      = 657A478B-16B9-4B6D-9C41-BEF86197BDF4
+  FILE_GUID                      = F19AA754-CE24-448D-B755-1F939B00C25D
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = PeiLib
@@ -26,6 +26,6 @@
 
 [Sources]
   PeiLib.c
-  
+
 [Ppis]
   gEfiPeiReadOnlyVariable2PpiGuid               ## CONSUMES

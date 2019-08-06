@@ -1,7 +1,7 @@
 ## @file
 # Component information file for Board Init Test Library
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = TestPointCheckLibNull
-  FILE_GUID                      = 657A478B-16B9-4B6D-9C41-BEF86197BDF4
+  FILE_GUID                      = A50DAF74-4EC0-46CD-A1ED-C885D4E97F2B
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = TestPointCheckLib
