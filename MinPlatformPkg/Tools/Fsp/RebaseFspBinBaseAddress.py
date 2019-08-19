@@ -68,6 +68,8 @@ file.close()
 pythontool = 'python'
 if 'PYTHON_HOME' in os.environ:
     pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
+else:
+    pythontool = sys.executable
 Process = subprocess.Popen([pythontool, splitFspBinPath, "info","-f",fspBinFilePath], stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit(b"FSP_M", 1);
