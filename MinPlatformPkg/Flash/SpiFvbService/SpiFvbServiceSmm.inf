@@ -1,7 +1,7 @@
 ### @file
 # Component description file for the Serial Flash device Runtime driver.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -50,6 +50,7 @@
 [Sources]
   Common/SpiFvbServiceCommon.c
   Common/FvbInfo.c
+  Common/SpiFvbServiceCommon.h
   Smm/SpiFvbServiceSmm.c
 
 [Protocols]

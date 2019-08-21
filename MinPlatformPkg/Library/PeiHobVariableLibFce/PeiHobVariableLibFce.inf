@@ -2,7 +2,7 @@
 # Module define variable layout and access method for common
 # circumstance.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -37,6 +37,8 @@
 [Sources]
   PeiHobVariableLibFce.c
   InternalCommonLib.c
+  Variable.h
+  Fce.h
 
 [Ppis]
   gEfiPeiMemoryDiscoveredPpiGuid                ## NOTIFY

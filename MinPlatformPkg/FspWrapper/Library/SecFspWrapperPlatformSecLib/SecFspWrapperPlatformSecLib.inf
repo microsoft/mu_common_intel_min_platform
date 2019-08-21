@@ -41,6 +41,7 @@
   SecGetPerformance.c
   SecTempRamDone.c
   PlatformInit.c
+  FsptCoreUpd.h
 
 [Sources.IA32]
   Ia32/SecEntry.nasm

@@ -1,7 +1,7 @@
 ### @file
 # Finds the matched default data and creates GUID hob for it.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -36,6 +36,8 @@
 [Sources]
   PeiHobVariableLibFceOptSize.c
   InternalCommonLib.c
+  Variable.h
+  Fce.h
 
 [Ppis]
   gEfiPeiMemoryDiscoveredPpiGuid                ## NOTIFY
