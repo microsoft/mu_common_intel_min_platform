@@ -1,7 +1,7 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -187,3 +187,6 @@
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
 !endif
+
+[BuildOptions]
+  *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
