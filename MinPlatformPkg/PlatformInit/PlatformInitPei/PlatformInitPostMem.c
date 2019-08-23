@@ -1,7 +1,7 @@
 /** @file
   Source code file for Platform Init PEI module
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -113,7 +113,7 @@ SetCacheMtrrAfterEndOfPei (
   Status = PeiServicesGetHobList ((VOID **) &Hob.Raw);
   while (!END_OF_HOB_LIST (Hob)) {
     if (Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION) {
-      if (CompareGuid (&Hob.Guid->Name, &gEfiSmmPeiSmramMemoryReserveGuid)) {
+      if (CompareGuid (&Hob.Guid->Name, &gEfiSmmSmramMemoryGuid)) {
         SmramHobDescriptorBlock = (EFI_SMRAM_HOB_DESCRIPTOR_BLOCK *) (Hob.Guid + 1);
         for (Index = 0; Index < SmramHobDescriptorBlock->NumberOfSmmReservedRegions; Index++) {
           if (SmramHobDescriptorBlock->Descriptor[Index].PhysicalStart > 0x100000) {
