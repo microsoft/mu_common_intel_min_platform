@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -241,11 +241,13 @@ TestPointDumpGcd (
       }
     }
     if (GcdMemoryMap != NULL) {
-      *GcdIoMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR), IoMap);
+      if (GcdIoMap != NULL) {
+        *GcdIoMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR), IoMap);
+      }
       *GcdIoMapNumberOfDescriptors = NumberOfDescriptors;
     }
   }
-  
+
   if (DumpPrint) {
     DEBUG ((DEBUG_INFO, "==== TestPointDumpGcd - Exit\n"));
   }

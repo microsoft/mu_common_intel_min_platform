@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -130,7 +130,7 @@ TestPointCheckLoadOptionVariable (
   for (ListIndex = 0; ListIndex < sizeof(mLoadOptionVariableList)/sizeof(mLoadOptionVariableList[0]); ListIndex++) {
     UnicodeSPrint (BootOrderName, sizeof(BootOrderName), L"%sOrder", mLoadOptionVariableList[ListIndex]);
     Status = GetVariable2 (BootOrderName, &gEfiGlobalVariableGuid, (VOID **)&BootOrder, &OrderSize);
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR(Status) || (BootOrder == NULL)) {
       continue;
     }
     for (Index = 0; Index < OrderSize/sizeof(CHAR16); Index++) {
@@ -222,7 +222,7 @@ TestPointCheckKeyOptionVariable (
     for (Index = 0; ; Index++) {
       UnicodeSPrint (KeyOptionName, sizeof(KeyOptionName), L"%s%04x", mKeyOptionVariableList[ListIndex], Index);
       Status = GetVariable2 (KeyOptionName, &gEfiGlobalVariableGuid, &Variable, &Size);
-      if (!EFI_ERROR(Status)) {
+      if (!EFI_ERROR(Status) && (Variable != NULL)) {
         DumpKeyOption (KeyOptionName, Variable, Size);
       } else {
         break;
