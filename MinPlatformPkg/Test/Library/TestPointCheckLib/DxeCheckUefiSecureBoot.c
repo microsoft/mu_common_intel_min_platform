@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -52,6 +52,9 @@ TestPointCheckUefiSecureBoot (
   ReturnStatus = EFI_SUCCESS;
   for (Index = 0; Index < sizeof(mUefiSecureBootVariable)/sizeof(mUefiSecureBootVariable[0]); Index++) {
     Status = GetVariable2 (mUefiSecureBootVariable[Index].Name, mUefiSecureBootVariable[Index].Guid, &Variable, &Size);
+    if(Variable == NULL) {
+      return EFI_NOT_FOUND;
+    }
     if (EFI_ERROR(Status)) {
       DEBUG ((DEBUG_ERROR, "Variable - %S not found\n", mUefiSecureBootVariable[Index].Name));
       ReturnStatus = Status;
@@ -69,6 +72,9 @@ TestPointCheckUefiSecureBoot (
 
   for (Index = 0; Index < sizeof(mUefiSecureBootModeVariable)/sizeof(mUefiSecureBootModeVariable[0]); Index++) {
     Status = GetVariable2 (mUefiSecureBootModeVariable[Index].Name, mUefiSecureBootModeVariable[Index].Guid, &Variable, &Size);
+    if(Variable == NULL) {
+      return EFI_NOT_FOUND;
+    }
     if (EFI_ERROR(Status)) {
       DEBUG ((DEBUG_ERROR, "Variable - %S not found\n", mUefiSecureBootModeVariable[Index].Name));
       ReturnStatus = Status;
