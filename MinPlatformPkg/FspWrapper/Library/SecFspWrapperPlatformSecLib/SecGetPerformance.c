@@ -1,7 +1,7 @@
 /** @file
   Sample to provide SecGetPerformance function.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -41,7 +41,7 @@ SecGetPerformance (
 {
   UINT32      Size;
   UINT32      Count;
-  UINT32      TopOfTemporaryRam;
+  UINTN       TopOfTemporaryRam;
   UINT64      Ticker;
   VOID        *TopOfTemporaryRamPpi;
   EFI_STATUS  Status;
@@ -77,12 +77,12 @@ SecGetPerformance (
   // |  TSC[31:00]  |
   // |--------------|
   //
-  TopOfTemporaryRam = (UINT32)(UINTN)TopOfTemporaryRamPpi - sizeof(UINT32);
-  TopOfTemporaryRam -= sizeof(UINT32) * 2;
-  Count             = *(UINT32 *) (UINTN) (TopOfTemporaryRam - sizeof (UINT32));
+  TopOfTemporaryRam = (UINTN) TopOfTemporaryRamPpi - sizeof (UINT32);
+  TopOfTemporaryRam -= sizeof (UINT32) * 2;
+  Count             = *(UINT32 *)(TopOfTemporaryRam - sizeof (UINT32));
   Size              = Count * sizeof (UINT32);
 
-  Ticker = *(UINT64 *) (UINTN) (TopOfTemporaryRam - sizeof (UINT32) - Size - sizeof (UINT32) * 2);
+  Ticker = *(UINT64 *) (TopOfTemporaryRam - sizeof (UINT32) - Size - sizeof (UINT32) * 2);
   Performance->ResetEnd = GetTimeInNanoSecond (Ticker);
 
   return EFI_SUCCESS;
