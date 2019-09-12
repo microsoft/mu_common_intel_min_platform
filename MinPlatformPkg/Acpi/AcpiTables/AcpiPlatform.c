@@ -1,7 +1,7 @@
 /** @file
   ACPI Platform Driver
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -867,12 +867,14 @@ InstallMadtFromScratch (
   UINT32                                              PcIoApicMask;
   UINTN                                               PcIoApicIndex;
 
+  MadtStructs = NULL;
+  NewMadtTable = NULL;
+  MaxMadtStructCount = 0;
+
   DetectApicIdMap();
 
   // Call for Local APIC ID Reorder
   SortCpuLocalApicInTable ();
-
-  NewMadtTable = NULL;
 
   MaxMadtStructCount = (UINT32) (
     MAX_CPU_NUM +    // processor local APIC structures
@@ -1115,13 +1117,14 @@ Done:
   //
   // Free memory
   //
-  for (MadtStructsIndex = 0; MadtStructsIndex < MaxMadtStructCount; MadtStructsIndex++) {
-    if (MadtStructs[MadtStructsIndex] != NULL) {
-      FreePool (MadtStructs[MadtStructsIndex]);
+  if (MadtStructs != NULL) {
+    for (MadtStructsIndex = 0; MadtStructsIndex < MaxMadtStructCount; MadtStructsIndex++) {
+      if (MadtStructs[MadtStructsIndex] != NULL) {
+        FreePool (MadtStructs[MadtStructsIndex]);
+      }
     }
+    FreePool (MadtStructs);
   }
-
-  FreePool (MadtStructs);
 
   if (NewMadtTable != NULL) {
     FreePool (NewMadtTable);
