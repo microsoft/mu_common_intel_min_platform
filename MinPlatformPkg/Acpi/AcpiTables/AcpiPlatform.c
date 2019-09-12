@@ -354,7 +354,7 @@ SortCpuLocalApicInTable (
 
       if(MAX_CPU_NUM <= Index) {
         DEBUG ((EFI_D_ERROR, "Asserting the SortCpuLocalApicInTable Index Bufferflow\n"));
-        ASSERT_EFI_ERROR(EFI_INVALID_PARAMETER);
+        return EFI_INVALID_PARAMETER;
       }
 
       TempVal = mCpuApicIdOrderTable[Index].ApicId;
@@ -874,7 +874,11 @@ InstallMadtFromScratch (
   DetectApicIdMap();
 
   // Call for Local APIC ID Reorder
-  SortCpuLocalApicInTable ();
+  Status = SortCpuLocalApicInTable ();
+  if (EFI_ERROR (Status)) {
+    DEBUG ((EFI_D_ERROR, "SortCpuLocalApicInTable failed: %r\n", Status));
+    goto Done;
+  }
 
   MaxMadtStructCount = (UINT32) (
     MAX_CPU_NUM +    // processor local APIC structures
