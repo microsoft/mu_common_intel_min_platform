@@ -1,6 +1,6 @@
 /** @file
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -610,6 +610,8 @@ DumpAcpiRsdt (
 
   if (OutTable != NULL) {
     *OutTable = NULL;
+  } else {
+    return EFI_INVALID_PARAMETER;
   }
 
   ReturnStatus = EFI_SUCCESS;
@@ -663,6 +665,8 @@ DumpAcpiXsdt (
   
   if (OutTable != NULL) {
     *OutTable = NULL;
+  } else {
+    return EFI_INVALID_PARAMETER;
   }
 
   ReturnStatus = EFI_SUCCESS;
