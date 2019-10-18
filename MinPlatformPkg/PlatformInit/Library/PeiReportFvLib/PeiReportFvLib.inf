@@ -1,7 +1,7 @@
 ### @file
 # Component information file for the Report Firmware Volume (FV) library.
 #
-# Copyright (c) 2018, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2018 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -30,22 +30,24 @@
   PeiReportFvLib.c
 
 [Pcd]
-  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode       ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress     ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize            ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMBase          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMSize          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUBase          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUSize          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryBase    ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemorySize    ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootBase      ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootSize      ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootBase        ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootSize        ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase      ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize      ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase      ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize      ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode             ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress           ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize                  ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMBase                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMSize                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSBase                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUBase                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspUSize                ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryBase          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemorySize          ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootBase            ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootSize            ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootBase              ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvOsBootSize              ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase            ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize            ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedPreMemoryBase   ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedPreMemorySize   ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase            ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize            ## CONSUMES

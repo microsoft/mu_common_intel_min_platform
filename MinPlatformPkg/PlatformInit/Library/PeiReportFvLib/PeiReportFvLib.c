@@ -1,7 +1,7 @@
 /** @file
   Source code file for Report Firmware Volume (FV) library
 
-Copyright (c) 2018, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2018 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -40,11 +40,16 @@ ReportPreMemFv (
     NULL,
     0
     );
-  DEBUG ((DEBUG_INFO, "Install FlashFvAdvanced - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvAdvancedBase), PcdGet32 (PcdFlashFvAdvancedSize)));
+  DEBUG ((
+    DEBUG_INFO,
+    "Install FlashFvAdvancedPreMemory - 0x%x, 0x%x\n",
+    PcdGet32 (PcdFlashFvAdvancedPreMemoryBase),
+    PcdGet32 (PcdFlashFvAdvancedPreMemorySize)
+    ));
   PeiServicesInstallFvInfo2Ppi (
-    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase))->FileSystemGuid),
-    (VOID *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase),
-    PcdGet32 (PcdFlashFvAdvancedSize),
+    &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvAdvancedPreMemoryBase))->FileSystemGuid),
+    (VOID *) (UINTN) PcdGet32 (PcdFlashFvAdvancedPreMemoryBase),
+    PcdGet32 (PcdFlashFvAdvancedPreMemorySize),
     NULL,
     NULL,
     0
@@ -113,6 +118,15 @@ ReportPostMemFv (
       &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase))->FileSystemGuid),
       (VOID *) (UINTN) PcdGet32 (PcdFlashFvOsBootBase),
       PcdGet32 (PcdFlashFvOsBootSize),
+      NULL,
+      NULL,
+      0
+      );
+    DEBUG ((DEBUG_INFO, "Install FlashFvAdvanced - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvAdvancedBase), PcdGet32 (PcdFlashFvAdvancedSize)));
+    PeiServicesInstallFvInfo2Ppi (
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvAdvancedBase),
+      PcdGet32 (PcdFlashFvAdvancedSize),
       NULL,
       NULL,
       0

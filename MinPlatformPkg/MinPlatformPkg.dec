@@ -168,6 +168,9 @@ SetCacheMtrrLib|Include/Library/SetCacheMtrrLib.h
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityBase|0x00000000|UINT32|0x20000010
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecuritySize|0x00000000|UINT32|0x20000011
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvSecurityOffset|0x00000000|UINT32|0x20000012
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedPreMemoryBase|0x00000000|UINT32|0x2000002D
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedPreMemorySize|0x00000000|UINT32|0x2000002E
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedPreMemoryOffset|0x00000000|UINT32|0x2000002F
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedBase|0x00000000|UINT32|0x20000013
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedSize|0x00000000|UINT32|0x20000014
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvAdvancedOffset|0x00000000|UINT32|0x20000015
