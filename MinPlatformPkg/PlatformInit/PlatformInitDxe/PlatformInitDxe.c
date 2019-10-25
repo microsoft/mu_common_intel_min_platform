@@ -75,7 +75,7 @@ OnEndOfDxe (
   gBS->CloseEvent (Event);
 
   TestPointEndOfDxeNoThirdPartyPciOptionRom ();
-  
+
   TestPointEndOfDxeDmaAcpiTableFunctional ();
 
   TestPointEndOfDxeDmaProtectionEnabled ();
@@ -183,7 +183,7 @@ OnReadyToBoot (
 
   Status = BoardInitReadyToBoot ();
   ASSERT_EFI_ERROR(Status);
-  
+
   Status = gBS->CreateEvent (
                   EVT_NOTIFY_SIGNAL,
                   TPL_CALLBACK,
@@ -192,7 +192,7 @@ OnReadyToBoot (
                   &ReadyToBootLaterEvent
                   );
   ASSERT_EFI_ERROR (Status);
-  
+
   gBS->SignalEvent (ReadyToBootLaterEvent);
 }
 
@@ -256,7 +256,7 @@ BoardNotificationInitEntryPoint (
                           &Registration
                           );
   ASSERT (ProtocolNotifyEvent != NULL);
-  
+
   Status = gBS->CreateEventEx (
                   EVT_NOTIFY_SIGNAL,
                   TPL_CALLBACK,
@@ -266,7 +266,7 @@ BoardNotificationInitEntryPoint (
                   &EndOfDxeEvent
                   );
   ASSERT_EFI_ERROR (Status);
-  
+
   SmmReadyToLockEvent = EfiCreateProtocolNotifyEvent  (
                           &gEfiDxeSmmReadyToLockProtocolGuid,
                           TPL_CALLBACK,
@@ -283,7 +283,7 @@ BoardNotificationInitEntryPoint (
              &ReadyToBootEvent
              );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gBS->CreateEventEx (
                   EVT_NOTIFY_SIGNAL,
                   TPL_CALLBACK,
