@@ -65,6 +65,8 @@ SecBoardInitLib|Include/Library/SecBoardInitLib.h
 TestPointLib|Include/Library/TestPointLib.h
 TestPointCheckLib|Include/Library/TestPointCheckLib.h
 
+SetCacheMtrrLib|Include/Library/SetCacheMtrrLib.h
+
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
 gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode|FALSE|BOOLEAN|0x80000008
@@ -204,11 +206,11 @@ gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemBase          |0x90000000 |UINT32|0x40010043
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemLimit         |0x00000000 |UINT32|0x40010044
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBBase  |0xFFFFFFFFFFFFFFFF |UINT64|0x40010045
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit |0x0000000000000000 |UINT64|0x40010046 
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit |0x0000000000000000 |UINT64|0x40010046
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemBase         |0xFFFFFFFF |UINT32|0x40010047
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemLimit        |0x00000000 |UINT32|0x40010048
   gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBBase |0xFFFFFFFFFFFFFFFF |UINT64|0x40010049
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit|0x0000000000000000 |UINT64|0x4001004A 
+  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit|0x0000000000000000 |UINT64|0x4001004A
   gMinPlatformPkgTokenSpaceGuid.PcdPciDmaAbove4G               |FALSE|BOOLEAN|0x4001004B
   gMinPlatformPkgTokenSpaceGuid.PcdPciNoExtendedConfigSpace    |FALSE|BOOLEAN|0x4001004C
   gMinPlatformPkgTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
