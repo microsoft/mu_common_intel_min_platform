@@ -1,7 +1,7 @@
 ### @file
 # Component information file for the Platform Init Pre-Memory PEI module.
 #
-# Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -22,23 +22,20 @@
   HobLib
   IoLib
   MemoryAllocationLib
-  MtrrLib
   PeimEntryPoint
   PeiServicesLib
   ReportFvLib
   TestPointCheckLib
   TimerLib
+  SetCacheMtrrLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-  UefiCpuPkg/UefiCpuPkg.dec
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode          ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress        ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize               ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit            ## CONSUMES
 

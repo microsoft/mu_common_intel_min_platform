@@ -23,15 +23,14 @@
   BaseMemoryLib
   HobLib
   PeiServicesLib
-  MtrrLib
   BoardInitLib
   TestPointCheckLib
+  SetCacheMtrrLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-  UefiCpuPkg/UefiCpuPkg.dec
 
 [Sources]
   PlatformInitPostMem.c
@@ -44,14 +43,6 @@
 
 [Protocols]
 
-[Guids]
-  gEfiSmmSmramMemoryGuid                        ## CONSUMES
-
 [Depex]
   gEfiPeiMemoryDiscoveredPpiGuid
 
-[Pcd]
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBBase
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedMemAbove4GBLimit
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBBase
-  gMinPlatformPkgTokenSpaceGuid.PcdPciReservedPMemAbove4GBLimit
