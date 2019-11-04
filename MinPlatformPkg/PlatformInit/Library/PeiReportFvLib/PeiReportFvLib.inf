@@ -30,6 +30,7 @@
   PeiReportFvLib.c
 
 [Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdBootStage                      ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode             ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaBaseAddress           ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashAreaSize                  ## CONSUMES
