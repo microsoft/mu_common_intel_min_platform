@@ -29,6 +29,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Guid/MemoryTypeInformation.h>
 #include <Ppi/PlatformMemorySize.h>
 #include <Ppi/BaseMemoryTest.h>
+#include <Ppi/PlatformInitTempRamExitPpi.h>
 
 EFI_STATUS
 EFIAPI
@@ -72,7 +73,31 @@ BaseMemoryTest (
   OUT EFI_PHYSICAL_ADDRESS               *ErrorAddress
   );
 
-static EFI_PEI_NOTIFY_DESCRIPTOR mMemDiscoveredNotifyList = {
+/**
+  A hook for platform-specific initialization prior to disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The platform initialization was successful.
+  @retval EFI_NOT_READY The platform has not been detected yet.
+**/
+EFI_STATUS
+EFIAPI
+PlatformInitBeforeTempRamExit (
+  VOID
+  );
+
+/**
+  A hook for platform-specific initialization after disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The platform initialization was successful.
+  @retval EFI_NOT_READY The platform has not been detected yet.
+**/
+EFI_STATUS
+EFIAPI
+PlatformInitAfterTempRamExit (
+  VOID
+  );
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_PEI_NOTIFY_DESCRIPTOR mMemDiscoveredNotifyList = {
   (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEfiPeiMemoryDiscoveredPpiGuid,
   (EFI_PEIM_NOTIFY_ENTRY_POINT) MemoryDiscoveredPpiNotifyCallback
@@ -90,11 +115,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED EFI_PEI_PPI_DESCRIPTOR mPpiBootMode = {
   NULL
 };
 
-static PEI_BASE_MEMORY_TEST_PPI     mPeiBaseMemoryTestPpi = { BaseMemoryTest };
+GLOBAL_REMOVE_IF_UNREFERENCED PEI_BASE_MEMORY_TEST_PPI     mPeiBaseMemoryTestPpi = { BaseMemoryTest };
 
-static PEI_PLATFORM_MEMORY_SIZE_PPI mMemoryMemorySizePpi  = { GetPlatformMemorySize };
+GLOBAL_REMOVE_IF_UNREFERENCED PEI_PLATFORM_MEMORY_SIZE_PPI mMemoryMemorySizePpi  = { GetPlatformMemorySize };
 
-static EFI_PEI_PPI_DESCRIPTOR       mMemPpiList[] = {
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_PEI_PPI_DESCRIPTOR       mMemPpiList[] = {
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI,
     &gPeiBaseMemoryTestPpiGuid,
@@ -105,6 +130,17 @@ static EFI_PEI_PPI_DESCRIPTOR       mMemPpiList[] = {
     &gPeiPlatformMemorySizePpiGuid,
     &mMemoryMemorySizePpi
   },
+};
+
+GLOBAL_REMOVE_IF_UNREFERENCED PLATFORM_INIT_TEMP_RAM_EXIT_PPI mPlatformInitTempRamExitPpi = {
+  PlatformInitBeforeTempRamExit,
+  PlatformInitAfterTempRamExit
+};
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_PEI_PPI_DESCRIPTOR mPlatformInitTempRamExitPpiDesc = {
+  (EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
+  &gPlatformInitTempRamExitPpiGuid,
+  &mPlatformInitTempRamExitPpi
 };
 
 ///
@@ -391,6 +427,35 @@ MemoryDiscoveredPpiNotifyCallback (
   return Status;
 }
 
+/**
+  A hook for platform-specific initialization prior to disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The platform initialization was successful.
+  @retval EFI_NOT_READY The platform has not been detected yet.
+**/
+EFI_STATUS
+EFIAPI
+PlatformInitBeforeTempRamExit (
+  VOID
+  )
+{
+  return BoardInitBeforeTempRamExit ();
+}
+
+/**
+  A hook for platform-specific initialization after disabling temporary RAM.
+
+  @retval EFI_SUCCESS   The platform initialization was successful.
+  @retval EFI_NOT_READY The platform has not been detected yet.
+**/
+EFI_STATUS
+EFIAPI
+PlatformInitAfterTempRamExit (
+  VOID
+  )
+{
+  return BoardInitAfterTempRamExit ();
+}
 
 /**
   This function handles PlatformInit task after PeiReadOnlyVariable2 PPI produced
@@ -444,6 +509,9 @@ PlatformInitPreMem (
   }
 
   Status = BoardInitBeforeMemoryInit ();
+  ASSERT_EFI_ERROR (Status);
+
+  Status = PeiServicesInstallPpi (&mPlatformInitTempRamExitPpiDesc);
   ASSERT_EFI_ERROR (Status);
 
   return Status;

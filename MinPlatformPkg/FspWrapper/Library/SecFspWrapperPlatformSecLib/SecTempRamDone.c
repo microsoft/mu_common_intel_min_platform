@@ -10,6 +10,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include <Ppi/TemporaryRamDone.h>
 #include <Ppi/TempRamExitPpi.h>
+#include <Ppi/PlatformInitTempRamExitPpi.h>
 
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
@@ -17,7 +18,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/DebugAgentLib.h>
 #include <Library/FspWrapperPlatformLib.h>
 #include <Library/FspWrapperApiLib.h>
-#include <Library/BoardInitLib.h>
 #include <Library/PeiServicesTablePointerLib.h>
 
 /**
@@ -29,14 +29,35 @@ SecPlatformDisableTemporaryMemory (
   VOID
   )
 {
-  EFI_STATUS                Status;
-  VOID                      *TempRamExitParam;
-  CONST EFI_PEI_SERVICES    **PeiServices;
-  FSP_TEMP_RAM_EXIT_PPI     *TempRamExitPpi;
+  EFI_STATUS                        Status;
+  VOID                              *TempRamExitParam;
+  CONST EFI_PEI_SERVICES            **PeiServices;
+  FSP_TEMP_RAM_EXIT_PPI             *TempRamExitPpi;
+  PLATFORM_INIT_TEMP_RAM_EXIT_PPI   *PlatformInitTempRamExitPpi;
 
   DEBUG ((DEBUG_INFO, "SecPlatformDisableTemporaryMemory enter\n"));
+  PeiServices = GetPeiServicesTablePointer ();
+  ASSERT (PeiServices != NULL);
+  if (PeiServices == NULL) {
+    return;
+  }
+  ASSERT ((*PeiServices) != NULL);
+  if ((*PeiServices) == NULL) {
+    return;
+  }
+  Status = (*PeiServices)->LocatePpi (
+                            PeiServices,
+                            &gPlatformInitTempRamExitPpiGuid,
+                            0,
+                            NULL,
+                            (VOID **) &PlatformInitTempRamExitPpi
+                            );
+  ASSERT_EFI_ERROR (Status);
+  if (EFI_ERROR (Status)) {
+    return;
+  }
 
-  Status = BoardInitBeforeTempRamExit ();
+  Status = PlatformInitTempRamExitPpi->PlatformInitBeforeTempRamExit ();
   ASSERT_EFI_ERROR (Status);
 
   if (PcdGet8 (PcdFspModeSelection) == 1) {
@@ -51,7 +72,6 @@ SecPlatformDisableTemporaryMemory (
     //
     // FSP Dispatch mode
     //
-    PeiServices = GetPeiServicesTablePointer ();
     Status = (*PeiServices)->LocatePpi (
                              PeiServices,
                              &gFspTempRamExitPpiGuid,
@@ -66,7 +86,7 @@ SecPlatformDisableTemporaryMemory (
     TempRamExitPpi->TempRamExit (NULL);
   }
 
-  Status = BoardInitAfterTempRamExit ();
+  Status = PlatformInitTempRamExitPpi->PlatformInitAfterTempRamExit ();
   ASSERT_EFI_ERROR (Status);
 
   return ;

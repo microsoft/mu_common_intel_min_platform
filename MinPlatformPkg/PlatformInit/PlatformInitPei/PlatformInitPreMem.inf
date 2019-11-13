@@ -53,6 +53,7 @@
   gEfiPeiMemoryDiscoveredPpiGuid
   gEfiPeiMasterBootModePpiGuid                  ## PRODUCES
   gEfiPeiBootInRecoveryModePpiGuid              ## PRODUCES
+  gPlatformInitTempRamExitPpiGuid               ## PRODUCES
   gEfiPeiReadOnlyVariable2PpiGuid
   gPeiBaseMemoryTestPpiGuid
   gPeiPlatformMemorySizePpiGuid

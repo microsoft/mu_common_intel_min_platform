@@ -69,7 +69,6 @@
   SerialPortLib
   FspWrapperPlatformLib
   FspWrapperApiLib
-  BoardInitLib
   SecBoardInitLib
   TestPointCheckLib
   PeiServicesTablePointerLib
@@ -80,6 +79,7 @@
   gTopOfTemporaryRamPpiGuid               ## PRODUCES
   gEfiPeiFirmwareVolumeInfoPpiGuid        ## PRODUCES
   gFspTempRamExitPpiGuid                  ## CONSUMES
+  gPlatformInitTempRamExitPpiGuid         ## CONSUMES
 
 [Pcd]
   gUefiCpuPkgTokenSpaceGuid.PcdPeiTemporaryRamStackSize               ## CONSUMES
