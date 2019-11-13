@@ -1,7 +1,7 @@
 /** @file
   Provide FSP wrapper platform sec related function.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -12,6 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Ppi/SecPerformance.h>
 #include <Ppi/FirmwareVolumeInfo.h>
 #include <Ppi/TopOfTemporaryRam.h>
+#include <Ppi/PeiCoreFvLocation.h>
 #include <Guid/FirmwareFileSystem2.h>
 
 #include <Library/LocalApicLib.h>
@@ -64,6 +65,18 @@ SecGetPerformance (
 
 PEI_SEC_PERFORMANCE_PPI  mSecPerformancePpi = {
   SecGetPerformance
+};
+
+EFI_PEI_CORE_FV_LOCATION_PPI  mPeiCoreFvLocationPpi = {
+  (VOID *) (UINTN) FixedPcdGet32 (PcdFspmBaseAddress)
+};
+
+EFI_PEI_PPI_DESCRIPTOR  mPeiCoreFvLocationPpiList[] = {
+  {
+    EFI_PEI_PPI_DESCRIPTOR_PPI,
+    &gEfiPeiCoreFvLocationPpiGuid,
+    &mPeiCoreFvLocationPpi
+  }
 };
 
 EFI_PEI_PPI_DESCRIPTOR  mPeiSecPlatformPpi[] = {
@@ -129,6 +142,8 @@ SecPlatformMain (
   )
 {
   EFI_PEI_PPI_DESCRIPTOR      *PpiList;
+  UINT8                       TopOfTemporaryRamPpiIndex;
+  UINT8                       *CopyDestinationPointer;
 
   DEBUG ((DEBUG_INFO, "FSP Wrapper BootFirmwareVolumeBase - 0x%x\n", SecCoreData->BootFirmwareVolumeBase));
   DEBUG ((DEBUG_INFO, "FSP Wrapper BootFirmwareVolumeSize - 0x%x\n", SecCoreData->BootFirmwareVolumeSize));
@@ -150,13 +165,22 @@ SecPlatformMain (
   // Use middle of Heap as temp buffer, it will be copied by caller.
   // Do not use Stack, because it will cause wrong calculation on stack by PeiCore
   //
-  PpiList = (VOID *)((UINTN)SecCoreData->PeiTemporaryRamBase + (UINTN)SecCoreData->PeiTemporaryRamSize/2);
-  CopyMem (PpiList, mPeiSecPlatformPpi, sizeof(mPeiSecPlatformPpi));
-
+  PpiList = (VOID *)((UINTN) SecCoreData->PeiTemporaryRamBase + (UINTN) SecCoreData->PeiTemporaryRamSize/2);
+  CopyDestinationPointer = (UINT8 *) PpiList;
+  TopOfTemporaryRamPpiIndex = 0;
+  if ((PcdGet8 (PcdFspModeSelection) == 0) && PcdGetBool (PcdFspDispatchModeUseFspPeiMain)) {
+    //
+    // In Dispatch mode, wrapper should provide PeiCoreFvLocationPpi.
+    //
+    CopyMem (CopyDestinationPointer, mPeiCoreFvLocationPpiList, sizeof (mPeiCoreFvLocationPpiList));
+    TopOfTemporaryRamPpiIndex = 1;
+    CopyDestinationPointer += sizeof (mPeiCoreFvLocationPpiList);
+  }
+  CopyMem (CopyDestinationPointer, mPeiSecPlatformPpi, sizeof (mPeiSecPlatformPpi));
   //
   // Patch TopOfTemporaryRamPpi
   //
-  PpiList[0].Ppi = (VOID *)((UINTN)SecCoreData->TemporaryRamBase + SecCoreData->TemporaryRamSize);
+  PpiList[TopOfTemporaryRamPpiIndex].Ppi = (VOID *)((UINTN) SecCoreData->TemporaryRamBase + SecCoreData->TemporaryRamSize);
 
   return PpiList;
 }

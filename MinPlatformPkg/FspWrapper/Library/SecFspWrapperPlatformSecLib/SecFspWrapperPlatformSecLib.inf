@@ -72,18 +72,20 @@
   BoardInitLib
   SecBoardInitLib
   TestPointCheckLib
+  PeiServicesTablePointerLib
 
 [Ppis]
   gEfiSecPlatformInformationPpiGuid       ## CONSUMES
   gPeiSecPerformancePpiGuid               ## CONSUMES
   gTopOfTemporaryRamPpiGuid               ## PRODUCES
   gEfiPeiFirmwareVolumeInfoPpiGuid        ## PRODUCES
+  gFspTempRamExitPpiGuid                  ## CONSUMES
 
 [Pcd]
   gUefiCpuPkgTokenSpaceGuid.PcdPeiTemporaryRamStackSize               ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFsptBaseAddress                  ## CONSUMES
   gIntelFsp2PkgTokenSpaceGuid.PcdFspTemporaryRamSize                  ## CONSUMES
-  gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable        ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable           ## CONSUMES
 
 [FixedPcd]
   gIntelFsp2WrapperTokenSpaceGuid.PcdCpuMicrocodePatchAddress         ## CONSUMES
@@ -91,3 +93,6 @@
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashMicrocodeOffset             ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheAddress            ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheSize               ## CONSUMES
+  gIntelFsp2WrapperTokenSpaceGuid.PcdFspmBaseAddress                  ## CONSUMES
+  gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection                 ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFspDispatchModeUseFspPeiMain       ## CONSUMES

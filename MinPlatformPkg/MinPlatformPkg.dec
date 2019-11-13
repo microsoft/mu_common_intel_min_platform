@@ -71,8 +71,6 @@ SetCacheMtrrLib|Include/Library/SetCacheMtrrLib.h
 
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
-gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode|FALSE|BOOLEAN|0x80000008
-
 gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
 gMinPlatformPkgTokenSpaceGuid.PcdFspReservedSizeOnStackTop|0x00000040|UINT32|0x80000001
 gMinPlatformPkgTokenSpaceGuid.PcdPeiPhaseStackTop|0x00000000|UINT32|0x80000002
@@ -273,6 +271,32 @@ gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
   # Stage 5 - boot to OS with security boot enabled
   #
   gMinPlatformPkgTokenSpaceGuid.PcdBootStage|4|UINT8|0xF00000A0
+
+  ## FSP Boot Mode Selector
+  # FALSE: The board is not a FSP wrapper (FSP binary not used)
+  # TRUE:  The board is a FSP wrapper (FSP binary is used)
+  #
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode|FALSE|BOOLEAN|0x80000008
+
+  ## FSP Dispatch Mode: Use the PEI Main Binary Included in FSP-M
+  # FALSE: The PEI Main included in FvPreMemory is used to dispatch all PEIMs
+  #        (both inside FSP and outside FSP).
+  #        Pros:
+  #          * PEI Main is re-built from source and is always the latest version
+  #          * Platform code can link any desired LibraryClass to PEI Main
+  #            (Ex: Custom DebugLib instance, SerialPortLib, etc.)
+  #        Cons:
+  #          * The PEI Main being used to execute FSP PEIMs is not the PEI Main
+  #            that the FSP PEIMs were tested with, adding risk of breakage.
+  #          * Two copies of PEI Main will exist in the final binary,
+  #            #1 in FSP-M, #2 in FvPreMemory. The copy in FSP-M is never
+  #            executed, wasting space.
+  #
+  # <b>TRUE</b>:  The PEI Main included in FSP is used to dispatch all PEIMs
+  #        (both inside FSP and outside FSP). PEI Main will not be included in
+  #        FvPreMemory. This is the default and is the recommended choice.
+  #
+  gMinPlatformPkgTokenSpaceGuid.PcdFspDispatchModeUseFspPeiMain|TRUE|BOOLEAN|0xF00000A8
 
 [PcdsFeatureFlag]
 
