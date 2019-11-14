@@ -1,7 +1,7 @@
 ### @file
 # Platform specific TPM2 component.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -21,23 +21,18 @@
 #
 
 [LibraryClasses]
-  MemoryAllocationLib
   BaseLib
   UefiBootServicesTableLib
   UefiDriverEntryPoint
-  UefiRuntimeServicesTableLib
-  BaseMemoryLib
   DebugLib
-  Tpm2CommandLib
-  Tpm2DeviceLib
-  RngLib
   UefiLib
+  TpmPlatformHierarchyLib
 
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
   SecurityPkg/SecurityPkg.dec
-  CryptoPkg/CryptoPkg.dec
 
 [Sources]
   Tcg2PlatformDxe.c
@@ -47,4 +42,3 @@
 
 [Depex]
   gEfiTcg2ProtocolGuid
-
