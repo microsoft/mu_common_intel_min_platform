@@ -62,6 +62,8 @@ BoardInitLib|Include/Library/BoardInitLib.h
 MultiBoardInitSupportLib|Include/Library/MultiBoardInitSupportLib.h
 SecBoardInitLib|Include/Library/SecBoardInitLib.h
 
+TpmPlatformHierarchyLib|Include/Library/TpmPlatformHierarchyLib.h
+
 TestPointLib|Include/Library/TestPointLib.h
 TestPointCheckLib|Include/Library/TestPointCheckLib.h
 
