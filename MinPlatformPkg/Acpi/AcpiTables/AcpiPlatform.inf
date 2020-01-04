@@ -85,6 +85,8 @@
   gMinPlatformPkgTokenSpaceGuid.PcdMaxCpuSocketCount
 
   gMinPlatformPkgTokenSpaceGuid.PcdWsmtProtectionFlags
+  gMinPlatformPkgTokenSpaceGuid.PcdUseMinPlatformPkgHpetEnable
+  gMinPlatformPkgTokenSpaceGuid.PcdUseMinPlatformPkgWsmtEnable
 
 [Protocols]
   gEfiAcpiTableProtocolGuid                     ## CONSUMES

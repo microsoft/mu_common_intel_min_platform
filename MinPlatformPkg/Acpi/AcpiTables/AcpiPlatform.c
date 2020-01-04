@@ -46,8 +46,12 @@ extern EFI_ACPI_WSMT_TABLE Wsmt;
 VOID  *mLocalTable[] = {
   &Facs,
   &Fadt,
+#if FixedPcdGetBool(PcdUseMinPlatformPkgHpetEnable) == 1
   &Hpet,
+#endif
+#if FixedPcdGetBool(PcdUseMinPlatformPkgWsmtEnable) == 1
   &Wsmt,
+#endif
 };
 
 EFI_ACPI_TABLE_PROTOCOL       *mAcpiTable;
@@ -1223,11 +1227,14 @@ PlatformUpdateTables (
   UINT8                                     *TempOemId;
   UINT64                                    TempOemTableId;
   EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
+
+#if FixedPcdGetBool(PcdUseMinPlatformPkgHpetEnable) == 1
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *HpetTable;
   UINT32                                           HpetBaseAddress;
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_BLOCK_ID     HpetBlockId;
   UINT32                                           HpetCapabilitiesData;
   HPET_GENERAL_CAPABILITIES_ID_REGISTER            HpetCapabilities;
+#endif
 
   TableHeader             = NULL;
 
@@ -1329,6 +1336,7 @@ PlatformUpdateTables (
     DEBUG(( EFI_D_ERROR, "  Flags 0x%x\n", FadtHeader->Flags ));
     break;
 
+#if FixedPcdGetBool(PcdUseMinPlatformPkgHpetEnable) == 1
   case EFI_ACPI_3_0_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
     HpetTable = (EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *)Table;
     HpetBaseAddress = PcdGet32 (PcdHpetBaseAddress);
@@ -1349,6 +1357,7 @@ PlatformUpdateTables (
     DEBUG(( EFI_D_ERROR, "ACPI HPET table @ address 0x%x\n", Table ));
     DEBUG(( EFI_D_ERROR, "  HPET base 0x%x\n", PcdGet32 (PcdHpetBaseAddress) ));
     break;
+#endif
 
   case EFI_ACPI_3_0_PCI_EXPRESS_MEMORY_MAPPED_CONFIGURATION_SPACE_BASE_ADDRESS_DESCRIPTION_TABLE_SIGNATURE:
     ASSERT(FALSE);
