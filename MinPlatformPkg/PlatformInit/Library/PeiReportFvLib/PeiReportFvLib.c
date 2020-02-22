@@ -1,7 +1,7 @@
 /** @file
   Source code file for Report Firmware Volume (FV) library
 
-Copyright (c) 2018 - 2019, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2018 - 2020, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -26,6 +26,17 @@ ReportPreMemFv (
       &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspMBase))->FileSystemGuid),
       (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspMBase),
       PcdGet32 (PcdFlashFvFspMSize),
+      NULL,
+      NULL,
+      0
+      );
+  }
+  if (PcdGetBool(PcdFspWrapperBootMode)) {
+    DEBUG ((DEBUG_INFO, "Install FlashFvFspT - 0x%x, 0x%x\n", PcdGet32 (PcdFlashFvFspTBase), PcdGet32 (PcdFlashFvFspTSize)));
+    PeiServicesInstallFvInfo2Ppi (
+      &(((EFI_FIRMWARE_VOLUME_HEADER *) (UINTN) PcdGet32 (PcdFlashFvFspTBase))->FileSystemGuid),
+      (VOID *) (UINTN) PcdGet32 (PcdFlashFvFspTBase),
+      PcdGet32 (PcdFlashFvFspTSize),
       NULL,
       NULL,
       0
