@@ -1,4 +1,12 @@
 /** @file
+
+  Updated to support ACPI 6.3 FACS & FADT structure
+
+  Copyright (C) Microsoft Corporation. All rights reserved.
+  SPDX-License-Identifier: BSD-2-Clause-Patent
+
+**/
+/** @file
   ACPI Platform Driver
 
 Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
@@ -38,8 +46,8 @@ typedef union {
 
 #pragma pack()
 
-extern EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE  Facs;
-extern EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt;
+extern EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE  Facs;
+extern EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE Fadt;
 extern EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER  Hpet;
 extern EFI_ACPI_WSMT_TABLE Wsmt;
 
@@ -1226,7 +1234,7 @@ PlatformUpdateTables (
   EFI_ACPI_DESCRIPTION_HEADER               *TableHeader;
   UINT8                                     *TempOemId;
   UINT64                                    TempOemTableId;
-  EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
+  EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
 
 #if FixedPcdGetBool(PcdUseMinPlatformPkgHpetEnable) == 1
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *HpetTable;
@@ -1290,8 +1298,8 @@ PlatformUpdateTables (
     ASSERT(FALSE);
     break;
 
-  case EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
-    FadtHeader    = (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
+  case EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
+    FadtHeader    = (EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
 
     FadtHeader->PreferredPmProfile = PcdGet8 (PcdFadtPreferredPmProfile);
     FadtHeader->IaPcBootArch       = PcdGet16 (PcdFadtIaPcBootArch);
@@ -1390,8 +1398,8 @@ IsHardwareChange (
   UINTN                         HWChangeSize;
   UINT32                        PciId;
   UINTN                         Handle;
-  EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *FacsPtr;
-  EFI_ACPI_3_0_FIXED_ACPI_DESCRIPTION_TABLE    *pFADT;
+  EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE *FacsPtr;
+  EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE    *pFADT;
 
   HandleCount  = 0;
   HandleBuffer = NULL;
@@ -1437,7 +1445,7 @@ IsHardwareChange (
   //
   Handle = 0;
   Status = LocateAcpiTableBySignature (
-              EFI_ACPI_1_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
+              EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
               (EFI_ACPI_DESCRIPTION_HEADER **) &pFADT,
               &Handle
               );
@@ -1459,7 +1467,7 @@ IsHardwareChange (
   //
   // Set HardwareSignature value based on CRC value.
   //
-  FacsPtr = (EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)pFADT->FirmwareCtrl;
+  FacsPtr = (EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)pFADT->FirmwareCtrl;
   FacsPtr->HardwareSignature = CRC;
   FreePool( HWChange );
 }
