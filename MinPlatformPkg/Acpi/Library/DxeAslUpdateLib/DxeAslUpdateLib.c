@@ -6,7 +6,7 @@
 
   This library uses the ACPI Support protocol.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2020, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -29,7 +29,7 @@ static EFI_ACPI_TABLE_PROTOCOL    *mAcpiTable = NULL;
 
 /**
   Initialize the ASL update library state.
-  This must be called prior to invoking other library functions.
+  This must be called at the beggining of the function calls in this library.
 
   @retval EFI_SUCCESS          - The function completed successfully.
 **/
@@ -50,17 +50,76 @@ InitializeAslUpdateLib (
   return Status;
 }
 
+/**
+  This function uses the ACPI SDT protocol to locate an ACPI SSDT table.
+
+  @param[in] TableId           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
+  @param[in] TableIdSize       - Length of the TableId to match.  Table ID are 8 bytes long, this function
+                                 will consider it a match if the first TableIdSize bytes match
+  @param[in, out] Table        - Updated with a pointer to the table
+  @param[in, out] Handle       - AcpiSupport protocol table handle for the table found
+
+  @retval EFI_SUCCESS          - The function completed successfully.
+  @retval EFI_NOT_FOUND        - Failed to locate AcpiTable.
+  @retval EFI_NOT_READY        - Not ready to locate AcpiTable.
+**/
+EFI_STATUS
+LocateAcpiTableByOemTableId (
+  IN      UINT8                         *TableId,
+  IN      UINT8                         TableIdSize,
+  IN OUT  EFI_ACPI_DESCRIPTION_HEADER   **Table,
+  IN OUT  UINTN                         *Handle
+  )
+{
+  EFI_STATUS                  Status;
+  INTN                        Index;
+  EFI_ACPI_TABLE_VERSION      Version;
+  EFI_ACPI_DESCRIPTION_HEADER *OrgTable;
+
+  if (mAcpiSdt == NULL) {
+    InitializeAslUpdateLib ();
+    if (mAcpiSdt == NULL) {
+      return EFI_NOT_READY;
+    }
+  }
+  ///
+  /// Locate table with matching ID
+  ///
+  Version = 0;
+  Index = 0;
+  do {
+    Status = mAcpiSdt->GetAcpiTable (Index, (EFI_ACPI_SDT_HEADER **)&OrgTable, &Version, Handle);
+    if (Status == EFI_NOT_FOUND) {
+      break;
+    }
+    ASSERT_EFI_ERROR (Status);
+    Index++;
+  } while (CompareMem (&(OrgTable->OemTableId), TableId, TableIdSize));
+
+  if (Status != EFI_NOT_FOUND) {
+    *Table = AllocateCopyPool (OrgTable->Length, OrgTable);
+    ASSERT (*Table);
+  }
+
+  ///
+  /// If we found the table, there will be no error.
+  ///
+  return Status;
+}
 
 /**
-  This procedure will update immediate value assigned to a Name
+  This procedure will update immediate value assigned to a Name.
 
   @param[in] AslSignature      - The signature of Operation Region that we want to update.
   @param[in] Buffer            - source of data to be written over original aml
   @param[in] Length            - length of data to be overwritten
 
   @retval EFI_SUCCESS          - The function completed successfully.
+  @retval EFI_NOT_FOUND        - Failed to locate AcpiTable.
+  @retval EFI_NOT_READY        - Not ready to locate AcpiTable.
 **/
 EFI_STATUS
+EFIAPI
 UpdateNameAslCode (
   IN     UINT32                        AslSignature,
   IN     VOID                          *Buffer,
@@ -149,11 +208,57 @@ UpdateNameAslCode (
   return EFI_NOT_FOUND;
 }
 
+/**
+  This procedure will update immediate value assigned to a Name in SSDT table.
+
+  @param[in] TableId           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
+  @param[in] TableIdSize       - Length of the TableId to match.  Table ID are 8 bytes long, this function
+                                 will consider it a match if the first TableIdSize bytes match
+  @param[in] AslSignature      - The signature of Operation Region that we want to update.
+  @param[in] Buffer            - source of data to be written over original aml
+  @param[in] Length            - length of data to be overwritten
+
+  @retval EFI_UNSUPPORTED      - The function is not supported in this library.
+**/
+EFI_STATUS
+EFIAPI
+UpdateSsdtNameAslCode (
+  IN     UINT8                         *TableId,
+  IN     UINT8                         TableIdSize,
+  IN     UINT32                        AslSignature,
+  IN     VOID                          *Buffer,
+  IN     UINTN                         Length
+  )
+{
+  return EFI_UNSUPPORTED;
+}
+
+/**
+  This procedure will update the name of ASL Method.
+
+  @param[in] AslSignature      - The signature of Operation Region that we want to update.
+  @param[in] Buffer            - source of data to be written over original aml
+  @param[in] Length            - length of data to be overwritten
+
+  @retval EFI_UNSUPPORTED      - The function is not supported in this library.
+**/
+EFI_STATUS
+EFIAPI
+UpdateMethodAslCode (
+  IN     UINT32                        AslSignature,
+  IN     VOID                          *Buffer,
+  IN     UINTN                         Length
+  )
+{
+  return EFI_UNSUPPORTED;
+}
 
 /**
   This function uses the ACPI SDT protocol to locate an ACPI table.
   It is really only useful for finding tables that only have a single instance,
   e.g. FADT, FACS, MADT, etc.  It is not good for locating SSDT, etc.
+  Matches are determined by finding the table with ACPI table that has
+  a matching signature.
 
   @param[in] Signature           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
   @param[in, out] Table          - Updated with a pointer to the table
@@ -161,8 +266,11 @@ UpdateNameAslCode (
   @param[in, out] Version        - The version of the table desired
 
   @retval EFI_SUCCESS            - The function completed successfully.
+  @retval EFI_NOT_FOUND          - Failed to locate AcpiTable.
+  @retval EFI_NOT_READY          - Not ready to locate AcpiTable.
 **/
 EFI_STATUS
+EFIAPI
 LocateAcpiTableBySignature (
   IN      UINT32                        Signature,
   IN OUT  EFI_ACPI_DESCRIPTION_HEADER   **Table,
@@ -204,105 +312,4 @@ LocateAcpiTableBySignature (
   /// If we found the table, there will be no error.
   ///
   return Status;
-}
-
-/**
-  This function uses the ACPI SDT protocol to locate an ACPI SSDT table.
-
-  @param[in] TableId           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
-  @param[in] TableIdSize       - Length of the TableId to match.  Table ID are 8 bytes long, this function
-                                 will consider it a match if the first TableIdSize bytes match
-  @param[in, out] Table        - Updated with a pointer to the table
-  @param[in, out] Handle       - AcpiSupport protocol table handle for the table found
-  @param[in, out] Version      - See AcpiSupport protocol, GetAcpiTable function for use
-
-  @retval EFI_SUCCESS          - The function completed successfully.
-**/
-EFI_STATUS
-LocateAcpiTableByOemTableId (
-  IN      UINT8                         *TableId,
-  IN      UINT8                         TableIdSize,
-  IN OUT  EFI_ACPI_DESCRIPTION_HEADER   **Table,
-  IN OUT  UINTN                         *Handle
-  )
-{
-  EFI_STATUS                  Status;
-  INTN                        Index;
-  EFI_ACPI_TABLE_VERSION      Version;
-  EFI_ACPI_DESCRIPTION_HEADER *OrgTable;
-
-  if (mAcpiSdt == NULL) {
-    InitializeAslUpdateLib ();
-    if (mAcpiSdt == NULL) {
-      return EFI_NOT_READY;
-    }
-  }
-  ///
-  /// Locate table with matching ID
-  ///
-  Version = 0;
-  Index = 0;
-  do {
-    Status = mAcpiSdt->GetAcpiTable (Index, (EFI_ACPI_SDT_HEADER **)&OrgTable, &Version, Handle);
-    if (Status == EFI_NOT_FOUND) {
-      break;
-    }
-    ASSERT_EFI_ERROR (Status);
-    Index++;
-  } while (CompareMem (&(OrgTable->OemTableId), TableId, TableIdSize));
-
-  if (Status != EFI_NOT_FOUND) {
-    *Table = AllocateCopyPool (OrgTable->Length, OrgTable);
-    ASSERT (*Table);
-  }
-
-  ///
-  /// If we found the table, there will be no error.
-  ///
-  return Status;
-}
-
-/**
-  This function calculates and updates an UINT8 checksum.
-
-  @param[in] Buffer          Pointer to buffer to checksum
-  @param[in] Size            Number of bytes to checksum
-  @param[in] ChecksumOffset  Offset to place the checksum result in
-
-  @retval EFI_SUCCESS        The function completed successfully.
-**/
-EFI_STATUS
-AcpiChecksum (
-  IN VOID       *Buffer,
-  IN UINTN      Size,
-  IN UINTN      ChecksumOffset
-  )
-{
-  UINT8 Sum;
-  UINT8 *Ptr;
-
-  Sum = 0;
-  ///
-  /// Initialize pointer
-  ///
-  Ptr = Buffer;
-
-  ///
-  /// set checksum to 0 first
-  ///
-  Ptr[ChecksumOffset] = 0;
-
-  ///
-  /// add all content of buffer
-  ///
-  while (Size--) {
-    Sum = (UINT8) (Sum + (*Ptr++));
-  }
-  ///
-  /// set checksum
-  ///
-  Ptr                 = Buffer;
-  Ptr[ChecksumOffset] = (UINT8) (0xff - Sum + 1);
-
-  return EFI_SUCCESS;
 }
