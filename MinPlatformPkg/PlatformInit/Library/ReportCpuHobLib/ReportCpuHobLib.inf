@@ -1,0 +1,27 @@
+### @file
+# Component information file for the Report CPU HOB library.
+#
+# Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+###
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = ReportCpuHobLib
+  FILE_GUID                      = F19AA754-CE24-448D-B755-1F939B00C25D
+  VERSION_STRING                 = 1.0
+  MODULE_TYPE                    = BASE
+  LIBRARY_CLASS                  = ReportCpuHobLib
+
+[LibraryClasses]
+  BaseLib
+  HobLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[Sources]
+  ReportCpuHobLib.c

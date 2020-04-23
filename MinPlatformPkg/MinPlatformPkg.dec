@@ -6,7 +6,7 @@
 # INF files to generate AutoGen.c and AutoGen.h files
 # for the build infrastructure.
 #
-# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2020, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -73,7 +73,9 @@
   TestPointLib|Include/Library/TestPointLib.h
   TestPointCheckLib|Include/Library/TestPointCheckLib.h
 
-SetCacheMtrrLib|Include/Library/SetCacheMtrrLib.h
+  SetCacheMtrrLib|Include/Library/SetCacheMtrrLib.h
+
+  ReportCpuHobLib|Include/Library/ReportCpuHobLib.h
 
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
