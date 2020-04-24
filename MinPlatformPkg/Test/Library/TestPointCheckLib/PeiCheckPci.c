@@ -29,6 +29,14 @@ TestPointCheckPciBusMaster (
   UINT8             HeaderType;
   EFI_STATUS        Status;
   PCI_SEGMENT_INFO  *PciSegmentInfo;
+  // MS_CHANGE_START
+  UINT8             *ExemptDevicePcdPtr;
+  UINT8             ExemptDeviceSegNumber;
+  UINT8             ExemptDeviceBusNumber;
+  UINT8             ExemptDeviceDevNumber;
+  UINT8             ExemptDeviceFuncNumber;
+  BOOLEAN           ExemptDeviceFound;
+  // MS_CHANGE_END
 
   PciSegmentInfo = GetPciSegmentInfo (&SegmentCount);
   if (PciSegmentInfo == NULL) {
@@ -40,6 +48,34 @@ TestPointCheckPciBusMaster (
     for (Bus = PciSegmentInfo[Segment].StartBusNumber; Bus <= PciSegmentInfo[Segment].EndBusNumber; Bus++) {
       for (Device = 0; Device <= 0x1F; Device++) {
         for (Function = 0; Function <= 0x7; Function++) {
+          // MS_CHANGE_START
+          //
+          // Some platforms have devices which do not expose any additional
+          // risk of DMA attacks but are not able to be turned off.  Allow
+          // the platform to define these devices and do not record errors
+          // for these devices.
+          //
+          ExemptDevicePcdPtr = PcdGetPtr (PcdTestPointIbvPlatformExemptPciBme);
+          ExemptDeviceFound = FALSE;
+          while (ExemptDevicePcdPtr[3] != 0xff) {
+            ExemptDeviceSegNumber = *ExemptDevicePcdPtr++;
+            ExemptDeviceBusNumber = *ExemptDevicePcdPtr++;
+            ExemptDeviceDevNumber = *ExemptDevicePcdPtr++;
+            ExemptDeviceFuncNumber = *ExemptDevicePcdPtr++;
+
+            if (Segment == ExemptDeviceSegNumber
+                && Bus == ExemptDeviceBusNumber
+                && Device == ExemptDeviceDevNumber
+                && Function == ExemptDeviceFuncNumber) {
+              ExemptDeviceFound = TRUE;
+            }
+          }
+
+          if (ExemptDeviceFound) {
+            continue;
+          }
+          // MS_CHANGE_END
+
           VendorId = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS(PciSegmentInfo[Segment].SegmentNumber, Bus, Device, Function, PCI_VENDOR_ID_OFFSET));
           //
           // If VendorId = 0xffff, there does not exist a device at this

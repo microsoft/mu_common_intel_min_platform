@@ -47,6 +47,7 @@
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme // MS_CHANGE
 
 [Guids]
   gEfiHobMemoryAllocStackGuid
