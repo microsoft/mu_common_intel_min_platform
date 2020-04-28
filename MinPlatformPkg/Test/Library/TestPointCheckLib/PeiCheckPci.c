@@ -14,6 +14,17 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PciSegmentInfoLib.h>
 #include <IndustryStandard/Pci.h>
 
+// MS_CHANGE_BEGIN
+#pragma pack(1)
+ typedef struct EXEMPT_DEVICE_STRUCT {
+  UINT8 Segment;
+  UINT8 Bus;
+  UINT8 Device;
+  UINT8 Function;
+} EXEMPT_DEVICE;
+#pragma pack()
+// MS_CHANGE_END
+
 EFI_STATUS
 TestPointCheckPciBusMaster (
   VOID
@@ -30,12 +41,9 @@ TestPointCheckPciBusMaster (
   EFI_STATUS        Status;
   PCI_SEGMENT_INFO  *PciSegmentInfo;
   // MS_CHANGE_START
-  UINT8             *ExemptDevicePcdPtr;
-  UINT8             ExemptDeviceSegNumber;
-  UINT8             ExemptDeviceBusNumber;
-  UINT8             ExemptDeviceDevNumber;
-  UINT8             ExemptDeviceFuncNumber;
+  EXEMPT_DEVICE     *ExemptDevicePcdPtr;
   BOOLEAN           ExemptDeviceFound;
+  UINTN             Index;
   // MS_CHANGE_END
 
   PciSegmentInfo = GetPciSegmentInfo (&SegmentCount);
@@ -55,18 +63,13 @@ TestPointCheckPciBusMaster (
           // the platform to define these devices and do not record errors
           // for these devices.
           //
-          ExemptDevicePcdPtr = PcdGetPtr (PcdTestPointIbvPlatformExemptPciBme);
+          ExemptDevicePcdPtr = (EXEMPT_DEVICE *) PcdGetPtr (PcdTestPointIbvPlatformExemptPciBme);
           ExemptDeviceFound = FALSE;
-          while (ExemptDevicePcdPtr[3] != 0xff) {
-            ExemptDeviceSegNumber = *ExemptDevicePcdPtr++;
-            ExemptDeviceBusNumber = *ExemptDevicePcdPtr++;
-            ExemptDeviceDevNumber = *ExemptDevicePcdPtr++;
-            ExemptDeviceFuncNumber = *ExemptDevicePcdPtr++;
-
-            if (Segment == ExemptDeviceSegNumber
-                && Bus == ExemptDeviceBusNumber
-                && Device == ExemptDeviceDevNumber
-                && Function == ExemptDeviceFuncNumber) {
+          for (Index = 0; Index < (PcdGetSize (PcdTestPointIbvPlatformExemptPciBme) / sizeof (EXEMPT_DEVICE)); Index++) {
+            if (Segment == ExemptDevicePcdPtr[Index].Segment
+                && Bus == ExemptDevicePcdPtr[Index].Bus
+                && Device == ExemptDevicePcdPtr[Index].Device
+                && Function == ExemptDevicePcdPtr[Index].Function) {
               ExemptDeviceFound = TRUE;
             }
           }

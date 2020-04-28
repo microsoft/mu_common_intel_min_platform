@@ -162,8 +162,8 @@
 
   # MS_CHANGE_BEGIN
   # The platform may define a list of devices that are exempt from PCI BME testing.
-  # PCD Format is {SegmentNumber1, BusNumber1, DeviceNumber1, FunctionNumber1, SegmentNumber2, BusNumber2, DeviceNumber2, FunctionNumber2, ... , 0xff, 0xff, 0xff, 0xff}
-  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme|{0xff, 0xff, 0xff, 0xff}|VOID*|0x00100303
+  # PCD Format is {SegmentNumber1, BusNumber1, DeviceNumber1, FunctionNumber1, SegmentNumber2, BusNumber2, DeviceNumber2, FunctionNumber2, ...}
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme|{0}|VOID*|0x00100303
   # MS_CHANGE_END
 
   ##
