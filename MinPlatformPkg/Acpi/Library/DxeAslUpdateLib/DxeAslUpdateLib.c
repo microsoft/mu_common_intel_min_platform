@@ -22,14 +22,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/AslUpdateLib.h>
 
 //
-// Function implemenations
+// Function implementations
 //
 static EFI_ACPI_SDT_PROTOCOL      *mAcpiSdt = NULL;
 static EFI_ACPI_TABLE_PROTOCOL    *mAcpiTable = NULL;
 
 /**
   Initialize the ASL update library state.
-  This must be called at the beggining of the function calls in this library.
+  This must be called at the beginning of the function calls in this library.
 
   @retval EFI_SUCCESS          - The function completed successfully.
 **/
