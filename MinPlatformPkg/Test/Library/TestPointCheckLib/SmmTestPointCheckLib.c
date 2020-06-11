@@ -125,7 +125,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      5,
+      6, // MS_CHANGE: correct parameter is 6 to indicate byte 6
       TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );
   }
