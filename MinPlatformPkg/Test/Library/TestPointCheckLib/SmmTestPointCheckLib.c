@@ -109,7 +109,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) { // MS_CHANGE
     return EFI_SUCCESS;
   }
 

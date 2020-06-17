@@ -41,6 +41,7 @@ TestPointCheckTcgTrustedBoot (
     goto Done;
   }
 
+  ProtocolCapability.Size = (UINT8) sizeof (ProtocolCapability); // MS_CHANGE
   Status = Tcg2->GetCapability (Tcg2, &ProtocolCapability);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_ERROR, "Tcg2->GetCapability - %r\n", Status));
