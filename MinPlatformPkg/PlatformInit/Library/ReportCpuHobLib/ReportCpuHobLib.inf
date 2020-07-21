@@ -12,7 +12,7 @@
   BASE_NAME                      = ReportCpuHobLib
   FILE_GUID                      = F19AA754-CE24-448D-B755-1F939B00C25D
   VERSION_STRING                 = 1.0
-  MODULE_TYPE                    = BASE
+  MODULE_TYPE                    = PEIM
   LIBRARY_CLASS                  = ReportCpuHobLib
 
 [LibraryClasses]
