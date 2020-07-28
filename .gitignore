@@ -1,0 +1,17 @@
+/Build/
+.DS_Store
+*_extdep/
+*.pyc
+__pycache__/
+tags/
+.vscode/
+*.bak
+BuildConfig.conf
+
+# Ignore cloned dependencies
+/Common
+/Silicon
+/MU_BASECORE
+
+# Ignore unused UDK PKGs.
+/Conf/
