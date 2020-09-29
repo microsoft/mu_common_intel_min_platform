@@ -1002,7 +1002,10 @@ CountTFreq (
         mTFreq[2]++;
       }
     } else {
-      ASSERT((LoopVar3+2)<(2 * NT - 1));
+      ASSERT ((LoopVar3 + 2) < (2 * NT - 1));
+      if ((LoopVar3 + 2) >= (2 * NT - 1)) {
+        return;
+      }
       mTFreq[LoopVar3 + 2]++;
     }
   }
@@ -1101,7 +1104,10 @@ WriteCLen (
         PutBits (CBIT, Count - 20);
       }
     } else {
-      ASSERT((LoopVar3+2)<NPT);
+      ASSERT ((LoopVar3 + 2) < NPT);
+      if ((LoopVar3 + 2) >= NPT) {
+        return;
+      }
       PutBits (mPTLen[LoopVar3 + 2], mPTCode[LoopVar3 + 2]);
     }
   }
