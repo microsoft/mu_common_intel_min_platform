@@ -7,7 +7,7 @@
   This sequence is further divided into Blocks and Huffman codings
   are applied to each Block.
 
-  Copyright (c) 2007 - 2014, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2007 - 2020, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -31,7 +31,6 @@
 // Macro Definitions
 //
 typedef INT16             NODE;
-#define UINT8_MAX         0xff
 #define UINT8_BIT         8
 #define THRESHOLD         3
 #define INIT_CRC          0
@@ -42,7 +41,7 @@ typedef INT16             NODE;
 #define PERC_FLAG         0x8000U
 #define CODE_BIT          16
 #define NIL               0
-#define MAX_HASH_VAL      (3 * WNDSIZ + (WNDSIZ / 512 + 1) * UINT8_MAX)
+#define MAX_HASH_VAL      (3 * WNDSIZ + (WNDSIZ / 512 + 1) * MAX_UINT8)
 #define HASH(LoopVar7, LoopVar5)        ((LoopVar7) + ((LoopVar5) << (WNDBIT - 9)) + WNDSIZ * 2)
 #define CRCPOLY           0xA001
 #define UPDATE_CRC(LoopVar5)     mCrc = mCrcTable[(mCrc ^ (LoopVar5)) & 0xFF] ^ (mCrc >> UINT8_BIT)
@@ -50,7 +49,7 @@ typedef INT16             NODE;
 //
 // C: the Char&Len Set; P: the Position Set; T: the exTra Set
 //
-#define NC                (UINT8_MAX + MAXMATCH + 2 - THRESHOLD)
+#define NC                (MAX_UINT8 + MAXMATCH + 2 - THRESHOLD)
 #define CBIT              9
 #define NP                (WNDBIT + 1)
 #define PBIT              4
@@ -66,13 +65,13 @@ typedef INT16             NODE;
 //
 
 /**
-  Put a dword to output stream
+  Put a dword to output stream.
 
   @param[in] Data    The dword to put.
 **/
 VOID
 EFIAPI
-PutDword(
+PutDword (
   IN UINT32 Data
   );
 
@@ -110,7 +109,7 @@ STATIC UINT16 *mSortPtr;
 STATIC UINT16 mLenCnt[17];
 STATIC UINT16 mLeft[2 * NC - 1];
 STATIC UINT16 mRight[2 * NC - 1];
-STATIC UINT16 mCrcTable[UINT8_MAX + 1];
+STATIC UINT16 mCrcTable[MAX_UINT8 + 1];
 STATIC UINT16 mCFreq[2 * NC - 1];
 STATIC UINT16 mCCode[NC];
 STATIC UINT16 mPFreq[2 * NP - 1];
@@ -142,7 +141,7 @@ MakeCrcTable (
 
   UINT32  LoopVar4;
 
-  for (LoopVar1 = 0; LoopVar1 <= UINT8_MAX; LoopVar1++) {
+  for (LoopVar1 = 0; LoopVar1 <= MAX_UINT8; LoopVar1++) {
     LoopVar4 = LoopVar1;
     for (LoopVar2 = 0; LoopVar2 < UINT8_BIT; LoopVar2++) {
       if ((LoopVar4 & 1) != 0) {
@@ -186,7 +185,7 @@ PutDword (
 
 /**
   Allocate memory spaces for data structures used in compression process.
-  
+
   @retval EFI_SUCCESS           Memory was allocated successfully.
   @retval EFI_OUT_OF_RESOURCES  A memory allocation failed.
 **/
@@ -197,9 +196,9 @@ AllocateMemory (
   )
 {
   mText       = AllocateZeroPool (WNDSIZ * 2 + MAXMATCH);
-  mLevel      = AllocateZeroPool ((WNDSIZ + UINT8_MAX + 1) * sizeof (*mLevel));
-  mChildCount = AllocateZeroPool ((WNDSIZ + UINT8_MAX + 1) * sizeof (*mChildCount));
-  mPosition   = AllocateZeroPool ((WNDSIZ + UINT8_MAX + 1) * sizeof (*mPosition));
+  mLevel      = AllocateZeroPool ((WNDSIZ + MAX_UINT8 + 1) * sizeof (*mLevel));
+  mChildCount = AllocateZeroPool ((WNDSIZ + MAX_UINT8 + 1) * sizeof (*mChildCount));
+  mPosition   = AllocateZeroPool ((WNDSIZ + MAX_UINT8 + 1) * sizeof (*mPosition));
   mParent     = AllocateZeroPool (WNDSIZ * 2 * sizeof (*mParent));
   mPrev       = AllocateZeroPool (WNDSIZ * 2 * sizeof (*mPrev));
   mNext       = AllocateZeroPool ((MAX_HASH_VAL + 1) * sizeof (*mNext));
@@ -251,8 +250,8 @@ InitSlide (
 {
   NODE  LoopVar1;
 
-  SetMem (mLevel + WNDSIZ, (UINT8_MAX + 1) * sizeof (UINT8), 1);
-  SetMem (mPosition + WNDSIZ, (UINT8_MAX + 1) * sizeof (NODE), 0);
+  SetMem (mLevel + WNDSIZ, (MAX_UINT8 + 1) * sizeof (UINT8), 1);
+  SetMem (mPosition + WNDSIZ, (MAX_UINT8 + 1) * sizeof (NODE), 0);
 
   SetMem (mParent + WNDSIZ, WNDSIZ * sizeof (NODE), 0);
 
@@ -284,7 +283,7 @@ Child (
 {
   NODE  LoopVar4;
 
-  LoopVar4             = mNext[HASH (LoopVar6, LoopVar5)];
+  LoopVar4      = mNext[HASH (LoopVar6, LoopVar5)];
   mParent[NIL]  = LoopVar6;  /* sentinel */
   while (mParent[LoopVar4] != LoopVar6) {
     LoopVar4 = mNext[LoopVar4];
@@ -299,6 +298,7 @@ Child (
   @param[in] LoopVar6       The parent node.
   @param[in] LoopVar5       The edge character.
   @param[in] LoopVar4       The child node.
+
 **/
 VOID
 EFIAPI
@@ -326,6 +326,7 @@ MakeChild (
   Split a node.
 
   @param[in] Old     The node to split.
+
 **/
 VOID
 EFIAPI
@@ -340,12 +341,12 @@ Split (
   New               = mAvail;
   mAvail            = mNext[New];
   mChildCount[New]  = 0;
-  LoopVar10                 = mPrev[Old];
+  LoopVar10         = mPrev[Old];
   mPrev[New]        = LoopVar10;
-  mNext[LoopVar10]          = New;
-  LoopVar10                 = mNext[Old];
+  mNext[LoopVar10]  = New;
+  LoopVar10         = mNext[Old];
   mNext[New]        = LoopVar10;
-  mPrev[LoopVar10]          = New;
+  mPrev[LoopVar10]  = New;
   mParent[New]      = mParent[Old];
   mLevel[New]       = (UINT8) mMatchLen;
   mPosition[New]    = mPos;
@@ -414,7 +415,7 @@ InsertNode (
     if (LoopVar4 == NIL) {
       MakeChild (LoopVar6, LoopVar5, mPos);
       mMatchLen = 1;
-      return ;
+      return;
     }
 
     mMatchLen = 2;
@@ -426,10 +427,10 @@ InsertNode (
   //
   for (;;) {
     if (LoopVar4 >= WNDSIZ) {
-      LoopVar2         = MAXMATCH;
+      LoopVar2  = MAXMATCH;
       mMatchPos = LoopVar4;
     } else {
-      LoopVar2         = mLevel[LoopVar4];
+      LoopVar2  = mLevel[LoopVar4];
       mMatchPos = (NODE) (mPosition[LoopVar4] & ~PERC_FLAG);
     }
 
@@ -437,12 +438,12 @@ InsertNode (
       mMatchPos -= WNDSIZ;
     }
 
-    TempString3  = &mText[mPos + mMatchLen];
-    TempString2  = &mText[mMatchPos + mMatchLen];
+    TempString3 = &mText[mPos + mMatchLen];
+    TempString2 = &mText[mMatchPos + mMatchLen];
     while (mMatchLen < LoopVar2) {
       if (*TempString3 != *TempString2) {
         Split (LoopVar4);
-        return ;
+        return;
       }
 
       mMatchLen++;
@@ -459,20 +460,20 @@ InsertNode (
     LoopVar4             = Child (LoopVar6, *TempString3);
     if (LoopVar4 == NIL) {
       MakeChild (LoopVar6, *TempString3, mPos);
-      return ;
+      return;
     }
 
     mMatchLen++;
   }
 
   LoopVar10             = mPrev[LoopVar4];
-  mPrev[mPos]   = LoopVar10;
+  mPrev[mPos]           = LoopVar10;
   mNext[LoopVar10]      = mPos;
   LoopVar10             = mNext[LoopVar4];
-  mNext[mPos]   = LoopVar10;
+  mNext[mPos]           = LoopVar10;
   mPrev[LoopVar10]      = mPos;
-  mParent[mPos] = LoopVar6;
-  mParent[LoopVar4]    = NIL;
+  mParent[mPos]         = LoopVar6;
+  mParent[LoopVar4]     = NIL;
 
   //
   // Special usage of 'next'
@@ -503,22 +504,22 @@ DeleteNode (
   NODE  LoopVar9;
 
   if (mParent[mPos] == NIL) {
-    return ;
+    return;
   }
 
   LoopVar4             = mPrev[mPos];
-  LoopVar11             = mNext[mPos];
+  LoopVar11            = mNext[mPos];
   mNext[LoopVar4]      = LoopVar11;
-  mPrev[LoopVar11]      = LoopVar4;
+  mPrev[LoopVar11]     = LoopVar4;
   LoopVar4             = mParent[mPos];
-  mParent[mPos] = NIL;
+  mParent[mPos]        = NIL;
   if (LoopVar4 >= WNDSIZ) {
-    return ;
+    return;
   }
 
   mChildCount[LoopVar4]--;
   if (mChildCount[LoopVar4] > 1) {
-    return ;
+    return;
   }
 
   LoopVar10 = (NODE) (mPosition[LoopVar4] & ~PERC_FLAG);
@@ -529,7 +530,7 @@ DeleteNode (
   LoopVar11 = LoopVar10;
   LoopVar6 = mParent[LoopVar4];
   LoopVar9 = mPosition[LoopVar6];
-  while ((LoopVar9 & PERC_FLAG) != 0){
+  while ((LoopVar9 & PERC_FLAG) != 0) {
     LoopVar9 &= ~PERC_FLAG;
     if (LoopVar9 >= mPos) {
       LoopVar9 -= WNDSIZ;
@@ -558,9 +559,9 @@ DeleteNode (
 
   LoopVar11           = Child (LoopVar4, mText[LoopVar10 + mLevel[LoopVar4]]);
   LoopVar10           = mPrev[LoopVar11];
-  LoopVar9           = mNext[LoopVar11];
+  LoopVar9            = mNext[LoopVar11];
   mNext[LoopVar10]    = LoopVar9;
-  mPrev[LoopVar9]    = LoopVar10;
+  mPrev[LoopVar9]     = LoopVar10;
   LoopVar10           = mPrev[LoopVar4];
   mNext[LoopVar10]    = LoopVar11;
   mPrev[LoopVar11]    = LoopVar10;
@@ -568,9 +569,9 @@ DeleteNode (
   mPrev[LoopVar10]    = LoopVar11;
   mNext[LoopVar11]    = LoopVar10;
   mParent[LoopVar11]  = mParent[LoopVar4];
-  mParent[LoopVar4]  = NIL;
-  mNext[LoopVar4]    = mAvail;
-  mAvail      = LoopVar4;
+  mParent[LoopVar4]   = NIL;
+  mNext[LoopVar4]     = mAvail;
+  mAvail              = LoopVar4;
 }
 
 /**
@@ -580,6 +581,7 @@ DeleteNode (
   @param[in] LoopVar8    The number of bytes to read.
 
   @return The number of bytes actually read.
+
 **/
 INT32
 EFIAPI
@@ -613,6 +615,7 @@ FreadCrc (
 
   @retval TRUE      The operation was successful.
   @retval FALSE     The operation failed due to insufficient memory.
+
 **/
 BOOLEAN
 EFIAPI
@@ -647,12 +650,13 @@ GetNextMatch (
 /**
   Send entry LoopVar1 down the queue.
 
-  @param[in] LoopVar1    The index of the item to move.
+  @param[in] Index    The index of the item to move.
+
 **/
 VOID
 EFIAPI
 DownHeap (
-  IN INT32 i
+  IN INT32 Index
   )
 {
   INT32 LoopVar1;
@@ -660,10 +664,10 @@ DownHeap (
   INT32 LoopVar2;
 
   //
-  // priority queue: send i-th entry down heap
+  // priority queue: send Index-th entry down heap
   //
-  LoopVar2 = mHeap[i];
-  LoopVar1 = 2 * i;
+  LoopVar2 = mHeap[Index];
+  LoopVar1 = 2 * Index;
   while (LoopVar1 <= mHeapSize) {
     if (LoopVar1 < mHeapSize && mFreq[mHeap[LoopVar1]] > mFreq[mHeap[LoopVar1 + 1]]) {
       LoopVar1++;
@@ -673,18 +677,19 @@ DownHeap (
       break;
     }
 
-    mHeap[i]  = mHeap[LoopVar1];
-    i         = LoopVar1;
-    LoopVar1         = 2 * i;
+    mHeap[Index]  = mHeap[LoopVar1];
+    Index         = LoopVar1;
+    LoopVar1  = 2 * Index;
   }
 
-  mHeap[i] = (INT16) LoopVar2;
+  mHeap[Index] = (INT16) LoopVar2;
 }
 
 /**
   Count the number of each code length for a Huffman tree.
 
   @param[in] LoopVar1      The top node.
+
 **/
 VOID
 EFIAPI
@@ -758,17 +763,18 @@ MakeLen (
 
 /**
   Assign code to each symbol based on the code length array.
-  
+
   @param[in] LoopVar8      The number of symbols.
   @param[in] Len    The code length array.
   @param[out] Code  The stores codes for each symbol.
+
 **/
 VOID
 EFIAPI
 MakeCode (
   IN  INT32         LoopVar8,
-  IN  UINT8 Len[    ],
-  OUT UINT16 Code[  ]
+  IN  UINT8         Len[],
+  OUT UINT16        Code[]
   )
 {
   INT32   LoopVar1;
@@ -783,7 +789,7 @@ MakeCode (
     Code[LoopVar1] = Start[Len[LoopVar1]]++;
   }
 }
-  
+
 /**
   Generates Huffman codes given a frequency distribution of symbols.
 
@@ -793,14 +799,15 @@ MakeCode (
   @param[out] CodeParm  The code for each symbol.
 
   @return The root of the Huffman tree.
+
 **/
 INT32
 EFIAPI
 MakeTree (
   IN  INT32             NParm,
-  IN  UINT16  FreqParm[ ],
-  OUT UINT8   LenParm[  ],
-  OUT UINT16  CodeParm[ ]
+  IN  UINT16            FreqParm[],
+  OUT UINT8             LenParm[],
+  OUT UINT16            CodeParm[]
   )
 {
   INT32 LoopVar1;
@@ -815,11 +822,11 @@ MakeTree (
   // make tree, calculate len[], return root
   //
   mTempInt32        = NParm;
-  mFreq     = FreqParm;
-  mLen      = LenParm;
-  Avail     = mTempInt32;
-  mHeapSize = 0;
-  mHeap[1]  = 0;
+  mFreq             = FreqParm;
+  mLen              = LenParm;
+  Avail             = mTempInt32;
+  mHeapSize         = 0;
+  mHeap[1]          = 0;
   for (LoopVar1 = 0; LoopVar1 < mTempInt32; LoopVar1++) {
     mLen[LoopVar1] = 0;
     if ((mFreq[LoopVar1]) != 0) {
@@ -856,7 +863,7 @@ MakeTree (
 
     LoopVar3         = Avail++;
     mFreq[LoopVar3]  = (UINT16) (mFreq[LoopVar1] + mFreq[LoopVar2]);
-    mHeap[1]  = (INT16) LoopVar3;
+    mHeap[1]         = (INT16) LoopVar3;
     DownHeap (1);
     mLeft[LoopVar3]  = (UINT16) LoopVar1;
     mRight[LoopVar3] = (UINT16) LoopVar2;
@@ -877,6 +884,7 @@ MakeTree (
 
   @param[in] LoopVar8   The rightmost LoopVar8 bits of the data is used.
   @param[in] x   The data.
+
 **/
 VOID
 EFIAPI
@@ -891,7 +899,7 @@ PutBits (
     mSubBitBuf |= x << (mBitCount -= LoopVar8);
   } else {
 
-    Temp = (UINT8)(mSubBitBuf | (x >> (LoopVar8 -= mBitCount)));
+    Temp = (UINT8) (mSubBitBuf | (x >> (LoopVar8 -= mBitCount)));
     if (mDst < mDstUpperLimit) {
       *mDst++ = Temp;
     }
@@ -901,7 +909,7 @@ PutBits (
       mSubBitBuf = x << (mBitCount = UINT8_BIT - LoopVar8);
     } else {
 
-      Temp = (UINT8)(x >> (LoopVar8 - UINT8_BIT));
+      Temp = (UINT8) (x >> (LoopVar8 - UINT8_BIT));
       if (mDst < mDstUpperLimit) {
         *mDst++ = Temp;
       }
@@ -950,7 +958,7 @@ EncodeP (
 
   PutBits (mPTLen[LoopVar5], mPTCode[LoopVar5]);
   if (LoopVar5 > 1) {
-    PutBits(LoopVar5 - 1, LoopVar7 & (0xFFFFU >> (17 - LoopVar5)));
+    PutBits (LoopVar5 - 1, LoopVar7 & (0xFFFFU >> (17 - LoopVar5)));
   }
 }
 
@@ -1057,6 +1065,7 @@ WritePTLen (
 
 /**
   Outputs the code length array for Char&Length Set.
+
 **/
 VOID
 EFIAPI
@@ -1136,8 +1145,8 @@ SendBlock (
   UINT32  Size;
   Flags = 0;
 
-  Root  = MakeTree (NC, mCFreq, mCLen, mCCode);
-  Size  = mCFreq[Root];
+  Root = MakeTree (NC, mCFreq, mCLen, mCCode);
+  Size = mCFreq[Root];
   PutBits (16, Size);
   if (Root >= NC) {
     CountTFreq ();
@@ -1172,8 +1181,8 @@ SendBlock (
     } else {
       Flags <<= 1;
     }
-    if ((Flags & (1U << (UINT8_BIT - 1))) != 0){
-      EncodeC(mBuf[Pos++] + (1U << UINT8_BIT));
+    if ((Flags & (1U << (UINT8_BIT - 1))) != 0) {
+      EncodeC (mBuf[Pos++] + (1U << UINT8_BIT));
       LoopVar3 = mBuf[Pos++] << UINT8_BIT;
       LoopVar3 += mBuf[Pos++];
 
@@ -1209,7 +1218,7 @@ HufEncodeStart (
 /**
   Outputs an Original Character or a Pointer.
 
-  @param[in] LoopVar5     The original character or the 'String Length' element of 
+  @param[in] LoopVar5     The original character or the 'String Length' element of
                    a Pointer.
   @param[in] LoopVar7     The 'Position' field of a Pointer.
 **/
@@ -1235,11 +1244,11 @@ CompressOutput (
   mBuf[mOutputPos++] = (UINT8) LoopVar5;
   mCFreq[LoopVar5]++;
   if (LoopVar5 >= (1U << UINT8_BIT)) {
-    mBuf[CPos] = (UINT8)(mBuf[CPos]|mOutputMask);
-    mBuf[mOutputPos++] = (UINT8)(LoopVar7 >> UINT8_BIT);
+    mBuf[CPos] = (UINT8) (mBuf[CPos]|mOutputMask);
+    mBuf[mOutputPos++] = (UINT8) (LoopVar7 >> UINT8_BIT);
     mBuf[mOutputPos++] = (UINT8) LoopVar7;
-    LoopVar5                  = 0;
-    while (LoopVar7!=0) {
+    LoopVar5           = 0;
+    while (LoopVar7 != 0) {
       LoopVar7 >>= 1;
       LoopVar5++;
     }
@@ -1301,8 +1310,8 @@ Encode (
   }
 
   while (mRemainder > 0) {
-    LastMatchLen  = mMatchLen;
-    LastMatchPos  = mMatchPos;
+    LastMatchLen = mMatchLen;
+    LastMatchPos = mMatchPos;
     if (!GetNextMatch ()) {
       Status = EFI_OUT_OF_RESOURCES;
     }
@@ -1315,14 +1324,14 @@ Encode (
       // Not enough benefits are gained by outputting a pointer,
       // so just output the original character
       //
-      CompressOutput(mText[mPos - 1], 0);
+      CompressOutput (mText[mPos - 1], 0);
     } else {
       //
       // Outputting a pointer is beneficial enough, do it.
       //
 
-      CompressOutput(LastMatchLen + (UINT8_MAX + 1 - THRESHOLD),
-             (mPos - LastMatchPos - 2) & (WNDSIZ - 1));
+      CompressOutput (LastMatchLen + (MAX_UINT8 + 1 - THRESHOLD),
+        (mPos - LastMatchPos - 2) & (WNDSIZ - 1));
       LastMatchLen--;
       while (LastMatchLen > 0) {
         if (!GetNextMatch ()) {
@@ -1381,15 +1390,15 @@ Compress (
   mSrc            = SrcBuffer;
   mSrcUpperLimit  = mSrc + SrcSize;
   mDst            = DstBuffer;
-  mDstUpperLimit  = mDst +*DstSize;
+  mDstUpperLimit  = mDst + *DstSize;
 
   PutDword (0L);
   PutDword (0L);
 
   MakeCrcTable ();
 
-  mOrigSize             = mCompSize = 0;
-  mCrc                  = INIT_CRC;
+  mOrigSize       = mCompSize = 0;
+  mCrc            = INIT_CRC;
 
   //
   // Compress it
