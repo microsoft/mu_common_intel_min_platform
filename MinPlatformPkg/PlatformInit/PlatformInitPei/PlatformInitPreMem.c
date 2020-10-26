@@ -15,7 +15,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/TimerLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/PeiServicesLib.h>
-#include <Library/ReportFvLib.h>
 #include <Ppi/ReadOnlyVariable2.h>
 #include <Ppi/MemoryDiscovered.h>
 #include <Ppi/FirmwareVolumeInfo.h>

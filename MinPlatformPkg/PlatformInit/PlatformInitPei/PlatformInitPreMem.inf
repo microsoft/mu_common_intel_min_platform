@@ -24,7 +24,6 @@
   MemoryAllocationLib
   PeimEntryPoint
   PeiServicesLib
-  ReportFvLib
   TestPointCheckLib
   TimerLib
   SetCacheMtrrLib
