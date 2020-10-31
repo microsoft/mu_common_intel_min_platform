@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = DxeTestPointLib
-  FILE_GUID                      = 9FDFABCE-7931-462F-8EDF-8C43AD58169C
+  FILE_GUID                      = 1D065CB4-B64C-482E-9869-F17606123C7F  ## MU_CHANGE - TCBZ3034 - Resolve duplicated GUIDs
   MODULE_TYPE                    = DXE_DRIVER
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = TestPointLib
