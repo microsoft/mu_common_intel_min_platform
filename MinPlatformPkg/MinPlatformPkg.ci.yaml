@@ -36,8 +36,15 @@
     "DependencyCheck": {
         "AcceptableDependencies": [
             "MdePkg/MdePkg.dec",
+            "MdeModulePkg/MdeModulePkg.dec",
+            "UefiCpuPkg/UefiCpuPkg.dec",
+            "PcAtChipsetPkg/PcAtChipsetPkg.dec",
+            "IntelFsp2Pkg/IntelFsp2Pkg.dec",
             "MinPlatformPkg/MinPlatformPkg.dec",
-            "UnitTestFrameworkPkg/UnitTestFrameworkPkg.dec" # MU_CHANGE add unit test framework
+            "IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec",
+            "SecurityPkg/SecurityPkg.dec",
+            "IntelSiliconPkg/IntelSiliconPkg.dec",
+            "CryptoPkg/CryptoPkg.dec"
         ],
         # For host based unit tests
         "AcceptableDependencies-HOST_APPLICATION":[
