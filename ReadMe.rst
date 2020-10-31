@@ -61,7 +61,7 @@ Bug Fixes-dev
 | Starting commit: 0de1e36 ("Add CI config for MinPlatformPkg", 2020-10-31)
 | Destination commit: 36bc2ca ("Platform/Intel/MinPlatformPkg: add Fsp measurement lib to dsc", 2020-08-28)
 
-- Incomplete
+- None
 
 Repo Maintenance
 ================
