@@ -31,6 +31,7 @@
   UefiBootServicesTableLib
   UefiRuntimeServicesTableLib
   BaseMemoryLib
+  MemoryAllocationLib       # MU_CHANGE - [TCBZ3036] Add MemoryAllocationLib dependency in MinDsdt
 
 [Protocols]
   gEfiAcpiTableProtocolGuid                     ## CONSUMES
