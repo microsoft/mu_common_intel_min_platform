@@ -53,7 +53,10 @@ Bug Fixes-dev
 2008_CIBuild Changes
 --------------------
 
-- Incomplete
+- Add MemoryAllocationLib dependency in MinDsdt
+- Add missing LibraryClasses to MinPlatformPkg DEC
+- Resolve duplicated GUIDs in FILE_GUID
+- Add missing components to DSC
 
 2008_Rebase Changes
 -------------------
