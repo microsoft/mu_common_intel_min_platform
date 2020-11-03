@@ -1,19 +1,22 @@
 ## @file
 # Provides services to update ASL tables.
+# Note that the current version of the library updates AML.
 #
-# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 ##
 
+## MU_CHANGE - [TCBZ3050] Update MinPlat AslUpdateLib with superior code from IntelSiliconPkg
+##              This should now be the One True Library.
 
 [Defines]
 INF_VERSION = 0x00010017
 BASE_NAME = DxeAslUpdateLib
 FILE_GUID = 1BC79513-CDD5-4993-A161-618015C6C66F
 VERSION_STRING = 1.0
-MODULE_TYPE = BASE
+MODULE_TYPE = DXE_DRIVER
 LIBRARY_CLASS = AslUpdateLib
 
 
@@ -30,7 +33,6 @@ MemoryAllocationLib
 [Packages]
 MdePkg/MdePkg.dec
 MinPlatformPkg/MinPlatformPkg.dec
-
 
 [Sources]
 DxeAslUpdateLib.c
