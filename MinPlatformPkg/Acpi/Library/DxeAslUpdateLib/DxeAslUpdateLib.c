@@ -1,15 +1,19 @@
 /** @file
   Boot service DXE ASL update library implementation.
+  Note that the current version of the library updates AML.
 
   These functions in this file can be called during DXE and cannot be called during runtime
   or in SMM which should use a RT or SMM library.
 
   This library uses the ACPI Support protocol.
 
-Copyright (c) 2017 - 2020, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
-
+  Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
+  SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
+
+// MU_CHANGE - [TCBZ3050] Update MinPlat AslUpdateLib with superior code from IntelSiliconPkg
+//              This should now be the One True Library.
+
 #include <Base.h>
 #include <Uefi/UefiBaseType.h>
 #include <Uefi/UefiSpec.h>
@@ -49,6 +53,52 @@ InitializeAslUpdateLib (
   ASSERT_EFI_ERROR (Status);
   return Status;
 }
+
+/**
+  This function calculates and updates an UINT8 checksum.
+
+  @param  Buffer          Pointer to buffer to checksum
+  @param  Size            Number of bytes to checksum
+  @param  ChecksumOffset  Offset to place the checksum result in
+
+  @retval EFI_SUCCESS      The function completed successfully.
+**/
+EFI_STATUS
+AcpiPlatformChecksum (
+  IN VOID       *Buffer,
+  IN UINTN      Size,
+  IN UINTN      ChecksumOffset
+  )
+{
+  UINT8 Sum;
+  UINT8 *Ptr;
+
+  Sum = 0;
+  //
+  // Initialize pointer
+  //
+  Ptr = Buffer;
+
+  //
+  // set checksum to 0 first
+  //
+  Ptr[ChecksumOffset] = 0;
+
+  //
+  // add all content of buffer
+  //
+  while ((Size--) != 0) {
+    Sum = (UINT8) (Sum + (*Ptr++));
+  }
+  //
+  // set checksum
+  //
+  Ptr                 = Buffer;
+  Ptr[ChecksumOffset] = (UINT8) (0xff - Sum + 1);
+
+  return EFI_SUCCESS;
+}
+
 
 /**
   This function uses the ACPI SDT protocol to locate an ACPI SSDT table.
@@ -97,7 +147,7 @@ LocateAcpiTableByOemTableId (
   } while (CompareMem (&(OrgTable->OemTableId), TableId, TableIdSize));
 
   if (Status != EFI_NOT_FOUND) {
-    *Table = AllocateCopyPool (OrgTable->Length, OrgTable);
+    *Table = OrgTable;
     ASSERT (*Table);
   }
 
@@ -121,14 +171,15 @@ LocateAcpiTableByOemTableId (
 EFI_STATUS
 EFIAPI
 UpdateNameAslCode (
-  IN     UINT32                        AslSignature,
-  IN     VOID                          *Buffer,
-  IN     UINTN                         Length
+  IN     UINT32               AslSignature,
+  IN     VOID                 *Buffer,
+  IN     UINTN                Length
   )
 {
   EFI_STATUS                  Status;
   EFI_ACPI_DESCRIPTION_HEADER *Table;
   UINT8                       *CurrPtr;
+  UINT8                       *EndPtr;
   UINT32                      *Signature;
   UINT8                       *DsdtPointer;
   UINTN                       Handle;
@@ -158,11 +209,19 @@ UpdateNameAslCode (
   /// Point to the beginning of the DSDT table
   ///
   CurrPtr = (UINT8 *) Table;
+  if (CurrPtr == NULL) {
+    return EFI_NOT_FOUND;
+  }
+
+  //
+  // EndPtr = beginning of table + length of table
+  //
+  EndPtr = CurrPtr + ((EFI_ACPI_COMMON_HEADER *) CurrPtr)->Length;
 
   ///
   /// Loop through the ASL looking for values that we must fix up.
   ///
-  for (DsdtPointer = CurrPtr; DsdtPointer <= (CurrPtr + ((EFI_ACPI_COMMON_HEADER *) CurrPtr)->Length); DsdtPointer++) {
+  for (DsdtPointer = CurrPtr; DsdtPointer < EndPtr; DsdtPointer++) {
     ///
     /// Get a pointer to compare for signature
     ///
@@ -213,12 +272,13 @@ UpdateNameAslCode (
 
   @param[in] TableId           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
   @param[in] TableIdSize       - Length of the TableId to match.  Table ID are 8 bytes long, this function
-                                 will consider it a match if the first TableIdSize bytes match
   @param[in] AslSignature      - The signature of Operation Region that we want to update.
   @param[in] Buffer            - source of data to be written over original aml
   @param[in] Length            - length of data to be overwritten
 
-  @retval EFI_UNSUPPORTED      - The function is not supported in this library.
+  @retval EFI_SUCCESS          - The function completed successfully.
+  @retval EFI_NOT_FOUND        - Failed to locate AcpiTable.
+  @retval EFI_NOT_READY        - Not ready to locate AcpiTable.
 **/
 EFI_STATUS
 EFIAPI
@@ -230,7 +290,83 @@ UpdateSsdtNameAslCode (
   IN     UINTN                         Length
   )
 {
-  return EFI_UNSUPPORTED;
+  EFI_STATUS                  Status;
+  EFI_ACPI_DESCRIPTION_HEADER *Table;
+  UINT8                       *CurrPtr;
+  UINT32                      *Signature;
+  UINT8                       *SsdtPointer;
+  UINTN                       Handle;
+  UINT8                       DataSize;
+
+  if (mAcpiTable == NULL) {
+    InitializeAslUpdateLib ();
+    if (mAcpiTable == NULL) {
+      return EFI_NOT_READY;
+    }
+  }
+
+  ///
+  /// Locate table with matching ID
+  ///
+  Handle = 0;
+  Status = LocateAcpiTableByOemTableId (
+             TableId,
+             TableIdSize,
+             (EFI_ACPI_DESCRIPTION_HEADER **) &Table,
+             &Handle
+             );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  ///
+  /// Point to the beginning of the DSDT table
+  ///
+  CurrPtr = (UINT8 *) Table;
+  if (CurrPtr == NULL) {
+    return EFI_NOT_FOUND;
+  }
+
+  ///
+  /// Loop through the ASL looking for values that we must fix up.
+  ///
+  for (SsdtPointer = CurrPtr; SsdtPointer <= (CurrPtr + ((EFI_ACPI_COMMON_HEADER *) CurrPtr)->Length); SsdtPointer++) {
+    ///
+    /// Get a pointer to compare for signature
+    ///
+    Signature = (UINT32 *) SsdtPointer;
+    ///
+    /// Check if this is the Device Object signature we are looking for
+    ///
+    if ((*Signature) == AslSignature) {
+      ///
+      /// Look for Name Encoding
+      ///
+      if (*(SsdtPointer-1) == AML_NAME_OP) {
+        ///
+        /// Check if size of new and old data is the same
+        ///
+        DataSize = *(SsdtPointer+4);
+        if ((Length == 1 && DataSize == 0xA) ||
+            (Length == 2 && DataSize == 0xB) ||
+            (Length == 4 && DataSize == 0xC)) {
+          CopyMem (SsdtPointer+5, Buffer, Length);
+        } else if (Length == 1 && ((*(UINT8*) Buffer) == 0 || (*(UINT8*) Buffer) == 1) && (DataSize == 0 || DataSize == 1)) {
+          CopyMem (SsdtPointer+4, Buffer, Length);
+        } else {
+          return EFI_BAD_BUFFER_SIZE;
+        }
+        AcpiPlatformChecksum (
+            Table,
+            Table->Length,
+            OFFSET_OF (EFI_ACPI_DESCRIPTION_HEADER,
+            Checksum)
+            );
+        return Status;
+      }
+    }
+  }
+  return EFI_NOT_FOUND;
 }
 
 /**
@@ -240,7 +376,9 @@ UpdateSsdtNameAslCode (
   @param[in] Buffer            - source of data to be written over original aml
   @param[in] Length            - length of data to be overwritten
 
-  @retval EFI_UNSUPPORTED      - The function is not supported in this library.
+  @retval EFI_SUCCESS          - The function completed successfully.
+  @retval EFI_NOT_FOUND        - Failed to locate AcpiTable.
+  @retval EFI_NOT_READY        - Not ready to locate AcpiTable.
 **/
 EFI_STATUS
 EFIAPI
@@ -250,7 +388,78 @@ UpdateMethodAslCode (
   IN     UINTN                         Length
   )
 {
-  return EFI_UNSUPPORTED;
+  EFI_STATUS                  Status;
+  EFI_ACPI_DESCRIPTION_HEADER *Table;
+  UINT8                       *CurrPtr;
+  UINT32                      *Signature;
+  UINT8                       *DsdtPointer;
+  UINTN                       Handle;
+
+  if (mAcpiTable == NULL) {
+    InitializeAslUpdateLib ();
+    if (mAcpiTable == NULL) {
+      return EFI_NOT_READY;
+    }
+  }
+
+  ///
+  /// Locate table with matching ID
+  ///
+  Handle = 0;
+  Status = LocateAcpiTableBySignature (
+             EFI_ACPI_3_0_DIFFERENTIATED_SYSTEM_DESCRIPTION_TABLE_SIGNATURE,
+             (EFI_ACPI_DESCRIPTION_HEADER **) &Table,
+             &Handle
+             );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  ///
+  /// Point to the beginning of the DSDT table
+  ///
+  CurrPtr = (UINT8 *) Table;
+  if (CurrPtr == NULL) {
+    return EFI_NOT_FOUND;
+  }
+
+  ///
+  /// Loop through the ASL looking for values that we must fix up.
+  ///
+  for (DsdtPointer = CurrPtr; DsdtPointer <= (CurrPtr + ((EFI_ACPI_COMMON_HEADER *) CurrPtr)->Length); DsdtPointer++) {
+    ///
+    /// Get a pointer to compare for signature
+    ///
+    Signature = (UINT32 *) DsdtPointer;
+    ///
+    /// Check if this is the Device Object signature we are looking for
+    ///
+    if ((*Signature) == AslSignature) {
+      ///
+      /// Look for Name Encoding
+      ///
+      if ((*(DsdtPointer-3) == AML_METHOD_OP)
+         || (*(DsdtPointer-2) == AML_METHOD_OP)
+         )
+      {
+        CopyMem (DsdtPointer, Buffer, Length);
+        Status = mAcpiTable->UninstallAcpiTable (
+                               mAcpiTable,
+                               Handle
+                               );
+        Handle = 0;
+        Status = mAcpiTable->InstallAcpiTable (
+                               mAcpiTable,
+                               Table,
+                               Table->Length,
+                               &Handle
+                               );
+        FreePool (Table);
+        return Status;
+      }
+    }
+  }
+  return EFI_NOT_FOUND;
 }
 
 /**
@@ -263,7 +472,6 @@ UpdateMethodAslCode (
   @param[in] Signature           - Pointer to an ASCII string containing the OEM Table ID from the ACPI table header
   @param[in, out] Table          - Updated with a pointer to the table
   @param[in, out] Handle         - AcpiSupport protocol table handle for the table found
-  @param[in, out] Version        - The version of the table desired
 
   @retval EFI_SUCCESS            - The function completed successfully.
   @retval EFI_NOT_FOUND          - Failed to locate AcpiTable.
