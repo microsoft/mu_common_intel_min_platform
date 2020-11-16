@@ -1,7 +1,7 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2020, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -44,6 +44,7 @@
     gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable|FALSE
     gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable|FALSE
     gMinPlatformPkgTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE
+    gMinPlatformPkgTokenSpaceGuid.PcdSerialTerminalEnable|FALSE
 
 ################################################################################
 #
