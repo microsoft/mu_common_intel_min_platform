@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = SmmMultiBoardAcpiSupportLib
-  FILE_GUID                      = E0238683-D3FD-4D97-8874-37C6157E2906
+  FILE_GUID                      = DEA4470C-706B-42C5-93E1-5F0694182A6B
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = MultiBoardAcpiSupportLib

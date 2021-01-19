@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = ReportCpuHobLib
-  FILE_GUID                      = F19AA754-CE24-448D-B755-1F939B00C25D
+  FILE_GUID                      = 704FC922-D192-42D0-9B10-1BAECC1EDE73
   VERSION_STRING                 = 1.0
   MODULE_TYPE                    = PEIM
   LIBRARY_CLASS                  = ReportCpuHobLib

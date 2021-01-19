@@ -10,7 +10,7 @@
 [Defines]
   INF_VERSION                    = 0x00010005
   BASE_NAME                      = SmmTestPointCheckLib
-  FILE_GUID                      = 74A1F91F-AD11-49C5-96B8-A579F4AA65F1
+  FILE_GUID                      = C1F70E6E-F9A6-46B9-B0F4-9FD0591265BF
   MODULE_TYPE                    = DXE_SMM_DRIVER
   VERSION_STRING                 = 1.0
   LIBRARY_CLASS                  = TestPointCheckLib
