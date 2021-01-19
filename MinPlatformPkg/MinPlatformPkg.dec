@@ -77,6 +77,12 @@
 
   ReportCpuHobLib|Include/Library/ReportCpuHobLib.h
 
+  BoardBootManagerLib|Include/Library/BoardBootManagerLib.h
+  CompressLib|Include/Library/CompressLib.h
+  HobVariableLib|Include/Library/HobVariableLib.h
+  MultiBoardAcpiSupportLib|Include/Library/MultiBoardAcpiSupportLib.h
+  ReportFvLib|Include/Library/ReportFvLib.h
+
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
   gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000
