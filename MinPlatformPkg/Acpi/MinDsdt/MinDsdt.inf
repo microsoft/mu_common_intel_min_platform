@@ -31,6 +31,7 @@
   UefiBootServicesTableLib
   UefiRuntimeServicesTableLib
   BaseMemoryLib
+  MemoryAllocationLib
 
 [Protocols]
   gEfiAcpiTableProtocolGuid                     ## CONSUMES
