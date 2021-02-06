@@ -1,7 +1,8 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2020, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) Microsoft Corporation.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -44,6 +45,7 @@
     gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable|FALSE
     gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable|FALSE
     gMinPlatformPkgTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE
+    gMinPlatformPkgTokenSpaceGuid.PcdSerialTerminalEnable|FALSE
 
 ################################################################################
 #
@@ -111,6 +113,12 @@
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
 
+[LibraryClasses.common.MM_STANDALONE]
+  DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
+  MemoryAllocationLib|StandaloneMmPkg/Library/StandaloneMmMemoryAllocationLib/StandaloneMmMemoryAllocationLib.inf
+  MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
+  StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
+
 ###################################################################################################
 #
 # Components Section - list of the modules and components that will be processed by compilation
@@ -131,21 +139,6 @@
 ###################################################################################################
 
 [Components]
-
-  # MU_CHANGE [BEGIN] - [TCBZ3033] Add missing components to DSC
-  MinPlatformPkg/Acpi/MinDsdt/MinDsdt.inf
-  MinPlatformPkg/Bds/Library/BoardBootManagerLibNull/BoardBootManagerLibNull.inf
-  MinPlatformPkg/Library/CompressLib/CompressLib.inf
-  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLib.inf
-  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLibNull.inf
-  MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
-  MinPlatformPkg/PlatformInit/Library/PeiReportFvLib/PeiReportFvLib.inf
-  MinPlatformPkg/PlatformInit/Library/ReportCpuHobLib/ReportCpuHobLib.inf
-  MinPlatformPkg/Tcg/Library/TpmPlatformHierarchyLib/TpmPlatformHierarchyLib.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
-  MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
-  # MU_CHANGE [END] - [TCBZ3033] Add missing components to DSC
 
   MinPlatformPkg/Library/PeiLib/PeiLib.inf
   MinPlatformPkg/Library/PeiHobVariableLibFce/PeiHobVariableLibFce.inf
