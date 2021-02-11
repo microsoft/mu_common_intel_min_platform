@@ -117,6 +117,7 @@
   DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
   MemoryAllocationLib|StandaloneMmPkg/Library/StandaloneMmMemoryAllocationLib/StandaloneMmMemoryAllocationLib.inf
   MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
+  SpiFlashCommonLib|MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
   StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
 
 ###################################################################################################
@@ -155,6 +156,7 @@
   MinPlatformPkg/Bds/Library/DxePlatformBootManagerLib/DxePlatformBootManagerLib.inf
 
   MinPlatformPkg/Flash/SpiFvbService/SpiFvbServiceSmm.inf
+  MinPlatformPkg/Flash/SpiFvbService/SpiFvbServiceStandaloneMm.inf
   MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
 
   MinPlatformPkg/FspWrapper/SaveMemoryConfig/SaveMemoryConfig.inf

@@ -15,9 +15,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Protocol/DevicePath.h>
 #include <Protocol/FirmwareVolumeBlock.h>
 
-#include <Library/UefiDriverEntryPoint.h>
-#include <Library/UefiBootServicesTableLib.h>
-#include <Library/UefiLib.h>
 #include <Library/BaseLib.h>
 #include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
@@ -159,4 +156,3 @@ extern FV_INFO                            mPlatformFvBaseAddress[];
 extern FV_INFO                            mPlatformDefaultBaseAddress[];
 
 #endif
-

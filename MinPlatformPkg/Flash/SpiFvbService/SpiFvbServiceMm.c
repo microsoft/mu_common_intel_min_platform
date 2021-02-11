@@ -1,14 +1,16 @@
 /** @file
-  Common driver source for several Serial Flash devices
+  MM driver source for several Serial Flash devices
   which are compliant with the Intel(R) Serial Flash Interface Compatibility Specification.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
-SPDX-License-Identifier: BSD-2-Clause-Patent
+  Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) Microsoft Corporation.<BR>
+  SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include "SpiFvbServiceCommon.h"
-#include <Library/SmmServicesTableLib.h>
+#include <Library/MmServicesTableLib.h>
+#include <Library/UefiDriverEntryPoint.h>
 #include <Protocol/SmmFirmwareVolumeBlock.h>
 
 /**
@@ -74,7 +76,7 @@ InstallFvbProtocol (
   //
   FvbHandle = NULL;
 
-  Status = gSmst->SmmInstallProtocolInterface (
+  Status = gMmst->MmInstallProtocolInterface (
                     &FvbHandle,
                     &gEfiSmmFirmwareVolumeBlockProtocolGuid,
                     EFI_NATIVE_INTERFACE,
@@ -82,7 +84,7 @@ InstallFvbProtocol (
                     );
   ASSERT_EFI_ERROR (Status);
 
-  Status = gSmst->SmmInstallProtocolInterface (
+  Status = gMmst->MmInstallProtocolInterface (
                     &FvbHandle,
                     &gEfiDevicePathProtocolGuid,
                     EFI_NATIVE_INTERFACE,
@@ -92,22 +94,13 @@ InstallFvbProtocol (
 }
 
 /**
-
   The function does the necessary initialization work for
   Firmware Volume Block Driver.
 
-  @param[in]  ImageHandle       The firmware allocated handle for the UEFI image.
-  @param[in]  SystemTable       A pointer to the EFI system table.
-
-  @retval     EFI_SUCCESS       This funtion always return EFI_SUCCESS.
-                                It will ASSERT on errors.
-
 **/
-EFI_STATUS
-EFIAPI
+VOID
 FvbInitialize (
-  IN EFI_HANDLE        ImageHandle,
-  IN EFI_SYSTEM_TABLE  *SystemTable
+  VOID
   )
 {
   EFI_FVB_INSTANCE                      *FvbInstance;
@@ -219,8 +212,7 @@ FvbInitialize (
     mFvbModuleGlobal.FvbInstance =  (EFI_FVB_INSTANCE *) AllocateRuntimeZeroPool (BufferSize);
     if (mFvbModuleGlobal.FvbInstance == NULL) {
       ASSERT (FALSE);
-      Status = EFI_OUT_OF_RESOURCES;
-      goto ERROR;
+      return;
     }
 
     MaxLbaSize      = 0;
@@ -276,9 +268,4 @@ FvbInitialize (
 
     }
   }
-
-  return EFI_SUCCESS;
-
-ERROR:
-  return Status;
 }
