@@ -7,7 +7,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include <Library/BoardAcpiEnableLib.h>
 #include <Library/MultiBoardAcpiSupportLib.h>
-#include <Library/PcdLib.h>
 #include <Library/DebugLib.h>
 #include <Library/SmmServicesTableLib.h>
 
@@ -21,7 +20,7 @@ RegisterBoardAcpiEnableFunc (
   EFI_STATUS  Status;
 
   Handle = NULL;
-  Status = gSmst->SmmInstallProtocolInterface (
+  Status = gMmst->MmInstallProtocolInterface (
                     &Handle,
                     &gBoardAcpiEnableGuid,
                     EFI_NATIVE_INTERFACE,

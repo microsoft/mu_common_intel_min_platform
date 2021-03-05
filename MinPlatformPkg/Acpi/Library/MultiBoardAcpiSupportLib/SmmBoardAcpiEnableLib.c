@@ -1,15 +1,15 @@
 /** @file
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include <Library/BoardAcpiTableLib.h>
 #include <Library/MultiBoardAcpiSupportLib.h>
-#include <Library/PcdLib.h>
 #include <Library/DebugLib.h>
-#include <Library/SmmServicesTableLib.h>
+#include <Library/MmServicesTableLib.h>
 
 EFI_STATUS
 EFIAPI
@@ -20,7 +20,7 @@ BoardEnableAcpi (
   BOARD_ACPI_ENABLE_FUNC     *BoardAcpiEnableFunc;
   EFI_STATUS                 Status;
 
-  Status = gSmst->SmmLocateProtocol (
+  Status = gMmst->MmLocateProtocol (
                     &gBoardAcpiEnableGuid,
                     NULL,
                     (VOID **)&BoardAcpiEnableFunc
@@ -42,7 +42,7 @@ BoardDisableAcpi (
   BOARD_ACPI_ENABLE_FUNC     *BoardAcpiEnableFunc;
   EFI_STATUS                 Status;
 
-  Status = gSmst->SmmLocateProtocol (
+  Status = gMmst->MmLocateProtocol (
                     &gBoardAcpiEnableGuid,
                     NULL,
                     (VOID **)&BoardAcpiEnableFunc
