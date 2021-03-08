@@ -117,6 +117,7 @@
   DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
   MemoryAllocationLib|StandaloneMmPkg/Library/StandaloneMmMemoryAllocationLib/StandaloneMmMemoryAllocationLib.inf
   MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
+  PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
   SpiFlashCommonLib|MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
   StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
 
@@ -147,6 +148,7 @@
 
   MinPlatformPkg/Acpi/AcpiTables/AcpiPlatform.inf
   MinPlatformPkg/Acpi/AcpiSmm/AcpiSmm.inf
+  MinPlatformPkg/Acpi/AcpiSmm/AcpiStandaloneMm.inf
   MinPlatformPkg/Acpi/Library/DxeAslUpdateLib/DxeAslUpdateLib.inf
   MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiEnableLibNull.inf
   MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiTableLibNull.inf

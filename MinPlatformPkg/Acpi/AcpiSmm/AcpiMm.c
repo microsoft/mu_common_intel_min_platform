@@ -1,12 +1,20 @@
 /** @file
-  Acpi Smm driver.
+  Functions shared between driver instances.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-#include "AcpiSmm.h"
+#include <PiMm.h>
+#include <Library/BoardAcpiEnableLib.h>
+#include <Library/DebugLib.h>
+#include <Library/MmServicesTableLib.h>
+#include <Library/PcdLib.h>
+#include <Protocol/SmmSwDispatch2.h>
+
+#include "AcpiMm.h"
 
 /**
   Enable SCI
@@ -53,20 +61,13 @@ DisableAcpiCallback (
 }
 
 /**
-  Initializes the Acpi Smm Driver
-
-  @param[in] ImageHandle   - Pointer to the loaded image protocol for this driver
-  @param[in] SystemTable   - Pointer to the EFI System Table
-
-  @retval Status           - EFI_SUCCESS
-  @retval Assert, otherwise.
+  ACPI initialization logic shared between the Traditional MM and
+  Standalone MM driver instances.
 
 **/
-EFI_STATUS
-EFIAPI
-InitializeAcpiSmm (
-  IN EFI_HANDLE        ImageHandle,
-  IN EFI_SYSTEM_TABLE  *SystemTable
+VOID
+InitializeAcpiMm (
+  VOID
   )
 {
   EFI_STATUS                                Status;
@@ -77,7 +78,7 @@ InitializeAcpiSmm (
   //
   // Locate the ICH SMM SW dispatch protocol
   //
-  Status = gSmst->SmmLocateProtocol (&gEfiSmmSwDispatch2ProtocolGuid, NULL, (VOID**)&SwDispatch);
+  Status = gMmst->MmLocateProtocol (&gEfiSmmSwDispatch2ProtocolGuid, NULL, (VOID**) &SwDispatch);
   ASSERT_EFI_ERROR (Status);
 
   //
@@ -103,6 +104,4 @@ InitializeAcpiSmm (
                          &SwHandle
                          );
   ASSERT_EFI_ERROR (Status);
-
-  return EFI_SUCCESS;
 }
