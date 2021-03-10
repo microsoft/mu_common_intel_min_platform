@@ -155,6 +155,7 @@
       NULL|SecurityPkg/Library/HashInstanceLibSha256/HashInstanceLibSha256.inf
   }
   SecurityPkg/Tcg/Tcg2Smm/Tcg2Smm.inf
+  SecurityPkg/Tcg/Tcg2Acpi/Tcg2Acpi.inf
   SecurityPkg/Tcg/Tcg2Config/Tcg2ConfigDxe.inf
 !endif
 
