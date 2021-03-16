@@ -1,7 +1,7 @@
 ## @file
 #  Platform description.
 #
-# Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -10,6 +10,8 @@
   #
   # Generic EDKII Lib
   #
+
+!include MdePkg/MdeLibs.dsc.inc
 
 [LibraryClasses.common]
   #
