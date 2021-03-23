@@ -153,6 +153,7 @@
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
+  MinPlatformPkg/Library/SerialPortTerminalLib/SerialPortTerminalLib.inf
   # MU_CHANGE [END] - [TCBZ3033] Add missing components to DSC
 
   MinPlatformPkg/Library/PeiLib/PeiLib.inf
