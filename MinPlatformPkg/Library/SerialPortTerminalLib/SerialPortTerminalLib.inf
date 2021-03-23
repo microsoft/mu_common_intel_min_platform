@@ -18,7 +18,7 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  BoardModulePkg/BoardModulePkg.dec
+  # BoardModulePkg/BoardModulePkg.dec   ## MU_CHANGE TCBZ3274 - Remove unnecessary dependency.
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
