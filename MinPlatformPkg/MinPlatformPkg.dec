@@ -85,6 +85,7 @@
 
   VariableReadLib|Include/Library/VariableReadLib.h
   VariableWriteLib|Include/Library/VariableWriteLib.h
+  LargeVariableReadLib|Include/Library/LargeVariableReadLib.h
 
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
