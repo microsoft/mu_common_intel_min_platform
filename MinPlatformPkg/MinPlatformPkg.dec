@@ -82,7 +82,9 @@
   HobVariableLib|Include/Library/HobVariableLib.h
   MultiBoardAcpiSupportLib|Include/Library/MultiBoardAcpiSupportLib.h
   ReportFvLib|Include/Library/ReportFvLib.h
+
   VariableReadLib|Include/Library/VariableReadLib.h
+  VariableWriteLib|Include/Library/VariableWriteLib.h
 
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
