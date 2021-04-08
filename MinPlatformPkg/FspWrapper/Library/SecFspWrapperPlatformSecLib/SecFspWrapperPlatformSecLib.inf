@@ -1,7 +1,7 @@
 ## @file
 #  Provide FSP wrapper platform sec related function.
 #
-#  Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+#  Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -88,9 +88,9 @@
   gMinPlatformPkgTokenSpaceGuid.PcdSecSerialPortDebugEnable           ## CONSUMES
 
 [FixedPcd]
-  gIntelFsp2WrapperTokenSpaceGuid.PcdCpuMicrocodePatchAddress         ## CONSUMES
-  gIntelFsp2WrapperTokenSpaceGuid.PcdCpuMicrocodePatchRegionSize      ## CONSUMES
-  gIntelFsp2WrapperTokenSpaceGuid.PcdFlashMicrocodeOffset             ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeBase               ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeSize               ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdMicrocodeOffsetInFv                ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheAddress            ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFlashCodeCacheSize               ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFspmBaseAddress                  ## CONSUMES
