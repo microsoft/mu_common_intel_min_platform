@@ -78,7 +78,7 @@
   FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
 
   BoardInitLib|MinPlatformPkg/PlatformInit/Library/BoardInitLibNull/BoardInitLibNull.inf
-  BoardAcpiTableLib|MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiTableLibNull.inf
+  BoardAcpiTableLib|MinPlatformPkg/Acpi/Library/BoardAcpiTableLibNull/BoardAcpiTableLibNull.inf
   BoardAcpiEnableLib|MinPlatformPkg/Acpi/Library/BoardAcpiEnableLibNull/BoardAcpiEnableLibNull.inf
   SiliconPolicyInitLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
   SiliconPolicyUpdateLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
@@ -153,7 +153,7 @@
   MinPlatformPkg/Acpi/AcpiSmm/AcpiStandaloneMm.inf
   MinPlatformPkg/Acpi/Library/DxeAslUpdateLib/DxeAslUpdateLib.inf
   MinPlatformPkg/Acpi/Library/BoardAcpiEnableLibNull/BoardAcpiEnableLibNull.inf
-  MinPlatformPkg/Acpi/Library/BoardAcpiLibNull/BoardAcpiTableLibNull.inf
+  MinPlatformPkg/Acpi/Library/BoardAcpiTableLibNull/BoardAcpiTableLibNull.inf
   MinPlatformPkg/Acpi/Library/MultiBoardAcpiSupportLib/DxeMultiBoardAcpiSupportLib.inf
   MinPlatformPkg/Acpi/Library/MultiBoardAcpiSupportLib/SmmMultiBoardAcpiSupportLib.inf
 
