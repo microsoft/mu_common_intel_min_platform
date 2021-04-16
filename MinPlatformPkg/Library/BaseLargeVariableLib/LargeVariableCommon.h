@@ -44,4 +44,11 @@
 //
 #define MAX_VARIABLE_SPLIT_DIGITS   6
 
+//
+// On some architectures (Ex. Itanium) there a requirement to
+// maintain DWORD alignment of the variable data. Hence the
+// maximum possible padding size is 3.
+//
+#define MAX_VARIABLE_NAME_PAD_SIZE  3
+
 #endif  // _LARGE_VARIABLE_COMMON_H_
