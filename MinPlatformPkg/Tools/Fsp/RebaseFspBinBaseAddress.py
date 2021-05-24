@@ -1,6 +1,6 @@
 ## @ RebaseFspBinBaseAddress.py
 #
-# Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2019 - 2021, Intel Corporation. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 
@@ -87,12 +87,12 @@ fspTBaseAddress = flashBase + fspTBaseOffset
 # Re-base FSP bin file to new address and save it as fspBinFileRebased using SplitFspBin.py
 #
 rebaseArguments = fspBinFilePath + " -c s m t -b " + str(hex(fspSBaseAddress).rstrip("L")) + " " + str(hex(fspMBaseAddress).rstrip("L")) + " " + str(hex(fspTBaseAddress).rstrip("L")) + " -o" + fspBinPath + " -n " + fspBinFileRebased
-os.system(pythontool + " " + splitFspBinPath + " rebase -f" + rebaseArguments)
+os.system('"' + pythontool + '"' + " " + splitFspBinPath + " rebase -f" + rebaseArguments)
 
 #
 # Split FSP bin to FSP-S/M/T segments
 #
 splitArguments = fspBinPath + os.sep + fspBinFileRebased + " -o " + fspBinPath + " -n Fsp_Rebased.fd"
-os.system(pythontool + " " + splitFspBinPath + " split -f" + splitArguments)
+os.system('"' + pythontool + '"' + " " + splitFspBinPath + " split -f" + splitArguments)
 
 exit(0)
