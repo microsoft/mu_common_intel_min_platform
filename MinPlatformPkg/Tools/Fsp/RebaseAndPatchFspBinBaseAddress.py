@@ -73,9 +73,7 @@ file.close()
 # Get FSP-M Size, in order to calculate the FSP-T Base. Used SplitFspBin.py script 
 # to dump the header, and get the ImageSize in FSP-M section
 #
-pythontool = 'python'
-if 'PYTHON_HOME' in os.environ:
-    pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
+pythontool = sys.executable
 Process = subprocess.Popen([pythontool, splitFspBinPath, "info","-f",fspBinFilePath], stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit(b"FSP_M", 1);
