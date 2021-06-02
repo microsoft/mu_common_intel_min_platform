@@ -150,7 +150,6 @@
   MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
   MinPlatformPkg/PlatformInit/Library/PeiReportFvLib/PeiReportFvLib.inf
   MinPlatformPkg/PlatformInit/Library/ReportCpuHobLib/ReportCpuHobLib.inf
-  MinPlatformPkg/Tcg/Library/TpmPlatformHierarchyLib/TpmPlatformHierarchyLib.inf
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
@@ -212,6 +211,7 @@
   MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
+  MinPlatformPkg/Tcg/Library/TpmPlatformHierarchyLib/TpmPlatformHierarchyLib.inf
 !if gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable == TRUE
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
