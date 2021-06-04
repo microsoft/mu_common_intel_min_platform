@@ -199,20 +199,25 @@ RandomizePlatformAuth (
 }
 
 // MU_CHANGE [BEGIN] - [TCBZ3411] Bug 3411 - Propose ConfigureTpmPlatformHierarchy() could disable TPM platform hierarchy
+/**
+  Disable the TPM platform hierarchy.
+
+  @retval   EFI_SUCCESS       The TPM was disabled successfully.
+  @retval   Others            An error occurred attempting to disable the TPM platform hierarchy.
+
+**/
 EFI_STATUS
 DisableTpmPlatformHierarchy (
+  VOID
   )
 {
-  EFI_STATUS    Status;
-
-  DEBUG ((DEBUG_INFO, "%a:%a() - Enter\n",gEfiCallerBaseName, __FUNCTION__));
+  EFI_STATUS  Status;
 
   // Make sure that we have use of the TPM.
-  Status = Tpm2RequestUseTpm();
-  if (EFI_ERROR( Status ))
-  {
-    DEBUG ((DEBUG_ERROR, "%a:%a() - Tpm2RequestUseTpm Failed! %r\n",gEfiCallerBaseName, __FUNCTION__, Status));
-    ASSERT_EFI_ERROR( Status );
+  Status = Tpm2RequestUseTpm ();
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "%a:%a() - Tpm2RequestUseTpm Failed! %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+    ASSERT_EFI_ERROR (Status);
     return Status;
   }
 
@@ -224,16 +229,17 @@ DisableTpmPlatformHierarchy (
   //                 EK cert will be unreadable.
 
   // Disable the PH.
-  Status = Tpm2HierarchyControl( TPM_RH_PLATFORM,     // AuthHandle
-                                 NULL,                // AuthSession
-                                 TPM_RH_PLATFORM,     // Hierarchy
-                                 NO );                // State
-  DEBUG ((DEBUG_VERBOSE, "%a:%a() -  Disable PH = %r\n",gEfiCallerBaseName, __FUNCTION__, Status));
-  if (EFI_ERROR( Status ))
-  {
-    DEBUG ((DEBUG_ERROR, "%a:%a() -  Disable PH Failed! %r\n",gEfiCallerBaseName, __FUNCTION__, Status));
-    ASSERT_EFI_ERROR( Status );
-    // JJC TODO LogTelemetry (TRUE, NULL, MS_RSC_TPM_FAILED_BOOTTIME_LOCK, NULL, NULL, (UINT64)Status, 0);
+  Status =  Tpm2HierarchyControl (
+              TPM_RH_PLATFORM,     // AuthHandle
+              NULL,                // AuthSession
+              TPM_RH_PLATFORM,     // Hierarchy
+              NO                   // State
+              );
+  DEBUG ((DEBUG_VERBOSE, "%a:%a() -  Disable PH = %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "%a:%a() -  Disable PH Failed! %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+    ASSERT_EFI_ERROR (Status);
+    // TODO: LogTelemetry (TRUE, NULL, MS_RSC_TPM_FAILED_BOOTTIME_LOCK, NULL, NULL, (UINT64)Status, 0);
   }
 
   return Status;
@@ -244,8 +250,9 @@ EFIAPI
 ConfigureTpmPlatformHierarchy (
   )
 {
-  // we prefer to disable the hierarchy entirely, not randomize it
-
+  //
+  // Disable the hierarchy entirely (do not randomize it)
+  //
   DisableTpmPlatformHierarchy ();
 }
 // MU_CHANGE [END] - [TCBZ3411] Bug 3411 - Propose ConfigureTpmPlatformHierarchy() could disable TPM platform hierarchy
