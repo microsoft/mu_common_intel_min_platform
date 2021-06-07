@@ -29,11 +29,13 @@
   DebugLib
   Tpm2DeviceLib
   Tpm2CommandLib
+  TpmPlatformHierarchyLib
   RngLib
 
 [Packages]
   MdePkg/MdePkg.dec
   SecurityPkg/SecurityPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
   Tcg2PlatformPei.c
