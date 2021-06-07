@@ -156,7 +156,9 @@
   MinPlatformPkg/Acpi/Library/BoardAcpiTableLibNull/BoardAcpiTableLibNull.inf
   MinPlatformPkg/Acpi/Library/MultiBoardAcpiSupportLib/DxeMultiBoardAcpiSupportLib.inf
   MinPlatformPkg/Acpi/Library/MultiBoardAcpiSupportLib/SmmMultiBoardAcpiSupportLib.inf
+  MinPlatformPkg/Acpi/MinDsdt/MinDsdt.inf
 
+  MinPlatformPkg/Bds/Library/BoardBootManagerLibNull/BoardBootManagerLibNull.inf
   MinPlatformPkg/Bds/Library/DxePlatformBootManagerLib/DxePlatformBootManagerLib.inf
 
   MinPlatformPkg/Flash/SpiFvbService/SpiFvbServiceSmm.inf
@@ -169,9 +171,15 @@
   MinPlatformPkg/FspWrapper/Library/PeiFspWrapperPlatformLib/PeiFspWrapperPlatformLib.inf
   MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformLib/DxeFspWrapperPlatformLib.inf
 
+  MinPlatformPkg/Library/CompressLib/CompressLib.inf
+  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLib.inf
+  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLibNull.inf
+  MinPlatformPkg/Library/SerialPortTerminalLib/SerialPortTerminalLib.inf
+
   MinPlatformPkg/Hsti/HstiIbvPlatformDxe/HstiIbvPlatformDxe.inf
 
   MinPlatformPkg/Pci/Library/PciHostBridgeLibSimple/PciHostBridgeLibSimple.inf
+  MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
 
   MinPlatformPkg/PlatformInit/ReportFv/ReportFvPei.inf
   MinPlatformPkg/PlatformInit/PlatformInitPei/PlatformInitPreMem.inf
@@ -182,6 +190,8 @@
   MinPlatformPkg/PlatformInit/Library/BoardInitLibNull/BoardInitLibNull.inf
   MinPlatformPkg/PlatformInit/Library/MultiBoardInitSupportLib/PeiMultiBoardInitSupportLib.inf
   MinPlatformPkg/PlatformInit/Library/MultiBoardInitSupportLib/DxeMultiBoardInitSupportLib.inf
+  MinPlatformPkg/PlatformInit/Library/PeiReportFvLib/PeiReportFvLib.inf
+  MinPlatformPkg/PlatformInit/Library/ReportCpuHobLib/ReportCpuHobLib.inf
   MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPreMem.inf
   MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPostMem.inf
   MinPlatformPkg/PlatformInit/SiliconPolicyDxe/SiliconPolicyDxe.inf
@@ -194,16 +204,16 @@
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/DxeTestPointCheckLib.inf
+  MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
   MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
-!if gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable == TRUE
+  MinPlatformPkg/Tcg/Library/TpmPlatformHierarchyLib/TpmPlatformHierarchyLib.inf
   MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
   MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
-!endif
 
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
