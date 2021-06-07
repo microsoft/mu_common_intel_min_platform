@@ -6,6 +6,7 @@
     Policy (platformPolicy) can be defined through this function.
 
     Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
+    Copyright (c) Microsoft Corporation.<BR>
     SPDX-License-Identifier: BSD-2-Clause-Patent
 
     @par Specification Reference:
@@ -17,8 +18,10 @@
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
 #include <Library/MemoryAllocationLib.h>
+#include <Library/PcdLib.h>
 #include <Library/RngLib.h>
 #include <Library/Tpm2CommandLib.h>
+#include <Library/Tpm2DeviceLib.h>
 
 //
 // The authorization value may be no larger than the digest produced by the hash
@@ -195,6 +198,51 @@ RandomizePlatformAuth (
 }
 
 /**
+  Disable the TPM platform hierarchy.
+
+  @retval   EFI_SUCCESS       The TPM was disabled successfully.
+  @retval   Others            An error occurred attempting to disable the TPM platform hierarchy.
+
+**/
+EFI_STATUS
+DisableTpmPlatformHierarchy (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+
+  // Make sure that we have use of the TPM.
+  Status = Tpm2RequestUseTpm ();
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "%a:%a() - Tpm2RequestUseTpm Failed! %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+    ASSERT_EFI_ERROR (Status);
+    return Status;
+  }
+
+  // Let's do what we can to shut down the hierarchies.
+
+  // Disable the PH NV.
+  // IMPORTANT NOTE: We *should* be able to disable the PH NV here, but TPM parts have
+  //                 been known to store the EK cert in the PH NV. If we disable it, the
+  //                 EK cert will be unreadable.
+
+  // Disable the PH.
+  Status =  Tpm2HierarchyControl (
+              TPM_RH_PLATFORM,     // AuthHandle
+              NULL,                // AuthSession
+              TPM_RH_PLATFORM,     // Hierarchy
+              NO                   // State
+              );
+  DEBUG ((DEBUG_VERBOSE, "%a:%a() -  Disable PH = %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "%a:%a() -  Disable PH Failed! %r\n", gEfiCallerBaseName, __FUNCTION__, Status));
+    ASSERT_EFI_ERROR (Status);
+  }
+
+  return Status;
+}
+
+/**
    This service defines the configuration of the Platform Hierarchy Authorization Value (platformAuth)
    and Platform Hierarchy Authorization Policy (platformPolicy)
 
@@ -204,8 +252,15 @@ EFIAPI
 ConfigureTpmPlatformHierarchy (
   )
 {
-  //
-  // Send Tpm2HierarchyChange Auth with random value to avoid PlatformAuth being null
-  //
-  RandomizePlatformAuth ();
+  if (PcdGetBool (PcdRandomizePlatformHierarchy)) {
+    //
+    // Send Tpm2HierarchyChange Auth with random value to avoid PlatformAuth being null
+    //
+    RandomizePlatformAuth ();
+  } else {
+    //
+    // Disable the hierarchy entirely (do not randomize it)
+    //
+    DisableTpmPlatformHierarchy ();
+  }
 }
