@@ -12,16 +12,13 @@
     https://trustedcomputinggroup.org/resource/tcg-tpm-v2-0-provisioning-guidance/
 **/
 
-#include <PiDxe.h>
+#include <Uefi.h>
 
-#include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/MemoryAllocationLib.h>
-#include <Library/Tpm2CommandLib.h>
 #include <Library/RngLib.h>
-#include <Library/UefiLib.h>
-#include <Protocol/DxeSmmReadyToLock.h>
+#include <Library/Tpm2CommandLib.h>
 
 //
 // The authorization value may be no larger than the digest produced by the hash
