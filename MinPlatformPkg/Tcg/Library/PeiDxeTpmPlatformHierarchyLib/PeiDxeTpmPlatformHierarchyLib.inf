@@ -26,14 +26,20 @@
   BaseMemoryLib
   DebugLib
   MemoryAllocationLib
+  PcdLib
   RngLib
   Tpm2CommandLib
+  Tpm2DeviceLib
 
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   SecurityPkg/SecurityPkg.dec
   CryptoPkg/CryptoPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
   PeiDxeTpmPlatformHierarchyLib.c
+
+[Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdRandomizePlatformHierarchy
