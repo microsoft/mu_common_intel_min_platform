@@ -231,6 +231,7 @@
   gMinPlatformPkgTokenSpaceGuid.PcdPciNoExtendedConfigSpace    |FALSE|BOOLEAN|0x4001004C
   gMinPlatformPkgTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
   gMinPlatformPkgTokenSpaceGuid.PcdPciSegmentCount             |0x1    |UINT8|0x4001004E
+  gMinPlatformPkgTokenSpaceGuid.PcdRandomizePlatformHierarchy  |TRUE |BOOLEAN|0x4001004F
 
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036
