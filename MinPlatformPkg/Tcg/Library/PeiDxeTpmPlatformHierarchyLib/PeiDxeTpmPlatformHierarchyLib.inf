@@ -7,6 +7,7 @@
 #   Policy (platformPolicy) can be defined through this function.
 #
 # Copyright (c) 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) Microsoft Corporation.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -14,23 +15,19 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = TpmPlatformHierarchyLib
+  BASE_NAME                      = PeiDxeTpmPlatformHierarchyLib
   FILE_GUID                      = 7794F92C-4E8E-4E57-9E4A-49A0764C7D73
-  MODULE_TYPE                    = DXE_DRIVER
+  MODULE_TYPE                    = PEIM
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = TpmPlatformHierarchyLib
+  LIBRARY_CLASS                  = TpmPlatformHierarchyLib|PEIM DXE_DRIVER
 
 [LibraryClasses]
-  MemoryAllocationLib
   BaseLib
-  UefiBootServicesTableLib
-  UefiDriverEntryPoint
   BaseMemoryLib
   DebugLib
-  Tpm2CommandLib
-  Tpm2DeviceLib
+  MemoryAllocationLib
   RngLib
-  UefiLib
+  Tpm2CommandLib
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -39,7 +36,4 @@
   CryptoPkg/CryptoPkg.dec
 
 [Sources]
-  TpmPlatformHierarchyLib.c
-
-[Depex]
-  gEfiTcg2ProtocolGuid
+  PeiDxeTpmPlatformHierarchyLib.c
