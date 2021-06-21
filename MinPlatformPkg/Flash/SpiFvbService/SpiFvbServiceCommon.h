@@ -12,6 +12,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Guid/EventGroup.h>
 #include <Guid/FirmwareFileSystem2.h>
 #include <Guid/SystemNvDataGuid.h>
+#include <Guid/VariableFlashInfo.h>       // MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+#include <Pi/PiFirmwareVolume.h>          // MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
 #include <Protocol/DevicePath.h>
 #include <Protocol/FirmwareVolumeBlock.h>
 
@@ -24,6 +26,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PcdLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/HobLib.h>
+#include <Library/SafeIntLib.h>           // MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
 
 #include <Library/SpiFlashCommonLib.h>
 
@@ -148,11 +151,25 @@ GetFvbInfo (
   OUT EFI_FIRMWARE_VOLUME_HEADER   **FvbInfo
   );
 
+// MU_CHANGE - START - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+/**
+  Get the HOB that contains variable flash information.
+
+  @param[out] BaseAddress         Base address of the variable store.
+  @param[out] Length              Length in bytes of the variable store.
+
+**/
+VOID
+GetVariableFlashInfo (
+  OUT EFI_PHYSICAL_ADDRESS      *BaseAddress,
+  OUT UINT32                    *Length
+  );
+// MU_CHANGE - END - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+
 extern FVB_GLOBAL                         mFvbModuleGlobal;
 extern FV_MEMMAP_DEVICE_PATH              mFvMemmapDevicePathTemplate;
 extern FV_PIWG_DEVICE_PATH                mFvPIWGDevicePathTemplate;
 extern EFI_FIRMWARE_VOLUME_BLOCK_PROTOCOL mFvbProtocolTemplate;
 extern FV_INFO                            mPlatformFvBaseAddress[];
-extern FV_INFO                            mPlatformDefaultBaseAddress[];
 
 #endif

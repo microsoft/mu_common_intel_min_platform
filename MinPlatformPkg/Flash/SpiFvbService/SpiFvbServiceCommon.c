@@ -25,12 +25,6 @@ FV_INFO mPlatformFvBaseAddress[] = {
   {0, 0}
 };
 
-FV_INFO mPlatformDefaultBaseAddress[] = {
-  {0, 0}, // {FixedPcdGet32(PcdFlashNvStorageVariableBase), FixedPcdGet32(PcdFlashNvStorageVariableSize)},
-  {0, 0}, // {FixedPcdGet32(PcdFlashFvMicrocodeBase), FixedPcdGet32(PcdFlashFvMicrocodeSize)},
-  {0, 0}
-};
-
 FV_MEMMAP_DEVICE_PATH mFvMemmapDevicePathTemplate = {
   {
     {
@@ -530,6 +524,59 @@ FvbSetVolumeAttributes (
   return EFI_SUCCESS;
 }
 
+// MU_CHANGE - START - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+/**
+  Get the HOB that contains variable flash information.
+
+  @param[out] BaseAddress         Base address of the variable store.
+  @param[out] Length              Length in bytes of the variable store.
+
+**/
+VOID
+GetVariableFlashInfo (
+  OUT EFI_PHYSICAL_ADDRESS      *BaseAddress,
+  OUT UINT32                    *Length
+  )
+{
+  EFI_STATUS                    Status;
+  EFI_HOB_GUID_TYPE             *GuidHob;
+  VARIABLE_FLASH_INFO           *VariableFlashInfo;
+
+  Status = EFI_SUCCESS;
+
+  if ((BaseAddress == NULL) || (Length == NULL)) {
+    ASSERT ((BaseAddress != NULL) && (Length != NULL));
+    return;
+  }
+
+  GuidHob = GetFirstGuidHob (&gVariableFlashInfoHobGuid);
+  if (GuidHob != NULL) {
+    DEBUG ((DEBUG_INFO, "[%a] - Variable Flash Info HOB found.\n", __FUNCTION__));
+    VariableFlashInfo = GET_GUID_HOB_DATA (GuidHob);
+    *BaseAddress = VariableFlashInfo->BaseAddress;
+    Status = SafeUint64ToUint32 (VariableFlashInfo->Length, Length);
+    // Stay within the current UINT32 size assumptions in the variable stack.
+    ASSERT_EFI_ERROR (Status);
+  }
+
+  if (GuidHob == NULL || EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_INFO, "[%a] - Unable to use Variable Flash Info HOB. Using PCD values.\n", __FUNCTION__));
+    *BaseAddress = (EFI_PHYSICAL_ADDRESS)PcdGet32 (PcdFlashNvStorageVariableBase);
+    *Length = PcdGet32 (PcdFlashNvStorageVariableSize);
+  }
+
+  //
+  // Assert if more than one variable flash information HOB is present.
+  //
+  DEBUG_CODE (
+    if ((GuidHob != NULL) && (GetNextGuidHob (&gVariableFlashInfoHobGuid, GET_NEXT_HOB (GuidHob)) != NULL)) {
+      DEBUG ((DEBUG_ERROR, "ERROR: Found two variable flash information HOBs\n"));
+      ASSERT (FALSE);
+    }
+    );
+}
+// MU_CHANGE - END - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+
 /**
   Check the integrity of firmware volume header
 
@@ -545,7 +592,14 @@ IsFvHeaderValid (
   IN CONST EFI_FIRMWARE_VOLUME_HEADER    *FvHeader
   )
 {
-  if (FvBase == PcdGet32(PcdFlashNvStorageVariableBase)) {
+  // MU_CHANGE - START - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+  EFI_PHYSICAL_ADDRESS    NvStorageFvBaseAddress;
+  UINT32                  NvStorageSize;
+
+  GetVariableFlashInfo (&NvStorageFvBaseAddress, &NvStorageSize);
+
+  if (FvBase == NvStorageFvBaseAddress) {
+  // MU_CHANGE - END - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
     if (CompareMem (&FvHeader->FileSystemGuid, &gEfiSystemNvDataFvGuid, sizeof(EFI_GUID)) != 0 ) {
       return FALSE;
     }
