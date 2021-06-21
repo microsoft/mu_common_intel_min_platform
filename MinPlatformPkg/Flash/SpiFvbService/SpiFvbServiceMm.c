@@ -114,14 +114,18 @@ FvbInitialize (
   UINT32                                BytesWritten;
   UINTN                                 BytesErased;
 
-  mPlatformFvBaseAddress[0].FvBase = PcdGet32(PcdFlashNvStorageVariableBase);
-  mPlatformFvBaseAddress[0].FvSize = PcdGet32(PcdFlashNvStorageVariableSize);
+  // MU_CHANGE - START - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
+  GetVariableFlashInfo (&BaseAddress, &mPlatformFvBaseAddress[0].FvSize);
+  Status = SafeUint64ToUint32 (BaseAddress, &mPlatformFvBaseAddress[0].FvBase);
+  ASSERT_EFI_ERROR (Status);
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "[%a] - 64-bit variable storage base address not supported.\n", __FUNCTION__));
+    return;
+  }
+
   mPlatformFvBaseAddress[1].FvBase = PcdGet32(PcdFlashFvMicrocodeBase);
   mPlatformFvBaseAddress[1].FvSize = PcdGet32(PcdFlashFvMicrocodeSize);
-  mPlatformDefaultBaseAddress[0].FvBase = PcdGet32(PcdFlashNvStorageVariableBase);
-  mPlatformDefaultBaseAddress[0].FvSize = PcdGet32(PcdFlashNvStorageVariableSize);
-  mPlatformDefaultBaseAddress[1].FvBase = PcdGet32(PcdFlashFvMicrocodeBase);
-  mPlatformDefaultBaseAddress[1].FvSize = PcdGet32(PcdFlashFvMicrocodeSize);
+  // MU_CHANGE - END - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
 
   //
   // We will only continue with FVB installation if the
