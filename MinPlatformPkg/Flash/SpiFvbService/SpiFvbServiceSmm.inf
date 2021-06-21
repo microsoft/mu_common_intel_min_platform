@@ -30,8 +30,10 @@
   BaseMemoryLib
   DebugLib
   BaseLib
+  HobLib                    # MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
   UefiBootServicesTableLib
   UefiDriverEntryPoint
+  SafeIntLib                # MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
   SpiFlashCommonLib
   MmServicesTableLib
 
@@ -63,6 +65,7 @@
 [Guids]
   gEfiFirmwareFileSystem2Guid                   ## CONSUMES
   gEfiSystemNvDataFvGuid                        ## CONSUMES
+  gVariableFlashInfoHobGuid                     ## CONSUMES  # MU_CHANGE TCBZ3478 - Add Dynamic Variable Store and Microcode Support
 
 [Depex]
   TRUE
