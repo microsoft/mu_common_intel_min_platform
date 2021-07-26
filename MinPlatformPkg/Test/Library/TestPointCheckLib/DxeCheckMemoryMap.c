@@ -135,7 +135,7 @@ TestPointCheckUefiMemoryMapEntry (
     DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesCode entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
   }
   if (EntryCount[EfiRuntimeServicesData] > 1) {
-    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
+    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesData]));
   }
   if (EntryCount[EfiACPIMemoryNVS] > 1) {
     DEBUG ((DEBUG_ERROR, "EfiACPIMemoryNVS entry - %d\n", EntryCount[EfiACPIMemoryNVS]));
