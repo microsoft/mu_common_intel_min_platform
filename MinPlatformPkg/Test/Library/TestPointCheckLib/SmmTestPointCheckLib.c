@@ -109,7 +109,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) { // MU_CHANGE TCBZ_3520 : correct parameter is 6 to indicate byte 6
     return EFI_SUCCESS;
   }
 
@@ -125,7 +125,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      5,
+      6, // MU_CHANGE TCBZ_3520 : correct parameter is 6 to indicate byte 6
       TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );
   }
