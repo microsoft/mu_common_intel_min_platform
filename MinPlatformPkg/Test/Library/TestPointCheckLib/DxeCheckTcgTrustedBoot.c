@@ -41,6 +41,7 @@ TestPointCheckTcgTrustedBoot (
     goto Done;
   }
 
+  ProtocolCapability.Size = (UINT8) sizeof (ProtocolCapability); // MU_CHANGE TCBZ3518 - TestPointCheckTcgTrustedBoot() forgets to initialize the size of ...
   Status = Tcg2->GetCapability (Tcg2, &ProtocolCapability);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_ERROR, "Tcg2->GetCapability - %r\n", Status));
