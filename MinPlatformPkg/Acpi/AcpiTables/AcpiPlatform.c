@@ -1219,7 +1219,8 @@ PlatformUpdateTables (
     FadtHeader->XGpe0Blk.Address    = PcdGet16 (PcdAcpiGpe0BlockAddress);
     FadtHeader->XGpe1Blk.Address    = PcdGet16 (PcdAcpiGpe1BlockAddress);
     if (FadtHeader->XGpe1Blk.Address == 0) {
-      FadtHeader->XGpe1Blk.AccessSize = 0;
+      FadtHeader->XGpe1Blk.AddressSpaceId = 0;
+      FadtHeader->XGpe1Blk.AccessSize     = 0;
     }
 
     DEBUG ((DEBUG_INFO, "ACPI FADT table @ address 0x%x\n", Table));
