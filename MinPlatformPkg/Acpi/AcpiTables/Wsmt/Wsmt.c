@@ -18,8 +18,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // WSMT Definitions
 //
 
-#define EFI_ACPI_OEM_WSMT_REVISION                      0x00000001
-
 EFI_ACPI_WSMT_TABLE Wsmt = {
   {
     EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE,
@@ -37,7 +35,7 @@ EFI_ACPI_WSMT_TABLE Wsmt = {
     { ' ', ' ', ' ', ' ', ' ', ' ' },
 
     0,
-    EFI_ACPI_OEM_WSMT_REVISION,
+    FixedPcdGet32 (PcdAcpiDefaultOemRevision),
     0,
     0
   },
