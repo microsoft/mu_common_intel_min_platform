@@ -42,7 +42,6 @@
   HobLib
   PciSegmentInfoLib
   AslUpdateLib
-  BoardAcpiTableLib
   SortLib
   LocalApicLib
 
