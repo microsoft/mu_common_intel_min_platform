@@ -462,8 +462,8 @@ InitializeHeader (
     );
 
   Header->OemRevision     = OemRevision;
-  Header->CreatorId       = 0;
-  Header->CreatorRevision = 0;
+  Header->CreatorId       = PcdGet32 (PcdAcpiDefaultCreatorId);
+  Header->CreatorRevision = PcdGet32 (PcdAcpiDefaultCreatorRevision);
 
   return EFI_SUCCESS;
 }
