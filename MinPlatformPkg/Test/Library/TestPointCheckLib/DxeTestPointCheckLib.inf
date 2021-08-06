@@ -18,6 +18,7 @@
 
 [LibraryClasses]
   BaseLib
+  BaseMemoryLib
   DebugLib
   DxeServicesTableLib
   UefiBootServicesTableLib

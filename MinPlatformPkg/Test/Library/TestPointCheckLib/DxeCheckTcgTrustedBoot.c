@@ -9,6 +9,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <PiDxe.h>
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
+#include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
 #include <Library/UefiLib.h>
 #include <Library/PrintLib.h>
@@ -41,6 +42,8 @@ TestPointCheckTcgTrustedBoot (
     goto Done;
   }
 
+  ZeroMem ((VOID *) &ProtocolCapability, sizeof (ProtocolCapability));
+  ProtocolCapability.Size = (UINT8) sizeof (ProtocolCapability);
   Status = Tcg2->GetCapability (Tcg2, &ProtocolCapability);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_ERROR, "Tcg2->GetCapability - %r\n", Status));
