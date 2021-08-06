@@ -738,6 +738,7 @@ TestPointSmmExitBootServices (
 #define TEST_POINT_SMM_READY_TO_BOOT                                                        L" - SMM Ready To Boot - "
 #define TEST_POINT_SMM_EXIT_BOOT_SERVICES                                                   L" - SMM Exit Boot Services - "
 
+#define TEST_POINT_INDEX_BYTE6_SMM                                                          6
 #define TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL                                     BIT0
 #define TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL            BIT1
 #define TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER                  BIT2
