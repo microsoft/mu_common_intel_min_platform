@@ -12,6 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/DebugLib.h>
 #include <Library/UefiLib.h>
 #include <Library/BaseMemoryLib.h>
+#include <Library/SafeIntLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
@@ -520,6 +521,7 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   UINTN                                               MemoryAttributesTableSize;
   EFI_STATUS                                          Status;
   UINTN                                               CommSize;
+  UINT64                                              LongCommSize;
   UINT8                                               *CommBuffer;
   EFI_SMM_COMMUNICATE_HEADER                          *CommHeader;
   EFI_SMM_COMMUNICATION_PROTOCOL                      *SmmCommunication;
@@ -620,7 +622,18 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
     (UINTN)CommData->UefiMemoryAttributeTableSize
     );
 
-  CommSize = OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data) + CommHeader->MessageLength;
+  Status = SafeUint64Add (OFFSET_OF (EFI_SMM_COMMUNICATE_HEADER, Data), CommHeader->MessageLength, &LongCommSize);
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: LongCommSize calculation - %r\n", Status));
+    return EFI_SUCCESS;
+  }
+
+  Status = SafeUint64ToUintn (LongCommSize, &CommSize);
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: CommSize conversion - %r\n", Status));
+    return EFI_SUCCESS;
+  }
+
   Status = SmmCommunication->Communicate(SmmCommunication, CommBuffer, &CommSize);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_INFO, "TestPointDxeSmmReadyToBootSmmPageProtection: SmmCommunication - %r\n", Status));

@@ -32,6 +32,7 @@
   TestPointLib
   PciSegmentLib
   PciSegmentInfoLib
+  SafeIntLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
