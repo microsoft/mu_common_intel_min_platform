@@ -59,34 +59,36 @@ CheckSmramDescriptor (
   )
 {
   UINTN   Index;
-  UINT64  Base;
+  UINTN   Index2;
   UINT64  Length;
+  BOOLEAN AdjacentRegion;
 
-  Base = 0;
   Length = 0;
   for (Index = 0; Index < NumberOfSmmReservedRegions; Index++) {
-    if (Base == 0) {
-      Base   = Descriptor[Index].PhysicalStart;
-      Length = Descriptor[Index].PhysicalSize;
-    } else {
-      if (Base + Length == Descriptor[Index].PhysicalStart) {
-        Length = Length + Descriptor[Index].PhysicalSize;
-      } else if (Descriptor[Index].PhysicalStart + Descriptor[Index].PhysicalSize == Base) {
-        Base = Descriptor[Index].PhysicalStart;
-        Length = Length + Descriptor[Index].PhysicalSize;
-      } else {
-        DEBUG ((DEBUG_ERROR, "Smram is not adjacent\n"));
-        TestPointLibAppendErrorString (
-          PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-          NULL,
-          TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_CODE \
-            TEST_POINT_DXE_SMM_READY_TO_LOCK 
-            TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_STRING
-          );
-        return EFI_INVALID_PARAMETER;
+    AdjacentRegion = FALSE;
+    for (Index2 = 0; Index2 < NumberOfSmmReservedRegions; Index2++) {
+      if ((NumberOfSmmReservedRegions == 1)
+          || (Descriptor[Index].PhysicalStart + Descriptor[Index].PhysicalSize == Descriptor[Index2].PhysicalStart)
+          || (Descriptor[Index2].PhysicalStart + Descriptor[Index2].PhysicalSize == Descriptor[Index].PhysicalStart)) {
+        AdjacentRegion = TRUE;
+        break;
       }
     }
-  }        
+
+    if (AdjacentRegion == TRUE) {
+      Length += Descriptor[Index].PhysicalSize;
+    } else {
+      DEBUG ((DEBUG_ERROR, "Smram is not adjacent\n"));
+      TestPointLibAppendErrorString (
+        PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+        NULL,
+        TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_CODE \
+          TEST_POINT_DXE_SMM_READY_TO_LOCK
+          TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_STRING
+        );
+      return EFI_INVALID_PARAMETER;
+    }
+  }
 
   if (Length != GetPowerOfTwo64 (Length)) {
     DEBUG ((DEBUG_ERROR, "Smram is not aligned\n"));
@@ -94,7 +96,7 @@ CheckSmramDescriptor (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_CODE \
-        TEST_POINT_DXE_SMM_READY_TO_LOCK 
+        TEST_POINT_DXE_SMM_READY_TO_LOCK
         TEST_POINT_BYTE7_DXE_SMM_READY_TO_LOCK_SMRAM_ALIGNED_ERROR_STRING
       );
     return EFI_INVALID_PARAMETER;
@@ -111,14 +113,14 @@ TestPointCheckSmmInfo (
   EFI_SMM_ACCESS2_PROTOCOL *SmmAccess;
   UINTN                    Size;
   EFI_SMRAM_DESCRIPTOR     *SmramRanges;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmInfo - Enter\n"));
-  
+
   Status = gBS->LocateProtocol (&gEfiSmmAccess2ProtocolGuid, NULL, (VOID **)&SmmAccess);
   if (EFI_ERROR (Status)) {
     goto Done ;
   }
-  
+
   Size = 0;
   Status = SmmAccess->GetCapabilities (SmmAccess, &Size, NULL);
   ASSERT (Status == EFI_BUFFER_TOO_SMALL);
@@ -128,7 +130,7 @@ TestPointCheckSmmInfo (
 
   Status = SmmAccess->GetCapabilities (SmmAccess, &Size, SmramRanges);
   ASSERT_EFI_ERROR (Status);
-  
+
   DEBUG ((DEBUG_INFO, "SMRAM Info\n"));
   DumpSmramDescriptor (Size / sizeof (EFI_SMRAM_DESCRIPTOR), SmramRanges);
 
