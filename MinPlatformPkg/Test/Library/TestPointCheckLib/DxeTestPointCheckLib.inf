@@ -109,3 +109,4 @@
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme # MU_CHANGE - TCBZ3541
