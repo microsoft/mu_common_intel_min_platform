@@ -44,6 +44,15 @@ typedef struct {
   UINT32                        Data[48];
 } PCI_CONFIG_SPACE;
 
+// MU_CHANGE - BEGIN - TCBZ3541
+typedef struct {
+  UINT8 Segment;
+  UINT8 Bus;
+  UINT8 Device;
+  UINT8 Function;
+} EXEMPT_DEVICE;
+// MU_CHANGE - END - TCBZ3541
+
 #pragma pack()
 
 VOID
@@ -396,6 +405,11 @@ TestPointCheckPciBusMaster (
   UINT8             HeaderType;
   EFI_STATUS        Status;
   PCI_SEGMENT_INFO  *PciSegmentInfo;
+  // MU_CHANGE - BEGIN - TCBZ3541
+  EXEMPT_DEVICE     *ExemptDevicePcdPtr;
+  BOOLEAN           ExemptDeviceFound;
+  UINTN             Index;
+  // MU_CHANGE - END - TCBZ3541
 
   PciSegmentInfo = GetPciSegmentInfo (&SegmentCount);
   if (PciSegmentInfo == NULL) {
@@ -407,6 +421,29 @@ TestPointCheckPciBusMaster (
     for (Bus = PciSegmentInfo[Segment].StartBusNumber; Bus <= PciSegmentInfo[Segment].EndBusNumber; Bus++) {
       for (Device = 0; Device <= 0x1F; Device++) {
         for (Function = 0; Function <= 0x7; Function++) {
+          // MU_CHANGE - BEGIN - TCBZ3541
+          //
+          // Some platforms have devices which do not expose any additional
+          // risk of DMA attacks but are not able to be turned off.  Allow
+          // the platform to define these devices and do not record errors
+          // for these devices.
+          //
+          ExemptDevicePcdPtr = (EXEMPT_DEVICE *) PcdGetPtr (PcdTestPointIbvPlatformExemptPciBme);
+          ExemptDeviceFound = FALSE;
+          for (Index = 0; Index < (PcdGetSize (PcdTestPointIbvPlatformExemptPciBme) / sizeof (EXEMPT_DEVICE)); Index++) {
+            if (Segment == ExemptDevicePcdPtr[Index].Segment
+                && Bus == ExemptDevicePcdPtr[Index].Bus
+                && Device == ExemptDevicePcdPtr[Index].Device
+                && Function == ExemptDevicePcdPtr[Index].Function) {
+              ExemptDeviceFound = TRUE;
+            }
+          }
+
+          if (ExemptDeviceFound) {
+            continue;
+          }
+          // MU_CHANGE - END - TCBZ3541
+
           VendorId = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS(PciSegmentInfo[Segment].SegmentNumber, Bus, Device, Function, PCI_VENDOR_ID_OFFSET));
           //
           // If VendorId = 0xffff, there does not exist a device at this
