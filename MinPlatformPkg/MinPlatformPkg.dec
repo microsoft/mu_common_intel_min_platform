@@ -162,6 +162,12 @@
   #   Stage Advanced:                                             {0x03, 0x0F, 0x03, 0x1D, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature|{0x03, 0x0F, 0x03, 0x1D, 0x3F, 0x0F, 0x0F, 0x07, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}|VOID*|0x00100302
 
+  # MU_CHANGE - BEGIN - TCBZ3541
+  # The platform may define a list of devices that are exempt from PCI BME testing.
+  # PCD Format is {SegmentNumber1, BusNumber1, DeviceNumber1, FunctionNumber1, SegmentNumber2, BusNumber2, DeviceNumber2, FunctionNumber2, ...}
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme|{0}|VOID*|0x00100303
+  # MU_CHANGE - END - TCBZ3541
+
   ##
   ## The Flash relevant PCD are ineffective and will be patched basing on FDF definitions during build.
   ## Set all of them to 0 here to prevent from confusion.
