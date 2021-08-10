@@ -1,7 +1,7 @@
 ## @file
 #  Provide FSP wrapper hob process related function.
 #
-# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -55,7 +55,6 @@
   BaseMemoryLib
   HobLib
   DebugLib
-  FspWrapperPlatformLib
   PeiServicesLib
   PeiServicesTablePointerLib
 
