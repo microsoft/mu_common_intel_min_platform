@@ -1,7 +1,7 @@
 /** @file
   This is an implementation of the ACPI platform driver.
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -35,6 +35,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/MemoryAllocationLib.h>
 #include <Library/AslUpdateLib.h>
 #include <Library/PciSegmentInfoLib.h>
+#include <Library/SortLib.h>
+#include <Library/LocalApicLib.h>
 
 #include <Protocol/AcpiTable.h>
 #include <Protocol/MpService.h>
