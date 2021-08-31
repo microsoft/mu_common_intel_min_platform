@@ -7,7 +7,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 
 #include "AcpiPlatform.h"
-#define MAX_SOCKET (FixedPcdGet32 (PcdMaxCpuSocketCount))
 
 #pragma pack(1)
 
@@ -213,7 +212,7 @@ SortCpuLocalApicInTable (
       CpuIdMapPtr->SocketNum = (UINT32)-1;
     } //end if PROC ENABLE
   } //end for CurrentProcessor
-  
+
   //keep for debug purpose
   DEBUG ((DEBUG_INFO, "::ACPI::  APIC ID Order Table Init.   CoreThreadMask = %x,  mNumOfBitShift = %x\n", CoreThreadMask, mNumOfBitShift));
   DebugDisplayReOrderTable (TempCpuApicIdOrderTable);
@@ -244,7 +243,7 @@ SortCpuLocalApicInTable (
   }
 
   //
-  // 1. Sort TempCpuApicIdOrderTable, 
+  // 1. Sort TempCpuApicIdOrderTable,
   //    sort it by using ApicId from minimum to maximum (Socket0 to SocketN), and the BSP must in the fist location of the table.
   //    So, start sorting the table from the second element and total elements are mNumberOfCpus-1.
   //
@@ -283,7 +282,7 @@ SortCpuLocalApicInTable (
   //
   // 5. Re-assigen AcpiProcessorId for AcpiProcessorUId uses purpose.
   //
-  for (Socket = 0; Socket < MAX_SOCKET; Socket++) {
+  for (Socket = 0; Socket < FixedPcdGet32 (PcdMaxCpuSocketCount); Socket++) {
     for (CurrProcessor = 0, Index = 0; CurrProcessor < mNumberOfCpus; CurrProcessor++) {
       if (mCpuApicIdOrderTable[CurrProcessor].Flags && (mCpuApicIdOrderTable[CurrProcessor].SocketNum == Socket)) {
         mCpuApicIdOrderTable[CurrProcessor].AcpiProcessorId = (ProcessorInfoBuffer.Location.Package << mNumOfBitShift) + Index;
