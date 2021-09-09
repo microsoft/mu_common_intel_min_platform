@@ -41,7 +41,7 @@ DumpHsti (
 
   SecurityFeatures = (UINT8 *) (Hsti + 1);
 
-  // MU_CHANGE [BEGIN] - Make sure to include the 'Required' field, when present.
+  // MU_CHANGE TCBZ3612 [BEGIN] - Make sure to include the 'Required' field, when present.
   // Handle the IHV-only field.
   if (Hsti->Role == PLATFORM_SECURITY_ROLE_PLATFORM_REFERENCE) {
     DEBUG ((DEBUG_INFO, "  SecurityFeaturesRequired    - "));
@@ -51,7 +51,7 @@ DumpHsti (
     DEBUG ((DEBUG_INFO, "\n"));
     SecurityFeatures = (UINT8 *) (SecurityFeatures + Hsti->SecurityFeaturesSize);
   }
-  // MU_CHANGE [END]
+  // MU_CHANGE TCBZ3612 [END]
 
   DEBUG ((DEBUG_INFO, "  SecurityFeaturesImplemented - "));
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
