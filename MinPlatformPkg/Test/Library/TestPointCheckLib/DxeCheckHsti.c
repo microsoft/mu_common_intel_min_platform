@@ -41,7 +41,7 @@ DumpHsti (
 
   SecurityFeatures = (UINT8 *) (Hsti + 1);
 
-  // MU_CHANGE [BEGIN]
+  // MU_CHANGE [BEGIN] - Don't over-index the structure if it's missing fields.
   // Handle the IHV-only field.
   if (Hsti->Role == PLATFORM_SECURITY_ROLE_PLATFORM_REFERENCE) {
     DEBUG ((DEBUG_INFO, "  SecurityFeaturesRequired    - "));
