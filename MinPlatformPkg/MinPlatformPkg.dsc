@@ -141,20 +141,6 @@
 
 [Components]
 
-  # MU_CHANGE [BEGIN] - [TCBZ3033] Add missing components to DSC
-  MinPlatformPkg/Acpi/MinDsdt/MinDsdt.inf
-  MinPlatformPkg/Bds/Library/BoardBootManagerLibNull/BoardBootManagerLibNull.inf
-  MinPlatformPkg/Library/CompressLib/CompressLib.inf
-  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLib.inf
-  MinPlatformPkg/Library/SetCacheMtrrLib/SetCacheMtrrLibNull.inf
-  MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
-  MinPlatformPkg/PlatformInit/Library/PeiReportFvLib/PeiReportFvLib.inf
-  MinPlatformPkg/PlatformInit/Library/ReportCpuHobLib/ReportCpuHobLib.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
-  MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
-  # MU_CHANGE [END] - [TCBZ3033] Add missing components to DSC
-
   MinPlatformPkg/Library/PeiLib/PeiLib.inf
   MinPlatformPkg/Library/PeiHobVariableLibFce/PeiHobVariableLibFce.inf
   MinPlatformPkg/Library/PeiHobVariableLibFce/PeiHobVariableLibFceOptSize.inf
