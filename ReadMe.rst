@@ -61,7 +61,7 @@ Bug Fixes-dev
 | Starting commit: f36963a8 ("MinPlatformPkg/TpmPlatformHierarchyLib: Add disable support", 2021-06-07)
 | Destination commit: c962051c ("MinPlatformPkg: Move TpmPlatformHierarchyLib definition", 2021-08-04)
 
-- Incomplete
+- None
 
 Repo Maintenance
 ================
