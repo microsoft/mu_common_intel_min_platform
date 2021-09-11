@@ -141,6 +141,18 @@
 
 [Components]
 
+  # MU_CHANGE TCBZ3619 [BEGIN] - Add missing components.
+  MinPlatformPkg/Library/DxeRuntimeVariableReadLib/DxeRuntimeVariableReadLib.inf
+  MinPlatformPkg/Library/DxeRuntimeVariableWriteLib/DxeRuntimeVariableWriteLib.inf
+  MinPlatformPkg/Library/PeiVariableReadLib/PeiVariableReadLib.inf
+  MinPlatformPkg/Library/SmmVariableWriteLib/TraditionalMmVariableWriteLib.inf
+  MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
+  MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableReadLib.inf
+  MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableWriteLib.inf
+  MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
+  MinPlatformPkg/Library/SmmVariableReadLib/TraditionalMmVariableReadLib.inf
+  # MU_CHANGE TCBZ3619 [END] - Add missing components.
+
   MinPlatformPkg/Library/PeiLib/PeiLib.inf
   MinPlatformPkg/Library/PeiHobVariableLibFce/PeiHobVariableLibFce.inf
   MinPlatformPkg/Library/PeiHobVariableLibFce/PeiHobVariableLibFceOptSize.inf
