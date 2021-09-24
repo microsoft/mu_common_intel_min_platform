@@ -1,9 +1,10 @@
 /** @file
-  This file contains a structure definition for the ACPI 5.0 Fixed ACPI
+  This file contains a structure definition for the ACPI 6.3 Fixed ACPI
   Description Table (FADT).  The contents of this file should only be modified
   for bug fixes, no porting is required.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -44,8 +45,12 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // IA-PC Boot Architecture Flags
 //
-
 #define EFI_ACPI_IAPC_BOOT_ARCH         0 // To be fixed
+
+//
+// ARM Boot Architecture Flags
+//
+#define EFI_ACPI_ARM_BOOT_ARCH          0 // To be fixed
 
 //
 // Fixed Feature Flags
@@ -55,7 +60,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM1A Event Register Block Generic Address Information
 //
-#define EFI_ACPI_PM1A_EVT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM1A_EVT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM1A_EVT_BLK_BIT_WIDTH         0x20
 #define EFI_ACPI_PM1A_EVT_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_PM1A_EVT_BLK_ADDRESS           0 // To be fixed
@@ -63,7 +68,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM1B Event Register Block Generic Address Information
 //
-#define EFI_ACPI_PM1B_EVT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM1B_EVT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM1B_EVT_BLK_BIT_WIDTH         0x00
 #define EFI_ACPI_PM1B_EVT_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_PM1B_EVT_BLK_ADDRESS           0 // To be fixed
@@ -71,7 +76,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM1A Control Register Block Generic Address Information
 //
-#define EFI_ACPI_PM1A_CNT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM1A_CNT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM1A_CNT_BLK_BIT_WIDTH         0x10
 #define EFI_ACPI_PM1A_CNT_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_PM1A_CNT_BLK_ADDRESS           0 // To be fixed
@@ -79,7 +84,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM1B Control Register Block Generic Address Information
 //
-#define EFI_ACPI_PM1B_CNT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM1B_CNT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM1B_CNT_BLK_BIT_WIDTH         0x00
 #define EFI_ACPI_PM1B_CNT_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_PM1B_CNT_BLK_ADDRESS           0 // To be fixed
@@ -87,7 +92,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM2 Control Register Block Generic Address Information
 //
-#define EFI_ACPI_PM2_CNT_BLK_ADDRESS_SPACE_ID EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM2_CNT_BLK_ADDRESS_SPACE_ID EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM2_CNT_BLK_BIT_WIDTH        0x08
 #define EFI_ACPI_PM2_CNT_BLK_BIT_OFFSET       0x00
 #define EFI_ACPI_PM2_CNT_BLK_ADDRESS          0 // To be fixed
@@ -96,7 +101,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Power Management Timer Control Register Block Generic Address
 // Information
 //
-#define EFI_ACPI_PM_TMR_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_PM_TMR_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_PM_TMR_BLK_BIT_WIDTH         0x20
 #define EFI_ACPI_PM_TMR_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_PM_TMR_BLK_ADDRESS           0 // To be fixed
@@ -105,7 +110,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // General Purpose Event 0 Register Block Generic Address
 // Information
 //
-#define EFI_ACPI_GPE0_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_GPE0_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_GPE0_BLK_BIT_WIDTH         0  // size of R_PCH_ACPI_GPE0_STS_127_96 + R_PCH_ACPI_GPE0_EN_127_96
 #define EFI_ACPI_GPE0_BLK_BIT_OFFSET        0x00
 #define EFI_ACPI_GPE0_BLK_ADDRESS           0 // To be fixed
@@ -114,14 +119,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // General Purpose Event 1 Register Block Generic Address
 // Information
 //
-#define EFI_ACPI_GPE1_BLK_ADDRESS_SPACE_ID  EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_GPE1_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_GPE1_BLK_BIT_WIDTH         0x0
 #define EFI_ACPI_GPE1_BLK_BIT_OFFSET        0x0
 #define EFI_ACPI_GPE1_BLK_ADDRESS           0 // To be fixed
 //
 // Reset Register Generic Address Information
 //
-#define EFI_ACPI_RESET_REG_ADDRESS_SPACE_ID EFI_ACPI_2_0_SYSTEM_IO
+#define EFI_ACPI_RESET_REG_ADDRESS_SPACE_ID EFI_ACPI_6_3_SYSTEM_IO
 #define EFI_ACPI_RESET_REG_BIT_WIDTH        0x08
 #define EFI_ACPI_RESET_REG_BIT_OFFSET       0x00
 #define EFI_ACPI_RESET_REG_ADDRESS          0x00000CF9
@@ -162,11 +167,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Please modify all values in Fadt.h only.
 //
 
-EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
+EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
   {
-    EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
-    sizeof (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE),
-    EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_REVISION,
+    EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
+    sizeof (EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE),
+    EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_REVISION,
 
     //
     // Checksum will be updated at runtime
@@ -187,9 +192,9 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
   //
   // These addresses will be updated at runtime
   //
-  0x00000000, 
   0x00000000,
-  
+  0x00000000,
+
   EFI_ACPI_RESERVED_BYTE,
   EFI_ACPI_PREFERRED_PM_PROFILE,
   EFI_ACPI_SCI_INT,
@@ -198,7 +203,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
   EFI_ACPI_ACPI_DISABLE,
   EFI_ACPI_S4_BIOS_REQ,
   EFI_ACPI_PSTATE_CNT,
-  
+
   EFI_ACPI_PM1A_EVT_BLK_ADDRESS,
   EFI_ACPI_PM1B_EVT_BLK_ADDRESS,
   EFI_ACPI_PM1A_CNT_BLK_ADDRESS,
@@ -240,15 +245,13 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_RESET_REG_ADDRESS_SPACE_ID,
     EFI_ACPI_RESET_REG_BIT_WIDTH,
     EFI_ACPI_RESET_REG_BIT_OFFSET,
-    EFI_ACPI_5_0_BYTE,
+    EFI_ACPI_6_3_BYTE,
     EFI_ACPI_RESET_REG_ADDRESS
   },
   EFI_ACPI_RESET_VALUE,
-  {
-    EFI_ACPI_RESERVED_BYTE,
-    EFI_ACPI_RESERVED_BYTE,
-    EFI_ACPI_RESERVED_BYTE
-  },
+
+  EFI_ACPI_ARM_BOOT_ARCH,
+  EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_MINOR_REVISION,
 
   //
   // These addresses will be updated at runtime
@@ -263,7 +266,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM1A_EVT_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM1A_EVT_BLK_BIT_WIDTH,
     EFI_ACPI_PM1A_EVT_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_WORD,
+    EFI_ACPI_6_3_WORD,
     EFI_ACPI_PM1A_EVT_BLK_ADDRESS
   },
   {
@@ -273,7 +276,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM1B_EVT_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM1B_EVT_BLK_BIT_WIDTH,
     EFI_ACPI_PM1B_EVT_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_WORD,
+    EFI_ACPI_6_3_WORD,
     EFI_ACPI_PM1B_EVT_BLK_ADDRESS
   },
   {
@@ -283,7 +286,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM1A_CNT_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM1A_CNT_BLK_BIT_WIDTH,
     EFI_ACPI_PM1A_CNT_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_WORD,
+    EFI_ACPI_6_3_WORD,
     EFI_ACPI_PM1A_CNT_BLK_ADDRESS
   },
   {
@@ -293,7 +296,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM1B_CNT_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM1B_CNT_BLK_BIT_WIDTH,
     EFI_ACPI_PM1B_CNT_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_WORD,
+    EFI_ACPI_6_3_WORD,
     EFI_ACPI_PM1B_CNT_BLK_ADDRESS
   },
   {
@@ -303,7 +306,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM2_CNT_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM2_CNT_BLK_BIT_WIDTH,
     EFI_ACPI_PM2_CNT_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_BYTE,
+    EFI_ACPI_6_3_BYTE,
     EFI_ACPI_PM2_CNT_BLK_ADDRESS
   },
   {
@@ -313,7 +316,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_PM_TMR_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_PM_TMR_BLK_BIT_WIDTH,
     EFI_ACPI_PM_TMR_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_DWORD,
+    EFI_ACPI_6_3_DWORD,
     EFI_ACPI_PM_TMR_BLK_ADDRESS
   },
   {
@@ -323,7 +326,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_GPE0_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_GPE0_BLK_BIT_WIDTH,
     EFI_ACPI_GPE0_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_BYTE,
+    EFI_ACPI_6_3_BYTE,
     EFI_ACPI_GPE0_BLK_ADDRESS
   },
   {
@@ -333,7 +336,7 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_GPE1_BLK_ADDRESS_SPACE_ID,
     EFI_ACPI_GPE1_BLK_BIT_WIDTH,
     EFI_ACPI_GPE1_BLK_BIT_OFFSET,
-    EFI_ACPI_5_0_BYTE,
+    EFI_ACPI_6_3_BYTE,
     EFI_ACPI_GPE1_BLK_ADDRESS
   },
   {
@@ -355,5 +358,10 @@ EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     0,
     0,
     0
-  }
+  },
+
+  //
+  // Hypervisor Vendor Identity
+  //
+  0x0000000000000000,
 };

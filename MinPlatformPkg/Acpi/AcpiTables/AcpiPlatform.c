@@ -2,6 +2,7 @@
   ACPI Platform Driver
 
 Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -11,7 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #pragma pack(1)
 
 typedef struct {
-  UINT32   AcpiProcessorId;
+  UINT32   AcpiProcessorUid;
   UINT32   ApicId;
   UINT32   Flags;
   UINT32   SocketNum;
@@ -25,9 +26,9 @@ typedef struct {
 // Define Union of IO APIC & Local APIC structure;
 //
 typedef union {
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE AcpiLocalApic;
-  EFI_ACPI_4_0_IO_APIC_STRUCTURE              AcpiIoApic;
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE AcpiLocalx2Apic;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE   AcpiLocalApic;
+  EFI_ACPI_6_3_IO_APIC_STRUCTURE                AcpiIoApic;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE AcpiLocalx2Apic;
   struct {
     UINT8 Type;
     UINT8 Length;
@@ -36,9 +37,9 @@ typedef union {
 
 #pragma pack()
 
-extern EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE  Facs;
-extern EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE Fadt;
-extern EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER  Hpet;
+extern EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE     Facs;
+extern EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE        Fadt;
+extern EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER Hpet;
 extern EFI_ACPI_WSMT_TABLE Wsmt;
 
 VOID  *mLocalTable[] = {
@@ -103,7 +104,7 @@ DebugDisplayReOrderTable (
   for (Index = 0; Index < mNumberOfCpus; Index++) {
     DEBUG ((DEBUG_INFO, " %02d       0x%02X      0x%02X       %d      %d      %d\n",
                            Index,
-                           CpuApicIdOrderTable[Index].AcpiProcessorId,
+                           CpuApicIdOrderTable[Index].AcpiProcessorUid,
                            CpuApicIdOrderTable[Index].ApicId,
                            CpuApicIdOrderTable[Index].Thread,
                            CpuApicIdOrderTable[Index].Flags,
@@ -118,31 +119,31 @@ AppendCpuMapTableEntry (
   )
 {
   EFI_STATUS    Status;
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE *LocalApicPtr;
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE *LocalX2ApicPtr;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE   *LocalApicPtr;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE *LocalX2ApicPtr;
   UINT8         Type;
 
   Status = EFI_SUCCESS;
   Type = ((ACPI_APIC_STRUCTURE_PTR *)ApicPtr)->AcpiApicCommon.Type;
-  LocalApicPtr = (EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE *)(&((ACPI_APIC_STRUCTURE_PTR *)ApicPtr)->AcpiLocalApic);
-  LocalX2ApicPtr = (EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE *)(&((ACPI_APIC_STRUCTURE_PTR *)ApicPtr)->AcpiLocalx2Apic);
+  LocalApicPtr = (EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE *)(&((ACPI_APIC_STRUCTURE_PTR *)ApicPtr)->AcpiLocalApic);
+  LocalX2ApicPtr = (EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE *)(&((ACPI_APIC_STRUCTURE_PTR *)ApicPtr)->AcpiLocalx2Apic);
 
-  if(Type == EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC) {
+  if(Type == EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC) {
     if(!mX2ApicEnabled) {
-      LocalApicPtr->Flags           = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].Flags;
-      LocalApicPtr->ApicId          = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].ApicId;
-      LocalApicPtr->AcpiProcessorId = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].AcpiProcessorId;
+      LocalApicPtr->Flags            = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].Flags;
+      LocalApicPtr->ApicId           = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].ApicId;
+      LocalApicPtr->AcpiProcessorUid = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].AcpiProcessorUid;
     } else {
-      LocalApicPtr->Flags           = 0;
-      LocalApicPtr->ApicId          = 0xFF;
-      LocalApicPtr->AcpiProcessorId = (UINT8)0xFF;
+      LocalApicPtr->Flags            = 0;
+      LocalApicPtr->ApicId           = 0xFF;
+      LocalApicPtr->AcpiProcessorUid = (UINT8)0xFF;
       Status = EFI_UNSUPPORTED;
     }
-  } else if(Type == EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC) {
+  } else if(Type == EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC) {
     if(mX2ApicEnabled) {
       LocalX2ApicPtr->Flags            = (UINT8)mCpuApicIdOrderTable[LocalApicCounter].Flags;
       LocalX2ApicPtr->X2ApicId         = mCpuApicIdOrderTable[LocalApicCounter].ApicId;
-      LocalX2ApicPtr->AcpiProcessorUid = mCpuApicIdOrderTable[LocalApicCounter].AcpiProcessorId;
+      LocalX2ApicPtr->AcpiProcessorUid = mCpuApicIdOrderTable[LocalApicCounter].AcpiProcessorUid;
     } else {
       LocalX2ApicPtr->Flags            = 0;
       LocalX2ApicPtr->X2ApicId         = (UINT32)-1;
@@ -201,15 +202,15 @@ SortCpuLocalApicInTable (
       //update processorbitMask
       if (CpuIdMapPtr->Flags == 1) {
         if (mForceX2ApicId) {
-          CpuIdMapPtr->SocketNum &= 0x7;
-          CpuIdMapPtr->AcpiProcessorId &= 0xFF; //keep lower 8bit due to use Proc obj in dsdt
+          CpuIdMapPtr->SocketNum        &= 0x7;
+          CpuIdMapPtr->AcpiProcessorUid &= 0xFF; //keep lower 8bit due to use Proc obj in dsdt
         }
       }
     } else {  //not enabled
-      CpuIdMapPtr->ApicId  = (UINT32)-1;
-      CpuIdMapPtr->Thread = (UINT32)-1;
-      CpuIdMapPtr->Flags   = 0;
-      CpuIdMapPtr->SocketNum = (UINT32)-1;
+      CpuIdMapPtr->ApicId     = (UINT32)-1;
+      CpuIdMapPtr->Thread     = (UINT32)-1;
+      CpuIdMapPtr->Flags      = 0;
+      CpuIdMapPtr->SocketNum  = (UINT32)-1;
     } //end if PROC ENABLE
   } //end for CurrentProcessor
 
@@ -280,12 +281,12 @@ SortCpuLocalApicInTable (
   }
 
   //
-  // 5. Re-assigen AcpiProcessorId for AcpiProcessorUId uses purpose.
+  // 5. Re-assign AcpiProcessorId for AcpiProcessorUid uses purpose.
   //
   for (Socket = 0; Socket < FixedPcdGet32 (PcdMaxCpuSocketCount); Socket++) {
     for (CurrProcessor = 0, Index = 0; CurrProcessor < mNumberOfCpus; CurrProcessor++) {
       if (mCpuApicIdOrderTable[CurrProcessor].Flags && (mCpuApicIdOrderTable[CurrProcessor].SocketNum == Socket)) {
-        mCpuApicIdOrderTable[CurrProcessor].AcpiProcessorId = (ProcessorInfoBuffer.Location.Package << mNumOfBitShift) + Index;
+        mCpuApicIdOrderTable[CurrProcessor].AcpiProcessorUid = (ProcessorInfoBuffer.Location.Package << mNumOfBitShift) + Index;
         Index++;
       }
     }
@@ -312,17 +313,17 @@ typedef struct {
 } STRUCTURE_HEADER;
 
 STRUCTURE_HEADER mMadtStructureTable[] = {
-  {EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC,          sizeof (EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE)},
-  {EFI_ACPI_4_0_IO_APIC,                       sizeof (EFI_ACPI_4_0_IO_APIC_STRUCTURE)},
-  {EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE,     sizeof (EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE)},
-  {EFI_ACPI_4_0_NON_MASKABLE_INTERRUPT_SOURCE, sizeof (EFI_ACPI_4_0_NON_MASKABLE_INTERRUPT_SOURCE_STRUCTURE)},
-  {EFI_ACPI_4_0_LOCAL_APIC_NMI,                sizeof (EFI_ACPI_4_0_LOCAL_APIC_NMI_STRUCTURE)},
-  {EFI_ACPI_4_0_LOCAL_APIC_ADDRESS_OVERRIDE,   sizeof (EFI_ACPI_4_0_LOCAL_APIC_ADDRESS_OVERRIDE_STRUCTURE)},
-  {EFI_ACPI_4_0_IO_SAPIC,                      sizeof (EFI_ACPI_4_0_IO_SAPIC_STRUCTURE)},
-  {EFI_ACPI_4_0_LOCAL_SAPIC,                   sizeof (EFI_ACPI_4_0_PROCESSOR_LOCAL_SAPIC_STRUCTURE)},
-  {EFI_ACPI_4_0_PLATFORM_INTERRUPT_SOURCES,    sizeof (EFI_ACPI_4_0_PLATFORM_INTERRUPT_SOURCES_STRUCTURE)},
-  {EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC,        sizeof (EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE)},
-  {EFI_ACPI_4_0_LOCAL_X2APIC_NMI,              sizeof (EFI_ACPI_4_0_LOCAL_X2APIC_NMI_STRUCTURE)}
+  {EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC,          sizeof (EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE)},
+  {EFI_ACPI_6_3_IO_APIC,                       sizeof (EFI_ACPI_6_3_IO_APIC_STRUCTURE)},
+  {EFI_ACPI_6_3_INTERRUPT_SOURCE_OVERRIDE,     sizeof (EFI_ACPI_6_3_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE)},
+  {EFI_ACPI_6_3_NON_MASKABLE_INTERRUPT_SOURCE, sizeof (EFI_ACPI_6_3_NON_MASKABLE_INTERRUPT_SOURCE_STRUCTURE)},
+  {EFI_ACPI_6_3_LOCAL_APIC_NMI,                sizeof (EFI_ACPI_6_3_LOCAL_APIC_NMI_STRUCTURE)},
+  {EFI_ACPI_6_3_LOCAL_APIC_ADDRESS_OVERRIDE,   sizeof (EFI_ACPI_6_3_LOCAL_APIC_ADDRESS_OVERRIDE_STRUCTURE)},
+  {EFI_ACPI_6_3_IO_SAPIC,                      sizeof (EFI_ACPI_6_3_IO_SAPIC_STRUCTURE)},
+  {EFI_ACPI_6_3_LOCAL_SAPIC,                   sizeof (EFI_ACPI_6_3_PROCESSOR_LOCAL_SAPIC_STRUCTURE)},
+  {EFI_ACPI_6_3_PLATFORM_INTERRUPT_SOURCES,    sizeof (EFI_ACPI_6_3_PLATFORM_INTERRUPT_SOURCES_STRUCTURE)},
+  {EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC,        sizeof (EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE)},
+  {EFI_ACPI_6_3_LOCAL_X2APIC_NMI,              sizeof (EFI_ACPI_6_3_LOCAL_X2APIC_NMI_STRUCTURE)}
 };
 
 /**
@@ -481,7 +482,7 @@ InitializeHeader (
 **/
 EFI_STATUS
 InitializeMadtHeader (
-  IN OUT EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *MadtHeader
+  IN OUT EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *MadtHeader
   )
 {
   EFI_STATUS Status;
@@ -493,8 +494,8 @@ InitializeMadtHeader (
 
   Status = InitializeHeader (
              &MadtHeader->Header,
-             EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE,
-             EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_REVISION,
+             EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE,
+             EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_REVISION,
              0
              );
   if (EFI_ERROR (Status)) {
@@ -502,7 +503,7 @@ InitializeMadtHeader (
   }
 
   MadtHeader->LocalApicAddress       = PcdGet32(PcdLocalApicAddress);
-  MadtHeader->Flags                  = EFI_ACPI_4_0_PCAT_COMPAT;
+  MadtHeader->Flags                  = EFI_ACPI_6_3_PCAT_COMPAT;
 
   return EFI_SUCCESS;
 }
@@ -539,7 +540,7 @@ CopyStructure (
   //
   // Initialize the number of table entries and the table based on the table header passed in.
   //
-  if (Header->Signature == EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE) {
+  if (Header->Signature == EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE) {
     TableNumEntries = sizeof (mMadtStructureTable) / sizeof (STRUCTURE_HEADER);
     StructureTable = mMadtStructureTable;
   } else {
@@ -649,7 +650,7 @@ BuildAcpiTable (
     return EFI_INVALID_PARAMETER;
   }
 
-  if (AcpiHeader->Signature != EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE) {
+  if (AcpiHeader->Signature != EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE) {
     DEBUG ((
       DEBUG_ERROR,
       "MADT header signature is expected, actually 0x%08x\n",
@@ -740,15 +741,15 @@ InstallMadtFromScratch (
 {
   EFI_STATUS                                          Status;
   UINTN                                               Index;
-  EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *NewMadtTable;
+  EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *NewMadtTable;
   UINTN                                               TableHandle;
-  EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER MadtTableHeader;
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE         ProcLocalApicStruct;
-  EFI_ACPI_4_0_IO_APIC_STRUCTURE                      IoApicStruct;
-  EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE    IntSrcOverrideStruct;
-  EFI_ACPI_4_0_LOCAL_APIC_NMI_STRUCTURE               LocalApciNmiStruct;
-  EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE       ProcLocalX2ApicStruct;
-  EFI_ACPI_4_0_LOCAL_X2APIC_NMI_STRUCTURE             LocalX2ApicNmiStruct;
+  EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER MadtTableHeader;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE         ProcLocalApicStruct;
+  EFI_ACPI_6_3_IO_APIC_STRUCTURE                      IoApicStruct;
+  EFI_ACPI_6_3_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE    IntSrcOverrideStruct;
+  EFI_ACPI_6_3_LOCAL_APIC_NMI_STRUCTURE               LocalApciNmiStruct;
+  EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE       ProcLocalX2ApicStruct;
+  EFI_ACPI_6_3_LOCAL_X2APIC_NMI_STRUCTURE             LocalX2ApicNmiStruct;
   STRUCTURE_HEADER                                    **MadtStructs;
   UINTN                                               MaxMadtStructCount;
   UINTN                                               MadtStructsIndex;
@@ -809,11 +810,11 @@ InstallMadtFromScratch (
   //
   // Build Processor Local APIC Structures and Processor Local X2APIC Structures
   //
-  ProcLocalApicStruct.Type = EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC;
-  ProcLocalApicStruct.Length = sizeof (EFI_ACPI_4_0_PROCESSOR_LOCAL_APIC_STRUCTURE);
+  ProcLocalApicStruct.Type = EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC;
+  ProcLocalApicStruct.Length = sizeof (EFI_ACPI_6_3_PROCESSOR_LOCAL_APIC_STRUCTURE);
 
-  ProcLocalX2ApicStruct.Type = EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC;
-  ProcLocalX2ApicStruct.Length = sizeof (EFI_ACPI_4_0_PROCESSOR_LOCAL_X2APIC_STRUCTURE);
+  ProcLocalX2ApicStruct.Type = EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC;
+  ProcLocalX2ApicStruct.Length = sizeof (EFI_ACPI_6_3_PROCESSOR_LOCAL_X2APIC_STRUCTURE);
   ProcLocalX2ApicStruct.Reserved[0] = 0;
   ProcLocalX2ApicStruct.Reserved[1] = 0;
 
@@ -824,9 +825,9 @@ InstallMadtFromScratch (
     // use a processor local x2APIC structure.
     //
     if (!mX2ApicEnabled && mCpuApicIdOrderTable[Index].ApicId < MAX_UINT8) {
-      ProcLocalApicStruct.Flags           = (UINT8) mCpuApicIdOrderTable[Index].Flags;
-      ProcLocalApicStruct.ApicId          = (UINT8) mCpuApicIdOrderTable[Index].ApicId;
-      ProcLocalApicStruct.AcpiProcessorId = (UINT8) mCpuApicIdOrderTable[Index].AcpiProcessorId;
+      ProcLocalApicStruct.Flags            = (UINT8) mCpuApicIdOrderTable[Index].Flags;
+      ProcLocalApicStruct.ApicId           = (UINT8) mCpuApicIdOrderTable[Index].ApicId;
+      ProcLocalApicStruct.AcpiProcessorUid = (UINT8) mCpuApicIdOrderTable[Index].AcpiProcessorUid;
 
       ASSERT (MadtStructsIndex < MaxMadtStructCount);
       Status = CopyStructure (
@@ -837,7 +838,7 @@ InstallMadtFromScratch (
     } else if (mCpuApicIdOrderTable[Index].ApicId != 0xFFFFFFFF) {
       ProcLocalX2ApicStruct.Flags            = (UINT8) mCpuApicIdOrderTable[Index].Flags;
       ProcLocalX2ApicStruct.X2ApicId         = mCpuApicIdOrderTable[Index].ApicId;
-      ProcLocalX2ApicStruct.AcpiProcessorUid = mCpuApicIdOrderTable[Index].AcpiProcessorId;
+      ProcLocalX2ApicStruct.AcpiProcessorUid = mCpuApicIdOrderTable[Index].AcpiProcessorUid;
 
       ASSERT (MadtStructsIndex < MaxMadtStructCount);
       Status = CopyStructure (
@@ -855,8 +856,8 @@ InstallMadtFromScratch (
   //
   // Build I/O APIC Structures
   //
-  IoApicStruct.Type = EFI_ACPI_4_0_IO_APIC;
-  IoApicStruct.Length = sizeof (EFI_ACPI_4_0_IO_APIC_STRUCTURE);
+  IoApicStruct.Type = EFI_ACPI_6_3_IO_APIC;
+  IoApicStruct.Length = sizeof (EFI_ACPI_6_3_IO_APIC_STRUCTURE);
   IoApicStruct.Reserved = 0;
 
   PcIoApicEnable = PcdGet32 (PcdPcIoApicEnable);
@@ -902,8 +903,8 @@ InstallMadtFromScratch (
   //
   // Build Interrupt Source Override Structures
   //
-  IntSrcOverrideStruct.Type = EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE;
-  IntSrcOverrideStruct.Length = sizeof (EFI_ACPI_4_0_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE);
+  IntSrcOverrideStruct.Type = EFI_ACPI_6_3_INTERRUPT_SOURCE_OVERRIDE;
+  IntSrcOverrideStruct.Length = sizeof (EFI_ACPI_6_3_INTERRUPT_SOURCE_OVERRIDE_STRUCTURE);
 
   //
   // IRQ0=>IRQ2 Interrupt Source Override Structure
@@ -946,11 +947,11 @@ InstallMadtFromScratch (
   //
   // Build Local APIC NMI Structures
   //
-  LocalApciNmiStruct.Type   = EFI_ACPI_4_0_LOCAL_APIC_NMI;
-  LocalApciNmiStruct.Length = sizeof (EFI_ACPI_4_0_LOCAL_APIC_NMI_STRUCTURE);
-  LocalApciNmiStruct.AcpiProcessorId = 0xFF;      // Applies to all processors
-  LocalApciNmiStruct.Flags           = 0x0005;    // Flags - Edge-tiggered, Active High
-  LocalApciNmiStruct.LocalApicLint   = 0x1;
+  LocalApciNmiStruct.Type   = EFI_ACPI_6_3_LOCAL_APIC_NMI;
+  LocalApciNmiStruct.Length = sizeof (EFI_ACPI_6_3_LOCAL_APIC_NMI_STRUCTURE);
+  LocalApciNmiStruct.AcpiProcessorUid = 0xFF;      // Applies to all processors
+  LocalApciNmiStruct.Flags            = 0x0005;    // Flags - Edge-tiggered, Active High
+  LocalApciNmiStruct.LocalApicLint    = 0x1;
 
   ASSERT (MadtStructsIndex < MaxMadtStructCount);
   Status = CopyStructure (
@@ -967,8 +968,8 @@ InstallMadtFromScratch (
   // Build Local x2APIC NMI Structure
   //
   if (mX2ApicEnabled) {
-    LocalX2ApicNmiStruct.Type   = EFI_ACPI_4_0_LOCAL_X2APIC_NMI;
-    LocalX2ApicNmiStruct.Length = sizeof (EFI_ACPI_4_0_LOCAL_X2APIC_NMI_STRUCTURE);
+    LocalX2ApicNmiStruct.Type   = EFI_ACPI_6_3_LOCAL_X2APIC_NMI;
+    LocalX2ApicNmiStruct.Length = sizeof (EFI_ACPI_6_3_LOCAL_X2APIC_NMI_STRUCTURE);
     LocalX2ApicNmiStruct.Flags  = 0x000D;                // Flags - Level-tiggered, Active High
     LocalX2ApicNmiStruct.AcpiProcessorUid = 0xFFFFFFFF;  // Applies to all processors
     LocalX2ApicNmiStruct.LocalX2ApicLint  = 0x01;
@@ -992,12 +993,12 @@ InstallMadtFromScratch (
   // Build Madt Structure from the Madt Header and collection of pointers in MadtStructs[]
   //
   Status = BuildAcpiTable (
-             (EFI_ACPI_DESCRIPTION_HEADER *) &MadtTableHeader,
-             sizeof (EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER),
-             MadtStructs,
-             MadtStructsIndex,
-             (UINT8 **) &NewMadtTable
-             );
+            (EFI_ACPI_DESCRIPTION_HEADER *) &MadtTableHeader,
+            sizeof (EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER),
+            MadtStructs,
+            MadtStructsIndex,
+            (UINT8 **)&NewMadtTable
+            );
   if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_ERROR, "BuildAcpiTable failed: %r\n", Status));
     goto Done;
@@ -1087,7 +1088,7 @@ InstallMcfgFromScratch (
   }
 
   //
-  // Publish Madt Structure to ACPI
+  // Publish Mcfg Structure to ACPI
   //
   Status = mAcpiTable->InstallAcpiTable (
                          mAcpiTable,
@@ -1120,7 +1121,7 @@ PlatformUpdateTables (
   EFI_ACPI_DESCRIPTION_HEADER               *TableHeader;
   UINT8                                     *TempOemId;
   UINT64                                    TempOemTableId;
-  EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
+  EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE *FadtHeader;
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *HpetTable;
   UINT32                                           HpetBaseAddress;
   EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_BLOCK_ID     HpetBlockId;
@@ -1177,12 +1178,12 @@ PlatformUpdateTables (
   //
   switch (Table->Signature) {
 
-  case EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
-    ASSERT (FALSE);
+  case EFI_ACPI_6_3_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
+    ASSERT(FALSE);
     break;
 
-  case EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
-    FadtHeader    = (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
+  case EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
+    FadtHeader = (EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
 
     FadtHeader->PreferredPmProfile = PcdGet8 (PcdFadtPreferredPmProfile);
     FadtHeader->IaPcBootArch       = PcdGet16 (PcdFadtIaPcBootArch);
@@ -1228,7 +1229,7 @@ PlatformUpdateTables (
     DEBUG ((DEBUG_INFO, "  Flags 0x%x\n", FadtHeader->Flags));
     break;
 
-  case EFI_ACPI_3_0_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
+  case EFI_ACPI_6_3_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
     HpetTable = (EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *)Table;
     HpetBaseAddress = PcdGet32 (PcdHpetBaseAddress);
     HpetTable->BaseAddressLower32Bit.Address = HpetBaseAddress;
@@ -1280,8 +1281,8 @@ IsHardwareChange (
   UINTN                         HWChangeSize;
   UINT32                        PciId;
   UINTN                         Handle;
-  EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *FacsPtr;
-  EFI_ACPI_3_0_FIXED_ACPI_DESCRIPTION_TABLE    *pFADT;
+  EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE *FacsPtr;
+  EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE    *pFADT;
 
   HandleCount  = 0;
   HandleBuffer = NULL;
@@ -1327,7 +1328,7 @@ IsHardwareChange (
   //
   Handle = 0;
   Status = LocateAcpiTableBySignature (
-              EFI_ACPI_1_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
+              EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
               (EFI_ACPI_DESCRIPTION_HEADER **) &pFADT,
               &Handle
               );
@@ -1349,7 +1350,7 @@ IsHardwareChange (
   //
   // Set HardwareSignature value based on CRC value.
   //
-  FacsPtr = (EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)pFADT->FirmwareCtrl;
+  FacsPtr = (EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)pFADT->FirmwareCtrl;
   FacsPtr->HardwareSignature = CRC;
   FreePool (HWChange);
 }

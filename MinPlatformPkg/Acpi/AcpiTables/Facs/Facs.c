@@ -1,9 +1,10 @@
 /** @file
-  This file contains a structure definition for the ACPI 5.0 Firmware ACPI
+  This file contains a structure definition for the ACPI 6.3 Firmware ACPI
   Control Structure (FACS).  The contents of this file should only be modified
   for bug fixes, no porting is required.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -35,9 +36,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Please modify all values in Facs.h only.
 //
 
-EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE Facs = {
-  EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE_SIGNATURE,
-  sizeof (EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE),
+EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE Facs = {
+  EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE_SIGNATURE,
+  sizeof (EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE),
 
   //
   // Hardware Signature will be updated at runtime
@@ -48,7 +49,7 @@ EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE Facs = {
   EFI_ACPI_GLOBAL_LOCK,
   EFI_ACPI_FIRMWARE_CONTROL_STRUCTURE_FLAGS,
   EFI_ACPI_X_FIRMWARE_WAKING_VECTOR,
-  EFI_ACPI_5_0_FIRMWARE_ACPI_CONTROL_STRUCTURE_VERSION,
+  EFI_ACPI_6_3_FIRMWARE_ACPI_CONTROL_STRUCTURE_VERSION,
   {
     EFI_ACPI_RESERVED_BYTE,
     EFI_ACPI_RESERVED_BYTE,
