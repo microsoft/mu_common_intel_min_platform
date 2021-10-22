@@ -3,6 +3,7 @@
 
 Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.<BR>
+Copyright (c) 2021, AMD Incorporated. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -947,21 +948,23 @@ InstallMadtFromScratch (
   //
   // Build Local APIC NMI Structures
   //
-  LocalApciNmiStruct.Type   = EFI_ACPI_6_3_LOCAL_APIC_NMI;
-  LocalApciNmiStruct.Length = sizeof (EFI_ACPI_6_3_LOCAL_APIC_NMI_STRUCTURE);
-  LocalApciNmiStruct.AcpiProcessorUid = 0xFF;      // Applies to all processors
-  LocalApciNmiStruct.Flags            = 0x0005;    // Flags - Edge-tiggered, Active High
-  LocalApciNmiStruct.LocalApicLint    = 0x1;
+  if (!mX2ApicEnabled) {
+    LocalApciNmiStruct.Type   = EFI_ACPI_6_3_LOCAL_APIC_NMI;
+    LocalApciNmiStruct.Length = sizeof (EFI_ACPI_6_3_LOCAL_APIC_NMI_STRUCTURE);
+    LocalApciNmiStruct.AcpiProcessorUid = 0xFF;      // Applies to all processors
+    LocalApciNmiStruct.Flags            = 0x0005;    // Flags - Edge-tiggered, Active High
+    LocalApciNmiStruct.LocalApicLint    = 0x1;
 
-  ASSERT (MadtStructsIndex < MaxMadtStructCount);
-  Status = CopyStructure (
-             &MadtTableHeader.Header,
-             (STRUCTURE_HEADER *) &LocalApciNmiStruct,
-             &MadtStructs[MadtStructsIndex++]
-             );
-  if (EFI_ERROR (Status)) {
-    DEBUG ((DEBUG_ERROR, "CopyMadtStructure (APIC NMI) failed: %r\n", Status));
-    goto Done;
+    ASSERT (MadtStructsIndex < MaxMadtStructCount);
+    Status = CopyStructure (
+              &MadtTableHeader.Header,
+              (STRUCTURE_HEADER *) &LocalApciNmiStruct,
+              &MadtStructs[MadtStructsIndex++]
+              );
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_ERROR, "CopyMadtStructure (APIC NMI) failed: %r\n", Status));
+      goto Done;
+    }
   }
 
   //
@@ -1453,6 +1456,10 @@ InstallAcpiPlatform (
 
   DEBUG ((DEBUG_INFO, "mNumberOfCpus - %d\n", mNumberOfCpus));
   DEBUG ((DEBUG_INFO, "mNumberOfEnabledCPUs - %d\n", mNumberOfEnabledCPUs));
+
+  if (LOCAL_APIC_MODE_X2APIC == GetApicMode ()) {
+    mX2ApicEnabled = TRUE;
+  }
 
   DEBUG ((DEBUG_INFO, "mX2ApicEnabled - 0x%x\n", mX2ApicEnabled));
   DEBUG ((DEBUG_INFO, "mForceX2ApicId - 0x%x\n", mForceX2ApicId));
