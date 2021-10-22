@@ -287,7 +287,7 @@ SortCpuLocalApicInTable (
   for (Socket = 0; Socket < FixedPcdGet32 (PcdMaxCpuSocketCount); Socket++) {
     for (CurrProcessor = 0, Index = 0; CurrProcessor < mNumberOfCpus; CurrProcessor++) {
       if (mCpuApicIdOrderTable[CurrProcessor].Flags && (mCpuApicIdOrderTable[CurrProcessor].SocketNum == Socket)) {
-        mCpuApicIdOrderTable[CurrProcessor].AcpiProcessorUid = (ProcessorInfoBuffer.Location.Package << mNumOfBitShift) + Index;
+        mCpuApicIdOrderTable[CurrProcessor].AcpiProcessorUid = (mCpuApicIdOrderTable[CurrProcessor].SocketNum << mNumOfBitShift) + Index;
         Index++;
       }
     }
