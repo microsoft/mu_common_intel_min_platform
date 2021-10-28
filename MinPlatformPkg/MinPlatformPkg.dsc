@@ -108,7 +108,6 @@
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
 
 [LibraryClasses.common.DXE_SMM_DRIVER]
-  SpiFlashCommonLib|MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
 
@@ -117,7 +116,6 @@
   MemoryAllocationLib|StandaloneMmPkg/Library/StandaloneMmMemoryAllocationLib/StandaloneMmMemoryAllocationLib.inf
   MmServicesTableLib|MdePkg/Library/StandaloneMmServicesTableLib/StandaloneMmServicesTableLib.inf
   PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
-  SpiFlashCommonLib|MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
   StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
   VariableReadLib|MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
   VariableWriteLib|MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
@@ -159,8 +157,6 @@
 
   MinPlatformPkg/Bds/Library/BoardBootManagerLibNull/BoardBootManagerLibNull.inf
   MinPlatformPkg/Bds/Library/DxePlatformBootManagerLib/DxePlatformBootManagerLib.inf
-
-  MinPlatformPkg/Flash/Library/SpiFlashCommonLibNull/SpiFlashCommonLibNull.inf
 
   MinPlatformPkg/FspWrapper/SaveMemoryConfig/SaveMemoryConfig.inf
   MinPlatformPkg/FspWrapper/Library/PeiFspWrapperHobProcessLib/PeiFspWrapperHobProcessLib.inf
