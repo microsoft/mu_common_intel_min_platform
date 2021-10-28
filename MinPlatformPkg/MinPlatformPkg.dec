@@ -63,8 +63,6 @@
   SiliconPolicyInitLib|Include/Library/SiliconPolicyInitLib.h
   SiliconPolicyUpdateLib|Include/Library/SiliconPolicyUpdateLib.h
 
-  SpiFlashCommonLib|Include/Library/SpiFlashCommonLib.h
-
   BoardInitLib|Include/Library/BoardInitLib.h
   MultiBoardInitSupportLib|Include/Library/MultiBoardInitSupportLib.h
   SecBoardInitLib|Include/Library/SecBoardInitLib.h
