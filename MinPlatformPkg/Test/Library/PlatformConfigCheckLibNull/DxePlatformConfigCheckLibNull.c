@@ -13,14 +13,14 @@
 #include <Library/PlatformConfigCheckLib.h>
 
 /**
-  This function peforms platform level checks at Exit Boot Services.
+  This function dumps platform level information at Exit Boot Services.
 
   @retval     EFI_SUCCESS  Function has completed successfully.
               Other        Function error indicates failure.
 **/
 EFI_STATUS
 EFIAPI
-PlatformConfigCheckExitBootServices (
+PlatformConfigDumpExitBootServices (
   VOID
   )
 {

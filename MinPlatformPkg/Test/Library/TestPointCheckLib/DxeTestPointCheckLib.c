@@ -1258,7 +1258,7 @@ TestPointExitBootServices (
 {
   DEBUG ((DEBUG_INFO, "======== TestPointExitBootServices - Enter\n"));
 
-  PlatformConfigCheckExitBootServices ();
+  PlatformConfigDumpExitBootServices ();
 
   DEBUG ((DEBUG_INFO, "======== TestPointExitBootServices - Exit\n"));
 
