@@ -33,7 +33,7 @@
   PciSegmentLib
   PciSegmentInfoLib
   SafeIntLib # MU_CHANGE: TCBZ3398
-  DxePlatformConfigCheckLib
+  PlatformConfigCheckLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec

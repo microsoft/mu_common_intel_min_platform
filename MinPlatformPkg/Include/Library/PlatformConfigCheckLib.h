@@ -1,15 +1,14 @@
 /** @file
+  Platform configuration check and information dump library NULL implementation.
 
-  Platform configuration check library for TestPointCheckLib
+  SPDX-License-Identifier: BSD-2-Clause-Patent
 
-  Copyright (c) Microsoft Corporation. All rights reserved
+  Copyright (c) Microsoft Corporation. All rights reserved.
 
 **/
 
 #ifndef _PLATFORM_CONFIG_CHECK_LIB_H_
 #define _PLATFORM_CONFIG_CHECK_LIB_H_
-
-#include <Uefi.h>
 
 /**
   This function dumps platform level information at Exit Boot Services.

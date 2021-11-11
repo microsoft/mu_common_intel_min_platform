@@ -1,15 +1,13 @@
 /** @file
+  Platform configuration check and information dump library NULL implementation.
 
-  Platform configuration check library NULL implementation for TestPointCheckLib
+  SPDX-License-Identifier: BSD-2-Clause-Patent
 
-  Copyright (c) Microsoft Corporation. All rights reserved
+  Copyright (c) Microsoft Corporation. All rights reserved.
+
  **/
 
 #include <Uefi.h>
-#include <Library/DebugLib.h>
-#include <Library/UefiLib.h>
-#include <Library/BaseLib.h>
-#include <Library/PrintLib.h>
 #include <Library/PlatformConfigCheckLib.h>
 
 /**

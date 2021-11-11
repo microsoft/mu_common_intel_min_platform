@@ -70,7 +70,7 @@
 
   TpmPlatformHierarchyLib|Include/Library/TpmPlatformHierarchyLib.h
 
-  DxePlatformConfigCheckLib|Include/Library/PlatformConfigCheckLib.h
+  PlatformConfigCheckLib|Include/Library/PlatformConfigCheckLib.h
   TestPointLib|Include/Library/TestPointLib.h
   TestPointCheckLib|Include/Library/TestPointCheckLib.h
 

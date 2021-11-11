@@ -83,6 +83,7 @@
   SiliconPolicyInitLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
   SiliconPolicyUpdateLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
 
+  PlatformConfigCheckLib|MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/PlatformConfigCheckLibNull.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
 
 [LibraryClasses.common.SEC]
@@ -105,7 +106,6 @@
   # DXE phase common
   #
   FspWrapperPlatformLib|MinPlatformPkg/FspWrapper/Library/DxeFspWrapperPlatformLib/DxeFspWrapperPlatformLib.inf
-  DxePlatformConfigCheckLib|MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/DxePlatformConfigCheckLibNull.inf
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/DxeTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
   TpmPlatformHierarchyLib|MinPlatformPkg/Tcg/Library/PeiDxeTpmPlatformHierarchyLib/PeiDxeTpmPlatformHierarchyLib.inf
@@ -203,7 +203,7 @@
 
   MinPlatformPkg/Services/StallServicePei/StallServicePei.inf
 
-  MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/DxePlatformConfigCheckLibNull.inf
+  MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/PlatformConfigCheckLibNull.inf
   MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
