@@ -1,5 +1,5 @@
 /** @file
-  Platform configuration check and information dump library NULL implementation.
+  Platform configuration check and information dump library implementation.
 
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
