@@ -5,6 +5,8 @@
 
   Copyright (c) Microsoft Corporation. All rights reserved.
 
+  MU_CHANGE [NEW FILE] - Support platform level configuration testing
+
  **/
 
 #include <Uefi.h>
