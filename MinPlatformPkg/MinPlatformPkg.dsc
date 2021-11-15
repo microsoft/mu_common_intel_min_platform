@@ -82,6 +82,9 @@
   SiliconPolicyInitLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyInitLibNull/SiliconPolicyInitLibNull.inf
   SiliconPolicyUpdateLib|MinPlatformPkg/PlatformInit/Library/SiliconPolicyUpdateLibNull/SiliconPolicyUpdateLibNull.inf
 
+  # MU_CHANGE [BEGIN] - Support platform level configuration testing
+  PlatformConfigCheckLib|MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/PlatformConfigCheckLibNull.inf
+  # MU_CHANGE [END]
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
 
 [LibraryClasses.common.SEC]
@@ -197,6 +200,9 @@
 
   MinPlatformPkg/Services/StallServicePei/StallServicePei.inf
 
+  # MU_CHANGE [BEGIN] - Support platform level configuration testing
+  MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/PlatformConfigCheckLibNull.inf
+  # MU_CHANGE [END]
   MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
