@@ -69,6 +69,9 @@
 
   TpmPlatformHierarchyLib|Include/Library/TpmPlatformHierarchyLib.h
 
+  # MU_CHANGE [BEGIN] - Support platform level configuration testing
+  PlatformConfigCheckLib|Include/Library/PlatformConfigCheckLib.h
+  # MU_CHANGE [END]
   TestPointLib|Include/Library/TestPointLib.h
   TestPointCheckLib|Include/Library/TestPointCheckLib.h
 
