@@ -22,6 +22,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Guid/PiSmmCommunicationRegionTable.h>
 
 #include "TestPointInternal.h"
+// MU_CHANGE [BEGIN] - Support platform level configuration testing
+#include <Library/PlatformConfigCheckLib.h>
+// MU_CHANGE [END]
 
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
 
@@ -1256,6 +1259,9 @@ TestPointExitBootServices (
   )
 {
   DEBUG ((DEBUG_INFO, "======== TestPointExitBootServices - Enter\n"));
+  // MU_CHANGE [BEGIN] - Support platform level configuration testing
+  PlatformConfigDumpExitBootServices ();
+  // MU_CHANGE [END]
 
   DEBUG ((DEBUG_INFO, "======== TestPointExitBootServices - Exit\n"));
 
