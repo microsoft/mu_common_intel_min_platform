@@ -6,6 +6,8 @@
 
 **/
 
+// MU_CHANGE - START refactor Tcg2PlatformDxe to lock TPM at EndOfDxe or ReadyToBoot depending on boot mode.
+
 #include <PiDxe.h>
 
 #include <Library/DebugLib.h>
@@ -79,3 +81,4 @@ Tcg2PlatformDxeEntryPoint (
 
   return EFI_SUCCESS;
 }
+// MU_CHANGE - END refactor Tcg2PlatformDxe to lock TPM at EndOfDxe or ReadyToBoot depending on boot mode.
