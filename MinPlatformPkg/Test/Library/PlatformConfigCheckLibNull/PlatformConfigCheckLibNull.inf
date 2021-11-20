@@ -15,7 +15,7 @@
   FILE_GUID                      = ABA05EC8-A7C3-4198-B8ED-4A0D6B9F8296
   MODULE_TYPE                    = BASE
   VERSION_STRING                 = 1.0
-  LIBRARY_CLASS                  = PlatformConfigCheckLibNull
+  LIBRARY_CLASS                  = PlatformConfigCheckLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
