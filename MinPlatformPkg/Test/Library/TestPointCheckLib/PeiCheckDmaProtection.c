@@ -30,13 +30,15 @@ CheckDrhd (
   EFI_ACPI_DMAR_DRHD_HEADER             *Drhd;
   UINT32                                Reg32;
   VTD_CAP_REG                           CapReg;
-    
+
   //
   // Sub table
   //
   DmarLen  = Dmar->Header.Length - sizeof(EFI_ACPI_DMAR_HEADER);
   DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)(Dmar + 1);
-  while (DmarLen > 0) {
+  // MU_CHANGE TCBZ3768: BEGIN - DMAR structure length calculation in TestPointCheckLib is invalid
+  while (DmarLen >= sizeof (*DmarStructHeader)) {
+  // MU_CHANGE TCBZ3768: END - DMAR structure length calculation in TestPointCheckLib is invalid
     switch (DmarStructHeader->Type) {
     case EFI_ACPI_DMAR_TYPE_DRHD:
       Drhd = (EFI_ACPI_DMAR_DRHD_HEADER *)DmarStructHeader;
@@ -61,8 +63,10 @@ CheckDrhd (
     default:
       break;
     }
-    DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)((UINT8 *)DmarStructHeader + DmarStructHeader->Length);
+    // MU_CHANGE TCBZ3768: BEGIN - DMAR structure length calculation in TestPointCheckLib is invalid
     DmarLen         -= DmarStructHeader->Length;
+    DmarStructHeader = (EFI_ACPI_DMAR_STRUCTURE_HEADER *)((UINT8 *)DmarStructHeader + DmarStructHeader->Length);
+    // MU_CHANGE TCBZ3768: END - DMAR structure length calculation in TestPointCheckLib is invalid
   }
 
   return EFI_SUCCESS;
