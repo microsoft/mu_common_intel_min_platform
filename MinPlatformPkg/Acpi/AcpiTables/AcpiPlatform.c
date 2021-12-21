@@ -169,7 +169,7 @@ SortCpuLocalApicInTable (
   UINT32                                    Index;
   UINT32                                    CurrProcessor;
   UINT32                                    BspApicId;
-  EFI_CPU_ID_ORDER_MAP                      *TempVal;
+  EFI_CPU_ID_ORDER_MAP                      TempVal;
   EFI_CPU_ID_ORDER_MAP                      *CpuIdMapPtr;
   UINT32                                    CoreThreadMask;
   EFI_CPU_ID_ORDER_MAP                      *TempCpuApicIdOrderTable;
@@ -183,7 +183,6 @@ SortCpuLocalApicInTable (
   }
 
   TempCpuApicIdOrderTable = AllocateZeroPool (mNumberOfCpus * sizeof (EFI_CPU_ID_ORDER_MAP));
-  TempVal = AllocateZeroPool (sizeof (EFI_CPU_ID_ORDER_MAP));
   CoreThreadMask = (UINT32) ((1 << mNumOfBitShift) - 1);
 
   for (CurrProcessor = 0, Index = 0; CurrProcessor < mNumberOfCpus; CurrProcessor++, Index++) {
