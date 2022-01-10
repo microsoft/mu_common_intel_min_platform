@@ -73,7 +73,7 @@ TestPointDumpMemoryMap (
   ZeroMem (Pages, sizeof(Pages));
 
   DEBUG ((EFI_D_INFO, "MemoryMap:\n"));
-  
+
   Entry = MemoryMap;
   NumberOfEntries = MemoryMapSize / DescriptorSize;
   DEBUG ((DEBUG_INFO, "Type       Start            End              # Pages          Attributes\n"));
@@ -135,7 +135,7 @@ TestPointCheckUefiMemoryMapEntry (
     DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesCode entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
   }
   if (EntryCount[EfiRuntimeServicesData] > 1) {
-    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
+    DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesData]));
   }
   if (EntryCount[EfiACPIMemoryNVS] > 1) {
     DEBUG ((DEBUG_ERROR, "EfiACPIMemoryNVS entry - %d\n", EntryCount[EfiACPIMemoryNVS]));
@@ -167,13 +167,13 @@ TestPointDumpUefiMemoryMap (
   EFI_MEMORY_DESCRIPTOR *MemoryMap;
   UINTN                 MemoryMapSize;
   UINTN                 DescriptorSize;
-  
+
   if (UefiMemoryMap != NULL) {
     *UefiMemoryMap = NULL;
     *UefiMemoryMapSize = 0;
     *UefiDescriptorSize = 0;
   }
-  
+
   if (DumpPrint) {
     DEBUG ((DEBUG_INFO, "==== TestPointDumpUefiMemoryMap - Enter\n"));
   }
@@ -211,7 +211,7 @@ TestPointDumpUefiMemoryMap (
   if (MemoryMap == NULL) {
     goto Done ;
   }
-  
+
   if (DumpPrint) {
     TestPointDumpMemoryMap (MemoryMap, MemoryMapSize, DescriptorSize);
   }
@@ -242,7 +242,7 @@ TestPointCheckUefiMemoryMap (
   UINTN                 UefiMemoryMapSize;
   UINTN                 UefiDescriptorSize;
   BOOLEAN               Result;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckUefiMemoryMap - Enter\n"));
   UefiMemoryMapSize = 0;
   MemoryMap = NULL;
