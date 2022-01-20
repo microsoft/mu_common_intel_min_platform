@@ -156,7 +156,8 @@ GetFvbInfo (
   Get the HOB that contains variable flash information.
 
   @param[out] BaseAddress         Base address of the variable store.
-  @param[out] Length              Length in bytes of the variable store.
+  @param[out] Length              Length in bytes of the firmware volume used for
+                                  variable store operations.
 
 **/
 VOID

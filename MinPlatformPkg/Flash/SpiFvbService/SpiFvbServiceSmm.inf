@@ -43,10 +43,10 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Pcd]
-  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase   ## CONSUMES
-  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize   ## CONSUMES
-  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize ## CONSUMES
-  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize   ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase   ## SOMETIMES_CONSUMES # MU_CHANGE TCBZ3479 - Add Variable Flash Information HOB
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize   ## SOMETIMES_CONSUMES # MU_CHANGE TCBZ3479 - Add Variable Flash Information HOB
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingSize ## SOMETIMES_CONSUMES # MU_CHANGE TCBZ3479 - Add Variable Flash Information HOB
+  gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize   ## SOMETIMES_CONSUMES # MU_CHANGE TCBZ3479 - Add Variable Flash Information HOB
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeBase          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvMicrocodeSize          ## CONSUMES
 

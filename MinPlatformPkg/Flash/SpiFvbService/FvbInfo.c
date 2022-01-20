@@ -48,7 +48,6 @@ GenerateNvStorageFvbMediaInfo (
 {
   EFI_STATUS                  Status;
   UINT32                      NvBlockNum;
-  UINT32                      NvStorageVariableSize;
   UINT64                      TotalNvVariableStorageSize;
   EFI_PHYSICAL_ADDRESS        NvStorageBaseAddress;
   EFI_FIRMWARE_VOLUME_HEADER  FvbInfo = {
@@ -72,19 +71,10 @@ GenerateNvStorageFvbMediaInfo (
     return EFI_INVALID_PARAMETER;
   }
 
-  GetVariableFlashInfo (&NvStorageBaseAddress, &NvStorageVariableSize);
-
   ZeroMem (FvbMediaInfo, sizeof (*FvbMediaInfo));
 
-  TotalNvVariableStorageSize =  (UINT64)NvStorageBaseAddress +
-                                  (UINT64)FixedPcdGet32 (PcdFlashNvStorageFtwWorkingSize);
-  Status =  SafeUint64Add (
-              TotalNvVariableStorageSize,
-              (UINT64)FixedPcdGet32(PcdFlashNvStorageFtwSpareSize),
-              &TotalNvVariableStorageSize
-              );
-  ASSERT_EFI_ERROR (Status);
-  if (EFI_ERROR (Status)) {
+  GetVariableFlashInfo (&NvStorageBaseAddress, (UINT32 *)&TotalNvVariableStorageSize);
+  if ((NvStorageBaseAddress == 0) || (TotalNvVariableStorageSize == 0)) {
     return EFI_UNSUPPORTED;
   }
 
