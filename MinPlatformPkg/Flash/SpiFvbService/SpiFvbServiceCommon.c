@@ -529,7 +529,8 @@ FvbSetVolumeAttributes (
   Get the HOB that contains variable flash information.
 
   @param[out] BaseAddress         Base address of the variable store.
-  @param[out] Length              Length in bytes of the variable store.
+  @param[out] Length              Length in bytes of the firmware volume used for
+                                  variable store operations.
 
 **/
 VOID
@@ -539,31 +540,69 @@ GetVariableFlashInfo (
   )
 {
   EFI_STATUS                    Status;
+  EFI_PHYSICAL_ADDRESS          NvBaseAddress;
+  UINT32                        NvStoreLength;
+  UINT32                        FtwSpareLength;
+  UINT32                        FtwWorkingLength;
+  UINT32                        TotalLength;
   EFI_HOB_GUID_TYPE             *GuidHob;
   VARIABLE_FLASH_INFO           *VariableFlashInfo;
 
+  TotalLength = 0;
   Status = EFI_SUCCESS;
 
   if ((BaseAddress == NULL) || (Length == NULL)) {
     ASSERT ((BaseAddress != NULL) && (Length != NULL));
     return;
   }
+  *BaseAddress = 0;
+  *Length = 0;
 
   GuidHob = GetFirstGuidHob (&gVariableFlashInfoHobGuid);
   if (GuidHob != NULL) {
     DEBUG ((DEBUG_INFO, "[%a] - Variable Flash Info HOB found.\n", __FUNCTION__));
     VariableFlashInfo = GET_GUID_HOB_DATA (GuidHob);
-    *BaseAddress = VariableFlashInfo->BaseAddress;
-    Status = SafeUint64ToUint32 (VariableFlashInfo->Length, Length);
+    NvBaseAddress = VariableFlashInfo->BaseAddress;
     // Stay within the current UINT32 size assumptions in the variable stack.
-    ASSERT_EFI_ERROR (Status);
+    Status = SafeUint64ToUint32 (VariableFlashInfo->Length, &NvStoreLength);
+    if (EFI_ERROR (Status)) {
+      ASSERT_EFI_ERROR (Status);
+      return;
+    }
+    Status = SafeUint64ToUint32 (VariableFlashInfo->FtwSpareLength, &FtwSpareLength);
+    if (EFI_ERROR (Status)) {
+      ASSERT_EFI_ERROR (Status);
+      return;
+    }
+    Status = SafeUint64ToUint32 (VariableFlashInfo->FtwWorkingLength, &FtwWorkingLength);
+    if (EFI_ERROR (Status)) {
+      ASSERT_EFI_ERROR (Status);
+      return;
+    }
   }
 
   if (GuidHob == NULL || EFI_ERROR (Status)) {
     DEBUG ((DEBUG_INFO, "[%a] - Unable to use Variable Flash Info HOB. Using PCD values.\n", __FUNCTION__));
-    *BaseAddress = (EFI_PHYSICAL_ADDRESS)PcdGet32 (PcdFlashNvStorageVariableBase);
-    *Length = PcdGet32 (PcdFlashNvStorageVariableSize);
+    NvBaseAddress = (EFI_PHYSICAL_ADDRESS)PcdGet32 (PcdFlashNvStorageVariableBase);
+    NvStoreLength = PcdGet32 (PcdFlashNvStorageVariableSize);
+    FtwSpareLength = PcdGet32 (PcdFlashNvStorageFtwSpareSize);
+    FtwWorkingLength = PcdGet32 (PcdFlashNvStorageFtwWorkingSize);
   }
+
+  Status = SafeUint32Add (NvStoreLength, FtwSpareLength, &TotalLength);
+  if (EFI_ERROR (Status)) {
+    ASSERT_EFI_ERROR (Status);
+    return;
+  }
+
+  Status = SafeUint32Add (TotalLength, FtwWorkingLength, &TotalLength);
+  if (EFI_ERROR (Status)) {
+    ASSERT_EFI_ERROR (Status);
+    return;
+  }
+
+  *BaseAddress = NvBaseAddress;
+  *Length = TotalLength;
 
   //
   // Assert if more than one variable flash information HOB is present.

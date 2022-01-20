@@ -113,13 +113,20 @@ FvbInitialize (
   UINT32                                MaxLbaSize;
   UINT32                                BytesWritten;
   UINTN                                 BytesErased;
+  UINT64                                NvStorageFvSize;  // MU_CHANGE - TCBZ3479 - Add Variable Flash Information HOB
 
   // MU_CHANGE - START - TCBZ3478 - Add Dynamic Variable Store and Microcode Support
-  GetVariableFlashInfo (&BaseAddress, &mPlatformFvBaseAddress[0].FvSize);
+  GetVariableFlashInfo (&BaseAddress, (UINT32 *)&NvStorageFvSize);
   Status = SafeUint64ToUint32 (BaseAddress, &mPlatformFvBaseAddress[0].FvBase);
-  ASSERT_EFI_ERROR (Status);
   if (EFI_ERROR (Status)) {
+    ASSERT_EFI_ERROR (Status);
     DEBUG ((DEBUG_ERROR, "[%a] - 64-bit variable storage base address not supported.\n", __FUNCTION__));
+    return;
+  }
+  Status = SafeUint64ToUint32 (NvStorageFvSize, &mPlatformFvBaseAddress[0].FvSize);
+  if (EFI_ERROR (Status)) {
+    ASSERT_EFI_ERROR (Status);
+    DEBUG ((DEBUG_ERROR, "[%a] - 64-bit variable storage base size not supported.\n", __FUNCTION__));
     return;
   }
 
