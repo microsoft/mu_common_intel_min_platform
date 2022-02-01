@@ -32,16 +32,16 @@ if __name__ == '__main__':
   #
   # Create command line argument parser object
   #
-  parser = argparse.ArgumentParser(prog=__prog__, version=__version__, usage=__usage__, description=__copyright__, conflict_handler='resolve')
+  parser = argparse.ArgumentParser(prog=__prog__, usage=__usage__, description=__copyright__, conflict_handler='resolve')
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument("-e", action="store_true", dest='Encode', help='encode file')
   group.add_argument("-d", action="store_true", dest='Decode', help='decode file')
-  parser.add_argument("-o", "--output", dest='OutputFile', type=str, metavar='filename', help="specify the output filename", required=True)
+  parser.add_argument("-o", "--output", dest='OutputFileName', type=str, metavar='filename', help="specify the output filename", required=True)
   parser.add_argument("-v", "--verbose", dest='Verbose', action="store_true", help="increase output messages")
   parser.add_argument("-q", "--quiet", dest='Quiet', action="store_true", help="reduce output messages")
   parser.add_argument("--debug", dest='Debug', type=int, metavar='[0-9]', choices=range(0,10), default=0, help="set debug level")
   parser.add_argument("--aml_filter", dest='AmlFilterStr', type=str, help="specify the AML filter.")
-  parser.add_argument(metavar="input_file", dest='InputFile', type=argparse.FileType('rb'), help="specify the input filename")
+  parser.add_argument(metavar="input_file", dest='InputFile', type=argparse.FileType('r'), help="specify the input filename")
 
   #
   # Parse command line arguments
@@ -49,11 +49,11 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   if args.Encode:
-    print 'Unsupported'
+    print('Unsupported')
 
   if args.Decode:
-    args.OutputFileName = args.OutputFile
-    args.OutputFile = open(args.OutputFileName, 'wb')
+    args.OutputFileName = os.path.normpath(args.OutputFileName)
+    args.OutputFile = open(args.OutputFileName, 'w')
 
     AmlFilter = args.AmlFilterStr
     filter_pattern = '|'.join(AmlFilter.split(' '))
@@ -69,4 +69,3 @@ if __name__ == '__main__':
             if match_obj is not None:
                 args.OutputFile.write(line)
     args.OutputFile.close()
-
