@@ -8,7 +8,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BoardAcpiEnableLib.h>
 #include <Library/MultiBoardAcpiSupportLib.h>
 #include <Library/DebugLib.h>
-#include <Library/SmmServicesTableLib.h>
+#include <Library/MmServicesTableLib.h>
 
 EFI_STATUS
 EFIAPI
