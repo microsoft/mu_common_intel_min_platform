@@ -481,7 +481,10 @@ PlatformInitPreMem (
 
   BuildMemoryTypeInformation ();
 
-  if (!PcdGetBool(PcdFspWrapperBootMode)) {
+  if ((!PcdGetBool (PcdFspWrapperBootMode)) || (PcdGet8 (PcdFspModeSelection) == 0)) {
+    //
+    // Install memory relating PPIs for EDKII native build and FSP dispatch mode
+    //
     Status = PeiServicesInstallPpi (mMemPpiList);
     ASSERT_EFI_ERROR (Status);
   }

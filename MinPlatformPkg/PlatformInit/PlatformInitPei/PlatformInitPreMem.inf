@@ -34,11 +34,13 @@
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
+  IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit            ## CONSUMES
+  gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection          ## CONSUMES
 
 [FixedPcd]
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize  ## CONSUMES
