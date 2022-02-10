@@ -15,19 +15,19 @@ It is organized so that common code can be made available to any platform with m
 
 This repository is part of Project Mu.  Please see Project Mu for details https://microsoft.github.io/mu
 
-Branch Status - release/202108
+Branch Status - release/202111
 ==============================
 
 :Status:
   In Development
 
 :Entered Development:
-  September 2021
-
-:Anticipated Stabilization:
   November 2021
 
-Branch Changes - release/202108
+:Anticipated Stabilization:
+  February 2022
+
+Branch Changes - release/202111
 ===============================
 
 Breaking Changes-dev
@@ -45,23 +45,23 @@ Bug Fixes-dev
 
 - None
 
-2108_RefBoot Changes
+2111_RefBoot Changes
 --------------------
 
 - Incomplete
 
-2108_CIBuild Changes
+2111_CIBuild Changes
 --------------------
 
 - None
 
-2108_Rebase Changes
+2111_Rebase Changes
 -------------------
 
-| Starting commit: f36963a8 ("MinPlatformPkg/TpmPlatformHierarchyLib: Add disable support", 2021-06-07)
-| Destination commit: c962051c ("MinPlatformPkg: Move TpmPlatformHierarchyLib definition", 2021-08-04)
+| Starting commit: 5ce49518 ("REBASE: Update Readme for CIBuild", 2021-09-11)
+| Destination commit: 7e07c136 ("MinPlatformPkg: Remove SpiFlashCommonLibNull", 2021-10-28)
 
-- None
+- Removed TCBZ3620 MinPlatformPkg: Fix some bad pointer types in PeiVariableReadLib as it was added upstream
 
 Repo Maintenance
 ================
@@ -69,7 +69,7 @@ Repo Maintenance
 Upstream Sync Details
 ---------------------
 
-- edk2_platforms - ff31f8f683 ("Platform/SiFive: Add VariablePolicyHelperLib to the dsc files", 2021-08-23)
+- edk2_platforms - 15d8aa1828a ("UserAuthFeaturePkg: VerifyPassword() allows one extra password attempt", 2021-12-7)
 
 Instructions
 ------------
@@ -172,12 +172,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .. CoreCI
 
-.. _Windows_VS2019: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202108
-.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2019?branchName=release%2F202108
+.. _Windows_VS2019: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202111
+.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2019?branchName=release%2F202111
 .. |WindowsCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/71.svg
 .. |WindowsCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
 
-.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202108
-.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202108
+.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202111
+.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202111
 .. |UbuntuCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/72.svg
 .. |UbuntuCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
