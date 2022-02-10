@@ -15,19 +15,19 @@ It is organized so that common code can be made available to any platform with m
 
 This repository is part of Project Mu.  Please see Project Mu for details https://microsoft.github.io/mu
 
-Branch Status - release/202108
+Branch Status - release/202202
 ==============================
 
 :Status:
   In Development
 
 :Entered Development:
-  September 2021
+  February 2022
 
 :Anticipated Stabilization:
-  November 2021
+  May 2022
 
-Branch Changes - release/202108
+Branch Changes - release/202202
 ===============================
 
 Breaking Changes-dev
@@ -45,23 +45,27 @@ Bug Fixes-dev
 
 - None
 
-2108_RefBoot Changes
+2202_RefBoot Changes
 --------------------
 
 - Incomplete
 
-2108_CIBuild Changes
+2202_CIBuild Changes
 --------------------
 
-- Incomplete
+- None
 
-2108_Rebase Changes
+2202_Rebase Changes
 -------------------
 
-| Starting commit: f36963a8 ("MinPlatformPkg/TpmPlatformHierarchyLib: Add disable support", 2021-06-07)
-| Destination commit: c962051c ("MinPlatformPkg: Move TpmPlatformHierarchyLib definition", 2021-08-04)
-
-- Incomplete
+| Starting commit: 1584a46f ("Updated references to Tcg libraries to use MU_TIANO_PLUS library that was moved out of this repo", 2022-02-15)
+| Destination commit: 7e07c136 ("MinPlatformPkg/SaveMemoryConfig: Fix GCC build failure.", 2022-02-17)
+  - Removed TCBZ3033 added in upstream and reverted locally
+  - Cherry-picked 53dcee339d TCBZ3612 MinPlatformPkg/Test: Fix mis-parsed HSTI structures (#13) from 202102 release
+  - Cherry-picked fb992e8ebc Implement a Dxe TestPoint library to allow for Platform specific tests
+  - Cherry-picked 3a8ee13fbd MinPlatformPkg/PlatformConfigCheckLibNull: Fix LIBRARY_CLASS name (#20)
+  - Cherry-picked 603de0cb6a MinPlatform/TestPointCheckLib: Fix incorrect modification of MemoryTypeInformation HOB and memory leak.
+  - Cherry-picked ed5f56bfda [TCBZ3541] MinPlatformPkg/TestPointCheckLib: Add support for BME device exemption
 
 Repo Maintenance
 ================
@@ -69,7 +73,7 @@ Repo Maintenance
 Upstream Sync Details
 ---------------------
 
-- edk2_platforms - ff31f8f683 ("Platform/SiFive: Add VariablePolicyHelperLib to the dsc files", 2021-08-23)
+- edk2_platforms - c9e377b00f ("Platform/Overdrive: enable resizable BAR support", 2022-02-25)
 
 Instructions
 ------------
@@ -172,12 +176,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .. CoreCI
 
-.. _Windows_VS2019: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202108
-.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2019?branchName=release%2F202108
+.. _Windows_VS2019: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202202
+.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2019?branchName=release%2F202202
 .. |WindowsCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/71.svg
 .. |WindowsCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
 
-.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202108
-.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202108
+.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202202
+.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202202
 .. |UbuntuCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/72.svg
 .. |UbuntuCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
