@@ -5,7 +5,7 @@ Project Mu Intel Common MinPlatform Repo
 ============================= ================= =============== ===================
  Host Type & Toolchain        Build Status      Test Status     Code Coverage
 ============================= ================= =============== ===================
-Windows_VS2019_               |WindowsCiBuild|  |WindowsCiTest| |WindowsCiCoverage|
+Windows_VS2022_               |WindowsCiBuild|  |WindowsCiTest| |WindowsCiCoverage|
 Ubuntu_GCC5_                  |UbuntuCiBuild|   |UbuntuCiTest|  |UbuntuCiCoverage|
 ============================= ================= =============== ===================
 
@@ -15,19 +15,19 @@ It is organized so that common code can be made available to any platform with m
 
 This repository is part of Project Mu.  Please see Project Mu for details https://microsoft.github.io/mu
 
-Branch Status - release/202202
+Branch Status - release/202208
 ==============================
 
 :Status:
   In Development
 
 :Entered Development:
-  February 2022
+  September 2022
 
 :Anticipated Stabilization:
-  May 2022
+  November 2022
 
-Branch Changes - release/202202
+Branch Changes - release/202208
 ===============================
 
 Breaking Changes-dev
@@ -45,29 +45,21 @@ Bug Fixes-dev
 
 - None
 
-2202_RefBoot Changes
+2208_RefBoot Changes
 --------------------
 
 - Incomplete
 
-2202_CIBuild Changes
+2208_CIBuild Changes
 --------------------
 
-- Removed Uncrustify CI check while edk2-platforms doesn't follow uncrustify
+- Incomplete
 
-2202_Rebase Changes
+2208_Rebase Changes
 -------------------
 
-| Starting commit: 1584a46f ("Updated references to Tcg libraries to use MU_TIANO_PLUS library that was moved out of this repo", 2022-02-15)
+| Starting commit: 7d2732a6 ("pip: update edk2-pytool-extensions requirement from ~=0.17.2 to ~=0.18.0", 2022-09-15)
 | Destination commit: 7e07c136 ("MinPlatformPkg/SaveMemoryConfig: Fix GCC build failure.", 2022-02-17)
-  
-  Needed to cherry-pick changes from 2102 branch that were left out of 2111
-  - Removed TCBZ3033 added in upstream and reverted locally
-  - Cherry-picked 53dcee339d TCBZ3612 MinPlatformPkg/Test: Fix mis-parsed HSTI structures (#13) from 202102 release
-  - Cherry-picked fb992e8ebc Implement a Dxe TestPoint library to allow for Platform specific tests
-  - Cherry-picked 3a8ee13fbd MinPlatformPkg/PlatformConfigCheckLibNull: Fix LIBRARY_CLASS name (#20)
-  - Cherry-picked 603de0cb6a MinPlatform/TestPointCheckLib: Fix incorrect modification of MemoryTypeInformation HOB and memory leak.
-  - Cherry-picked ed5f56bfda [TCBZ3541] MinPlatformPkg/TestPointCheckLib: Add support for BME device exemption
 
 Repo Maintenance
 ================
@@ -75,7 +67,7 @@ Repo Maintenance
 Upstream Sync Details
 ---------------------
 
-- edk2_platforms - c9e377b00f ("Platform/Overdrive: enable resizable BAR support", 2022-02-25)
+- edk2_platforms - 3c3b116801 ("Maintainers.txt: Update maintainers list for edk2-platforms", 2022-08-25)
 
 Instructions
 ------------
@@ -178,8 +170,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .. CoreCI
 
-.. _Windows_VS2022: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202202
-.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2022?branchName=release%2F202202
+.. _Windows_VS2022: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202208
+.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2022?branchName=release%2F202208
 .. |WindowsCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/71.svg
 .. |WindowsCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
 
