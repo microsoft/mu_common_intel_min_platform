@@ -16,14 +16,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 VOID
 CheckFirmwareTrustContinuationCryptoStrength (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
-  EFI_STATUS      Status;
-  BOOLEAN         Result;
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
 
   if ((mFeatureImplemented[2] & HSTI_BYTE2_FIRMWARE_TRUSTED_CONTINUATION_CRYPTO_STRENGTH) == 0) {
-    return ;
+    return;
   }
 
   Result = TRUE;
@@ -42,5 +42,5 @@ CheckFirmwareTrustContinuationCryptoStrength (
     ASSERT_EFI_ERROR (Status);
   }
 
-  return ;
+  return;
 }

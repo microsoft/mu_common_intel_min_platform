@@ -11,7 +11,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/SiliconPolicyInitLib.h>
 #include <Library/SiliconPolicyUpdateLib.h>
 
-
 /**
   Silicon Policy Init before memory PEI module entry point
 

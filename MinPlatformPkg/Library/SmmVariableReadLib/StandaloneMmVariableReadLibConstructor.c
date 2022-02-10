@@ -40,12 +40,12 @@ StandaloneMmVariableReadLibConstructor (
   IN EFI_MM_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS    Status;
+  EFI_STATUS  Status;
 
   //
   // Locate SmmVariableProtocol.
   //
-  Status = gMmst->MmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **) &mVariableReadLibSmmVariable);
+  Status = gMmst->MmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **)&mVariableReadLibSmmVariable);
   ASSERT_EFI_ERROR (Status);
   return Status;
 }

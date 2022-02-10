@@ -36,16 +36,16 @@ extern EFI_SMM_VARIABLE_PROTOCOL  *mVariableReadLibSmmVariable;
 EFI_STATUS
 EFIAPI
 TraditionalMmVariableReadLibConstructor (
-  IN EFI_HANDLE         ImageHandle,
-  IN EFI_SYSTEM_TABLE   *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS    Status;
+  EFI_STATUS  Status;
 
   //
   // Locate SmmVariableProtocol.
   //
-  Status = gSmst->SmmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **) &mVariableReadLibSmmVariable);
+  Status = gSmst->SmmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **)&mVariableReadLibSmmVariable);
   ASSERT_EFI_ERROR (Status);
   return Status;
 }

@@ -41,9 +41,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 EFI_STATUS
 LocateSupportProtocol (
-  IN     EFI_GUID                      *Protocol,
-  IN     EFI_GUID                      *FfsGuid,
-     OUT VOID                          **Instance
+  IN     EFI_GUID  *Protocol,
+  IN     EFI_GUID  *FfsGuid,
+  OUT VOID         **Instance
   )
 {
   EFI_STATUS              Status;
@@ -76,7 +76,6 @@ LocateSupportProtocol (
   // Looking for FV with ACPI storage file
   //
   for (Index = 0; Index < NumberOfHandles; Index++) {
-
     //
     // Get the protocol on this handle
     // This should not fail because of LocateHandleBuffer
@@ -91,17 +90,17 @@ LocateSupportProtocol (
     //
     // See if it has the ACPI storage file
     //
-    Size      = 0;
-    FvStatus  = 0;
-    Status = ((EFI_FIRMWARE_VOLUME2_PROTOCOL *) (*Instance))->ReadFile (
-                                                              *Instance,
-                                                              FfsGuid,
-                                                              NULL,
-                                                              &Size,
-                                                              &FileType,
-                                                              &Attributes,
-                                                              &FvStatus
-                                                              );
+    Size     = 0;
+    FvStatus = 0;
+    Status   = ((EFI_FIRMWARE_VOLUME2_PROTOCOL *)(*Instance))->ReadFile (
+                                                                 *Instance,
+                                                                 FfsGuid,
+                                                                 NULL,
+                                                                 &Size,
+                                                                 &FileType,
+                                                                 &Attributes,
+                                                                 &FvStatus
+                                                                 );
 
     //
     // If we found it, then we are done
@@ -132,22 +131,22 @@ LocateSupportProtocol (
 **/
 EFI_STATUS
 PublishAcpiTablesFromFv (
-  IN EFI_GUID *FfsGuid
+  IN EFI_GUID  *FfsGuid
   )
 {
-  EFI_STATUS                    Status;
-  EFI_FIRMWARE_VOLUME2_PROTOCOL *FwVol;
-  EFI_ACPI_COMMON_HEADER        *CurrentTable;
-  UINT32                        FvStatus;
-  UINTN                         Size;
-  UINTN                         TableHandle;
-  INTN                          Instance;
-  EFI_ACPI_TABLE_PROTOCOL       *AcpiTable;
+  EFI_STATUS                     Status;
+  EFI_FIRMWARE_VOLUME2_PROTOCOL  *FwVol;
+  EFI_ACPI_COMMON_HEADER         *CurrentTable;
+  UINT32                         FvStatus;
+  UINTN                          Size;
+  UINTN                          TableHandle;
+  INTN                           Instance;
+  EFI_ACPI_TABLE_PROTOCOL        *AcpiTable;
 
-  Instance      = 0;
-  TableHandle   = 0;
-  CurrentTable  = NULL;
-  FwVol         = NULL;
+  Instance     = 0;
+  TableHandle  = 0;
+  CurrentTable = NULL;
+  FwVol        = NULL;
 
   Status = gBS->LocateProtocol (&gEfiAcpiTableProtocolGuid, NULL, (VOID **)&AcpiTable);
   ASSERT_EFI_ERROR (Status);
@@ -156,10 +155,10 @@ PublishAcpiTablesFromFv (
   // Locate the firmware volume protocol
   //
   Status = LocateSupportProtocol (
-            &gEfiFirmwareVolume2ProtocolGuid,
-            FfsGuid,
-            (VOID **) &FwVol
-            );
+             &gEfiFirmwareVolume2ProtocolGuid,
+             FfsGuid,
+             (VOID **)&FwVol
+             );
   ASSERT_EFI_ERROR (Status);
 
   //
@@ -172,23 +171,22 @@ PublishAcpiTablesFromFv (
                       FfsGuid,
                       EFI_SECTION_RAW,
                       Instance,
-                      (VOID **) &CurrentTable,
+                      (VOID **)&CurrentTable,
                       &Size,
                       &FvStatus
                       );
 
     if (!EFI_ERROR (Status)) {
-
       //
       // Add the table
       //
       TableHandle = 0;
-      Status = AcpiTable->InstallAcpiTable (
-                              AcpiTable,
-                              CurrentTable,
-                              CurrentTable->Length,
-                              &TableHandle
-                              );
+      Status      = AcpiTable->InstallAcpiTable (
+                                 AcpiTable,
+                                 CurrentTable,
+                                 CurrentTable->Length,
+                                 &TableHandle
+                                 );
       ASSERT_EFI_ERROR (Status);
 
       //
@@ -219,14 +217,14 @@ PublishAcpiTablesFromFv (
 EFI_STATUS
 EFIAPI
 InstallMinDsdt (
-  IN EFI_HANDLE         ImageHandle,
-  IN EFI_SYSTEM_TABLE   *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
   EFI_STATUS  Status;
 
   Status = PublishAcpiTablesFromFv (&gEfiCallerIdGuid);
   ASSERT_EFI_ERROR (Status);
-  
+
   return EFI_SUCCESS;
 }

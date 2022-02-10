@@ -14,15 +14,15 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 MemoryDiscoveredPpiNotifyCallback (
-  IN CONST EFI_PEI_SERVICES      **PeiServices,
-  IN EFI_PEI_NOTIFY_DESCRIPTOR   *NotifyDescriptor,
-  IN VOID                        *Ppi
+  IN CONST EFI_PEI_SERVICES     **PeiServices,
+  IN EFI_PEI_NOTIFY_DESCRIPTOR  *NotifyDescriptor,
+  IN VOID                       *Ppi
   );
 
-static EFI_PEI_NOTIFY_DESCRIPTOR mMemDiscoveredNotifyList = {
+static EFI_PEI_NOTIFY_DESCRIPTOR  mMemDiscoveredNotifyList = {
   (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEfiPeiMemoryDiscoveredPpiGuid,
-  (EFI_PEIM_NOTIFY_ENTRY_POINT) MemoryDiscoveredPpiNotifyCallback
+  (EFI_PEIM_NOTIFY_ENTRY_POINT)MemoryDiscoveredPpiNotifyCallback
 };
 
 /**
@@ -61,7 +61,7 @@ ReportFvEntryPoint (
   IN CONST EFI_PEI_SERVICES     **PeiServices
   )
 {
-  EFI_STATUS Status;
+  EFI_STATUS  Status;
 
   ReportPreMemFv ();
 

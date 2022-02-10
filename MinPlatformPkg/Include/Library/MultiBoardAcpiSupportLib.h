@@ -13,30 +13,30 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 typedef
 EFI_STATUS
-(EFIAPI *BOARD_ENABLE_ACPI) (
+(EFIAPI *BOARD_ENABLE_ACPI)(
   IN BOOLEAN  EnableSci
   );
 
 typedef
 EFI_STATUS
-(EFIAPI *BOARD_DISABLE_ACPI) (
+(EFIAPI *BOARD_DISABLE_ACPI)(
   IN BOOLEAN  DisableSci
   );
 
 typedef struct {
-  BOARD_ENABLE_ACPI        BoardEnableAcpi;
-  BOARD_DISABLE_ACPI       BoardDisableAcpi;
+  BOARD_ENABLE_ACPI     BoardEnableAcpi;
+  BOARD_DISABLE_ACPI    BoardDisableAcpi;
 } BOARD_ACPI_ENABLE_FUNC;
 
 typedef
 EFI_STATUS
-(EFIAPI *BOARD_UPDATE_ACPI_TABLE) (
+(EFIAPI *BOARD_UPDATE_ACPI_TABLE)(
   IN OUT EFI_ACPI_COMMON_HEADER       *Table,
   IN OUT EFI_ACPI_TABLE_VERSION       *Version
   );
 
 typedef struct {
-  BOARD_UPDATE_ACPI_TABLE  BoardUpdateAcpiTable;
+  BOARD_UPDATE_ACPI_TABLE    BoardUpdateAcpiTable;
 } BOARD_ACPI_TABLE_FUNC;
 
 EFI_STATUS

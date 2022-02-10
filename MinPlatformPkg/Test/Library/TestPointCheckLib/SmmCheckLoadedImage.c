@@ -19,10 +19,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 VOID
 DumpLoadedImage (
-  IN UINTN                                  Index,
-  IN EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage,
-  IN EFI_DEVICE_PATH_PROTOCOL               *DevicePath,
-  IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
+  IN UINTN                      Index,
+  IN EFI_LOADED_IMAGE_PROTOCOL  *LoadedImage,
+  IN EFI_DEVICE_PATH_PROTOCOL   *DevicePath,
+  IN EFI_DEVICE_PATH_PROTOCOL   *LoadedImageDevicePath
   );
 
 VOID
@@ -30,32 +30,34 @@ TestPointDumpSmmLoadedImage (
   VOID
   )
 {
-  EFI_STATUS                             Status;
-  EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage;
-  UINTN                                  Index;
-  UINTN                                  HandleBufSize;
-  EFI_HANDLE                             *HandleBuf;
-  UINTN                                  HandleCount;
-  EFI_DEVICE_PATH_PROTOCOL               *DevicePath;
-  EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath;
-  
+  EFI_STATUS                 Status;
+  EFI_LOADED_IMAGE_PROTOCOL  *LoadedImage;
+  UINTN                      Index;
+  UINTN                      HandleBufSize;
+  EFI_HANDLE                 *HandleBuf;
+  UINTN                      HandleCount;
+  EFI_DEVICE_PATH_PROTOCOL   *DevicePath;
+  EFI_DEVICE_PATH_PROTOCOL   *LoadedImageDevicePath;
+
   DEBUG ((DEBUG_INFO, "==== TestPointDumpSmmLoadedImage - Enter\n"));
-  HandleBuf = NULL;
+  HandleBuf     = NULL;
   HandleBufSize = 0;
-  Status = gSmst->SmmLocateHandle (
-                    ByProtocol,
-                    &gEfiLoadedImageProtocolGuid,
-                    NULL,
-                    &HandleBufSize,
-                    HandleBuf
-                    );
+  Status        = gSmst->SmmLocateHandle (
+                           ByProtocol,
+                           &gEfiLoadedImageProtocolGuid,
+                           NULL,
+                           &HandleBufSize,
+                           HandleBuf
+                           );
   if (Status != EFI_BUFFER_TOO_SMALL) {
-    goto Done ;
+    goto Done;
   }
+
   HandleBuf = AllocateZeroPool (HandleBufSize);
   if (HandleBuf == NULL) {
-    goto Done ;
+    goto Done;
   }
+
   Status = gSmst->SmmLocateHandle (
                     ByProtocol,
                     &gEfiLoadedImageProtocolGuid,
@@ -64,10 +66,11 @@ TestPointDumpSmmLoadedImage (
                     HandleBuf
                     );
   if (EFI_ERROR (Status)) {
-    goto Done ;
+    goto Done;
   }
-  HandleCount = HandleBufSize / sizeof(EFI_HANDLE);
-  
+
+  HandleCount = HandleBufSize / sizeof (EFI_HANDLE);
+
   DEBUG ((DEBUG_INFO, "SmmLoadedImage (%d):\n", HandleCount));
   for (Index = 0; Index < HandleCount; Index++) {
     Status = gSmst->SmmHandleProtocol (
@@ -75,17 +78,17 @@ TestPointDumpSmmLoadedImage (
                       &gEfiLoadedImageProtocolGuid,
                       (VOID **)&LoadedImage
                       );
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       continue;
     }
 
     Status = gSmst->SmmHandleProtocol (LoadedImage->DeviceHandle, &gEfiDevicePathProtocolGuid, (VOID **)&DevicePath);
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       DevicePath = NULL;
     }
 
     Status = gSmst->SmmHandleProtocol (HandleBuf[Index], &gEfiLoadedImageDevicePathProtocolGuid, (VOID **)&LoadedImageDevicePath);
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       LoadedImageDevicePath = NULL;
     }
 
@@ -100,5 +103,5 @@ Done:
 
   DEBUG ((DEBUG_INFO, "==== TestPointDumpSmmLoadedImage - Exit\n"));
 
-  return ;
+  return;
 }

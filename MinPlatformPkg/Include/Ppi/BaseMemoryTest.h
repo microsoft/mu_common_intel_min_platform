@@ -1,5 +1,5 @@
 /** @file
-  The file describes the PPI which notifies other drivers 
+  The file describes the PPI which notifies other drivers
   of the PEIM being initialized by the PEI Dispatcher.
 
 Copyright (c) 2018, Intel Corporation. All rights reserved.<BR>
@@ -26,19 +26,19 @@ typedef enum {
 
 typedef
 EFI_STATUS
-(EFIAPI *PEI_BASE_MEMORY_TEST) (
+(EFIAPI *PEI_BASE_MEMORY_TEST)(
   IN  EFI_PEI_SERVICES                   **PeiServices,
-  IN PEI_BASE_MEMORY_TEST_PPI            * This,
+  IN PEI_BASE_MEMORY_TEST_PPI            *This,
   IN  EFI_PHYSICAL_ADDRESS               BeginAddress,
   IN  UINT64                             MemoryLength,
   IN  PEI_MEMORY_TEST_OP                 Operation,
-  OUT EFI_PHYSICAL_ADDRESS               * ErrorAddress
+  OUT EFI_PHYSICAL_ADDRESS               *ErrorAddress
   );
 
 struct _PEI_BASE_MEMORY_TEST_PPI {
-  PEI_BASE_MEMORY_TEST  BaseMemoryTest;
+  PEI_BASE_MEMORY_TEST    BaseMemoryTest;
 };
 
-extern EFI_GUID gPeiBaseMemoryTestPpiGuid;
+extern EFI_GUID  gPeiBaseMemoryTestPpiGuid;
 
 #endif

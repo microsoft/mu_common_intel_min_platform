@@ -29,7 +29,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Additional pages are used by DXE memory manager.
 // It should be consistent between RetrieveRequiredMemorySize() and GetPeiMemSize()
 //
-#define PEI_ADDITIONAL_MEMORY_SIZE    (16 * EFI_PAGE_SIZE)
+#define PEI_ADDITIONAL_MEMORY_SIZE  (16 * EFI_PAGE_SIZE)
 
 /**
   Get the mem size in memory type infromation table.
@@ -40,22 +40,23 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 UINT64
 GetMemorySizeInMemoryTypeInformation (
-  IN EFI_PEI_SERVICES **PeiServices
+  IN EFI_PEI_SERVICES  **PeiServices
   )
 {
-  EFI_STATUS                  Status;
-  EFI_PEI_HOB_POINTERS        Hob;
-  EFI_MEMORY_TYPE_INFORMATION *MemoryData;
-  UINT8                       Index;
-  UINTN                       TempPageNum;
+  EFI_STATUS                   Status;
+  EFI_PEI_HOB_POINTERS         Hob;
+  EFI_MEMORY_TYPE_INFORMATION  *MemoryData;
+  UINT8                        Index;
+  UINTN                        TempPageNum;
 
   MemoryData = NULL;
-  Status     = (*PeiServices)->GetHobList ((CONST EFI_PEI_SERVICES**)PeiServices, (VOID **) &Hob.Raw);
+  Status     = (*PeiServices)->GetHobList ((CONST EFI_PEI_SERVICES **)PeiServices, (VOID **)&Hob.Raw);
   ASSERT_EFI_ERROR (Status);
   while (!END_OF_HOB_LIST (Hob)) {
-    if (Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION &&
-      CompareGuid (&Hob.Guid->Name, &gEfiMemoryTypeInformationGuid)) {
-      MemoryData = (EFI_MEMORY_TYPE_INFORMATION *) (Hob.Raw + sizeof (EFI_HOB_GENERIC_HEADER) + sizeof (EFI_GUID));
+    if ((Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION) &&
+        CompareGuid (&Hob.Guid->Name, &gEfiMemoryTypeInformationGuid))
+    {
+      MemoryData = (EFI_MEMORY_TYPE_INFORMATION *)(Hob.Raw + sizeof (EFI_HOB_GENERIC_HEADER) + sizeof (EFI_GUID));
       break;
     }
 
@@ -86,10 +87,10 @@ GetMemorySizeInMemoryTypeInformation (
 **/
 UINT64
 RetrieveRequiredMemorySize (
-  IN EFI_PEI_SERVICES **PeiServices
+  IN EFI_PEI_SERVICES  **PeiServices
   )
 {
-  UINT64                      Size;
+  UINT64  Size;
 
   Size = GetMemorySizeInMemoryTypeInformation (PeiServices);
   return Size + PEI_ADDITIONAL_MEMORY_SIZE;
@@ -105,12 +106,12 @@ RetrieveRequiredMemorySize (
 **/
 UINT64
 GetPeiMemSize (
-  IN EFI_PEI_SERVICES **PeiServices,
-  IN UINT32           BootMode
+  IN EFI_PEI_SERVICES  **PeiServices,
+  IN UINT32            BootMode
   )
 {
-  UINT64                      Size;
-  UINT64                      MinSize;
+  UINT64  Size;
+  UINT64  MinSize;
 
   if (BootMode == BOOT_IN_RECOVERY_MODE) {
     return PcdGet32 (PcdPeiRecoveryMinMemSize);
@@ -140,48 +141,50 @@ GetPeiMemSize (
 EFI_STATUS
 EFIAPI
 PostFspmHobProcess (
-  IN VOID                 *FspHobList
+  IN VOID  *FspHobList
   )
 {
-  EFI_PEI_HOB_POINTERS Hob;
-  UINT64               PeiMemSize;
-  EFI_PHYSICAL_ADDRESS PeiMemBase;
-  EFI_STATUS           Status;
-  EFI_BOOT_MODE        BootMode;
-  EFI_PEI_CAPSULE_PPI  *Capsule;
-  VOID                 *CapsuleBuffer;
-  UINTN                CapsuleBufferLength;
-  UINT64               RequiredMemSize;
-  UINT64               ResourceLength;
-  EFI_PEI_SERVICES     **PeiServices;
+  EFI_PEI_HOB_POINTERS  Hob;
+  UINT64                PeiMemSize;
+  EFI_PHYSICAL_ADDRESS  PeiMemBase;
+  EFI_STATUS            Status;
+  EFI_BOOT_MODE         BootMode;
+  EFI_PEI_CAPSULE_PPI   *Capsule;
+  VOID                  *CapsuleBuffer;
+  UINTN                 CapsuleBufferLength;
+  UINT64                RequiredMemSize;
+  UINT64                ResourceLength;
+  EFI_PEI_SERVICES      **PeiServices;
 
   PeiServices = (EFI_PEI_SERVICES **)GetPeiServicesTablePointer ();
 
   PeiServicesGetBootMode (&BootMode);
 
-  PeiMemBase = 0;
-  PeiMemSize = 0;
+  PeiMemBase      = 0;
+  PeiMemSize      = 0;
   RequiredMemSize = 0;
-  ResourceLength = 0;
+  ResourceLength  = 0;
   //
   // Parse the hob list from fsp
   // Report all the resource hob except MMIO and IO resource Hob's
   //
   if (BootMode != BOOT_ON_S3_RESUME) {
-    PeiMemSize = GetPeiMemSize (PeiServices, BootMode);
+    PeiMemSize      = GetPeiMemSize (PeiServices, BootMode);
     RequiredMemSize = RetrieveRequiredMemorySize (PeiServices);
-    Hob.Raw = (UINT8 *)(UINTN)FspHobList;
-    DEBUG((DEBUG_INFO, "FspHobList - 0x%x\n", FspHobList));
+    Hob.Raw         = (UINT8 *)(UINTN)FspHobList;
+    DEBUG ((DEBUG_INFO, "FspHobList - 0x%x\n", FspHobList));
     //
     // Find the largest available system Memory and use it for PeiMemory
     //
     while ((Hob.Raw = GetNextHob (EFI_HOB_TYPE_RESOURCE_DESCRIPTOR, Hob.Raw)) != NULL) {
-      if ((Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
-        && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)
-        && (Hob.ResourceDescriptor->PhysicalStart >= PeiMemBase)
-        && (Hob.ResourceDescriptor->ResourceLength >= PeiMemSize)) {
-           PeiMemBase = Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength - PeiMemSize;
+      if (  (Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
+         && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)
+         && (Hob.ResourceDescriptor->PhysicalStart >= PeiMemBase)
+         && (Hob.ResourceDescriptor->ResourceLength >= PeiMemSize))
+      {
+        PeiMemBase = Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength - PeiMemSize;
       }
+
       Hob.Raw = GET_NEXT_HOB (Hob);
     }
   }
@@ -196,19 +199,21 @@ PostFspmHobProcess (
       Hob.Raw = GET_NEXT_HOB (Hob);
       continue;
     }
+
     ResourceLength = Hob.ResourceDescriptor->ResourceLength;
-    DEBUG((DEBUG_INFO, "Resource start %lx resource length %lx resource type %d\n",Hob.ResourceDescriptor->PhysicalStart,Hob.ResourceDescriptor->ResourceLength,Hob.ResourceDescriptor->ResourceType));
+    DEBUG ((DEBUG_INFO, "Resource start %lx resource length %lx resource type %d\n", Hob.ResourceDescriptor->PhysicalStart, Hob.ResourceDescriptor->ResourceLength, Hob.ResourceDescriptor->ResourceType));
     if (BootMode != BOOT_ON_S3_RESUME) {
       //
       // If the system memory found in FSP Hob is determined for PeiMemory. Split the Resource descriptor Hob
       //
-      if ((Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
-        && (Hob.ResourceDescriptor->PhysicalStart <= PeiMemBase)
-        && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength >= PeiMemBase + PeiMemSize)
-        && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)) {
+      if (  (Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
+         && (Hob.ResourceDescriptor->PhysicalStart <= PeiMemBase)
+         && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength >= PeiMemBase + PeiMemSize)
+         && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB))
+      {
         if ((CompareGuid (&Hob.ResourceDescriptor->Owner, &gZeroGuid))) {
           BuildResourceDescriptorHob (
-          Hob.ResourceDescriptor->ResourceType,
+            Hob.ResourceDescriptor->ResourceType,
             Hob.ResourceDescriptor->ResourceAttribute,
             PeiMemBase,
             PeiMemSize
@@ -222,6 +227,7 @@ PostFspmHobProcess (
             &Hob.ResourceDescriptor->Owner
             );
         }
+
         ResourceLength = (Hob.ResourceDescriptor->ResourceLength) -(PeiMemSize);
       }
     }
@@ -280,64 +286,61 @@ PostFspmHobProcess (
     0x1000
     );
 
-
-    //
-    // Capsule mode
-    //
-    Capsule = NULL;
-    CapsuleBuffer = NULL;
-    CapsuleBufferLength = 0;
-    if (BootMode == BOOT_ON_FLASH_UPDATE) {
-      Status = PeiServicesLocatePpi (
-                 &gEfiPeiCapsulePpiGuid,
-                 0,
-                 NULL,
-                 (VOID **) &Capsule
-                 );
-      ASSERT_EFI_ERROR (Status);
-
-      if (Status == EFI_SUCCESS) {
-        Status = PeiServicesGetHobList ((void**)&Hob.Raw);
-        ASSERT_EFI_ERROR (Status);
-        while ((Hob.Raw = GetNextHob (EFI_HOB_TYPE_RESOURCE_DESCRIPTOR, Hob.Raw)) != NULL) {
-          if ((Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
-               && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)
-               && (Hob.ResourceDescriptor->PhysicalStart >= BASE_1MB)
-               && (Hob.ResourceDescriptor->PhysicalStart != PeiMemBase)
-               && (Hob.ResourceDescriptor->ResourceLength >= CapsuleBufferLength)) {
-             CapsuleBufferLength = (UINTN)Hob.ResourceDescriptor->ResourceLength;
-             CapsuleBuffer = (VOID*)(UINTN)Hob.ResourceDescriptor->PhysicalStart;
-
-          }
-          Hob.Raw = GET_NEXT_HOB (Hob);
-        }
-
-        //
-        // Call the Capsule PPI Coalesce function to coalesce the capsule data.
-        //
-        Status = Capsule->Coalesce (PeiServices, &CapsuleBuffer, &CapsuleBufferLength);
-      }
-    }
-
-
-    DEBUG((DEBUG_INFO, "FSP wrapper PeiMemBase      : 0x%08x\n", PeiMemBase));
-    DEBUG((DEBUG_INFO, "FSP wrapper PeiMemSize      : 0x%08x\n", PeiMemSize));
-    DEBUG((DEBUG_INFO, "FSP wrapper RequiredMemSize : 0x%08x\n", RequiredMemSize));
-
-
-    //
-    // Install efi memory
-    //
-    Status = PeiServicesInstallPeiMemory (
-               PeiMemBase,
-               PeiMemSize - RequiredMemSize
+  //
+  // Capsule mode
+  //
+  Capsule             = NULL;
+  CapsuleBuffer       = NULL;
+  CapsuleBufferLength = 0;
+  if (BootMode == BOOT_ON_FLASH_UPDATE) {
+    Status = PeiServicesLocatePpi (
+               &gEfiPeiCapsulePpiGuid,
+               0,
+               NULL,
+               (VOID **)&Capsule
                );
     ASSERT_EFI_ERROR (Status);
 
-    if (Capsule != NULL) {
-      Status = Capsule->CreateState ((EFI_PEI_SERVICES **)PeiServices, CapsuleBuffer, CapsuleBufferLength);
-    }
+    if (Status == EFI_SUCCESS) {
+      Status = PeiServicesGetHobList ((void **)&Hob.Raw);
+      ASSERT_EFI_ERROR (Status);
+      while ((Hob.Raw = GetNextHob (EFI_HOB_TYPE_RESOURCE_DESCRIPTOR, Hob.Raw)) != NULL) {
+        if (  (Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_SYSTEM_MEMORY)
+           && (Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength <= BASE_4GB)
+           && (Hob.ResourceDescriptor->PhysicalStart >= BASE_1MB)
+           && (Hob.ResourceDescriptor->PhysicalStart != PeiMemBase)
+           && (Hob.ResourceDescriptor->ResourceLength >= CapsuleBufferLength))
+        {
+          CapsuleBufferLength = (UINTN)Hob.ResourceDescriptor->ResourceLength;
+          CapsuleBuffer       = (VOID *)(UINTN)Hob.ResourceDescriptor->PhysicalStart;
+        }
 
+        Hob.Raw = GET_NEXT_HOB (Hob);
+      }
+
+      //
+      // Call the Capsule PPI Coalesce function to coalesce the capsule data.
+      //
+      Status = Capsule->Coalesce (PeiServices, &CapsuleBuffer, &CapsuleBufferLength);
+    }
+  }
+
+  DEBUG ((DEBUG_INFO, "FSP wrapper PeiMemBase      : 0x%08x\n", PeiMemBase));
+  DEBUG ((DEBUG_INFO, "FSP wrapper PeiMemSize      : 0x%08x\n", PeiMemSize));
+  DEBUG ((DEBUG_INFO, "FSP wrapper RequiredMemSize : 0x%08x\n", RequiredMemSize));
+
+  //
+  // Install efi memory
+  //
+  Status = PeiServicesInstallPeiMemory (
+             PeiMemBase,
+             PeiMemSize - RequiredMemSize
+             );
+  ASSERT_EFI_ERROR (Status);
+
+  if (Capsule != NULL) {
+    Status = Capsule->CreateState ((EFI_PEI_SERVICES **)PeiServices, CapsuleBuffer, CapsuleBufferLength);
+  }
 
   //
   // Create a memory allocation HOB at fixed location for MP Services PPI AP wait loop.
@@ -360,7 +363,7 @@ PostFspmHobProcess (
 **/
 VOID
 ProcessFspHobList (
-  IN VOID                 *FspHobList
+  IN VOID  *FspHobList
   )
 {
   UINT8                 PhysicalAddressBits;
@@ -372,7 +375,7 @@ ProcessFspHobList (
   AsmCpuid (0x80000000, &RegEax, NULL, NULL, NULL);
   if (RegEax >= 0x80000008) {
     AsmCpuid (0x80000008, &RegEax, NULL, NULL, NULL);
-    PhysicalAddressBits = (UINT8) RegEax;
+    PhysicalAddressBits = (UINT8)RegEax;
   } else {
     PhysicalAddressBits = 36;
   }
@@ -390,14 +393,15 @@ ProcessFspHobList (
       //
       // Skip FSP binary creates PcdDataBaseHobGuid
       //
-      if (!CompareGuid(&FspHob.Guid->Name, &gPcdDataBaseHobGuid)) {
+      if (!CompareGuid (&FspHob.Guid->Name, &gPcdDataBaseHobGuid)) {
         BuildGuidDataHob (
           &FspHob.Guid->Name,
-          GET_GUID_HOB_DATA(FspHob),
-          GET_GUID_HOB_DATA_SIZE(FspHob)
-        );
+          GET_GUID_HOB_DATA (FspHob),
+          GET_GUID_HOB_DATA_SIZE (FspHob)
+          );
       }
     }
+
     FspHob.Raw = GET_NEXT_HOB (FspHob);
   }
 }
@@ -407,11 +411,11 @@ CheckFspGraphicsDeviceInfoHob (
   VOID
   )
 {
-  EFI_PEI_HOB_POINTERS             Hob;
-  EFI_STATUS                       Status;
-  EFI_PEI_GRAPHICS_INFO_HOB        *FspGraphicsInfo = NULL;
-  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB *FspGraphicsDeviceInfo = NULL;
-  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB GraphicsDeviceInfo;
+  EFI_PEI_HOB_POINTERS              Hob;
+  EFI_STATUS                        Status;
+  EFI_PEI_GRAPHICS_INFO_HOB         *FspGraphicsInfo       = NULL;
+  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB  *FspGraphicsDeviceInfo = NULL;
+  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB  GraphicsDeviceInfo;
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
@@ -421,8 +425,9 @@ CheckFspGraphicsDeviceInfoHob (
       }
     }
   }
+
   if (FspGraphicsInfo == NULL) {
-    return ;
+    return;
   }
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
@@ -433,8 +438,9 @@ CheckFspGraphicsDeviceInfoHob (
       }
     }
   }
+
   if (FspGraphicsDeviceInfo != NULL) {
-    return ;
+    return;
   }
 
   //
@@ -451,10 +457,10 @@ CheckFspGraphicsDeviceInfoHob (
   BuildGuidDataHob (
     &gEfiGraphicsDeviceInfoHobGuid,
     &GraphicsDeviceInfo,
-    sizeof(GraphicsDeviceInfo)
+    sizeof (GraphicsDeviceInfo)
     );
 
-  return ;
+  return;
 }
 
 /**
@@ -467,7 +473,6 @@ DumpFspSmbiosMemoryInfoHob (
   )
 {
 }
-
 
 /**
   Dump FSP SMBIOS Processor Info HOB
@@ -500,8 +505,8 @@ DumpFspHobList (
   VOID
   )
 {
-  EFI_PEI_HOB_POINTERS Hob;
-  EFI_STATUS           Status;
+  EFI_PEI_HOB_POINTERS  Hob;
+  EFI_STATUS            Status;
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   ASSERT_EFI_ERROR (Status);
@@ -509,12 +514,19 @@ DumpFspHobList (
     if (Hob.Header->HobType == EFI_HOB_TYPE_GUID_EXTENSION) {
       DEBUG ((DEBUG_INFO, "FSP Extended    GUID HOB: {%g}\n", &(Hob.Guid->Name)));
     }
+
     if ((Hob.Header->HobType == EFI_HOB_TYPE_RESOURCE_DESCRIPTOR) &&
-       (Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_MEMORY_RESERVED)) {
-      DEBUG ((DEBUG_INFO, "FSP Reserved Resource HOB: %016lX ~ %016lX\n", \
-              Hob.ResourceDescriptor->PhysicalStart, Hob.ResourceDescriptor->PhysicalStart \
-              + Hob.ResourceDescriptor->ResourceLength));
+        (Hob.ResourceDescriptor->ResourceType == EFI_RESOURCE_MEMORY_RESERVED))
+    {
+      DEBUG ((
+        DEBUG_INFO,
+        "FSP Reserved Resource HOB: %016lX ~ %016lX\n", \
+        Hob.ResourceDescriptor->PhysicalStart,
+        Hob.ResourceDescriptor->PhysicalStart \
+        + Hob.ResourceDescriptor->ResourceLength
+        ));
     }
+
     Hob.Raw = GET_NEXT_HOB (Hob);
   }
 }
@@ -528,8 +540,8 @@ DumpFspMemoryResource (
   VOID
   )
 {
-  EFI_PEI_HOB_POINTERS Hob;
-  EFI_STATUS           Status;
+  EFI_PEI_HOB_POINTERS  Hob;
+  EFI_STATUS            Status;
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   ASSERT_EFI_ERROR (Status);
@@ -538,23 +550,29 @@ DumpFspMemoryResource (
   DEBUG ((DEBUG_INFO, "================================= ==== ================ ====================================\n"));
   while ((Hob.Raw = GetNextHob (EFI_HOB_TYPE_RESOURCE_DESCRIPTOR, Hob.Raw)) != NULL) {
     if (!CompareGuid (&(Hob.ResourceDescriptor->Owner), &gZeroGuid)) {
-      DEBUG ((DEBUG_INFO, "%016lx-%016lx %4x %016x %g\n",
-              Hob.ResourceDescriptor->PhysicalStart,
-              Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength,
-              Hob.ResourceDescriptor->ResourceType,
-              Hob.ResourceDescriptor->ResourceAttribute,
-              &(Hob.ResourceDescriptor->Owner)
-              ));
+      DEBUG ((
+        DEBUG_INFO,
+        "%016lx-%016lx %4x %016x %g\n",
+        Hob.ResourceDescriptor->PhysicalStart,
+        Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength,
+        Hob.ResourceDescriptor->ResourceType,
+        Hob.ResourceDescriptor->ResourceAttribute,
+        &(Hob.ResourceDescriptor->Owner)
+        ));
     } else {
-      DEBUG ((DEBUG_INFO, "%016lx-%016lx %4x %016x \n",
-              Hob.ResourceDescriptor->PhysicalStart,
-              Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength,
-              Hob.ResourceDescriptor->ResourceType,
-              Hob.ResourceDescriptor->ResourceAttribute
-              ));
+      DEBUG ((
+        DEBUG_INFO,
+        "%016lx-%016lx %4x %016x \n",
+        Hob.ResourceDescriptor->PhysicalStart,
+        Hob.ResourceDescriptor->PhysicalStart + Hob.ResourceDescriptor->ResourceLength,
+        Hob.ResourceDescriptor->ResourceType,
+        Hob.ResourceDescriptor->ResourceAttribute
+        ));
     }
+
     Hob.Raw = GET_NEXT_HOB (Hob);
   }
+
   DEBUG ((DEBUG_INFO, "\n"));
 }
 
@@ -567,9 +585,9 @@ DumpFspGraphicsInfoHob (
   VOID
   )
 {
-  EFI_PEI_HOB_POINTERS      Hob;
-  EFI_STATUS                Status;
-  EFI_PEI_GRAPHICS_INFO_HOB *FspGraphicsInfo = NULL;
+  EFI_PEI_HOB_POINTERS       Hob;
+  EFI_STATUS                 Status;
+  EFI_PEI_GRAPHICS_INFO_HOB  *FspGraphicsInfo = NULL;
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
@@ -578,25 +596,28 @@ DumpFspGraphicsInfoHob (
         FspGraphicsInfo = GET_GUID_HOB_DATA (Hob.Guid);
       }
     }
+
     if (FspGraphicsInfo != NULL) {
-      DEBUG((DEBUG_INFO, "\nGraphicsInfo\n"));
-      DEBUG((DEBUG_INFO, "  |-> FrameBufferBase : 0x%016lx\n", FspGraphicsInfo->FrameBufferBase));
-      DEBUG((DEBUG_INFO, "  |-> FrameBufferSize : 0x%016lx\n", FspGraphicsInfo->FrameBufferSize));
-      DEBUG((DEBUG_INFO, "  |-> GraphicsMode\n"));
-      DEBUG((DEBUG_INFO, "    |-> Version              : 0x%08x\n", FspGraphicsInfo->GraphicsMode.Version));
-      DEBUG((DEBUG_INFO, "    |-> HorizontalResolution : %d\n", FspGraphicsInfo->GraphicsMode.HorizontalResolution));
-      DEBUG((DEBUG_INFO, "    |-> VerticalResolution   : %d\n", FspGraphicsInfo->GraphicsMode.VerticalResolution));
-      DEBUG((DEBUG_INFO, "    |-> PixelFormat          : %d\n", FspGraphicsInfo->GraphicsMode.PixelFormat));
-      DEBUG((DEBUG_INFO, "    |-> PixelInformation     : %d|%d|%d|%d\n",
+      DEBUG ((DEBUG_INFO, "\nGraphicsInfo\n"));
+      DEBUG ((DEBUG_INFO, "  |-> FrameBufferBase : 0x%016lx\n", FspGraphicsInfo->FrameBufferBase));
+      DEBUG ((DEBUG_INFO, "  |-> FrameBufferSize : 0x%016lx\n", FspGraphicsInfo->FrameBufferSize));
+      DEBUG ((DEBUG_INFO, "  |-> GraphicsMode\n"));
+      DEBUG ((DEBUG_INFO, "    |-> Version              : 0x%08x\n", FspGraphicsInfo->GraphicsMode.Version));
+      DEBUG ((DEBUG_INFO, "    |-> HorizontalResolution : %d\n", FspGraphicsInfo->GraphicsMode.HorizontalResolution));
+      DEBUG ((DEBUG_INFO, "    |-> VerticalResolution   : %d\n", FspGraphicsInfo->GraphicsMode.VerticalResolution));
+      DEBUG ((DEBUG_INFO, "    |-> PixelFormat          : %d\n", FspGraphicsInfo->GraphicsMode.PixelFormat));
+      DEBUG ((
+        DEBUG_INFO,
+        "    |-> PixelInformation     : %d|%d|%d|%d\n",
         FspGraphicsInfo->GraphicsMode.PixelInformation.RedMask,
         FspGraphicsInfo->GraphicsMode.PixelInformation.GreenMask,
         FspGraphicsInfo->GraphicsMode.PixelInformation.BlueMask,
         FspGraphicsInfo->GraphicsMode.PixelInformation.ReservedMask
         ));
-      DEBUG((DEBUG_INFO, "    |-> PixelsPerScanLine    : %d\n", FspGraphicsInfo->GraphicsMode.PixelsPerScanLine));
-      DEBUG((DEBUG_INFO, "\n"));
+      DEBUG ((DEBUG_INFO, "    |-> PixelsPerScanLine    : %d\n", FspGraphicsInfo->GraphicsMode.PixelsPerScanLine));
+      DEBUG ((DEBUG_INFO, "\n"));
     } else {
-      DEBUG((DEBUG_INFO, "\nNo GraphicsInfo\n"));
+      DEBUG ((DEBUG_INFO, "\nNo GraphicsInfo\n"));
     }
   }
 }
@@ -606,9 +627,9 @@ DumpFspGraphicsDeviceInfoHob (
   VOID
   )
 {
-  EFI_PEI_HOB_POINTERS             Hob;
-  EFI_STATUS                       Status;
-  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB *FspGraphicsDeviceInfo = NULL;
+  EFI_PEI_HOB_POINTERS              Hob;
+  EFI_STATUS                        Status;
+  EFI_PEI_GRAPHICS_DEVICE_INFO_HOB  *FspGraphicsDeviceInfo = NULL;
 
   Status = PeiServicesGetHobList ((VOID **)&Hob.Raw);
   if (!EFI_ERROR (Status)) {
@@ -617,22 +638,23 @@ DumpFspGraphicsDeviceInfoHob (
         FspGraphicsDeviceInfo = GET_GUID_HOB_DATA (Hob.Guid);
       }
     }
+
     if (FspGraphicsDeviceInfo != NULL) {
-      DEBUG((DEBUG_INFO, "\nGraphicsDeviceInfo\n"));
-      DEBUG((DEBUG_INFO, "  |-> VendorId          : 0x%04x\n", FspGraphicsDeviceInfo->VendorId));
-      DEBUG((DEBUG_INFO, "  |-> DeviceId          : 0x%04x\n", FspGraphicsDeviceInfo->DeviceId));
-      DEBUG((DEBUG_INFO, "  |-> SubsystemVendorId : 0x%04x\n", FspGraphicsDeviceInfo->SubsystemVendorId));
-      DEBUG((DEBUG_INFO, "  |-> SubsystemId       : 0x%04x\n", FspGraphicsDeviceInfo->SubsystemId));
-      DEBUG((DEBUG_INFO, "  |-> RevisionId        : 0x%02x\n", FspGraphicsDeviceInfo->RevisionId));
-      DEBUG((DEBUG_INFO, "  |-> BarIndex          : 0x%02x\n", FspGraphicsDeviceInfo->BarIndex));
-      DEBUG((DEBUG_INFO, "\n"));
+      DEBUG ((DEBUG_INFO, "\nGraphicsDeviceInfo\n"));
+      DEBUG ((DEBUG_INFO, "  |-> VendorId          : 0x%04x\n", FspGraphicsDeviceInfo->VendorId));
+      DEBUG ((DEBUG_INFO, "  |-> DeviceId          : 0x%04x\n", FspGraphicsDeviceInfo->DeviceId));
+      DEBUG ((DEBUG_INFO, "  |-> SubsystemVendorId : 0x%04x\n", FspGraphicsDeviceInfo->SubsystemVendorId));
+      DEBUG ((DEBUG_INFO, "  |-> SubsystemId       : 0x%04x\n", FspGraphicsDeviceInfo->SubsystemId));
+      DEBUG ((DEBUG_INFO, "  |-> RevisionId        : 0x%02x\n", FspGraphicsDeviceInfo->RevisionId));
+      DEBUG ((DEBUG_INFO, "  |-> BarIndex          : 0x%02x\n", FspGraphicsDeviceInfo->BarIndex));
+      DEBUG ((DEBUG_INFO, "\n"));
     } else {
-      DEBUG((DEBUG_INFO, "\nNo GraphicsDeviceInfo\n"));
+      DEBUG ((DEBUG_INFO, "\nNo GraphicsDeviceInfo\n"));
     }
   }
 }
 
-EFI_PEI_PPI_DESCRIPTOR mSiliconInitializedDesc = {
+EFI_PEI_PPI_DESCRIPTOR  mSiliconInitializedDesc = {
   (EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEdkiiSiliconInitializedPpiGuid,
   NULL
@@ -648,10 +670,10 @@ EFI_PEI_PPI_DESCRIPTOR mSiliconInitializedDesc = {
 EFI_STATUS
 EFIAPI
 PostFspsHobProcess (
-  IN VOID                 *FspHobList
+  IN VOID  *FspHobList
   )
 {
-  EFI_STATUS   Status;
+  EFI_STATUS  Status;
 
   if (PcdGet8 (PcdFspModeSelection) == 1) {
     //
@@ -664,19 +686,20 @@ PostFspsHobProcess (
     // Only in FSP Dispatch mode, FSP-S should be reported to DXE dispatcher.
     //
     BuildFvHob (
-      (EFI_PHYSICAL_ADDRESS) (UINTN) PcdGet32 (PcdFlashFvFspSBase),
+      (EFI_PHYSICAL_ADDRESS)(UINTN)PcdGet32 (PcdFlashFvFspSBase),
       PcdGet32 (PcdFlashFvFspSSize)
       );
   }
+
   CheckFspGraphicsDeviceInfoHob ();
   DEBUG_CODE_BEGIN ();
-    DumpFspSmbiosMemoryInfoHob ();
-    DumpFspSmbiosProcessorInfoHob();
-    DumpFspSmbiosCacheInfoHob();
-    DumpFspGraphicsInfoHob ();
-    DumpFspGraphicsDeviceInfoHob ();
-    DumpFspHobList ();
-    DumpFspMemoryResource ();
+  DumpFspSmbiosMemoryInfoHob ();
+  DumpFspSmbiosProcessorInfoHob ();
+  DumpFspSmbiosCacheInfoHob ();
+  DumpFspGraphicsInfoHob ();
+  DumpFspGraphicsDeviceInfoHob ();
+  DumpFspHobList ();
+  DumpFspMemoryResource ();
   DEBUG_CODE_END ();
 
   Status = PeiServicesInstallPpi (&mSiliconInitializedDesc);

@@ -58,11 +58,11 @@
 EFI_STATUS
 EFIAPI
 VarLibSetVariable (
-  IN  CHAR16                        *VariableName,
-  IN  EFI_GUID                      *VendorGuid,
-  IN  UINT32                        Attributes,
-  IN  UINTN                         DataSize,
-  IN  VOID                          *Data
+  IN  CHAR16    *VariableName,
+  IN  EFI_GUID  *VendorGuid,
+  IN  UINT32    Attributes,
+  IN  UINTN     DataSize,
+  IN  VOID      *Data
   );
 
 /**
@@ -89,10 +89,10 @@ VarLibSetVariable (
 EFI_STATUS
 EFIAPI
 VarLibQueryVariableInfo (
-  IN  UINT32                        Attributes,
-  OUT UINT64                        *MaximumVariableStorageSize,
-  OUT UINT64                        *RemainingVariableStorageSize,
-  OUT UINT64                        *MaximumVariableSize
+  IN  UINT32  Attributes,
+  OUT UINT64  *MaximumVariableStorageSize,
+  OUT UINT64  *RemainingVariableStorageSize,
+  OUT UINT64  *MaximumVariableSize
   );
 
 /**
@@ -131,8 +131,8 @@ VarLibIsVariableRequestToLockSupported (
 EFI_STATUS
 EFIAPI
 VarLibVariableRequestToLock (
-  IN  CHAR16                       *VariableName,
-  IN  EFI_GUID                     *VendorGuid
+  IN  CHAR16    *VariableName,
+  IN  EFI_GUID  *VendorGuid
   );
 
-#endif  // _VARIABLE_WRITE_LIB_H_
+#endif // _VARIABLE_WRITE_LIB_H_

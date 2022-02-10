@@ -34,9 +34,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 SecPlatformInformation (
-  IN CONST EFI_PEI_SERVICES                     **PeiServices,
-  IN OUT   UINT64                               *StructureSize,
-     OUT   EFI_SEC_PLATFORM_INFORMATION_RECORD  *PlatformInformationRecord
+  IN CONST EFI_PEI_SERVICES                  **PeiServices,
+  IN OUT   UINT64                            *StructureSize,
+  OUT   EFI_SEC_PLATFORM_INFORMATION_RECORD  *PlatformInformationRecord
   );
 
 /**
@@ -68,7 +68,7 @@ PEI_SEC_PERFORMANCE_PPI  mSecPerformancePpi = {
 };
 
 EFI_PEI_CORE_FV_LOCATION_PPI  mPeiCoreFvLocationPpi = {
-  (VOID *) (UINTN) FixedPcdGet32 (PcdFspmBaseAddress)
+  (VOID *)(UINTN)FixedPcdGet32 (PcdFspmBaseAddress)
 };
 
 EFI_PEI_PPI_DESCRIPTOR  mPeiCoreFvLocationPpiList[] = {
@@ -112,10 +112,10 @@ Interrupt8259WriteMask (
   IN UINT16  EdgeLevel
   )
 {
-  IoWrite8 (LEGACY_8259_MASK_REGISTER_MASTER, (UINT8) Mask);
-  IoWrite8 (LEGACY_8259_MASK_REGISTER_SLAVE, (UINT8) (Mask >> 8));
-  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_MASTER, (UINT8) EdgeLevel);
-  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_SLAVE, (UINT8) (EdgeLevel >> 8));
+  IoWrite8 (LEGACY_8259_MASK_REGISTER_MASTER, (UINT8)Mask);
+  IoWrite8 (LEGACY_8259_MASK_REGISTER_SLAVE, (UINT8)(Mask >> 8));
+  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_MASTER, (UINT8)EdgeLevel);
+  IoWrite8 (LEGACY_8259_EDGE_LEVEL_TRIGGERED_REGISTER_SLAVE, (UINT8)(EdgeLevel >> 8));
 }
 
 /**
@@ -138,12 +138,12 @@ Interrupt8259WriteMask (
 EFI_PEI_PPI_DESCRIPTOR *
 EFIAPI
 SecPlatformMain (
-  IN OUT   EFI_SEC_PEI_HAND_OFF        *SecCoreData
+  IN OUT   EFI_SEC_PEI_HAND_OFF  *SecCoreData
   )
 {
-  EFI_PEI_PPI_DESCRIPTOR      *PpiList;
-  UINT8                       TopOfTemporaryRamPpiIndex;
-  UINT8                       *CopyDestinationPointer;
+  EFI_PEI_PPI_DESCRIPTOR  *PpiList;
+  UINT8                   TopOfTemporaryRamPpiIndex;
+  UINT8                   *CopyDestinationPointer;
 
   DEBUG ((DEBUG_INFO, "FSP Wrapper BootFirmwareVolumeBase - 0x%x\n", SecCoreData->BootFirmwareVolumeBase));
   DEBUG ((DEBUG_INFO, "FSP Wrapper BootFirmwareVolumeSize - 0x%x\n", SecCoreData->BootFirmwareVolumeSize));
@@ -154,7 +154,7 @@ SecPlatformMain (
   DEBUG ((DEBUG_INFO, "FSP Wrapper StackBase              - 0x%x\n", SecCoreData->StackBase));
   DEBUG ((DEBUG_INFO, "FSP Wrapper StackSize              - 0x%x\n", SecCoreData->StackSize));
 
-  InitializeApicTimer (0, (UINT32) -1, TRUE, 5);
+  InitializeApicTimer (0, (UINT32)-1, TRUE, 5);
 
   //
   // Set all 8259 interrupts to edge triggered and disabled
@@ -165,8 +165,8 @@ SecPlatformMain (
   // Use middle of Heap as temp buffer, it will be copied by caller.
   // Do not use Stack, because it will cause wrong calculation on stack by PeiCore
   //
-  PpiList = (VOID *)((UINTN) SecCoreData->PeiTemporaryRamBase + (UINTN) SecCoreData->PeiTemporaryRamSize/2);
-  CopyDestinationPointer = (UINT8 *) PpiList;
+  PpiList                   = (VOID *)((UINTN)SecCoreData->PeiTemporaryRamBase + (UINTN)SecCoreData->PeiTemporaryRamSize/2);
+  CopyDestinationPointer    = (UINT8 *)PpiList;
   TopOfTemporaryRamPpiIndex = 0;
   if ((PcdGet8 (PcdFspModeSelection) == 0) && PcdGetBool (PcdFspDispatchModeUseFspPeiMain)) {
     //
@@ -174,13 +174,14 @@ SecPlatformMain (
     //
     CopyMem (CopyDestinationPointer, mPeiCoreFvLocationPpiList, sizeof (mPeiCoreFvLocationPpiList));
     TopOfTemporaryRamPpiIndex = 1;
-    CopyDestinationPointer += sizeof (mPeiCoreFvLocationPpiList);
+    CopyDestinationPointer   += sizeof (mPeiCoreFvLocationPpiList);
   }
+
   CopyMem (CopyDestinationPointer, mPeiSecPlatformPpi, sizeof (mPeiSecPlatformPpi));
   //
   // Patch TopOfTemporaryRamPpi
   //
-  PpiList[TopOfTemporaryRamPpiIndex].Ppi = (VOID *)((UINTN) SecCoreData->TemporaryRamBase + SecCoreData->TemporaryRamSize);
+  PpiList[TopOfTemporaryRamPpiIndex].Ppi = (VOID *)((UINTN)SecCoreData->TemporaryRamBase + SecCoreData->TemporaryRamSize);
 
   return PpiList;
 }

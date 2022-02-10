@@ -19,16 +19,16 @@ typedef struct _PEI_PLATFORM_MEMORY_SIZE_PPI PEI_PLATFORM_MEMORY_SIZE_PPI;
 
 typedef
 EFI_STATUS
-(EFIAPI *PEI_GET_MINIMUM_PLATFORM_MEMORY_SIZE) (
+(EFIAPI *PEI_GET_MINIMUM_PLATFORM_MEMORY_SIZE)(
   IN      EFI_PEI_SERVICES                       **PeiServices,
-  IN PEI_PLATFORM_MEMORY_SIZE_PPI                * This,
+  IN PEI_PLATFORM_MEMORY_SIZE_PPI                *This,
   IN OUT  UINT64                                 *MemorySize
   );
 
 typedef struct _PEI_PLATFORM_MEMORY_SIZE_PPI {
-  PEI_GET_MINIMUM_PLATFORM_MEMORY_SIZE  GetPlatformMemorySize;
+  PEI_GET_MINIMUM_PLATFORM_MEMORY_SIZE    GetPlatformMemorySize;
 } PEI_PLATFORM_MEMORY_SIZE_PPI;
 
-extern EFI_GUID gPeiPlatformMemorySizePpiGuid;
+extern EFI_GUID  gPeiPlatformMemorySizePpiGuid;
 
 #endif

@@ -44,10 +44,10 @@ PeiGetVariable (
   OUT UINTN          *Size  OPTIONAL
   )
 {
-  EFI_STATUS                        Status;
-  EFI_PEI_READ_ONLY_VARIABLE2_PPI   *VariableServices;
-  UINTN                             VariableSize;
-  VOID                              *VariableData;
+  EFI_STATUS                       Status;
+  EFI_PEI_READ_ONLY_VARIABLE2_PPI  *VariableServices;
+  UINTN                            VariableSize;
+  VOID                             *VariableData;
 
   ASSERT (Name != NULL);
   ASSERT (Guid != NULL);
@@ -60,20 +60,20 @@ PeiGetVariable (
              (VOID **)&VariableServices
              );
   ASSERT_EFI_ERROR (Status);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     return EFI_NOT_READY;
   }
 
   VariableSize = 0;
   VariableData = NULL;
-  Status = VariableServices->GetVariable (
-                               VariableServices,
-                               Name,
-                               Guid,
-                               NULL,
-                               &VariableSize,
-                               VariableData
-                               );
+  Status       = VariableServices->GetVariable (
+                                     VariableServices,
+                                     Name,
+                                     Guid,
+                                     NULL,
+                                     &VariableSize,
+                                     VariableData
+                                     );
   if (Status != EFI_BUFFER_TOO_SMALL) {
     return Status;
   }
@@ -88,6 +88,7 @@ PeiGetVariable (
     if (*Size < VariableSize) {
       return EFI_BUFFER_TOO_SMALL;
     }
+
     VariableData = *Value;
   }
 
@@ -109,6 +110,7 @@ PeiGetVariable (
   if (Size != NULL) {
     *Size = VariableSize;
   }
+
   return Status;
 }
 
@@ -142,9 +144,9 @@ PeiGetLargeVariable (
   OUT UINTN     *Size  OPTIONAL
   )
 {
-  EFI_STATUS                        Status;
-  UINTN                             VariableSize;
-  VOID                              *VariableData;
+  EFI_STATUS  Status;
+  UINTN       VariableSize;
+  VOID        *VariableData;
 
   ASSERT (Name != NULL);
   ASSERT (Guid != NULL);
@@ -152,7 +154,7 @@ PeiGetLargeVariable (
 
   VariableSize = 0;
   VariableData = NULL;
-  Status = GetLargeVariable (Name, Guid, &VariableSize, NULL);
+  Status       = GetLargeVariable (Name, Guid, &VariableSize, NULL);
   if (Status == EFI_BUFFER_TOO_SMALL) {
     VariableData = AllocatePages (EFI_SIZE_TO_PAGES (VariableSize));
     if (VariableData == NULL) {
@@ -160,47 +162,54 @@ PeiGetLargeVariable (
       ASSERT (FALSE);
       return EFI_OUT_OF_RESOURCES;
     }
+
     Status = GetLargeVariable (Name, Guid, &VariableSize, VariableData);
     if (EFI_ERROR (Status)) {
       DEBUG ((DEBUG_ERROR, "Error: Unable to read UEFI variable Status: %r\n", Status));
       ASSERT_EFI_ERROR (Status);
       return Status;
     }
+
     if (Value != NULL) {
       *Value = VariableData;
     }
+
     if (Size != NULL) {
       *Size = VariableSize;
     }
+
     return EFI_SUCCESS;
   }
+
   return Status;
 }
 
 EFI_PEI_FILE_HANDLE
 InternalGetFfsHandleFromAnyFv (
-  IN CONST  EFI_GUID           *NameGuid
+  IN CONST  EFI_GUID  *NameGuid
   )
 {
-  EFI_STATUS                 Status;
-  UINTN                      FvInstance;
-  EFI_PEI_FV_HANDLE          FvHandle;
-  EFI_PEI_FILE_HANDLE        FfsHandle;
+  EFI_STATUS           Status;
+  UINTN                FvInstance;
+  EFI_PEI_FV_HANDLE    FvHandle;
+  EFI_PEI_FILE_HANDLE  FfsHandle;
 
-  FvInstance  = 0;
-  FvHandle    = NULL;
-  FfsHandle   = NULL;
+  FvInstance = 0;
+  FvHandle   = NULL;
+  FfsHandle  = NULL;
   while (TRUE) {
     Status = PeiServicesFfsFindNextVolume (FvInstance, &FvHandle);
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       break;
     }
+
     Status = PeiServicesFfsFindFileByName (NameGuid, FvHandle, &FfsHandle);
     if (Status == EFI_SUCCESS) {
       break;
     }
+
     FfsHandle = NULL;
-    FvInstance ++;
+    FvInstance++;
   }
 
   return FfsHandle;
@@ -218,14 +227,14 @@ InternalGetFfsHandleFromAnyFv (
 EFI_STATUS
 EFIAPI
 PeiGetFfsFromAnyFv (
-  IN CONST  EFI_GUID           *NameGuid,
-  OUT       VOID               **Address,
-  OUT       UINTN              *Size
+  IN CONST  EFI_GUID  *NameGuid,
+  OUT       VOID      **Address,
+  OUT       UINTN     *Size
   )
 {
-  EFI_STATUS                 Status;
-  EFI_FV_FILE_INFO           FvFileInfo;
-  EFI_PEI_FILE_HANDLE        FfsHandle;
+  EFI_STATUS           Status;
+  EFI_FV_FILE_INFO     FvFileInfo;
+  EFI_PEI_FILE_HANDLE  FfsHandle;
 
   FfsHandle = InternalGetFfsHandleFromAnyFv (NameGuid);
   if (FfsHandle == NULL) {
@@ -236,9 +245,10 @@ PeiGetFfsFromAnyFv (
   // Need get size
   //
   Status = PeiServicesFfsGetFileInfo (FfsHandle, &FvFileInfo);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     return EFI_NOT_FOUND;
   }
+
   *Address = FvFileInfo.Buffer;
   *Size    = FvFileInfo.BufferSize;
 
@@ -259,17 +269,17 @@ PeiGetFfsFromAnyFv (
 **/
 EFI_STATUS
 InternalGetSectionByType (
-  IN VOID                  *SectionBuffer,
-  IN UINTN                 SectionBufferSize,
-  IN EFI_SECTION_TYPE      SectionType,
-  IN UINTN                 SectionInstance,
-  OUT VOID                 **OutSectionBuffer,
-  OUT UINTN                *OutSectionSize
+  IN VOID              *SectionBuffer,
+  IN UINTN             SectionBufferSize,
+  IN EFI_SECTION_TYPE  SectionType,
+  IN UINTN             SectionInstance,
+  OUT VOID             **OutSectionBuffer,
+  OUT UINTN            *OutSectionSize
   )
 {
-  EFI_COMMON_SECTION_HEADER             *SectionHeader;
-  UINTN                                 SectionSize;
-  UINTN                                 Instance;
+  EFI_COMMON_SECTION_HEADER  *SectionHeader;
+  UINTN                      SectionSize;
+  UINTN                      Instance;
 
   //
   // Find Section
@@ -278,16 +288,16 @@ InternalGetSectionByType (
 
   Instance = 0;
   while ((UINTN)SectionHeader < (UINTN)SectionBuffer + SectionBufferSize) {
-    if (IS_SECTION2(SectionHeader)) {
-      SectionSize = SECTION2_SIZE(SectionHeader);
+    if (IS_SECTION2 (SectionHeader)) {
+      SectionSize = SECTION2_SIZE (SectionHeader);
     } else {
-      SectionSize = SECTION_SIZE(SectionHeader);
+      SectionSize = SECTION_SIZE (SectionHeader);
     }
 
     if (SectionHeader->Type == SectionType) {
       if (Instance == SectionInstance) {
         *OutSectionBuffer = (UINT8 *)SectionHeader;
-        *OutSectionSize = SectionSize;
+        *OutSectionSize   = SectionSize;
         return EFI_SUCCESS;
       } else {
         Instance++;
@@ -301,7 +311,7 @@ InternalGetSectionByType (
     //
     // Next Section
     //
-    SectionHeader = (EFI_COMMON_SECTION_HEADER *)((UINTN)SectionHeader + ALIGN_VALUE(SectionSize, 4));
+    SectionHeader = (EFI_COMMON_SECTION_HEADER *)((UINTN)SectionHeader + ALIGN_VALUE (SectionSize, 4));
   }
 
   return EFI_NOT_FOUND;
@@ -321,11 +331,11 @@ InternalGetSectionByType (
 EFI_STATUS
 EFIAPI
 PeiGetSectionFromAnyFv  (
-  IN CONST  EFI_GUID           *NameGuid,
-  IN        EFI_SECTION_TYPE   SectionType,
-  IN        UINTN              SectionInstance,
-  OUT       VOID               **Address,
-  OUT       UINTN              *Size
+  IN CONST  EFI_GUID          *NameGuid,
+  IN        EFI_SECTION_TYPE  SectionType,
+  IN        UINTN             SectionInstance,
+  OUT       VOID              **Address,
+  OUT       UINTN             *Size
   )
 {
   EFI_STATUS                 Status;
@@ -334,21 +344,22 @@ PeiGetSectionFromAnyFv  (
   UINTN                      FileBufferSize;
 
   Status = PeiGetFfsFromAnyFv (NameGuid, &FileBuffer, &FileBufferSize);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     return Status;
   }
 
   Status = InternalGetSectionByType (FileBuffer, FileBufferSize, SectionType, SectionInstance, Address, Size);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     return Status;
   }
+
   Section = *Address;
-  if (IS_SECTION2(Section)) {
-    ASSERT(SECTION2_SIZE(Section) > 0x00FFFFFF);
-    *Size = SECTION2_SIZE(Section) - sizeof (EFI_COMMON_SECTION_HEADER2);
+  if (IS_SECTION2 (Section)) {
+    ASSERT (SECTION2_SIZE (Section) > 0x00FFFFFF);
+    *Size    = SECTION2_SIZE (Section) - sizeof (EFI_COMMON_SECTION_HEADER2);
     *Address = (UINT8 *)*Address + sizeof (EFI_COMMON_SECTION_HEADER2);
   } else {
-    *Size = SECTION_SIZE(Section) - sizeof (EFI_COMMON_SECTION_HEADER);
+    *Size    = SECTION_SIZE (Section) - sizeof (EFI_COMMON_SECTION_HEADER);
     *Address = (UINT8 *)*Address + sizeof (EFI_COMMON_SECTION_HEADER);
   }
 

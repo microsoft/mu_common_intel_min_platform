@@ -49,20 +49,20 @@
 EFI_STATUS
 EFIAPI
 GetLargeVariable (
-  IN     CHAR16                      *VariableName,
-  IN     EFI_GUID                    *VendorGuid,
-  IN OUT UINTN                       *DataSize,
-  OUT    VOID                        *Data           OPTIONAL
+  IN     CHAR16    *VariableName,
+  IN     EFI_GUID  *VendorGuid,
+  IN OUT UINTN     *DataSize,
+  OUT    VOID      *Data           OPTIONAL
   )
 {
-  CHAR16        TempVariableName[MAX_VARIABLE_NAME_SIZE];
-  EFI_STATUS    Status;
-  UINTN         TotalSize;
-  UINTN         VarDataSize;
-  UINTN         Index;
-  UINTN         VariableSize;
-  UINTN         BytesRemaining;
-  UINT8         *OffsetPtr;
+  CHAR16      TempVariableName[MAX_VARIABLE_NAME_SIZE];
+  EFI_STATUS  Status;
+  UINTN       TotalSize;
+  UINTN       VarDataSize;
+  UINTN       Index;
+  UINTN       VariableSize;
+  UINTN       BytesRemaining;
+  UINT8       *OffsetPtr;
 
   VarDataSize = 0;
 
@@ -76,15 +76,15 @@ GetLargeVariable (
         Status = EFI_INVALID_PARAMETER;
         goto Done;
       }
+
       DEBUG ((DEBUG_VERBOSE, "GetLargeVariable: Single Variable Found\n"));
       Status = VarLibGetVariable (VariableName, VendorGuid, NULL, DataSize, Data);
       goto Done;
     } else {
       *DataSize = VarDataSize;
-      Status = EFI_BUFFER_TOO_SMALL;
+      Status    = EFI_BUFFER_TOO_SMALL;
       goto Done;
     }
-
   } else if (Status == EFI_NOT_FOUND) {
     //
     // Check if the first variable of a multi-variable set exists
@@ -115,8 +115,10 @@ GetLargeVariable (
         if (Status != EFI_BUFFER_TOO_SMALL) {
           break;
         }
+
         TotalSize += VarDataSize;
       }
+
       DEBUG ((DEBUG_VERBOSE, "TotalSize = %d, NumVariables = %d\n", TotalSize, Index));
 
       //
@@ -131,38 +133,39 @@ GetLargeVariable (
         //
         // Read the data from all variables
         //
-        OffsetPtr       = (UINT8 *) Data;
-        BytesRemaining  = *DataSize;
+        OffsetPtr      = (UINT8 *)Data;
+        BytesRemaining = *DataSize;
         for (Index = 0; Index < MAX_VARIABLE_SPLIT; Index++) {
           VarDataSize = 0;
           ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
           UnicodeSPrint (TempVariableName, MAX_VARIABLE_NAME_SIZE, L"%s%d", VariableName, Index);
           VariableSize = BytesRemaining;
           DEBUG ((DEBUG_INFO, "Reading %s, Guid = %g,", TempVariableName, VendorGuid));
-          Status = VarLibGetVariable (TempVariableName, VendorGuid, NULL, &VariableSize, (VOID *) OffsetPtr);
+          Status = VarLibGetVariable (TempVariableName, VendorGuid, NULL, &VariableSize, (VOID *)OffsetPtr);
           DEBUG ((DEBUG_INFO, " Size %d\n", VariableSize));
           if (EFI_ERROR (Status)) {
             if (Status == EFI_NOT_FOUND) {
               DEBUG ((DEBUG_VERBOSE, "No more variables found\n"));
               Status = EFI_SUCCESS;   // The end has been reached
             }
+
             goto Done;
           }
 
           if (VariableSize < BytesRemaining) {
             BytesRemaining -= VariableSize;
-            OffsetPtr += VariableSize;
+            OffsetPtr      += VariableSize;
           } else {
             DEBUG ((DEBUG_VERBOSE, "All data has been read\n"));
             BytesRemaining = 0;
             break;
           }
-        }   //End of for loop
+        }   // End of for loop
 
         goto Done;
       } else {
         *DataSize = TotalSize;
-        Status = EFI_BUFFER_TOO_SMALL;
+        Status    = EFI_BUFFER_TOO_SMALL;
         goto Done;
       }
     } else {

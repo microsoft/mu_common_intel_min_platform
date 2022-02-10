@@ -50,15 +50,15 @@
 EFI_STATUS
 EFIAPI
 VarLibGetVariable (
-  IN     CHAR16                      *VariableName,
-  IN     EFI_GUID                    *VendorGuid,
-  OUT    UINT32                      *Attributes,    OPTIONAL
+  IN     CHAR16 *VariableName,
+  IN     EFI_GUID *VendorGuid,
+  OUT    UINT32 *Attributes, OPTIONAL
   IN OUT UINTN                       *DataSize,
   OUT    VOID                        *Data           OPTIONAL
   )
 {
-  EFI_STATUS                          Status;
-  EFI_PEI_READ_ONLY_VARIABLE2_PPI     *VariablePpi;
+  EFI_STATUS                       Status;
+  EFI_PEI_READ_ONLY_VARIABLE2_PPI  *VariablePpi;
 
   //
   // Locate the variable PPI.
@@ -67,7 +67,7 @@ VarLibGetVariable (
              &gEfiPeiReadOnlyVariable2PpiGuid,
              0,
              NULL,
-             (VOID **) &VariablePpi
+             (VOID **)&VariablePpi
              );
   ASSERT_EFI_ERROR (Status);
   if (EFI_ERROR (Status)) {
@@ -76,16 +76,17 @@ VarLibGetVariable (
 
   if (VariablePpi != NULL) {
     Status = VariablePpi->GetVariable (
-              VariablePpi,
-              VariableName,
-              VendorGuid,
-              Attributes,
-              DataSize,
-              Data
-              );
+                            VariablePpi,
+                            VariableName,
+                            VendorGuid,
+                            Attributes,
+                            DataSize,
+                            Data
+                            );
   } else {
     Status = EFI_UNSUPPORTED;
   }
+
   return Status;
 }
 
@@ -119,13 +120,13 @@ VarLibGetVariable (
 EFI_STATUS
 EFIAPI
 VarLibGetNextVariableName (
-  IN OUT UINTN                    *VariableNameSize,
-  IN OUT CHAR16                   *VariableName,
-  IN OUT EFI_GUID                 *VendorGuid
+  IN OUT UINTN     *VariableNameSize,
+  IN OUT CHAR16    *VariableName,
+  IN OUT EFI_GUID  *VendorGuid
   )
 {
-  EFI_STATUS                          Status;
-  EFI_PEI_READ_ONLY_VARIABLE2_PPI     *VariablePpi;
+  EFI_STATUS                       Status;
+  EFI_PEI_READ_ONLY_VARIABLE2_PPI  *VariablePpi;
 
   //
   // Locate the variable PPI.
@@ -134,7 +135,7 @@ VarLibGetNextVariableName (
              &gEfiPeiReadOnlyVariable2PpiGuid,
              0,
              NULL,
-             (VOID **) &VariablePpi
+             (VOID **)&VariablePpi
              );
   ASSERT_EFI_ERROR (Status);
   if (EFI_ERROR (Status)) {
@@ -143,13 +144,14 @@ VarLibGetNextVariableName (
 
   if (VariablePpi != NULL) {
     Status = VariablePpi->NextVariableName (
-              VariablePpi,
-              VariableNameSize,
-              VariableName,
-              VendorGuid
-              );
+                            VariablePpi,
+                            VariableNameSize,
+                            VariableName,
+                            VendorGuid
+                            );
   } else {
     Status = EFI_UNSUPPORTED;
   }
+
   return Status;
 }

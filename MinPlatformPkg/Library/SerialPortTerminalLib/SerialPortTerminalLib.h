@@ -20,10 +20,10 @@
 // Below is the platform console device path
 //
 typedef struct {
-  VENDOR_DEVICE_PATH        Guid;
-  UART_DEVICE_PATH          Uart;
-  VENDOR_DEVICE_PATH        TerminalType;
-  EFI_DEVICE_PATH_PROTOCOL  End;
+  VENDOR_DEVICE_PATH          Guid;
+  UART_DEVICE_PATH            Uart;
+  VENDOR_DEVICE_PATH          TerminalType;
+  EFI_DEVICE_PATH_PROTOCOL    End;
 } SERIAL_DEVICE_PATH;
 
 #define gEndEntire \

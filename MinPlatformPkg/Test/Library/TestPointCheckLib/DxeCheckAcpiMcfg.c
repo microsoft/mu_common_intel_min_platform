@@ -39,20 +39,22 @@ DumpAcpiMcfg (
   IN EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER  *Mcfg
   )
 {
-  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE   *Struct;
-  UINTN                                                                                   Count;
-  UINTN                                                                                   Index;
+  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE  *Struct;
+  UINTN                                                                                  Count;
+  UINTN                                                                                  Index;
 
   DumpAcpiTableHeader (&Mcfg->Header);
 
-  Count = Mcfg->Header.Length - sizeof(EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER);
-  Count = Count / sizeof(EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE);
+  Count  = Mcfg->Header.Length - sizeof (EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER);
+  Count  = Count / sizeof (EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE);
   Struct = (VOID *)(Mcfg + 1);
   for (Index = 0; Index < Count; Index++) {
     DEBUG ((DEBUG_INFO, "         "));
     DEBUG ((DEBUG_INFO, " Segment :"));
     DEBUG ((DEBUG_INFO, " BaseAddress=0x%016lx", Struct->BaseAddress));
-    DEBUG ((DEBUG_INFO, " Seg=0x%04x Bus=(0x%02x-0x%02x)",
+    DEBUG ((
+      DEBUG_INFO,
+      " Seg=0x%04x Bus=(0x%02x-0x%02x)",
       Struct->PciSegmentGroupNumber,
       Struct->StartBusNumber,
       Struct->EndBusNumber
@@ -60,6 +62,7 @@ DumpAcpiMcfg (
     DEBUG ((DEBUG_INFO, "\n"));
     Struct++;
   }
+
   return EFI_SUCCESS;
 }
 
@@ -68,19 +71,21 @@ CheckAcpiMcfg (
   IN EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER  *Mcfg
   )
 {
-  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE   *Struct;
-  UINTN                                                                                   Count;
-  UINTN                                                                                   Index;
+  EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE  *Struct;
+  UINTN                                                                                  Count;
+  UINTN                                                                                  Index;
 
-  Count = Mcfg->Header.Length - sizeof(EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER);
-  Count = Count / sizeof(EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE);
+  Count  = Mcfg->Header.Length - sizeof (EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER);
+  Count  = Count / sizeof (EFI_ACPI_MEMORY_MAPPED_ENHANCED_CONFIGURATION_SPACE_BASE_ADDRESS_ALLOCATION_STRUCTURE);
   Struct = (VOID *)(Mcfg + 1);
   for (Index = 0; Index < Count; Index++) {
     if (!IsMmioExit (Struct->BaseAddress, (Struct->EndBusNumber - Struct->StartBusNumber + 1) * SIZE_1MB, TRUE)) {
       DEBUG ((DEBUG_ERROR, "MCFG resource (0x%x) is not reported correctly.\n", Struct->BaseAddress));
       return EFI_NOT_STARTED;
     }
+
     Struct++;
   }
+
   return EFI_SUCCESS;
 }

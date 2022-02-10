@@ -17,24 +17,24 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define TEST_POINT_SMM_COMMUNICATION_FUNC_ID_UEFI_GCD_MAP_INFO  0x1
 
 typedef struct {
-  UINT32     Version;
-  UINT32     FuncId;
-  UINT64     Size;
+  UINT32    Version;
+  UINT32    FuncId;
+  UINT64    Size;
 } TEST_POINT_SMM_COMMUNICATION_HEADER;
 
 typedef struct {
-  TEST_POINT_SMM_COMMUNICATION_HEADER  Header;
-  UINT64                               UefiMemoryMapOffset;
-  UINT64                               UefiMemoryMapSize;
-  UINT64                               GcdMemoryMapOffset;
-  UINT64                               GcdMemoryMapSize;
-  UINT64                               GcdIoMapOffset;
-  UINT64                               GcdIoMapSize;
-  UINT64                               UefiMemoryAttributeTableOffset;
-  UINT64                               UefiMemoryAttributeTableSize;
+  TEST_POINT_SMM_COMMUNICATION_HEADER    Header;
+  UINT64                                 UefiMemoryMapOffset;
+  UINT64                                 UefiMemoryMapSize;
+  UINT64                                 GcdMemoryMapOffset;
+  UINT64                                 GcdMemoryMapSize;
+  UINT64                                 GcdIoMapOffset;
+  UINT64                                 GcdIoMapSize;
+  UINT64                                 UefiMemoryAttributeTableOffset;
+  UINT64                                 UefiMemoryAttributeTableSize;
 } TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO;
 
-#define TEST_POINT_SMM_COMMUNICATION_GUID { \
+#define TEST_POINT_SMM_COMMUNICATION_GUID  {\
   0x9cfa432a, 0x17cd, 0x4eb7, { 0x96, 0x54, 0x2e, 0xb2, 0x5, 0x91, 0xef, 0x8f } \
   }
 

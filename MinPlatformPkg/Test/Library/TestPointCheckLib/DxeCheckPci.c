@@ -24,52 +24,60 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Data region after PCI configuration header(for cardbus bridge)
 //
 typedef struct {
-  UINT16  SubVendorId;  // Subsystem Vendor ID
-  UINT16  SubSystemId;  // Subsystem ID
-  UINT32  LegacyBase;   // Optional 16-Bit PC Card Legacy
+  UINT16    SubVendorId; // Subsystem Vendor ID
+  UINT16    SubSystemId; // Subsystem ID
+  UINT32    LegacyBase;  // Optional 16-Bit PC Card Legacy
   // Mode Base Address
   //
-  UINT32  Data[46];
+  UINT32    Data[46];
 } PCI_CARDBUS_DATA;
 
 typedef union {
-  PCI_DEVICE_HEADER_TYPE_REGION Device;
-  PCI_BRIDGE_CONTROL_REGISTER   Bridge;
-  PCI_CARDBUS_CONTROL_REGISTER  CardBus;
+  PCI_DEVICE_HEADER_TYPE_REGION    Device;
+  PCI_BRIDGE_CONTROL_REGISTER      Bridge;
+  PCI_CARDBUS_CONTROL_REGISTER     CardBus;
 } NON_COMMON_UNION;
 
 typedef struct {
-  PCI_DEVICE_INDEPENDENT_REGION Common;
-  NON_COMMON_UNION              NonCommon;
-  UINT32                        Data[48];
+  PCI_DEVICE_INDEPENDENT_REGION    Common;
+  NON_COMMON_UNION                 NonCommon;
+  UINT32                           Data[48];
 } PCI_CONFIG_SPACE;
 
 #pragma pack()
 
 VOID
 DumpPciDevice (
-  IN UINT8                             Bus,
-  IN UINT8                             Device,
-  IN UINT8                             Function,
-  IN PCI_TYPE00                        *PciData
+  IN UINT8       Bus,
+  IN UINT8       Device,
+  IN UINT8       Function,
+  IN PCI_TYPE00  *PciData
   )
 {
-//DEBUG ((DEBUG_INFO, "  00/00/00 : [0000][0000] [00|00|00] 00000000 00000000 00000000 00000000 00000000 00000000 0000\n"));
-  DEBUG ((DEBUG_INFO, "  %02x/%02x/%02x :",
+  // DEBUG ((DEBUG_INFO, "  00/00/00 : [0000][0000] [00|00|00] 00000000 00000000 00000000 00000000 00000000 00000000 0000\n"));
+  DEBUG ((
+    DEBUG_INFO,
+    "  %02x/%02x/%02x :",
     Bus,
     Device,
     Function
     ));
-  DEBUG ((DEBUG_INFO, " [%04x][%04x]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [%04x][%04x]",
     PciData->Hdr.VendorId,
     PciData->Hdr.DeviceId
     ));
-  DEBUG ((DEBUG_INFO, " [%02x|%02x|%02x]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [%02x|%02x|%02x]",
     PciData->Hdr.ClassCode[2],
     PciData->Hdr.ClassCode[1],
     PciData->Hdr.ClassCode[0]
     ));
-  DEBUG ((DEBUG_INFO, " %08x %08x %08x %08x %08x %08x",
+  DEBUG ((
+    DEBUG_INFO,
+    " %08x %08x %08x %08x %08x %08x",
     PciData->Device.Bar[0],
     PciData->Device.Bar[1],
     PciData->Device.Bar[2],
@@ -77,44 +85,58 @@ DumpPciDevice (
     PciData->Device.Bar[4],
     PciData->Device.Bar[6]
     ));
-  DEBUG ((DEBUG_INFO, " %04x\n",
+  DEBUG ((
+    DEBUG_INFO,
+    " %04x\n",
     PciData->Hdr.Command
     ));
 }
 
 VOID
 DumpPciBridge (
-  IN UINT8                             Bus,
-  IN UINT8                             Device,
-  IN UINT8                             Function,
-  IN PCI_TYPE01                        *PciData
+  IN UINT8       Bus,
+  IN UINT8       Device,
+  IN UINT8       Function,
+  IN PCI_TYPE01  *PciData
   )
 {
-//DEBUG ((DEBUG_INFO, "  00/00/00*: [0000][0000] [00|00|00] 00000000 00000000 [00|00|00] [00:00] [0000:0000] [0000:0000] [00000000:00000000] [0000:0000] 0000   0000\n"));
-  DEBUG ((DEBUG_INFO, "  %02x/%02x/%02x*:",
+  // DEBUG ((DEBUG_INFO, "  00/00/00*: [0000][0000] [00|00|00] 00000000 00000000 [00|00|00] [00:00] [0000:0000] [0000:0000] [00000000:00000000] [0000:0000] 0000   0000\n"));
+  DEBUG ((
+    DEBUG_INFO,
+    "  %02x/%02x/%02x*:",
     Bus,
     Device,
     Function
     ));
-  DEBUG ((DEBUG_INFO, " [%04x][%04x]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [%04x][%04x]",
     PciData->Hdr.VendorId,
     PciData->Hdr.DeviceId
     ));
-  DEBUG ((DEBUG_INFO, " [%02x|%02x|%02x]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [%02x|%02x|%02x]",
     PciData->Hdr.ClassCode[2],
     PciData->Hdr.ClassCode[1],
     PciData->Hdr.ClassCode[0]
     ));
-  DEBUG ((DEBUG_INFO, " %08x %08x",
+  DEBUG ((
+    DEBUG_INFO,
+    " %08x %08x",
     PciData->Bridge.Bar[0],
     PciData->Bridge.Bar[1]
     ));
-  DEBUG ((DEBUG_INFO, " [%02x|%02x|%02x]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [%02x|%02x|%02x]",
     PciData->Bridge.PrimaryBus,
     PciData->Bridge.SecondaryBus,
     PciData->Bridge.SubordinateBus
     ));
-  DEBUG ((DEBUG_INFO, " [00:00] [0000:0000] [0000:0000]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [00:00] [0000:0000] [0000:0000]",
     PciData->Bridge.IoBase,
     PciData->Bridge.IoLimit,
     PciData->Bridge.MemoryBase,
@@ -122,16 +144,22 @@ DumpPciBridge (
     PciData->Bridge.PrefetchableMemoryBase,
     PciData->Bridge.PrefetchableMemoryLimit
     ));
-  DEBUG ((DEBUG_INFO, " [00000000:00000000] [0000:0000]",
+  DEBUG ((
+    DEBUG_INFO,
+    " [00000000:00000000] [0000:0000]",
     PciData->Bridge.PrefetchableBaseUpper32,
     PciData->Bridge.PrefetchableLimitUpper32,
     PciData->Bridge.IoBaseUpper16,
     PciData->Bridge.IoLimitUpper16
     ));
-  DEBUG ((DEBUG_INFO, " %04x  ",
+  DEBUG ((
+    DEBUG_INFO,
+    " %04x  ",
     PciData->Bridge.BridgeControl
     ));
-  DEBUG ((DEBUG_INFO, " %04x\n",
+  DEBUG ((
+    DEBUG_INFO,
+    " %04x\n",
     PciData->Hdr.Command
     ));
 }
@@ -148,9 +176,9 @@ DumpPciBridge (
 **/
 EFI_STATUS
 PciGetProtocolAndResource (
-  IN  EFI_HANDLE                            Handle,
-  OUT EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL       **IoDev,
-  OUT EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR     **Descriptors
+  IN  EFI_HANDLE                         Handle,
+  OUT EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL    **IoDev,
+  OUT EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR  **Descriptors
   )
 {
   EFI_STATUS  Status;
@@ -159,22 +187,22 @@ PciGetProtocolAndResource (
   // Get inferface from protocol
   //
   Status = gBS->HandleProtocol (
-                Handle,
-                &gEfiPciRootBridgeIoProtocolGuid,
-                (VOID**)IoDev
-               );
+                  Handle,
+                  &gEfiPciRootBridgeIoProtocolGuid,
+                  (VOID **)IoDev
+                  );
 
   if (EFI_ERROR (Status)) {
     return Status;
   }
+
   //
   // Call Configuration() to get address space descriptors
   //
-  Status = (*IoDev)->Configuration (*IoDev, (VOID**)Descriptors);
+  Status = (*IoDev)->Configuration (*IoDev, (VOID **)Descriptors);
   if (Status == EFI_UNSUPPORTED) {
     *Descriptors = NULL;
     return EFI_SUCCESS;
-
   } else {
     return Status;
   }
@@ -212,6 +240,7 @@ PciGetNextBusRange (
     *MaxBus = PCI_MAX_BUS;
     return EFI_SUCCESS;
   }
+
   //
   // *Descriptors points to one or more address space descriptors, which
   // ends with a end tagged descriptor. Examine each of the descriptors,
@@ -221,8 +250,8 @@ PciGetNextBusRange (
 
   while ((*Descriptors)->Desc != ACPI_END_TAG_DESCRIPTOR) {
     if ((*Descriptors)->ResType == ACPI_ADDRESS_SPACE_TYPE_BUS) {
-      *MinBus = (UINT16) (*Descriptors)->AddrRangeMin;
-      *MaxBus = (UINT16) (*Descriptors)->AddrRangeMax;
+      *MinBus = (UINT16)(*Descriptors)->AddrRangeMin;
+      *MaxBus = (UINT16)(*Descriptors)->AddrRangeMax;
       (*Descriptors)++;
       return (EFI_SUCCESS);
     }
@@ -242,32 +271,32 @@ TestPointCheckPciResource (
   VOID
   )
 {
-  UINT16                            Bus;
-  UINT16                            Device;
-  UINT16                            Func;
-  UINT64                            Address;
-  EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL   *IoDev;
-  EFI_STATUS                        Status;
-  PCI_TYPE00                        PciData;
-  UINTN                             Index;
-  EFI_HANDLE                        *HandleBuf;
-  UINTN                             HandleCount;
-  EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR *Descriptors;
-  UINT16                            MinBus;
-  UINT16                            MaxBus;
-  BOOLEAN                           IsEnd;
-  
+  UINT16                             Bus;
+  UINT16                             Device;
+  UINT16                             Func;
+  UINT64                             Address;
+  EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL    *IoDev;
+  EFI_STATUS                         Status;
+  PCI_TYPE00                         PciData;
+  UINTN                              Index;
+  EFI_HANDLE                         *HandleBuf;
+  UINTN                              HandleCount;
+  EFI_ACPI_ADDRESS_SPACE_DESCRIPTOR  *Descriptors;
+  UINT16                             MinBus;
+  UINT16                             MaxBus;
+  BOOLEAN                            IsEnd;
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckPciResource - Enter\n"));
   HandleBuf = NULL;
-  Status = gBS->LocateHandleBuffer (
-                  ByProtocol,
-                  &gEfiPciRootBridgeIoProtocolGuid,
-                  NULL,
-                  &HandleCount,
-                  &HandleBuf
-                  );
+  Status    = gBS->LocateHandleBuffer (
+                     ByProtocol,
+                     &gEfiPciRootBridgeIoProtocolGuid,
+                     NULL,
+                     &HandleCount,
+                     &HandleBuf
+                     );
   if (EFI_ERROR (Status)) {
-    goto Done ;
+    goto Done;
   }
 
   DEBUG ((DEBUG_INFO, "  B  D  F*    VID   DID   Class[CSP]   Bar0     Bar1    Bus[PSS]   Io[BL]  Memory[BL]"));
@@ -316,7 +345,7 @@ TestPointCheckPciResource (
             // will be no more functions in the same device, so we can break
             // loop to deal with the next device.
             //
-            if (PciData.Hdr.VendorId == 0xffff && Func == 0) {
+            if ((PciData.Hdr.VendorId == 0xffff) && (Func == 0)) {
               break;
             }
 
@@ -329,27 +358,28 @@ TestPointCheckPciResource (
                            &PciData
                            );
 
-              if (IS_PCI_BRIDGE(&PciData)) {
+              if (IS_PCI_BRIDGE (&PciData)) {
                 // Bridge
                 DumpPciBridge ((UINT8)Bus, (UINT8)Device, (UINT8)Func, (PCI_TYPE01 *)&PciData);
-              } else if (IS_CARDBUS_BRIDGE(&PciData)) {
+              } else if (IS_CARDBUS_BRIDGE (&PciData)) {
                 // CardBus Bridge
               } else {
                 // Device
                 DumpPciDevice ((UINT8)Bus, (UINT8)Device, (UINT8)Func, &PciData);
               }
-              
+
               //
               // If this is not a multi-function device, we can leave the loop
               // to deal with the next device.
               //
-              if (Func == 0 && ((PciData.Hdr.HeaderType & HEADER_TYPE_MULTI_FUNCTION) == 0x00)) {
+              if ((Func == 0) && ((PciData.Hdr.HeaderType & HEADER_TYPE_MULTI_FUNCTION) == 0x00)) {
                 break;
               }
             }
           }
         }
       }
+
       //
       // If Descriptor is NULL, Configuration() returns EFI_UNSUPPRORED,
       // we assume the bus range is 0~PCI_MAX_BUS. After enumerated all
@@ -360,7 +390,7 @@ TestPointCheckPciResource (
       }
     }
   }
-  
+
 Done:
   if (HandleBuf != NULL) {
     FreePool (HandleBuf);
@@ -368,13 +398,13 @@ Done:
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckPciResource - Exit\n"));
 
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED_ERROR_CODE \
-        TEST_POINT_PCI_ENUMERATION_DONE \
-        TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED_ERROR_STRING
+      TEST_POINT_PCI_ENUMERATION_DONE \
+      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED_ERROR_STRING
       );
   }
 
@@ -407,7 +437,7 @@ TestPointCheckPciBusMaster (
     for (Bus = PciSegmentInfo[Segment].StartBusNumber; Bus <= PciSegmentInfo[Segment].EndBusNumber; Bus++) {
       for (Device = 0; Device <= 0x1F; Device++) {
         for (Function = 0; Function <= 0x7; Function++) {
-          VendorId = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS(PciSegmentInfo[Segment].SegmentNumber, Bus, Device, Function, PCI_VENDOR_ID_OFFSET));
+          VendorId = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS (PciSegmentInfo[Segment].SegmentNumber, Bus, Device, Function, PCI_VENDOR_ID_OFFSET));
           //
           // If VendorId = 0xffff, there does not exist a device at this
           // location. For each device, if there is any function on it,
@@ -415,20 +445,20 @@ TestPointCheckPciBusMaster (
           // will be no more functions in the same device, so we can break
           // loop to deal with the next device.
           //
-          if (VendorId == 0xffff && Function == 0) {
+          if ((VendorId == 0xffff) && (Function == 0)) {
             break;
           }
 
           if (VendorId != 0xffff) {
-            Command = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS(Segment, Bus, Device, Function, PCI_COMMAND_OFFSET));
+            Command = PciSegmentRead16 (PCI_SEGMENT_LIB_ADDRESS (Segment, Bus, Device, Function, PCI_COMMAND_OFFSET));
             if ((Command & EFI_PCI_COMMAND_BUS_MASTER) != 0) {
               DEBUG ((DEBUG_INFO, "PCI BME enabled (S%04x.B%02x.D%02x.F%x - %04x)\n", Segment, Bus, Device, Function, Command));
               TestPointLibAppendErrorString (
                 PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
                 NULL,
                 TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED_ERROR_CODE \
-                  TEST_POINT_PCI_ENUMERATION_DONE \
-                  TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED_ERROR_STRING
+                TEST_POINT_PCI_ENUMERATION_DONE \
+                TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED_ERROR_STRING
                 );
               Status = EFI_INVALID_PARAMETER;
             }
@@ -437,8 +467,8 @@ TestPointCheckPciBusMaster (
             // If this is not a multi-function device, we can leave the loop
             // to deal with the next device.
             //
-            HeaderType = PciSegmentRead8 (PCI_SEGMENT_LIB_ADDRESS(Segment, Bus, Device, Function, PCI_HEADER_TYPE_OFFSET));
-            if (Function == 0 && ((HeaderType & HEADER_TYPE_MULTI_FUNCTION) == 0x00)) {
+            HeaderType = PciSegmentRead8 (PCI_SEGMENT_LIB_ADDRESS (Segment, Bus, Device, Function, PCI_HEADER_TYPE_OFFSET));
+            if ((Function == 0) && ((HeaderType & HEADER_TYPE_MULTI_FUNCTION) == 0x00)) {
               break;
             }
           }

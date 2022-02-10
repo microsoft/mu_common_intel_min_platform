@@ -59,11 +59,11 @@
 EFI_STATUS
 EFIAPI
 SetLargeVariable (
-  IN  CHAR16                       *VariableName,
-  IN  EFI_GUID                     *VendorGuid,
-  IN  BOOLEAN                      LockVariable,
-  IN  UINTN                        DataSize,
-  IN  VOID                         *Data
+  IN  CHAR16    *VariableName,
+  IN  EFI_GUID  *VendorGuid,
+  IN  BOOLEAN   LockVariable,
+  IN  UINTN     DataSize,
+  IN  VOID      *Data
   );
 
-#endif  // _LARGE_VARIABLE_WRITE_LIB_H_
+#endif // _LARGE_VARIABLE_WRITE_LIB_H_

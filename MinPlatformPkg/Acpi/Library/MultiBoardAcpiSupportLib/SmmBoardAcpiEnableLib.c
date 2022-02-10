@@ -17,19 +17,20 @@ BoardEnableAcpi (
   IN BOOLEAN  EnableSci
   )
 {
-  BOARD_ACPI_ENABLE_FUNC     *BoardAcpiEnableFunc;
-  EFI_STATUS                 Status;
+  BOARD_ACPI_ENABLE_FUNC  *BoardAcpiEnableFunc;
+  EFI_STATUS              Status;
 
   Status = gSmst->SmmLocateProtocol (
                     &gBoardAcpiEnableGuid,
                     NULL,
                     (VOID **)&BoardAcpiEnableFunc
                     );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardAcpiEnableFunc->BoardEnableAcpi != NULL) {
       return BoardAcpiEnableFunc->BoardEnableAcpi (EnableSci);
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -39,19 +40,19 @@ BoardDisableAcpi (
   IN BOOLEAN  DisableSci
   )
 {
-  BOARD_ACPI_ENABLE_FUNC     *BoardAcpiEnableFunc;
-  EFI_STATUS                 Status;
+  BOARD_ACPI_ENABLE_FUNC  *BoardAcpiEnableFunc;
+  EFI_STATUS              Status;
 
   Status = gSmst->SmmLocateProtocol (
                     &gBoardAcpiEnableGuid,
                     NULL,
                     (VOID **)&BoardAcpiEnableFunc
                     );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardAcpiEnableFunc->BoardDisableAcpi != NULL) {
       return BoardAcpiEnableFunc->BoardDisableAcpi (DisableSci);
     }
   }
+
   return EFI_SUCCESS;
 }
-

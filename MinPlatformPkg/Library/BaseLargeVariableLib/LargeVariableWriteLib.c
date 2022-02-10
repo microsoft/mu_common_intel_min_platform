@@ -41,15 +41,15 @@ GetRemainingVariableStorageSpace (
   VOID
   )
 {
-  EFI_STATUS      Status;
-  UINT64          MaximumVariableStorageSize;
-  UINT64          RemainingVariableStorageSize;
-  UINT64          MaximumVariableSize;
+  EFI_STATUS  Status;
+  UINT64      MaximumVariableStorageSize;
+  UINT64      RemainingVariableStorageSize;
+  UINT64      MaximumVariableSize;
 
-  Status                        = EFI_SUCCESS;
-  MaximumVariableStorageSize    = 0;
-  RemainingVariableStorageSize  = 0;
-  MaximumVariableSize           = 0;
+  Status                       = EFI_SUCCESS;
+  MaximumVariableStorageSize   = 0;
+  RemainingVariableStorageSize = 0;
+  MaximumVariableSize          = 0;
 
   Status = VarLibQueryVariableInfo (
              EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
@@ -80,18 +80,18 @@ GetRemainingVariableStorageSpace (
 **/
 UINT64
 GetVariableSplitSize (
-  IN  UINTN                        VariableNameLength
+  IN  UINTN  VariableNameLength
   )
 {
-  EFI_STATUS      Status;
-  UINT64          MaximumVariableStorageSize;
-  UINT64          RemainingVariableStorageSize;
-  UINT64          VariableSplitSize;
+  EFI_STATUS  Status;
+  UINT64      MaximumVariableStorageSize;
+  UINT64      RemainingVariableStorageSize;
+  UINT64      VariableSplitSize;
 
-  Status                        = EFI_SUCCESS;
-  MaximumVariableStorageSize    = 0;
-  RemainingVariableStorageSize  = 0;
-  VariableSplitSize             = 0;
+  Status                       = EFI_SUCCESS;
+  MaximumVariableStorageSize   = 0;
+  RemainingVariableStorageSize = 0;
+  VariableSplitSize            = 0;
 
   Status = VarLibQueryVariableInfo (
              EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
@@ -142,15 +142,15 @@ GetVariableSplitSize (
 EFI_STATUS
 EFIAPI
 DeleteLargeVariableInternal (
-  IN  CHAR16                       *VariableName,
-  IN  EFI_GUID                     *VendorGuid
+  IN  CHAR16    *VariableName,
+  IN  EFI_GUID  *VendorGuid
   )
 {
-  CHAR16        TempVariableName[MAX_VARIABLE_NAME_SIZE];
-  EFI_STATUS    Status;
-  EFI_STATUS    Status2;
-  UINTN         VarDataSize;
-  UINTN         Index;
+  CHAR16      TempVariableName[MAX_VARIABLE_NAME_SIZE];
+  EFI_STATUS  Status;
+  EFI_STATUS  Status2;
+  UINTN       VarDataSize;
+  UINTN       Index;
 
   VarDataSize = 0;
 
@@ -161,15 +161,14 @@ DeleteLargeVariableInternal (
   if (Status == EFI_BUFFER_TOO_SMALL) {
     DEBUG ((DEBUG_VERBOSE, "DeleteLargeVariableInternal: Deleting Single Variable\n"));
     Status = VarLibSetVariable (
-                VariableName,
-                VendorGuid,
-                EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
-                0,
-                NULL
-                );
+               VariableName,
+               VendorGuid,
+               EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
+               0,
+               NULL
+               );
     goto Done;
   } else if (Status == EFI_NOT_FOUND) {
-
     //
     // Check if the first variable of a multi-variable set exists
     //
@@ -178,13 +177,13 @@ DeleteLargeVariableInternal (
       Status = EFI_OUT_OF_RESOURCES;
       goto Done;
     }
+
     VarDataSize = 0;
     Index       = 0;
     ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
     UnicodeSPrint (TempVariableName, MAX_VARIABLE_NAME_SIZE, L"%s%d", VariableName, Index);
     Status = VarLibGetVariable (TempVariableName, VendorGuid, NULL, &VarDataSize, NULL);
     if (Status == EFI_BUFFER_TOO_SMALL) {
-
       //
       // The first variable exists. Delete all the variables.
       //
@@ -214,6 +213,7 @@ DeleteLargeVariableInternal (
       Status = EFI_NOT_FOUND;
     }
   }
+
 Done:
   DEBUG ((DEBUG_ERROR, "DeleteLargeVariableInternal: Status = %r\n", Status));
   return Status;
@@ -252,46 +252,46 @@ Done:
 EFI_STATUS
 EFIAPI
 SetLargeVariable (
-  IN  CHAR16                       *VariableName,
-  IN  EFI_GUID                     *VendorGuid,
-  IN  BOOLEAN                      LockVariable,
-  IN  UINTN                        DataSize,
-  IN  VOID                         *Data
+  IN  CHAR16    *VariableName,
+  IN  EFI_GUID  *VendorGuid,
+  IN  BOOLEAN   LockVariable,
+  IN  UINTN     DataSize,
+  IN  VOID      *Data
   )
 {
-  CHAR16        TempVariableName[MAX_VARIABLE_NAME_SIZE];
-  UINT64        VariableSplitSize;
-  UINT64        RemainingVariableStorage;
-  EFI_STATUS    Status;
-  EFI_STATUS    Status2;
-  UINTN         VariableNameLength;
-  UINTN         Index;
-  UINTN         VariablesSaved;
-  UINT8         *OffsetPtr;
-  UINTN         BytesRemaining;
-  UINTN         SizeToSave;
+  CHAR16      TempVariableName[MAX_VARIABLE_NAME_SIZE];
+  UINT64      VariableSplitSize;
+  UINT64      RemainingVariableStorage;
+  EFI_STATUS  Status;
+  EFI_STATUS  Status2;
+  UINTN       VariableNameLength;
+  UINTN       Index;
+  UINTN       VariablesSaved;
+  UINT8       *OffsetPtr;
+  UINTN       BytesRemaining;
+  UINTN       SizeToSave;
 
   //
   // Check input parameters.
   //
-  if (VariableName == NULL || VariableName[0] == 0 || VendorGuid == NULL) {
+  if ((VariableName == NULL) || (VariableName[0] == 0) || (VendorGuid == NULL)) {
     return EFI_INVALID_PARAMETER;
   }
 
-  if (DataSize != 0 && Data == NULL) {
+  if ((DataSize != 0) && (Data == NULL)) {
     return EFI_INVALID_PARAMETER;
   }
 
-  if (DataSize == 0 && LockVariable) {
+  if ((DataSize == 0) && LockVariable) {
     DEBUG ((DEBUG_ERROR, "SetLargeVariable: Cannot lock a variable that is being deleted\n"));
     return EFI_INVALID_PARAMETER;
   }
 
   VariablesSaved = 0;
   if (LockVariable && !VarLibIsVariableRequestToLockSupported ()) {
-      Status = EFI_INVALID_PARAMETER;
-      DEBUG ((DEBUG_ERROR, "SetLargeVariable: Variable locking is not currently supported\n"));
-      goto Done;
+    Status = EFI_INVALID_PARAMETER;
+    DEBUG ((DEBUG_ERROR, "SetLargeVariable: Variable locking is not currently supported\n"));
+    goto Done;
   }
 
   //
@@ -303,10 +303,9 @@ SetLargeVariable (
     goto Done;
   }
 
-  VariableNameLength  = StrLen (VariableName);
-  VariableSplitSize   = GetVariableSplitSize (VariableNameLength);
+  VariableNameLength = StrLen (VariableName);
+  VariableSplitSize  = GetVariableSplitSize (VariableNameLength);
   if (DataSize <= VariableSplitSize) {
-
     //
     // A single variable is sufficient to store the data, only create one.
     //
@@ -321,6 +320,7 @@ SetLargeVariable (
     if (EFI_ERROR (Status)) {
       goto Done;
     }
+
     if (LockVariable) {
       Status = VarLibVariableRequestToLock (VariableName, VendorGuid);
     }
@@ -343,7 +343,7 @@ SetLargeVariable (
     // Check that it is possible to store the data using less than
     // MAX_VARIABLE_SPLIT variables
     //
-    if ((DataSize / ((UINTN) VariableSplitSize - MAX_VARIABLE_SPLIT_DIGITS)) > MAX_VARIABLE_SPLIT) {
+    if ((DataSize / ((UINTN)VariableSplitSize - MAX_VARIABLE_SPLIT_DIGITS)) > MAX_VARIABLE_SPLIT) {
       DEBUG ((
         DEBUG_ERROR,
         "SetLargeVariable: More than %d variables are needed to store the data, which exceeds the maximum supported\n",
@@ -365,9 +365,9 @@ SetLargeVariable (
     }
 
     DEBUG ((DEBUG_VERBOSE, "SetLargeVariable: Saving using multiple variables.\n"));
-    OffsetPtr         = (UINT8 *) Data;
-    BytesRemaining    = DataSize;
-    VariablesSaved    = 0;
+    OffsetPtr      = (UINT8 *)Data;
+    BytesRemaining = DataSize;
+    VariablesSaved = 0;
 
     //
     // Store chunks of data in UEFI variables until all data is stored
@@ -376,9 +376,9 @@ SetLargeVariable (
       ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
       UnicodeSPrint (TempVariableName, MAX_VARIABLE_NAME_SIZE, L"%s%d", VariableName, Index);
 
-      SizeToSave          = 0;
-      VariableNameLength  = StrLen (TempVariableName);
-      VariableSplitSize   = GetVariableSplitSize (VariableNameLength);
+      SizeToSave         = 0;
+      VariableNameLength = StrLen (TempVariableName);
+      VariableSplitSize  = GetVariableSplitSize (VariableNameLength);
       if (VariableSplitSize == 0) {
         DEBUG ((DEBUG_ERROR, "Unable to save variable, out of NV storage space\n"));
         Status = EFI_OUT_OF_RESOURCES;
@@ -386,25 +386,27 @@ SetLargeVariable (
       }
 
       if (BytesRemaining > VariableSplitSize) {
-        SizeToSave = (UINTN) VariableSplitSize;
+        SizeToSave = (UINTN)VariableSplitSize;
       } else {
         SizeToSave = BytesRemaining;
       }
+
       DEBUG ((DEBUG_INFO, "Saving %s, Guid = %g, Size %d\n", TempVariableName, VendorGuid, SizeToSave));
       Status = VarLibSetVariable (
-                TempVariableName,
-                VendorGuid,
-                EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
-                SizeToSave,
-                (VOID *) OffsetPtr
-                );
+                 TempVariableName,
+                 VendorGuid,
+                 EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
+                 SizeToSave,
+                 (VOID *)OffsetPtr
+                 );
       if (EFI_ERROR (Status)) {
         DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error writting variable: Status = %r\n", Status));
         goto Done;
       }
+
       VariablesSaved  = Index;
       BytesRemaining -= SizeToSave;
-      OffsetPtr += SizeToSave;
+      OffsetPtr      += SizeToSave;
     }   // End of for loop
 
     //
@@ -428,7 +430,7 @@ SetLargeVariable (
   }
 
 Done:
-  if (EFI_ERROR (Status) && VariablesSaved > 0) {
+  if (EFI_ERROR (Status) && (VariablesSaved > 0)) {
     DEBUG ((DEBUG_ERROR, "SetLargeVariable: An error was encountered, deleting variables with partially stored data\n"));
     for (Index = 0; Index < VariablesSaved; Index++) {
       ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
@@ -442,9 +444,10 @@ Done:
                   0,
                   NULL
                   );
-    DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error deleting variable: Status = %r\n", Status2));
+      DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error deleting variable: Status = %r\n", Status2));
     }
   }
+
   DEBUG ((DEBUG_ERROR, "SetLargeVariable: Status = %r\n", Status));
   return Status;
 }

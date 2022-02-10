@@ -23,24 +23,26 @@ BoardDetect (
   VOID
   )
 {
-  BOARD_DETECT_FUNC          *BoardDetectFunc;
-  UINTN                      Index;
-  EFI_STATUS                 Status;
+  BOARD_DETECT_FUNC  *BoardDetectFunc;
+  UINTN              Index;
+  EFI_STATUS         Status;
 
   for (Index = 0; ; Index++) {
-    Status = PeiServicesLocatePpi(
+    Status = PeiServicesLocatePpi (
                &gBoardDetectGuid,
                Index,
                NULL,
                (VOID **)&BoardDetectFunc
                );
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       break;
     }
+
     if (BoardDetectFunc->BoardDetect != NULL) {
       BoardDetectFunc->BoardDetect ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -56,20 +58,21 @@ BoardDebugInit (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardDebugInit != NULL) {
       return BoardPreMemInit->BoardDebugInit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -85,20 +88,21 @@ BoardBootModeDetect (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardBootModeDetect != NULL) {
       return BoardPreMemInit->BoardBootModeDetect ();
     }
   }
+
   return BOOT_WITH_FULL_CONFIGURATION;
 }
 
@@ -114,20 +118,21 @@ BoardInitBeforeMemoryInit (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardInitBeforeMemoryInit != NULL) {
       return BoardPreMemInit->BoardInitBeforeMemoryInit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -143,20 +148,21 @@ BoardInitAfterMemoryInit (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardInitAfterMemoryInit != NULL) {
       return BoardPreMemInit->BoardInitAfterMemoryInit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -172,20 +178,21 @@ BoardInitBeforeTempRamExit (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardInitBeforeTempRamExit != NULL) {
       return BoardPreMemInit->BoardInitBeforeTempRamExit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -201,20 +208,21 @@ BoardInitAfterTempRamExit (
   VOID
   )
 {
-  BOARD_PRE_MEM_INIT_FUNC    *BoardPreMemInit;
-  EFI_STATUS                 Status;
+  BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit;
+  EFI_STATUS               Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPreMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPreMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPreMemInit->BoardInitAfterTempRamExit != NULL) {
       return BoardPreMemInit->BoardInitAfterTempRamExit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -230,20 +238,21 @@ BoardInitBeforeSiliconInit (
   VOID
   )
 {
-  BOARD_POST_MEM_INIT_FUNC   *BoardPostMemInit;
-  EFI_STATUS                 Status;
+  BOARD_POST_MEM_INIT_FUNC  *BoardPostMemInit;
+  EFI_STATUS                Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPostMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPostMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPostMemInit->BoardInitBeforeSiliconInit != NULL) {
       return BoardPostMemInit->BoardInitBeforeSiliconInit ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -259,19 +268,20 @@ BoardInitAfterSiliconInit (
   VOID
   )
 {
-  BOARD_POST_MEM_INIT_FUNC   *BoardPostMemInit;
-  EFI_STATUS                 Status;
+  BOARD_POST_MEM_INIT_FUNC  *BoardPostMemInit;
+  EFI_STATUS                Status;
 
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gBoardPostMemInitGuid,
              0,
              NULL,
              (VOID **)&BoardPostMemInit
              );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardPostMemInit->BoardInitAfterSiliconInit != NULL) {
       return BoardPostMemInit->BoardInitAfterSiliconInit ();
     }
   }
+
   return EFI_SUCCESS;
 }

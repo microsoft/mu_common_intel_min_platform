@@ -23,19 +23,20 @@ BoardInitAfterPciEnumeration (
   VOID
   )
 {
-  BOARD_NOTIFICATION_INIT_FUNC    *BoardNotificationInit;
-  EFI_STATUS                      Status;
+  BOARD_NOTIFICATION_INIT_FUNC  *BoardNotificationInit;
+  EFI_STATUS                    Status;
 
   Status = gBS->LocateProtocol (
                   &gBoardNotificationInitGuid,
                   NULL,
                   (VOID **)&BoardNotificationInit
                   );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardNotificationInit->BoardInitAfterPciEnumeration != NULL) {
       return BoardNotificationInit->BoardInitAfterPciEnumeration ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -51,19 +52,20 @@ BoardInitReadyToBoot (
   VOID
   )
 {
-  BOARD_NOTIFICATION_INIT_FUNC    *BoardNotificationInit;
-  EFI_STATUS                      Status;
+  BOARD_NOTIFICATION_INIT_FUNC  *BoardNotificationInit;
+  EFI_STATUS                    Status;
 
   Status = gBS->LocateProtocol (
                   &gBoardNotificationInitGuid,
                   NULL,
                   (VOID **)&BoardNotificationInit
                   );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardNotificationInit->BoardInitReadyToBoot != NULL) {
       return BoardNotificationInit->BoardInitReadyToBoot ();
     }
   }
+
   return EFI_SUCCESS;
 }
 
@@ -79,18 +81,19 @@ BoardInitEndOfFirmware (
   VOID
   )
 {
-  BOARD_NOTIFICATION_INIT_FUNC    *BoardNotificationInit;
-  EFI_STATUS                      Status;
+  BOARD_NOTIFICATION_INIT_FUNC  *BoardNotificationInit;
+  EFI_STATUS                    Status;
 
   Status = gBS->LocateProtocol (
                   &gBoardNotificationInitGuid,
                   NULL,
                   (VOID **)&BoardNotificationInit
                   );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardNotificationInit->BoardInitEndOfFirmware != NULL) {
       return BoardNotificationInit->BoardInitEndOfFirmware ();
     }
   }
+
   return EFI_SUCCESS;
 }

@@ -23,6 +23,7 @@ InternalDumpData (
   )
 {
   UINTN  Index;
+
   for (Index = 0; Index < Size; Index++) {
     DEBUG ((DEBUG_INFO, "%02x", (UINTN)Data[Index]));
     if ((Index + 1) != Size) {
@@ -45,11 +46,11 @@ InternalDumpHex (
   IN UINTN  Size
   )
 {
-  UINTN   Index;
-  UINTN   Count;
-  UINTN   Left;
+  UINTN  Index;
+  UINTN  Count;
+  UINTN  Left;
 
-#define COLUME_SIZE  (16 * 2)
+  #define COLUME_SIZE  (16 * 2)
 
   Count = Size / COLUME_SIZE;
   Left  = Size % COLUME_SIZE;

@@ -7,11 +7,9 @@
 
 **/
 
-
 #ifndef __BOARD_BOOT_MANAGER_LIB_H_
 #define __BOARD_BOOT_MANAGER_LIB_H_
 #include <Library/UefiBootManagerLib.h>
-
 
 /**
   This function is called each second during boot manager waits the timeout.
@@ -21,7 +19,7 @@
 VOID
 EFIAPI
 BoardBootManagerWaitCallback (
-  IN UINT16          TimeoutRemain
+  IN UINT16  TimeoutRemain
   );
 
 /**

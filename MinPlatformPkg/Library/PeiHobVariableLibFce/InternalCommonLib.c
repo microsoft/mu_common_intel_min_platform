@@ -29,15 +29,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 STATIC
 AUTHENTICATED_VARIABLE_HEADER *
 GetStartPointer (
-  IN VARIABLE_STORE_HEADER       *VarStoreHeader
+  IN VARIABLE_STORE_HEADER  *VarStoreHeader
   )
 {
   //
   // The end of variable store
   //
-  return (AUTHENTICATED_VARIABLE_HEADER *) HEADER_ALIGN (VarStoreHeader + 1);
+  return (AUTHENTICATED_VARIABLE_HEADER *)HEADER_ALIGN (VarStoreHeader + 1);
 }
-
 
 /**
   This code gets the pointer to the last variable memory pointer byte.
@@ -50,15 +49,14 @@ GetStartPointer (
 STATIC
 AUTHENTICATED_VARIABLE_HEADER *
 GetEndPointer (
-  IN VARIABLE_STORE_HEADER       *VarStoreHeader
+  IN VARIABLE_STORE_HEADER  *VarStoreHeader
   )
 {
   //
   // The end of variable store
   //
-  return (AUTHENTICATED_VARIABLE_HEADER *) HEADER_ALIGN ((UINTN) VarStoreHeader + VarStoreHeader->Size);
+  return (AUTHENTICATED_VARIABLE_HEADER *)HEADER_ALIGN ((UINTN)VarStoreHeader + VarStoreHeader->Size);
 }
-
 
 /**
   This code checks if variable header is valid or not.
@@ -72,10 +70,10 @@ GetEndPointer (
 STATIC
 BOOLEAN
 IsValidVariableHeader (
-  IN  AUTHENTICATED_VARIABLE_HEADER   *Variable
+  IN  AUTHENTICATED_VARIABLE_HEADER  *Variable
   )
 {
-  if (Variable == NULL || Variable->StartId != VARIABLE_DATA ) {
+  if ((Variable == NULL) || (Variable->StartId != VARIABLE_DATA)) {
     return FALSE;
   }
 
@@ -94,32 +92,35 @@ IsValidVariableHeader (
 STATIC
 UINTN
 NameSizeOfVariable (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *AuthVariable,
-  IN  BOOLEAN                           AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *AuthVariable,
+  IN  BOOLEAN                        AuthFlag
   )
 {
-  VARIABLE_HEADER *Variable;
+  VARIABLE_HEADER  *Variable;
 
-  Variable = (VARIABLE_HEADER *) AuthVariable;
+  Variable = (VARIABLE_HEADER *)AuthVariable;
   if (AuthFlag) {
-    if (AuthVariable->State == (UINT8) (-1) ||
-       AuthVariable->DataSize == (UINT32) (-1) ||
-       AuthVariable->NameSize == (UINT32) (-1) ||
-       AuthVariable->Attributes == (UINT32) (-1)) {
+    if ((AuthVariable->State == (UINT8)(-1)) ||
+        (AuthVariable->DataSize == (UINT32)(-1)) ||
+        (AuthVariable->NameSize == (UINT32)(-1)) ||
+        (AuthVariable->Attributes == (UINT32)(-1)))
+    {
       return 0;
     }
-    return (UINTN) AuthVariable->NameSize;
+
+    return (UINTN)AuthVariable->NameSize;
   } else {
-    if (Variable->State == (UINT8) (-1) ||
-       Variable->DataSize == (UINT32) (-1) ||
-       Variable->NameSize == (UINT32) (-1) ||
-       Variable->Attributes == (UINT32) (-1)) {
+    if ((Variable->State == (UINT8)(-1)) ||
+        (Variable->DataSize == (UINT32)(-1)) ||
+        (Variable->NameSize == (UINT32)(-1)) ||
+        (Variable->Attributes == (UINT32)(-1)))
+    {
       return 0;
     }
-    return (UINTN) Variable->NameSize;
+
+    return (UINTN)Variable->NameSize;
   }
 }
-
 
 /**
   This code gets the size of data of variable.
@@ -133,29 +134,33 @@ NameSizeOfVariable (
 STATIC
 UINTN
 DataSizeOfVariable (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *AuthVariable,
-  IN  BOOLEAN                           AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *AuthVariable,
+  IN  BOOLEAN                        AuthFlag
   )
 {
-  VARIABLE_HEADER *Variable;
+  VARIABLE_HEADER  *Variable;
 
-  Variable = (VARIABLE_HEADER *) AuthVariable;
+  Variable = (VARIABLE_HEADER *)AuthVariable;
   if (AuthFlag) {
-    if (AuthVariable->State == (UINT8) (-1) ||
-       AuthVariable->DataSize == (UINT32) (-1) ||
-       AuthVariable->NameSize == (UINT32) (-1) ||
-       AuthVariable->Attributes == (UINT32) (-1)) {
+    if ((AuthVariable->State == (UINT8)(-1)) ||
+        (AuthVariable->DataSize == (UINT32)(-1)) ||
+        (AuthVariable->NameSize == (UINT32)(-1)) ||
+        (AuthVariable->Attributes == (UINT32)(-1)))
+    {
       return 0;
     }
-    return (UINTN) AuthVariable->DataSize;
+
+    return (UINTN)AuthVariable->DataSize;
   } else {
-    if (Variable->State == (UINT8) (-1) ||
-       Variable->DataSize == (UINT32) (-1) ||
-       Variable->NameSize == (UINT32) (-1) ||
-       Variable->Attributes == (UINT32) (-1)) {
+    if ((Variable->State == (UINT8)(-1)) ||
+        (Variable->DataSize == (UINT32)(-1)) ||
+        (Variable->NameSize == (UINT32)(-1)) ||
+        (Variable->Attributes == (UINT32)(-1)))
+    {
       return 0;
     }
-    return (UINTN) Variable->DataSize;
+
+    return (UINTN)Variable->DataSize;
   }
 }
 
@@ -169,10 +174,10 @@ DataSizeOfVariable (
 **/
 UINTN
 GetVariableHeaderSize (
-  IN  BOOLEAN       AuthFlag
+  IN  BOOLEAN  AuthFlag
   )
 {
-  UINTN Value;
+  UINTN  Value;
 
   if (AuthFlag) {
     Value = sizeof (AUTHENTICATED_VARIABLE_HEADER);
@@ -182,7 +187,6 @@ GetVariableHeaderSize (
 
   return Value;
 }
-
 
 /**
   This code gets the pointer to the variable name.
@@ -196,13 +200,12 @@ GetVariableHeaderSize (
 STATIC
 CHAR16 *
 GetVariableNamePtr (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *Variable,
-  IN BOOLEAN                            AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *Variable,
+  IN BOOLEAN                         AuthFlag
   )
 {
-  return (CHAR16 *) ((UINTN) Variable + GetVariableHeaderSize (AuthFlag));
+  return (CHAR16 *)((UINTN)Variable + GetVariableHeaderSize (AuthFlag));
 }
-
 
 /**
   This code gets the pointer to the variable guid.
@@ -215,20 +218,19 @@ GetVariableNamePtr (
 **/
 EFI_GUID *
 GetVendorGuidPtr (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *AuthVariable,
-  IN  BOOLEAN                           AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *AuthVariable,
+  IN  BOOLEAN                        AuthFlag
   )
 {
-  VARIABLE_HEADER *Variable;
+  VARIABLE_HEADER  *Variable;
 
-  Variable = (VARIABLE_HEADER *) AuthVariable;
+  Variable = (VARIABLE_HEADER *)AuthVariable;
   if (AuthFlag) {
     return &AuthVariable->VendorGuid;
   } else {
     return &Variable->VendorGuid;
   }
 }
-
 
 /**
   This code gets the pointer to the variable data.
@@ -242,22 +244,21 @@ GetVendorGuidPtr (
 STATIC
 UINT8 *
 GetVariableDataPtr (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *Variable,
-  IN  BOOLEAN                           AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *Variable,
+  IN  BOOLEAN                        AuthFlag
   )
 {
-  UINTN Value;
+  UINTN  Value;
 
   //
   // Be careful about pad size for alignment
   //
-  Value =  (UINTN) GetVariableNamePtr (Variable, AuthFlag);
+  Value  =  (UINTN)GetVariableNamePtr (Variable, AuthFlag);
   Value += NameSizeOfVariable (Variable, AuthFlag);
   Value += GET_PAD_SIZE (NameSizeOfVariable (Variable, AuthFlag));
 
-  return (UINT8 *) Value;
+  return (UINT8 *)Value;
 }
-
 
 /**
   This code gets the pointer to the next variable header.
@@ -271,24 +272,24 @@ GetVariableDataPtr (
 STATIC
 AUTHENTICATED_VARIABLE_HEADER *
 GetNextVariablePtr (
-  IN  AUTHENTICATED_VARIABLE_HEADER     *Variable,
-  IN  BOOLEAN                           AuthFlag
+  IN  AUTHENTICATED_VARIABLE_HEADER  *Variable,
+  IN  BOOLEAN                        AuthFlag
   )
 {
-  UINTN Value;
+  UINTN  Value;
 
   if (!IsValidVariableHeader (Variable)) {
     return NULL;
   }
 
-  Value =  (UINTN) GetVariableDataPtr (Variable, AuthFlag);
+  Value  =  (UINTN)GetVariableDataPtr (Variable, AuthFlag);
   Value += DataSizeOfVariable (Variable, AuthFlag);
   Value += GET_PAD_SIZE (DataSizeOfVariable (Variable, AuthFlag));
 
   //
   // Be careful about pad size for alignment
   //
-  return (AUTHENTICATED_VARIABLE_HEADER *) HEADER_ALIGN (Value);
+  return (AUTHENTICATED_VARIABLE_HEADER *)HEADER_ALIGN (Value);
 }
 
 EFI_STATUS
@@ -298,6 +299,7 @@ BuildDefaultDataHobForRecoveryVariable (
   IN EFI_PEI_NOTIFY_DESCRIPTOR  *NotifyDescriptor,
   IN VOID                       *Ppi
   )
+
 /*++
 
 Routine Description:
@@ -309,26 +311,26 @@ Arguments:
   PeiServices       General purpose services available to every PEIM.
   NotifyDescriptor  Notify that this module published.
   Ppi               PPI that was installed.
-    
+
 Returns:
 
   EFI_SUCCESS     The function completed successfully.
 
 --*/
 {
-  EFI_HOB_GUID_TYPE          *GuidHob;
-  VARIABLE_STORE_HEADER      *AuthVarStoreHeader;
-  VARIABLE_STORE_HEADER      *VarStoreHeader;
-  UINT32                     VarStoreSize;
-  AUTHENTICATED_VARIABLE_HEADER *AuthStartPtr;
-  AUTHENTICATED_VARIABLE_HEADER *AuthEndPtr;
-  AUTHENTICATED_VARIABLE_HEADER *AuthVariable;
-  VARIABLE_HEADER               *Variable;
-  UINT8                         *AuthVariablePtr;
-  UINT8                         *VariablePtr;
-  
-  GuidHob = GetFirstGuidHob (&gEfiAuthenticatedVariableGuid);
-  AuthVarStoreHeader = (VARIABLE_STORE_HEADER *) GET_GUID_HOB_DATA (GuidHob);
+  EFI_HOB_GUID_TYPE              *GuidHob;
+  VARIABLE_STORE_HEADER          *AuthVarStoreHeader;
+  VARIABLE_STORE_HEADER          *VarStoreHeader;
+  UINT32                         VarStoreSize;
+  AUTHENTICATED_VARIABLE_HEADER  *AuthStartPtr;
+  AUTHENTICATED_VARIABLE_HEADER  *AuthEndPtr;
+  AUTHENTICATED_VARIABLE_HEADER  *AuthVariable;
+  VARIABLE_HEADER                *Variable;
+  UINT8                          *AuthVariablePtr;
+  UINT8                          *VariablePtr;
+
+  GuidHob            = GetFirstGuidHob (&gEfiAuthenticatedVariableGuid);
+  AuthVarStoreHeader = (VARIABLE_STORE_HEADER *)GET_GUID_HOB_DATA (GuidHob);
   //
   // Go through AuthVarStore to calculate the required size for normal varstore.
   //
@@ -338,36 +340,38 @@ Returns:
   AuthVariable = AuthStartPtr;
   while ((AuthVariable < AuthEndPtr) && IsValidVariableHeader (AuthVariable)) {
     if (AuthVariable->State == VAR_ADDED) {
-      VarStoreSize = HEADER_ALIGN (VarStoreSize);
+      VarStoreSize  = HEADER_ALIGN (VarStoreSize);
       VarStoreSize += sizeof (VARIABLE_HEADER);
       VarStoreSize += AuthVariable->NameSize + GET_PAD_SIZE (AuthVariable->NameSize);
       VarStoreSize += AuthVariable->DataSize + GET_PAD_SIZE (AuthVariable->DataSize);
     }
+
     AuthVariable = GetNextVariablePtr (AuthVariable, TRUE);
   }
 
   //
   // Create HOB data for normal variable storage.
-  // Allocate more data for header alignment. 
+  // Allocate more data for header alignment.
   //
   VarStoreSize   = VarStoreSize + HEADER_ALIGNMENT - 1;
-  VarStoreHeader = (VARIABLE_STORE_HEADER *) BuildGuidHob (&gEfiVariableGuid, VarStoreSize);
+  VarStoreHeader = (VARIABLE_STORE_HEADER *)BuildGuidHob (&gEfiVariableGuid, VarStoreSize);
   ASSERT (VarStoreHeader != NULL);
   if (VarStoreHeader == NULL) {
     return EFI_OUT_OF_RESOURCES;
   }
+
   CopyGuid (&VarStoreHeader->Signature, &gEfiVariableGuid);
   VarStoreHeader->Format = AuthVarStoreHeader->Format;
   VarStoreHeader->State  = AuthVarStoreHeader->State;
-  
+
   //
   // Copy variable data from AuthVarStore to NormalVarStore
   //
   AuthVariable = AuthStartPtr;
-  VariablePtr  = (UINT8 *) (VarStoreHeader + 1);
+  VariablePtr  = (UINT8 *)(VarStoreHeader + 1);
   while ((AuthVariable < AuthEndPtr) && IsValidVariableHeader (AuthVariable)) {
     if (AuthVariable->State == VAR_ADDED) {
-      Variable = (VARIABLE_HEADER *) HEADER_ALIGN ((UINTN) VariablePtr);
+      Variable = (VARIABLE_HEADER *)HEADER_ALIGN ((UINTN)VariablePtr);
       //
       // Copy variable header
       //
@@ -381,29 +385,30 @@ Returns:
       //
       // Copy variable Name and Data
       //
-      VariablePtr     = (UINT8 *) (Variable + 1);
-      AuthVariablePtr = (UINT8 *) (AuthVariable + 1);
+      VariablePtr     = (UINT8 *)(Variable + 1);
+      AuthVariablePtr = (UINT8 *)(AuthVariable + 1);
       CopyMem (VariablePtr, AuthVariablePtr, Variable->NameSize);
       VariablePtr     = VariablePtr + Variable->NameSize + GET_PAD_SIZE (Variable->NameSize);
       AuthVariablePtr = AuthVariablePtr + AuthVariable->NameSize + GET_PAD_SIZE (AuthVariable->NameSize);
       CopyMem (VariablePtr, AuthVariablePtr, Variable->DataSize);
-      VariablePtr     = VariablePtr + Variable->DataSize + GET_PAD_SIZE (Variable->DataSize);
+      VariablePtr = VariablePtr + Variable->DataSize + GET_PAD_SIZE (Variable->DataSize);
     }
+
     AuthVariable = GetNextVariablePtr (AuthVariable, TRUE);
   }
-  
+
   //
   // Update Variable Storage Size
   //
-  VarStoreHeader->Size = (UINT32) ((UINTN) VariablePtr - (UINTN) VarStoreHeader);
-  
+  VarStoreHeader->Size = (UINT32)((UINTN)VariablePtr - (UINTN)VarStoreHeader);
+
   return EFI_SUCCESS;
 }
 
-EFI_PEI_NOTIFY_DESCRIPTOR mMemoryNotifyList = {
+EFI_PEI_NOTIFY_DESCRIPTOR  mMemoryNotifyList = {
   (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEfiPeiMemoryDiscoveredPpiGuid,
-  BuildDefaultDataHobForRecoveryVariable 
+  BuildDefaultDataHobForRecoveryVariable
 };
 
 /**
@@ -419,31 +424,32 @@ EFI_PEI_NOTIFY_DESCRIPTOR mMemoryNotifyList = {
 **/
 AUTHENTICATED_VARIABLE_HEADER *
 FindVariableFromHob (
-  IN CHAR16                     *VariableName,
-  IN EFI_GUID                   *VendorGuid,
-  OUT BOOLEAN                   *AuthFlag
+  IN CHAR16    *VariableName,
+  IN EFI_GUID  *VendorGuid,
+  OUT BOOLEAN  *AuthFlag
   )
 {
-  EFI_HOB_GUID_TYPE             *GuidHob;
-  VARIABLE_STORE_HEADER         *VariableStoreHeader;
-  AUTHENTICATED_VARIABLE_HEADER *StartPtr;
-  AUTHENTICATED_VARIABLE_HEADER *EndPtr;
-  AUTHENTICATED_VARIABLE_HEADER *CurrPtr;
-  VOID                          *Point;
+  EFI_HOB_GUID_TYPE              *GuidHob;
+  VARIABLE_STORE_HEADER          *VariableStoreHeader;
+  AUTHENTICATED_VARIABLE_HEADER  *StartPtr;
+  AUTHENTICATED_VARIABLE_HEADER  *EndPtr;
+  AUTHENTICATED_VARIABLE_HEADER  *CurrPtr;
+  VOID                           *Point;
 
   VariableStoreHeader = NULL;
 
   GuidHob = GetFirstGuidHob (&gEfiAuthenticatedVariableGuid);
   if (GuidHob != NULL) {
-    VariableStoreHeader = (VARIABLE_STORE_HEADER *) GET_GUID_HOB_DATA (GuidHob);
-    *AuthFlag = TRUE;
+    VariableStoreHeader = (VARIABLE_STORE_HEADER *)GET_GUID_HOB_DATA (GuidHob);
+    *AuthFlag           = TRUE;
   } else {
     GuidHob = GetFirstGuidHob (&gEfiVariableGuid);
     if (GuidHob != NULL) {
-      VariableStoreHeader = (VARIABLE_STORE_HEADER *) GET_GUID_HOB_DATA (GuidHob);
-      *AuthFlag = FALSE;
+      VariableStoreHeader = (VARIABLE_STORE_HEADER *)GET_GUID_HOB_DATA (GuidHob);
+      *AuthFlag           = FALSE;
     }
   }
+
   ASSERT (VariableStoreHeader != NULL);
   if (VariableStoreHeader == NULL) {
     return NULL;
@@ -452,12 +458,13 @@ FindVariableFromHob (
   StartPtr = GetStartPointer (VariableStoreHeader);
   EndPtr   = GetEndPointer (VariableStoreHeader);
   for ( CurrPtr = StartPtr
-      ; (CurrPtr < EndPtr) && IsValidVariableHeader (CurrPtr)
-      ; CurrPtr = GetNextVariablePtr (CurrPtr, *AuthFlag)
-      ) {
+        ; (CurrPtr < EndPtr) && IsValidVariableHeader (CurrPtr)
+        ; CurrPtr = GetNextVariablePtr (CurrPtr, *AuthFlag)
+        )
+  {
     if (CurrPtr->State == VAR_ADDED) {
       if (CompareGuid (VendorGuid, GetVendorGuidPtr (CurrPtr, *AuthFlag))) {
-        Point = (VOID *) GetVariableNamePtr (CurrPtr, *AuthFlag);
+        Point = (VOID *)GetVariableNamePtr (CurrPtr, *AuthFlag);
 
         ASSERT (NameSizeOfVariable (CurrPtr, *AuthFlag) != 0);
         if (CompareMem (VariableName, Point, NameSizeOfVariable (CurrPtr, *AuthFlag)) == 0) {
@@ -494,16 +501,16 @@ FindVariableFromHob (
 EFI_STATUS
 EFIAPI
 GetVariableFromHob (
-  IN     CHAR16                 *VariableName,
-  IN     EFI_GUID               *VendorGuid,
-  OUT    UINT32                 *Attributes, OPTIONAL
+  IN     CHAR16 *VariableName,
+  IN     EFI_GUID *VendorGuid,
+  OUT    UINT32 *Attributes, OPTIONAL
   IN OUT UINTN                  *DataSize,
   OUT    VOID                   *Data
   )
 {
-  BOOLEAN                       AuthFlag;
-  AUTHENTICATED_VARIABLE_HEADER *Variable;
-  UINTN                         VarDataSize;
+  BOOLEAN                        AuthFlag;
+  AUTHENTICATED_VARIABLE_HEADER  *Variable;
+  UINTN                          VarDataSize;
 
   if ((VariableName == NULL) || (VendorGuid == NULL) || (DataSize == NULL)) {
     return EFI_INVALID_PARAMETER;
@@ -561,18 +568,18 @@ GetVariableFromHob (
 EFI_STATUS
 EFIAPI
 SetVariableToHob (
-  IN CHAR16                     *VariableName,
-  IN EFI_GUID                   *VendorGuid,
-  IN UINT32                     *Attributes, OPTIONAL
+  IN CHAR16 *VariableName,
+  IN EFI_GUID *VendorGuid,
+  IN UINT32 *Attributes, OPTIONAL
   IN UINTN                      DataSize,
   IN VOID                       *Data
   )
 {
-  BOOLEAN                       AuthFlag;
-  AUTHENTICATED_VARIABLE_HEADER *Variable;
-  UINTN                         VarDataSize;
+  BOOLEAN                        AuthFlag;
+  AUTHENTICATED_VARIABLE_HEADER  *Variable;
+  UINTN                          VarDataSize;
 
-  if (VariableName == NULL || VariableName[0] == 0 || VendorGuid == NULL) {
+  if ((VariableName == NULL) || (VariableName[0] == 0) || (VendorGuid == NULL)) {
     return EFI_INVALID_PARAMETER;
   }
 
@@ -594,6 +601,7 @@ SetVariableToHob (
       if (*Attributes == 0) {
         return EFI_INVALID_PARAMETER;
       }
+
       Variable->Attributes = *Attributes;
     }
 
@@ -606,7 +614,7 @@ SetVariableToHob (
 }
 
 /**
-  This function finds the matched data and create GUID hob for it. 
+  This function finds the matched data and create GUID hob for it.
 
   @retval EFI_SUCCESS           The matched default data is found.
   @retval EFI_NOT_FOUND         The matched default data is not found.
@@ -623,6 +631,6 @@ CreateVariableHob (
   UINT16  SkuId;
 
   StoreId = EFI_HII_DEFAULT_CLASS_STANDARD; // BUGBUG: Should get from PCD
-  SkuId = (UINT16)LibPcdGetSku ();
+  SkuId   = (UINT16)LibPcdGetSku ();
   return CreateDefaultVariableHob (StoreId, SkuId);
 }

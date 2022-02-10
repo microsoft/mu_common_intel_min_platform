@@ -27,7 +27,7 @@ RegisterBoardAcpiEnableFunc (
                     EFI_NATIVE_INTERFACE,
                     BoardAcpiEnableFunc
                     );
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
   return EFI_SUCCESS;
 }

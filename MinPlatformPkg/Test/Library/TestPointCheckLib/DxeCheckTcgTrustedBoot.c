@@ -29,23 +29,23 @@ TestPointCheckTcgTrustedBoot (
   VOID
   )
 {
-  EFI_STATUS                       Status;
-  EFI_TCG2_PROTOCOL                *Tcg2;
-  EFI_TCG2_BOOT_SERVICE_CAPABILITY ProtocolCapability;
-  VOID                             *Acpi;
+  EFI_STATUS                        Status;
+  EFI_TCG2_PROTOCOL                 *Tcg2;
+  EFI_TCG2_BOOT_SERVICE_CAPABILITY  ProtocolCapability;
+  VOID                              *Acpi;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckTcgTrustedBoot - Enter\n"));
 
   Status = gBS->LocateProtocol (&gEfiTcg2ProtocolGuid, NULL, (VOID **)&Tcg2);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_ERROR, "Tcg2 Protocol - %r\n", Status));
     goto Done;
   }
 
-  ZeroMem ((VOID *) &ProtocolCapability, sizeof (ProtocolCapability));
-  ProtocolCapability.Size = (UINT8) sizeof (ProtocolCapability);
-  Status = Tcg2->GetCapability (Tcg2, &ProtocolCapability);
-  if (EFI_ERROR(Status)) {
+  ZeroMem ((VOID *)&ProtocolCapability, sizeof (ProtocolCapability));
+  ProtocolCapability.Size = (UINT8)sizeof (ProtocolCapability);
+  Status                  = Tcg2->GetCapability (Tcg2, &ProtocolCapability);
+  if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_ERROR, "Tcg2->GetCapability - %r\n", Status));
     goto Done;
   }
@@ -60,7 +60,8 @@ TestPointCheckTcgTrustedBoot (
   DEBUG ((DEBUG_INFO, "MaxResponseSize     - 0x%04x\n", ProtocolCapability.MaxResponseSize));
   DEBUG ((DEBUG_INFO, "ManufacturerID      - 0x%08x\n", ProtocolCapability.ManufacturerID));
   if ((ProtocolCapability.StructureVersion.Major > 1) ||
-      (ProtocolCapability.StructureVersion.Minor > 0)) {
+      (ProtocolCapability.StructureVersion.Minor > 0))
+  {
     DEBUG ((DEBUG_INFO, "NumberOfPCRBanks    - 0x%08x\n", ProtocolCapability.NumberOfPCRBanks));
     DEBUG ((DEBUG_INFO, "ActivePcrBanks      - 0x%08x\n", ProtocolCapability.ActivePcrBanks));
   }
@@ -77,15 +78,16 @@ TestPointCheckTcgTrustedBoot (
   }
 
 Done:
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED_ERROR_CODE \
-        TEST_POINT_READY_TO_BOOT \
-        TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED_ERROR_STRING
+      TEST_POINT_READY_TO_BOOT \
+      TEST_POINT_BYTE5_READY_TO_BOOT_TCG_TRUSTED_BOOT_ENABLED_ERROR_STRING
       );
   }
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckTcgTrustedBoot - Exit\n"));
   return Status;
 }

@@ -121,15 +121,15 @@ SmmExitBootServicesEventNotify (
 EFI_STATUS
 EFIAPI
 PlatformInitSmmEntryPoint (
-  IN EFI_HANDLE       ImageHandle,
-  IN EFI_SYSTEM_TABLE *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS Status;
-  VOID       *SmmEndOfDxeRegistration;
-  VOID       *SmmReadyToLockRegistration;
-  VOID       *SmmReadyToBootRegistration;
-  VOID       *SmmExitBootServicesRegistration;
+  EFI_STATUS  Status;
+  VOID        *SmmEndOfDxeRegistration;
+  VOID        *SmmReadyToLockRegistration;
+  VOID        *SmmReadyToBootRegistration;
+  VOID        *SmmExitBootServicesRegistration;
 
   Status = gSmst->SmmRegisterProtocolNotify (
                     &gEfiSmmEndOfDxeProtocolGuid,
@@ -137,21 +137,21 @@ PlatformInitSmmEntryPoint (
                     &SmmEndOfDxeRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gSmst->SmmRegisterProtocolNotify (
                     &gEfiSmmReadyToLockProtocolGuid,
                     SmmReadyToLockEventNotify,
                     &SmmReadyToLockRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gSmst->SmmRegisterProtocolNotify (
                     &gEdkiiSmmReadyToBootProtocolGuid,
                     SmmReadyToBootEventNotify,
                     &SmmReadyToBootRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gSmst->SmmRegisterProtocolNotify (
                     &gEdkiiSmmExitBootServicesProtocolGuid,
                     SmmExitBootServicesEventNotify,

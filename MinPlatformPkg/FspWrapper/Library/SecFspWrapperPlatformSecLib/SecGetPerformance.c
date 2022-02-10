@@ -53,11 +53,12 @@ SecGetPerformance (
                              &gTopOfTemporaryRamPpiGuid,
                              0,
                              NULL,
-                             (VOID **) &TopOfTemporaryRamPpi
+                             (VOID **)&TopOfTemporaryRamPpi
                              );
   if (EFI_ERROR (Status)) {
     return EFI_NOT_FOUND;
   }
+
   //
   // |--------------| <- TopOfTemporaryRam - BL
   // |   List Ptr   |
@@ -77,12 +78,12 @@ SecGetPerformance (
   // |  TSC[31:00]  |
   // |--------------|
   //
-  TopOfTemporaryRam = (UINTN) TopOfTemporaryRamPpi - sizeof (UINT32);
+  TopOfTemporaryRam  = (UINTN)TopOfTemporaryRamPpi - sizeof (UINT32);
   TopOfTemporaryRam -= sizeof (UINT32) * 2;
-  Count             = *(UINT32 *)(TopOfTemporaryRam - sizeof (UINT32));
-  Size              = Count * sizeof (UINT32);
+  Count              = *(UINT32 *)(TopOfTemporaryRam - sizeof (UINT32));
+  Size               = Count * sizeof (UINT32);
 
-  Ticker = *(UINT64 *) (TopOfTemporaryRam - sizeof (UINT32) - Size - sizeof (UINT32) * 2);
+  Ticker                = *(UINT64 *)(TopOfTemporaryRam - sizeof (UINT32) - Size - sizeof (UINT32) * 2);
   Performance->ResetEnd = GetTimeInNanoSecond (Ticker);
 
   return EFI_SUCCESS;

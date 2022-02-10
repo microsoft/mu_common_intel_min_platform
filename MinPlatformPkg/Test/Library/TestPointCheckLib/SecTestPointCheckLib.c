@@ -19,8 +19,8 @@ TestPointDumpCpuInfo (
 
 EFI_STATUS
 TestTempRam (
-  IN VOID   *TempRamTestStart,
-  IN VOID   *TempRamTestEnd
+  IN VOID  *TempRamTestStart,
+  IN VOID  *TempRamTestEnd
   )
 {
   UINTN    Index;
@@ -37,6 +37,7 @@ TestTempRam (
       Result = FALSE;
     }
   }
+
   if (Result) {
     DEBUG ((DEBUG_INFO, "TempRam Test PASS\n"));
     return EFI_SUCCESS;
@@ -62,11 +63,12 @@ TestTempRam (
 EFI_STATUS
 EFIAPI
 TestPointTempMemoryFunction (
-  IN VOID   *TempRamStart,
-  IN VOID   *TempRamEnd
+  IN VOID  *TempRamStart,
+  IN VOID  *TempRamEnd
   )
 {
   UINTN  StackMark;
+
   DEBUG ((DEBUG_INFO, "======== TestPointTempMemoryFunction - Enter\n"));
 
   DEBUG ((DEBUG_INFO, "TempRamStart - 0x%08x\n", TempRamStart));

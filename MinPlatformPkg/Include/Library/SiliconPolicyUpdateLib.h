@@ -13,9 +13,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
   The meaning of Policy is defined by silicon code.
   It could be the raw data, a handle, a PPI, etc.
-  
+
   The input Policy must be returned by SiliconPolicyDonePreMem().
-  
+
   1) In FSP path, the input Policy should be FspmUpd.
   A platform may use this API to update the FSPM UPD policy initialized
   by the silicon module or the default UPD data.
@@ -31,7 +31,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID *
 EFIAPI
 SiliconPolicyUpdatePreMem (
-  IN OUT VOID *Policy
+  IN OUT VOID  *Policy
   );
 
 /**
@@ -39,9 +39,9 @@ SiliconPolicyUpdatePreMem (
 
   The meaning of Policy is defined by silicon code.
   It could be the raw data, a handle, a PPI, etc.
-  
+
   The input Policy must be returned by SiliconPolicyDonePostMem().
-  
+
   1) In FSP path, the input Policy should be FspsUpd.
   A platform may use this API to update the FSPS UPD policy initialized
   by the silicon module or the default UPD data.
@@ -57,7 +57,7 @@ SiliconPolicyUpdatePreMem (
 VOID *
 EFIAPI
 SiliconPolicyUpdatePostMem (
-  IN OUT VOID *Policy
+  IN OUT VOID  *Policy
   );
 
 /**
@@ -65,9 +65,9 @@ SiliconPolicyUpdatePostMem (
 
   The meaning of Policy is defined by silicon code.
   It could be the raw data, a handle, a Protocol, etc.
-  
+
   The input Policy must be returned by SiliconPolicyDoneLate().
-  
+
   In FSP or non-FSP path, the board may use additional way to get
   the silicon policy data field based upon the input Policy.
 
@@ -78,7 +78,7 @@ SiliconPolicyUpdatePostMem (
 VOID *
 EFIAPI
 SiliconPolicyUpdateLate (
-  IN OUT VOID *Policy
+  IN OUT VOID  *Policy
   );
 
 #endif

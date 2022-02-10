@@ -13,7 +13,7 @@
 #include <Library/HobLib.h>
 #include <Library/PcdLib.h>
 
-#define PCI_SEGMENT_INFO_HOB_GUID { \
+#define PCI_SEGMENT_INFO_HOB_GUID  {\
   0x6eab7169, 0x9b21, 0x450e, { 0x99, 0xe8, 0xe, 0xb1, 0x1b, 0x7d, 0xfe, 0xcb } \
   }
 
@@ -44,12 +44,12 @@ GetPciSegmentInfo (
   }
 
   *Count = 1;
-  Hob = GetFirstGuidHob (&mPciSegmentInfoHobGuid);
+  Hob    = GetFirstGuidHob (&mPciSegmentInfoHobGuid);
   if (Hob != NULL) {
-    PciSegmentInfo = GET_GUID_HOB_DATA(Hob);
+    PciSegmentInfo = GET_GUID_HOB_DATA (Hob);
   } else {
     mPciSegmentInfo.SegmentNumber  = 0;
-    mPciSegmentInfo.BaseAddress    = PcdGet64(PcdPciExpressBaseAddress);
+    mPciSegmentInfo.BaseAddress    = PcdGet64 (PcdPciExpressBaseAddress);
     mPciSegmentInfo.StartBusNumber = 0;
     mPciSegmentInfo.EndBusNumber   = (UINT8)((PcdGet32 (PcdPciExpressRegionLength) / 0x100000) - 1);
 
@@ -57,18 +57,20 @@ GetPciSegmentInfo (
 
     if (mPciSegmentInfo.BaseAddress == 0) {
       // Premem phase
-      PciSegmentInfo = BuildGuidHob (&mPciSegmentInfoHobGuid, sizeof(PCI_SEGMENT_INFO));
-      ASSERT(PciSegmentInfo != NULL);
+      PciSegmentInfo = BuildGuidHob (&mPciSegmentInfoHobGuid, sizeof (PCI_SEGMENT_INFO));
+      ASSERT (PciSegmentInfo != NULL);
       if (PciSegmentInfo == NULL) {
         return NULL;
       }
+
       PciSegmentInfo->SegmentNumber  = 0;
-      PciSegmentInfo->BaseAddress    = PcdGet64(PcdPciExpressBaseAddress);
+      PciSegmentInfo->BaseAddress    = PcdGet64 (PcdPciExpressBaseAddress);
       PciSegmentInfo->StartBusNumber = 0;
       PciSegmentInfo->EndBusNumber   = (UINT8)((PcdGet32 (PcdPciExpressRegionLength) / 0x100000) - 1);
     } else {
       PciSegmentInfo = (VOID *)&mPciSegmentInfo;
     }
   }
+
   return PciSegmentInfo;
 }

@@ -24,8 +24,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 TestPointTempMemoryFunction (
-  IN VOID   *TempRamStart,
-  IN VOID   *TempRamEnd
+  IN VOID  *TempRamStart,
+  IN VOID  *TempRamEnd
   )
 {
   return EFI_SUCCESS;

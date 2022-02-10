@@ -28,10 +28,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 EnableAcpiCallback (
-  IN  EFI_HANDLE                    DispatchHandle,
-  IN  CONST VOID                    *DispatchContext,
-  IN  OUT VOID                      *CommBuffer  OPTIONAL,
-  IN  OUT UINTN                     *CommBufferSize  OPTIONAL
+  IN  EFI_HANDLE  DispatchHandle,
+  IN  CONST VOID  *DispatchContext,
+  IN  OUT VOID    *CommBuffer  OPTIONAL,
+  IN  OUT UINTN   *CommBufferSize  OPTIONAL
   )
 {
   BoardEnableAcpi (TRUE);
@@ -50,10 +50,10 @@ EnableAcpiCallback (
 EFI_STATUS
 EFIAPI
 DisableAcpiCallback (
-  IN  EFI_HANDLE                    DispatchHandle,
-  IN  CONST VOID                    *DispatchContext,
-  IN  OUT VOID                      *CommBuffer  OPTIONAL,
-  IN  UINTN                         *CommBufferSize  OPTIONAL
+  IN  EFI_HANDLE  DispatchHandle,
+  IN  CONST VOID  *DispatchContext,
+  IN  OUT VOID    *CommBuffer  OPTIONAL,
+  IN  UINTN       *CommBufferSize  OPTIONAL
   )
 {
   BoardDisableAcpi (TRUE);
@@ -70,38 +70,38 @@ InitializeAcpiMm (
   VOID
   )
 {
-  EFI_STATUS                                Status;
-  EFI_HANDLE                                SwHandle;
-  EFI_SMM_SW_DISPATCH2_PROTOCOL             *SwDispatch;
-  EFI_SMM_SW_REGISTER_CONTEXT               SwContext;
+  EFI_STATUS                     Status;
+  EFI_HANDLE                     SwHandle;
+  EFI_SMM_SW_DISPATCH2_PROTOCOL  *SwDispatch;
+  EFI_SMM_SW_REGISTER_CONTEXT    SwContext;
 
   //
   // Locate the ICH SMM SW dispatch protocol
   //
-  Status = gMmst->MmLocateProtocol (&gEfiSmmSwDispatch2ProtocolGuid, NULL, (VOID**) &SwDispatch);
+  Status = gMmst->MmLocateProtocol (&gEfiSmmSwDispatch2ProtocolGuid, NULL, (VOID **)&SwDispatch);
   ASSERT_EFI_ERROR (Status);
 
   //
   // Register ACPI enable SMI handler
   //
-  SwContext.SwSmiInputValue = (UINTN) PcdGet8 (PcdAcpiEnableSwSmi);
-  Status = SwDispatch->Register (
-                         SwDispatch,
-                         EnableAcpiCallback,
-                         &SwContext,
-                         &SwHandle
-                         );
+  SwContext.SwSmiInputValue = (UINTN)PcdGet8 (PcdAcpiEnableSwSmi);
+  Status                    = SwDispatch->Register (
+                                            SwDispatch,
+                                            EnableAcpiCallback,
+                                            &SwContext,
+                                            &SwHandle
+                                            );
   ASSERT_EFI_ERROR (Status);
 
   //
   // Register ACPI disable SMI handler
   //
-  SwContext.SwSmiInputValue = (UINTN) PcdGet8 (PcdAcpiDisableSwSmi);
-  Status = SwDispatch->Register (
-                         SwDispatch,
-                         DisableAcpiCallback,
-                         &SwContext,
-                         &SwHandle
-                         );
+  SwContext.SwSmiInputValue = (UINTN)PcdGet8 (PcdAcpiDisableSwSmi);
+  Status                    = SwDispatch->Register (
+                                            SwDispatch,
+                                            DisableAcpiCallback,
+                                            &SwContext,
+                                            &SwHandle
+                                            );
   ASSERT_EFI_ERROR (Status);
 }

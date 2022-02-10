@@ -16,14 +16,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 VOID
 CheckFirmwareVersionRollbackProtection (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
   if ((mFeatureImplemented[2] & HSTI_BYTE2_FIRMWARE_VERSION_ROLLBACK_PROTECTION) == 0) {
-    return ;
+    return;
   }
 
   Result = TRUE;
@@ -43,5 +43,5 @@ CheckFirmwareVersionRollbackProtection (
     ASSERT_EFI_ERROR (Status);
   }
 
-  return ;
+  return;
 }

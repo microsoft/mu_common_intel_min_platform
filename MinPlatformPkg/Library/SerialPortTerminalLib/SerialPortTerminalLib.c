@@ -8,14 +8,14 @@
 
 #include "SerialPortTerminalLib.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED SERIAL_DEVICE_PATH mSerialDevicePath = {
+GLOBAL_REMOVE_IF_UNREFERENCED SERIAL_DEVICE_PATH  mSerialDevicePath = {
   {
     {
       HARDWARE_DEVICE_PATH,
       HW_VENDOR_DP,
       {
-        (UINT8) sizeof (VENDOR_DEVICE_PATH),
-        (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8)
+        (UINT8)sizeof (VENDOR_DEVICE_PATH),
+        (UINT8)((sizeof (VENDOR_DEVICE_PATH)) >> 8)
       }
     },
     EDKII_SERIAL_PORT_LIB_VENDOR_GUID
@@ -25,8 +25,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED SERIAL_DEVICE_PATH mSerialDevicePath = {
       MESSAGING_DEVICE_PATH,
       MSG_UART_DP,
       {
-        (UINT8) sizeof (UART_DEVICE_PATH),
-        (UINT8) ((sizeof (UART_DEVICE_PATH)) >> 8)
+        (UINT8)sizeof (UART_DEVICE_PATH),
+        (UINT8)((sizeof (UART_DEVICE_PATH)) >> 8)
       }
     },
     0,                  // Reserved
@@ -40,8 +40,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED SERIAL_DEVICE_PATH mSerialDevicePath = {
       MESSAGING_DEVICE_PATH,
       MSG_VENDOR_DP,
       {
-        (UINT8) (sizeof (VENDOR_DEVICE_PATH)),
-        (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8),
+        (UINT8)(sizeof (VENDOR_DEVICE_PATH)),
+        (UINT8)((sizeof (VENDOR_DEVICE_PATH)) >> 8),
       }
     },
     DEVICE_PATH_MESSAGING_PC_ANSI
@@ -64,11 +64,10 @@ AddSerialTerminal (
   //
   // Append Serial Terminal into "ConIn"
   //
-  EfiBootManagerUpdateConsoleVariable (ConOut, (EFI_DEVICE_PATH_PROTOCOL *) &mSerialDevicePath, NULL);
-  EfiBootManagerUpdateConsoleVariable (ConIn, (EFI_DEVICE_PATH_PROTOCOL *) &mSerialDevicePath, NULL);
-  EfiBootManagerUpdateConsoleVariable (ErrOut, (EFI_DEVICE_PATH_PROTOCOL *) &mSerialDevicePath, NULL);
+  EfiBootManagerUpdateConsoleVariable (ConOut, (EFI_DEVICE_PATH_PROTOCOL *)&mSerialDevicePath, NULL);
+  EfiBootManagerUpdateConsoleVariable (ConIn, (EFI_DEVICE_PATH_PROTOCOL *)&mSerialDevicePath, NULL);
+  EfiBootManagerUpdateConsoleVariable (ErrOut, (EFI_DEVICE_PATH_PROTOCOL *)&mSerialDevicePath, NULL);
 }
-
 
 /**
   Constructor for the Serial Port Device controller library.
@@ -86,17 +85,20 @@ SerialPortTerminalLibConstructor (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  mSerialDevicePath.Uart.BaudRate = PcdGet64(PcdUartDefaultBaudRate);
-  mSerialDevicePath.Uart.DataBits = PcdGet8(PcdUartDefaultDataBits);
-  mSerialDevicePath.Uart.Parity   = PcdGet8(PcdUartDefaultParity);
-  mSerialDevicePath.Uart.StopBits = PcdGet8(PcdUartDefaultStopBits);
-  DEBUG ((DEBUG_INFO, "[SerialPortTerminalLibConstructor] [%d, %d, %d, %d]\n",
-      mSerialDevicePath.Uart.BaudRate,
-      mSerialDevicePath.Uart.DataBits,
-      mSerialDevicePath.Uart.Parity,
-      mSerialDevicePath.Uart.StopBits));
+  mSerialDevicePath.Uart.BaudRate = PcdGet64 (PcdUartDefaultBaudRate);
+  mSerialDevicePath.Uart.DataBits = PcdGet8 (PcdUartDefaultDataBits);
+  mSerialDevicePath.Uart.Parity   = PcdGet8 (PcdUartDefaultParity);
+  mSerialDevicePath.Uart.StopBits = PcdGet8 (PcdUartDefaultStopBits);
+  DEBUG ((
+    DEBUG_INFO,
+    "[SerialPortTerminalLibConstructor] [%d, %d, %d, %d]\n",
+    mSerialDevicePath.Uart.BaudRate,
+    mSerialDevicePath.Uart.DataBits,
+    mSerialDevicePath.Uart.Parity,
+    mSerialDevicePath.Uart.StopBits
+    ));
 
-  AddSerialTerminal();
+  AddSerialTerminal ();
 
   return EFI_SUCCESS;
 }

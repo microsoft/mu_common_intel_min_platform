@@ -13,11 +13,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 ADAPTER_INFO_PLATFORM_SECURITY_STRUCT  mHstiStruct = {
   PLATFORM_SECURITY_VERSION_VNEXTCS,
   PLATFORM_SECURITY_ROLE_PLATFORM_IBV,
-  {HSTI_IMPLEMENTATION_ID_PLATFORM},
+  { HSTI_IMPLEMENTATION_ID_PLATFORM },
   HSTI_SECURITY_FEATURE_SIZE,
-  {0}, // SecurityFeaturesRequired
-  {0}, // SecurityFeaturesImplemented
-  {0}, // SecurityFeaturesVerified
+  { 0 }, // SecurityFeaturesRequired
+  { 0 }, // SecurityFeaturesImplemented
+  { 0 }, // SecurityFeaturesVerified
   0,
 };
 
@@ -28,19 +28,19 @@ UINT8  mFeatureImplemented[HSTI_SECURITY_FEATURE_SIZE];
 **/
 VOID
 InitData (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
-  EFI_STATUS                             Status;
+  EFI_STATUS  Status;
 
-  ASSERT (PcdGetSize(PcdHstiIbvPlatformFeature) == sizeof(mFeatureImplemented));
-  CopyMem (mFeatureImplemented, PcdGetPtr(PcdHstiIbvPlatformFeature), sizeof(mFeatureImplemented));
+  ASSERT (PcdGetSize (PcdHstiIbvPlatformFeature) == sizeof (mFeatureImplemented));
+  CopyMem (mFeatureImplemented, PcdGetPtr (PcdHstiIbvPlatformFeature), sizeof (mFeatureImplemented));
 
   mHstiStruct.Role = Role;
-  CopyMem (mHstiStruct.SecurityFeaturesImplemented, mFeatureImplemented, sizeof(mFeatureImplemented));
+  CopyMem (mHstiStruct.SecurityFeaturesImplemented, mFeatureImplemented, sizeof (mFeatureImplemented));
   Status = HstiLibSetTable (
              &mHstiStruct,
-             sizeof(mHstiStruct)
+             sizeof (mHstiStruct)
              );
   if (EFI_ERROR (Status)) {
     if (Status != EFI_ALREADY_STARTED) {
@@ -61,38 +61,39 @@ InitData (
 CHAR16 *
 EFIAPI
 BuildHstiErrorString (
-  IN  CHAR16                   *ErrorCodeString,
-  IN  CHAR16                   *ErrorCategoryString,
-  IN  CHAR16                   *ErrorString
+  IN  CHAR16  *ErrorCodeString,
+  IN  CHAR16  *ErrorCategoryString,
+  IN  CHAR16  *ErrorString
   )
 {
-  UINTN                            Offset;
-  UINTN                            StringSize;
-  CHAR16                           *ErrorStringOut;
+  UINTN   Offset;
+  UINTN   StringSize;
+  CHAR16  *ErrorStringOut;
 
   ErrorStringOut = NULL;
-  Offset = 0;
+  Offset         = 0;
 
-  StringSize = StrSize (HSTI_ERROR) + StrSize(ErrorCodeString) + StrSize(HSTI_PLATFORM_SECURITY_SPECIFICATION) + StrSize(ErrorCategoryString) + StrSize(ErrorString);
+  StringSize     = StrSize (HSTI_ERROR) + StrSize (ErrorCodeString) + StrSize (HSTI_PLATFORM_SECURITY_SPECIFICATION) + StrSize (ErrorCategoryString) + StrSize (ErrorString);
   ErrorStringOut = AllocatePool (StringSize);
   ASSERT (ErrorStringOut != NULL);
   if (ErrorStringOut != NULL) {
     CopyMem (ErrorStringOut, HSTI_ERROR, StrSize (HSTI_ERROR)-1);
     Offset += StrLen (HSTI_ERROR);
 
-    CopyMem (ErrorStringOut + Offset, ErrorCodeString,  StrSize(ErrorCodeString)-1);
-    Offset += StrLen(ErrorCodeString);
+    CopyMem (ErrorStringOut + Offset, ErrorCodeString, StrSize (ErrorCodeString)-1);
+    Offset += StrLen (ErrorCodeString);
 
-    CopyMem (ErrorStringOut + Offset, HSTI_PLATFORM_SECURITY_SPECIFICATION, StrSize(HSTI_PLATFORM_SECURITY_SPECIFICATION)-1);
-    Offset += StrLen(HSTI_PLATFORM_SECURITY_SPECIFICATION);
+    CopyMem (ErrorStringOut + Offset, HSTI_PLATFORM_SECURITY_SPECIFICATION, StrSize (HSTI_PLATFORM_SECURITY_SPECIFICATION)-1);
+    Offset += StrLen (HSTI_PLATFORM_SECURITY_SPECIFICATION);
 
-    CopyMem (ErrorStringOut + Offset, ErrorCategoryString,  StrSize(ErrorCategoryString)-1);
-    Offset += StrLen(ErrorCategoryString);
+    CopyMem (ErrorStringOut + Offset, ErrorCategoryString, StrSize (ErrorCategoryString)-1);
+    Offset += StrLen (ErrorCategoryString);
 
-    CopyMem (ErrorStringOut + Offset, ErrorString,  StrSize(ErrorString));
-    Offset += StrLen(ErrorString);
+    CopyMem (ErrorStringOut + Offset, ErrorString, StrSize (ErrorString));
+    Offset += StrLen (ErrorString);
   }
-  return  ErrorStringOut;
+
+  return ErrorStringOut;
 }
 
 /**
@@ -100,7 +101,7 @@ BuildHstiErrorString (
 **/
 VOID
 UpdateData (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   DEBUG ((EFI_D_INFO, "2.0 Firmware Trust Continuation Crypto Strength\n"));
@@ -129,14 +130,14 @@ UpdateData (
 **/
 VOID
 DumpHsti (
-  IN VOID                     *HstiData
+  IN VOID  *HstiData
   )
 {
-  ADAPTER_INFO_PLATFORM_SECURITY *Hsti;
-  UINT8                          *SecurityFeatures;
-  CHAR16                         *ErrorString;
-  UINTN                          Index;
-  CHAR16                         ErrorChar;
+  ADAPTER_INFO_PLATFORM_SECURITY  *Hsti;
+  UINT8                           *SecurityFeatures;
+  CHAR16                          *ErrorString;
+  UINTN                           Index;
+  CHAR16                          ErrorChar;
 
   Hsti = HstiData;
   DEBUG ((EFI_D_INFO, "HSTI\n"));
@@ -150,6 +151,7 @@ DumpHsti (
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
     DEBUG ((EFI_D_INFO, "%02x ", SecurityFeatures[Index]));
   }
+
   DEBUG ((EFI_D_INFO, "\n"));
 
   SecurityFeatures = (UINT8 *)(SecurityFeatures + Hsti->SecurityFeaturesSize);
@@ -157,6 +159,7 @@ DumpHsti (
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
     DEBUG ((EFI_D_INFO, "%02x ", SecurityFeatures[Index]));
   }
+
   DEBUG ((EFI_D_INFO, "\n"));
 
   SecurityFeatures = (UINT8 *)(SecurityFeatures + Hsti->SecurityFeaturesSize);
@@ -164,16 +167,18 @@ DumpHsti (
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
     DEBUG ((EFI_D_INFO, "%02x ", SecurityFeatures[Index]));
   }
+
   DEBUG ((EFI_D_INFO, "\n"));
 
   ErrorString = (CHAR16 *)(SecurityFeatures + Hsti->SecurityFeaturesSize);
   DEBUG ((EFI_D_INFO, "  ErrorString                 - \""));
-  CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
-  for (; ErrorChar != 0;) {
+  CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
+  for ( ; ErrorChar != 0;) {
     DEBUG ((EFI_D_INFO, "%c", ErrorChar));
     ErrorString++;
-    CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
+    CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
   }
+
   DEBUG ((EFI_D_INFO, "\"\n"));
 }
 
@@ -182,7 +187,7 @@ DumpHsti (
 **/
 VOID
 DumpData (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   VOID        *Hsti;
@@ -192,7 +197,7 @@ DumpData (
   Status = HstiLibGetTable (Role, NULL, &Hsti, &HstiSize);
   if (EFI_ERROR (Status)) {
     DEBUG ((EFI_D_ERROR, "HSTI (Role - 0x%08x) not found!\n", Role));
-    return ;
+    return;
   }
 
   DumpHsti (Hsti);
@@ -209,8 +214,8 @@ DumpData (
 VOID
 EFIAPI
 OnReadyToBoot (
-  EFI_EVENT                               Event,
-  VOID                                    *Context
+  EFI_EVENT  Event,
+  VOID       *Context
   )
 {
   UpdateData (PLATFORM_SECURITY_ROLE_PLATFORM_IBV);
@@ -233,8 +238,8 @@ OnReadyToBoot (
 EFI_STATUS
 EFIAPI
 HstiPlatformDxeEntrypoint (
-  IN EFI_HANDLE           ImageHandle,
-  IN EFI_SYSTEM_TABLE     *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
   EFI_STATUS  Status;
@@ -243,11 +248,11 @@ HstiPlatformDxeEntrypoint (
   InitData (PLATFORM_SECURITY_ROLE_PLATFORM_IBV);
 
   Status = EfiCreateEventReadyToBootEx (
-            TPL_NOTIFY,
-            OnReadyToBoot,
-            NULL,
-            &Event
-            );
+             TPL_NOTIFY,
+             OnReadyToBoot,
+             NULL,
+             &Event
+             );
 
   return Status;
 }
