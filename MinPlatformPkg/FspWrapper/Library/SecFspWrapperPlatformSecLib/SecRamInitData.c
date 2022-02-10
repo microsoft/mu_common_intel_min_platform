@@ -15,13 +15,12 @@ typedef struct {
   FSPT_CORE_UPD     FsptCoreUpd;
 } FSPT_UPD_CORE_DATA;
 
-GLOBAL_REMOVE_IF_UNREFERENCED CONST FSPT_UPD_CORE_DATA FsptUpdDataPtr = {
+GLOBAL_REMOVE_IF_UNREFERENCED CONST FSPT_UPD_CORE_DATA  FsptUpdDataPtr = {
   {
     0x4450555F54505346,
     0x00,
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    }
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
   },
   {
     FixedPcdGet32 (PcdFlashFvMicrocodeBase) + FixedPcdGet32 (PcdMicrocodeOffsetInFv),
@@ -29,8 +28,6 @@ GLOBAL_REMOVE_IF_UNREFERENCED CONST FSPT_UPD_CORE_DATA FsptUpdDataPtr = {
     0,          // Set CodeRegionBase as 0, so that caching will be 4GB-(CodeRegionSize > LLCSize ? LLCSize : CodeRegionSize) will be used.
     FixedPcdGet32 (PcdFlashCodeCacheSize),
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    }
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
   }
 };
-

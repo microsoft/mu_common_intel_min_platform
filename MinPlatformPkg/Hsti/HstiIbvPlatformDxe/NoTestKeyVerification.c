@@ -16,14 +16,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 VOID
 CheckNoTestKeyVerification (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
-  EFI_STATUS      Status;
-  BOOLEAN         Result;
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
 
   if ((mFeatureImplemented[2] & HSTI_BYTE2_NO_TEST_KEY_VERIFICATION) == 0) {
-    return ;
+    return;
   }
 
   Result = TRUE;
@@ -45,5 +45,4 @@ CheckNoTestKeyVerification (
                );
     ASSERT_EFI_ERROR (Status);
   }
-
 }

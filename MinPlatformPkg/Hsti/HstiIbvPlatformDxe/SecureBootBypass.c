@@ -16,14 +16,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 VOID
 CheckSecureBootBypass (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
   if ((mFeatureImplemented[2] & HSTI_BYTE2_SECUREBOOT_BYPASS_CHECKING) == 0) {
-    return ;
+    return;
   }
 
   Result = TRUE;
@@ -41,5 +41,4 @@ CheckSecureBootBypass (
                );
     ASSERT_EFI_ERROR (Status);
   }
-
 }

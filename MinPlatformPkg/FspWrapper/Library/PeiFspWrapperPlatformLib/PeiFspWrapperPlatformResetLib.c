@@ -11,6 +11,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
 #include <FspEas.h>
+
 /**
   Perform platform related reset in FSP wrapper.
 
@@ -21,10 +22,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID
 EFIAPI
 CallFspWrapperResetSystem (
-  UINT32    ResetType
+  UINT32  ResetType
   )
 {
-  EFI_RESET_TYPE             EfiResetType;
+  EFI_RESET_TYPE  EfiResetType;
 
   switch (ResetType) {
     case FSP_STATUS_RESET_REQUIRED_COLD:
@@ -37,6 +38,7 @@ CallFspWrapperResetSystem (
       DEBUG ((DEBUG_ERROR, "UnSupported reset type requested. Initiating cold reset\n"));
       EfiResetType = EfiResetCold;
   }
+
   (*GetPeiServicesTablePointer ())->ResetSystem2 (EfiResetType, EFI_SUCCESS, 0, NULL);
   CpuDeadLoop ();
 }

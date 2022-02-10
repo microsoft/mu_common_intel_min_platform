@@ -52,8 +52,13 @@ DumpAcpiTcpaClient (
 {
   DumpAcpiTableHeader (&TcpaClient->Header);
   DEBUG ((DEBUG_INFO, "         "));
-  DEBUG ((DEBUG_INFO, " PlatformClass=0x%04x Laml=0x%08x Lasa=0x%016lx\n",
-    TcpaClient->PlatformClass, TcpaClient->Laml, TcpaClient->Lasa));
+  DEBUG ((
+    DEBUG_INFO,
+    " PlatformClass=0x%04x Laml=0x%08x Lasa=0x%016lx\n",
+    TcpaClient->PlatformClass,
+    TcpaClient->Laml,
+    TcpaClient->Lasa
+    ));
 }
 
 VOID
@@ -63,8 +68,13 @@ DumpAcpiTcpaServer (
 {
   DumpAcpiTableHeader (&TcpaServer->Header);
   DEBUG ((DEBUG_INFO, "         "));
-  DEBUG ((DEBUG_INFO, " PlatformClass=0x%04x Laml=0x%016lx Lasa=0x%016lx\n",
-    TcpaServer->PlatformClass, TcpaServer->Laml, TcpaServer->Lasa));
+  DEBUG ((
+    DEBUG_INFO,
+    " PlatformClass=0x%04x Laml=0x%016lx Lasa=0x%016lx\n",
+    TcpaServer->PlatformClass,
+    TcpaServer->Laml,
+    TcpaServer->Lasa
+    ));
 }
 
 VOID
@@ -73,19 +83,20 @@ DumpAcpiTcpa (
   )
 {
   EFI_TCG_CLIENT_ACPI_TABLE  *TcpaClient;
+
   TcpaClient = (VOID *)Tcpa;
   switch (TcpaClient->PlatformClass) {
-  case TCG_PLATFORM_TYPE_CLIENT:
-    DumpAcpiTcpaClient((VOID *)Tcpa);
-    break;
-  case TCG_PLATFORM_TYPE_SERVER:
-    DumpAcpiTcpaServer((VOID *)Tcpa);
-    break;
-  default:
-    DumpAcpiTableHeader (Tcpa);
-    DEBUG ((DEBUG_INFO, "         "));
-    DEBUG ((DEBUG_INFO, " PlatformClass=0x%04x\n", TcpaClient->PlatformClass));
-    break;
+    case TCG_PLATFORM_TYPE_CLIENT:
+      DumpAcpiTcpaClient ((VOID *)Tcpa);
+      break;
+    case TCG_PLATFORM_TYPE_SERVER:
+      DumpAcpiTcpaServer ((VOID *)Tcpa);
+      break;
+    default:
+      DumpAcpiTableHeader (Tcpa);
+      DEBUG ((DEBUG_INFO, "         "));
+      DEBUG ((DEBUG_INFO, " PlatformClass=0x%04x\n", TcpaClient->PlatformClass));
+      break;
   }
 }
 
@@ -95,15 +106,17 @@ CheckAcpiTpm2 (
   )
 {
   switch (Tpm2->StartMethod) {
-  case EFI_TPM2_ACPI_TABLE_START_METHOD_TIS:
-    if (!IsMmioExit (0xFED40000, SIZE_4KB, TRUE)) {
-      DEBUG ((DEBUG_ERROR, "TPM2 resource (0x%x) is not reported correctly.\n", 0xFED40000));
-      return EFI_NOT_STARTED;
-    }
-    break;
-  default:
-    break;
+    case EFI_TPM2_ACPI_TABLE_START_METHOD_TIS:
+      if (!IsMmioExit (0xFED40000, SIZE_4KB, TRUE)) {
+        DEBUG ((DEBUG_ERROR, "TPM2 resource (0x%x) is not reported correctly.\n", 0xFED40000));
+        return EFI_NOT_STARTED;
+      }
+
+      break;
+    default:
+      break;
   }
+
   return EFI_SUCCESS;
 }
 
@@ -116,6 +129,7 @@ CheckAcpiTcpaClient (
     DEBUG ((DEBUG_ERROR, "TCPA.client resource (0x%x) is not reported correctly.\n", 0xFED40000));
     return EFI_NOT_STARTED;
   }
+
   return EFI_SUCCESS;
 }
 
@@ -128,6 +142,7 @@ CheckAcpiTcpaServer (
     DEBUG ((DEBUG_ERROR, "TCPA.server resource (0x%x) is not reported correctly.\n", 0xFED40000));
     return EFI_NOT_STARTED;
   }
+
   return EFI_SUCCESS;
 }
 
@@ -137,16 +152,18 @@ CheckAcpiTcpa (
   )
 {
   EFI_TCG_CLIENT_ACPI_TABLE  *TcpaClient;
+
   TcpaClient = (VOID *)Tcpa;
   switch (TcpaClient->PlatformClass) {
-  case TCG_PLATFORM_TYPE_CLIENT:
-    return CheckAcpiTcpaClient((VOID *)Tcpa);
-    break;
-  case TCG_PLATFORM_TYPE_SERVER:
-    return CheckAcpiTcpaServer((VOID *)Tcpa);
-    break;
-  default:
-    break;
+    case TCG_PLATFORM_TYPE_CLIENT:
+      return CheckAcpiTcpaClient ((VOID *)Tcpa);
+      break;
+    case TCG_PLATFORM_TYPE_SERVER:
+      return CheckAcpiTcpaServer ((VOID *)Tcpa);
+      break;
+    default:
+      break;
   }
+
   return EFI_UNSUPPORTED;
 }

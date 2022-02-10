@@ -32,17 +32,17 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 SaveMemoryConfigEntryPoint (
-  IN EFI_HANDLE         ImageHandle,
-  IN EFI_SYSTEM_TABLE   *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS        Status;
-  EFI_HOB_GUID_TYPE *GuidHob;
-  VOID              *HobData;
-  VOID              *VariableData;
-  UINTN             DataSize;
-  UINTN             BufferSize;
-  BOOLEAN           DataIsIdentical;
+  EFI_STATUS         Status;
+  EFI_HOB_GUID_TYPE  *GuidHob;
+  VOID               *HobData;
+  VOID               *VariableData;
+  UINTN              DataSize;
+  UINTN              BufferSize;
+  BOOLEAN            DataIsIdentical;
 
   DataSize        = 0;
   BufferSize      = 0;
@@ -58,8 +58,8 @@ SaveMemoryConfigEntryPoint (
   //
   GuidHob = GetFirstGuidHob (&gFspNonVolatileStorageHob2Guid);
   if (GuidHob != NULL) {
-    HobData = (VOID *) (UINTN) ((FSP_NON_VOLATILE_STORAGE_HOB2 *) (UINTN) GuidHob)->NvsDataPtr;
-    DataSize = (UINTN) ((FSP_NON_VOLATILE_STORAGE_HOB2 *) (UINTN) GuidHob)->NvsDataLength;
+    HobData  = (VOID *)(UINTN)((FSP_NON_VOLATILE_STORAGE_HOB2 *)(UINTN)GuidHob)->NvsDataPtr;
+    DataSize = (UINTN)((FSP_NON_VOLATILE_STORAGE_HOB2 *)(UINTN)GuidHob)->NvsDataLength;
   } else {
     //
     // Fall back to version1 FspNvsHob
@@ -87,10 +87,12 @@ SaveMemoryConfigEntryPoint (
             if (!EFI_ERROR (Status) && (BufferSize == DataSize) && (0 == CompareMem (HobData, VariableData, DataSize))) {
               DataIsIdentical = TRUE;
             }
+
             FreePool (VariableData);
           }
         }
       }
+
       Status = EFI_SUCCESS;
 
       if (!DataIsIdentical) {
@@ -102,7 +104,7 @@ SaveMemoryConfigEntryPoint (
       }
     }
   } else {
-    DEBUG((DEBUG_ERROR, "Memory S3 Data HOB was not found\n"));
+    DEBUG ((DEBUG_ERROR, "Memory S3 Data HOB was not found\n"));
   }
 
   //

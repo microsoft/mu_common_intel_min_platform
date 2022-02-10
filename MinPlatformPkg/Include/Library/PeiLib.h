@@ -80,9 +80,9 @@ PeiGetLargeVariable (
 EFI_STATUS
 EFIAPI
 PeiGetFfsFromAnyFv (
-  IN CONST  EFI_GUID           *NameGuid,
-  OUT       VOID               **Address,
-  OUT       UINTN              *Size
+  IN CONST  EFI_GUID  *NameGuid,
+  OUT       VOID      **Address,
+  OUT       UINTN     *Size
   );
 
 /**
@@ -99,11 +99,11 @@ PeiGetFfsFromAnyFv (
 EFI_STATUS
 EFIAPI
 PeiGetSectionFromAnyFv  (
-  IN CONST  EFI_GUID           *NameGuid,
-  IN        EFI_SECTION_TYPE   SectionType,
-  IN        UINTN              SectionInstance,
-  OUT       VOID               **Address,
-  OUT       UINTN              *Size
+  IN CONST  EFI_GUID          *NameGuid,
+  IN        EFI_SECTION_TYPE  SectionType,
+  IN        UINTN             SectionInstance,
+  OUT       VOID              **Address,
+  OUT       UINTN             *Size
   );
 
 #endif

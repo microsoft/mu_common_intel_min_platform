@@ -14,7 +14,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 EFI_STATUS
 TestPointCheckMtrr (
-  IN BOOLEAN   IsForDxe
+  IN BOOLEAN  IsForDxe
   );
 
 EFI_STATUS
@@ -55,10 +55,10 @@ TestPointVtdEngine (
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
   PLATFORM_TEST_POINT_VERSION,
   PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI},
+  { TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI },
   TEST_POINT_FEATURE_SIZE,
-  {0}, // FeaturesImplemented
-  {0}, // FeaturesVerified
+  { 0 }, // FeaturesImplemented
+  { 0 }, // FeaturesVerified
   0,
 };
 
@@ -77,9 +77,9 @@ GetFeatureImplemented (
              &TestPoint,
              &TestPointSize
              );
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
-  return (UINT8 *)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT);
+  return (UINT8 *)TestPoint + sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT);
 }
 
 /**
@@ -98,7 +98,7 @@ TestPointDebugInitDone (
   VOID
   )
 {
-  UINT8       *FeatureImplemented;
+  UINT8  *FeatureImplemented;
 
   FeatureImplemented = GetFeatureImplemented ();
 
@@ -164,7 +164,7 @@ TestPointMemoryDiscoveredMtrrFunctional (
 
   Result = TRUE;
   Status = TestPointCheckMtrr (FALSE);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -212,7 +212,7 @@ TestPointMemoryDiscoveredMemoryResourceFunctional (
   Result = TRUE;
 
   Status = TestPointCheckMemoryResource ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -259,7 +259,7 @@ TestPointMemoryDiscoveredFvInfoFunctional (
   DEBUG ((DEBUG_INFO, "======== TestPointMemoryDiscoveredFvInfoFunctional - Enter\n"));
   Result = TRUE;
   Status = TestPointCheckFvInfo ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -306,7 +306,7 @@ TestPointMemoryDiscoveredDmaProtectionEnabled (
 
   Result = TRUE;
   Status = TestPointVtdEngine ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -356,7 +356,7 @@ TestPointEndOfPeiSystemResourceFunctional (
 
   Result = TRUE;
   Status = TestPointCheckSmmInfoPei ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -405,7 +405,7 @@ TestPointEndOfPeiMtrrFunctional (
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiMtrrFunctional - Enter\n"));
   Result = TRUE;
   Status = TestPointCheckMtrr (TRUE);
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -452,7 +452,7 @@ TestPointEndOfPeiPciBusMasterDisabled (
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfPeiPciBusMasterDisabled - Enter\n"));
   Result = TRUE;
   Status = TestPointCheckPciBusMaster ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
@@ -476,22 +476,22 @@ TestPointEndOfPeiPciBusMasterDisabled (
 **/
 VOID
 InitData (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   EFI_STATUS                               Status;
   UINT8                                    FeatureImplemented[TEST_POINT_FEATURE_SIZE];
   ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  TestPointStruct;
 
-  ASSERT (PcdGetSize(PcdTestPointIbvPlatformFeature) == sizeof(FeatureImplemented));
-  CopyMem (FeatureImplemented, PcdGetPtr(PcdTestPointIbvPlatformFeature), sizeof(FeatureImplemented));
+  ASSERT (PcdGetSize (PcdTestPointIbvPlatformFeature) == sizeof (FeatureImplemented));
+  CopyMem (FeatureImplemented, PcdGetPtr (PcdTestPointIbvPlatformFeature), sizeof (FeatureImplemented));
 
-  CopyMem (&TestPointStruct, &mTestPointStruct, sizeof(TestPointStruct));
+  CopyMem (&TestPointStruct, &mTestPointStruct, sizeof (TestPointStruct));
   TestPointStruct.Role = Role;
-  CopyMem (TestPointStruct.FeaturesImplemented, FeatureImplemented, sizeof(FeatureImplemented));
+  CopyMem (TestPointStruct.FeaturesImplemented, FeatureImplemented, sizeof (FeatureImplemented));
   Status = TestPointLibSetTable (
              &TestPointStruct,
-             sizeof(TestPointStruct)
+             sizeof (TestPointStruct)
              );
   if (EFI_ERROR (Status)) {
     if (Status != EFI_ALREADY_STARTED) {

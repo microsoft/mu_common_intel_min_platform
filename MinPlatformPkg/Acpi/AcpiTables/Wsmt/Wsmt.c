@@ -18,7 +18,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // WSMT Definitions
 //
 
-EFI_ACPI_WSMT_TABLE Wsmt = {
+EFI_ACPI_WSMT_TABLE  Wsmt = {
   {
     EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE,
     sizeof (EFI_ACPI_WSMT_TABLE),
@@ -40,5 +40,5 @@ EFI_ACPI_WSMT_TABLE Wsmt = {
     0
   },
 
-  FixedPcdGet32(PcdWsmtProtectionFlags)
+  FixedPcdGet32 (PcdWsmtProtectionFlags)
 };

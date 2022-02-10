@@ -18,7 +18,7 @@ TestPointCheckAcpiGcdResource (
   VOID
   );
 
-CHAR8 *mGcdMemoryTypeShortName[] = {
+CHAR8  *mGcdMemoryTypeShortName[] = {
   " NE  ",
   " RSVD",
   " SYS ",
@@ -27,32 +27,32 @@ CHAR8 *mGcdMemoryTypeShortName[] = {
   " RELI",
 };
 
-CHAR8 mUnknownStr[11];
+CHAR8  mUnknownStr[11];
 
 CHAR8 *
-ShortNameOfGcdMemoryType(
-  IN UINT32 Type
+ShortNameOfGcdMemoryType (
+  IN UINT32  Type
   )
 {
-  if (Type < sizeof(mGcdMemoryTypeShortName) / sizeof(mGcdMemoryTypeShortName[0])) {
+  if (Type < sizeof (mGcdMemoryTypeShortName) / sizeof (mGcdMemoryTypeShortName[0])) {
     return mGcdMemoryTypeShortName[Type];
   } else {
     return " ???? ";
   }
 }
 
-CHAR8 *mGcdIoTypeShortName[] = {
+CHAR8  *mGcdIoTypeShortName[] = {
   " NE  ",
   " RSVD",
   " SYS ",
 };
 
 CHAR8 *
-ShortNameOfGcdIoType(
-  IN UINT32 Type
+ShortNameOfGcdIoType (
+  IN UINT32  Type
   )
 {
-  if (Type < sizeof(mGcdIoTypeShortName) / sizeof(mGcdIoTypeShortName[0])) {
+  if (Type < sizeof (mGcdIoTypeShortName) / sizeof (mGcdIoTypeShortName[0])) {
     return mGcdIoTypeShortName[Type];
   } else {
     return " ???? ";
@@ -61,9 +61,9 @@ ShortNameOfGcdIoType(
 
 VOID
 PrintBitMask (
-  IN UINT64 Bit,
-  IN UINT64 Capabilities,
-  IN UINT64 Attributes
+  IN UINT64  Bit,
+  IN UINT64  Capabilities,
+  IN UINT64  Attributes
   )
 {
   if ((Capabilities & Bit) != 0) {
@@ -82,7 +82,7 @@ PrintMemoryDescriptorHeader (
   VOID
   )
 {
-  if (sizeof(UINT64) == sizeof(UINTN)) {
+  if (sizeof (UINT64) == sizeof (UINTN)) {
     DEBUG ((DEBUG_INFO, "                                              U                                      \n"));
     DEBUG ((DEBUG_INFO, "                                       RRMNXRWCWWWU                                  \n"));
     DEBUG ((DEBUG_INFO, "Base Address     End Address      Type TORVPPPEBTCC Image            Device          \n"));
@@ -100,13 +100,14 @@ PrintMemoryDescriptor (
   EFI_GCD_MEMORY_SPACE_DESCRIPTOR  *MemoryDescriptor
   )
 {
-  DEBUG ((DEBUG_INFO,
+  DEBUG ((
+    DEBUG_INFO,
     "%016lx-%016lx",
     MemoryDescriptor->BaseAddress,
     MemoryDescriptor->BaseAddress + MemoryDescriptor->Length - 1
     ));
 
-  DEBUG ((DEBUG_INFO, ShortNameOfGcdMemoryType(MemoryDescriptor->GcdMemoryType)));
+  DEBUG ((DEBUG_INFO, ShortNameOfGcdMemoryType (MemoryDescriptor->GcdMemoryType)));
   DEBUG ((DEBUG_INFO, " "));
 
   if (MemoryDescriptor->GcdMemoryType != EfiGcdMemoryTypeNonExistent) {
@@ -126,7 +127,7 @@ PrintMemoryDescriptor (
     DEBUG ((DEBUG_INFO, "            "));
   }
 
-  if (sizeof(UINT64) == sizeof(UINTN)) {
+  if (sizeof (UINT64) == sizeof (UINTN)) {
     if (MemoryDescriptor->ImageHandle != NULL) {
       DEBUG ((DEBUG_INFO, " %016lx", (UINT64)(UINTN)MemoryDescriptor->ImageHandle));
       if (MemoryDescriptor->DeviceHandle != NULL) {
@@ -159,7 +160,8 @@ PrintIoDescriptor (
   EFI_GCD_IO_SPACE_DESCRIPTOR  *IoDescriptor
   )
 {
-  DEBUG ((DEBUG_INFO,
+  DEBUG ((
+    DEBUG_INFO,
     "%016lx-%016lx",
     IoDescriptor->BaseAddress,
     IoDescriptor->BaseAddress + IoDescriptor->Length - 1
@@ -179,38 +181,40 @@ PrintIoDescriptor (
 
 VOID
 TestPointDumpGcd (
-  OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
-  OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
-  OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
-  OUT UINTN                           *GcdIoMapNumberOfDescriptors,  OPTIONAL
+  OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap, OPTIONAL
+  OUT UINTN                           *GcdMemoryMapNumberOfDescriptors, OPTIONAL
+  OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap, OPTIONAL
+  OUT UINTN                           *GcdIoMapNumberOfDescriptors, OPTIONAL
   IN  BOOLEAN                         DumpPrint
   )
 {
-  EFI_STATUS                      Status;
-  EFI_GCD_MEMORY_SPACE_DESCRIPTOR *MemoryMap;
-  EFI_GCD_IO_SPACE_DESCRIPTOR     *IoMap;
-  UINTN                           NumberOfDescriptors;
-  UINTN                           Index;
+  EFI_STATUS                       Status;
+  EFI_GCD_MEMORY_SPACE_DESCRIPTOR  *MemoryMap;
+  EFI_GCD_IO_SPACE_DESCRIPTOR      *IoMap;
+  UINTN                            NumberOfDescriptors;
+  UINTN                            Index;
 
   if (GcdMemoryMap != NULL) {
-    *GcdMemoryMap = NULL;
+    *GcdMemoryMap                    = NULL;
     *GcdMemoryMapNumberOfDescriptors = 0;
   }
+
   if (GcdIoMap != NULL) {
-    *GcdIoMap = NULL;
+    *GcdIoMap                    = NULL;
     *GcdIoMapNumberOfDescriptors = 0;
   }
-  
+
   if (DumpPrint) {
     DEBUG ((DEBUG_INFO, "==== TestPointDumpGcd - Enter\n"));
     DEBUG ((DEBUG_INFO, "GCD MEM:\n"));
   }
+
   NumberOfDescriptors = 0;
   MemoryMap           = NULL;
-  Status = gDS->GetMemorySpaceMap (
-                  &NumberOfDescriptors,
-                  &MemoryMap
-                  );
+  Status              = gDS->GetMemorySpaceMap (
+                               &NumberOfDescriptors,
+                               &MemoryMap
+                               );
   if (!EFI_ERROR (Status)) {
     if (DumpPrint) {
       PrintMemoryDescriptorHeader ();
@@ -218,8 +222,9 @@ TestPointDumpGcd (
         PrintMemoryDescriptor (&MemoryMap[Index]);
       }
     }
+
     if (GcdMemoryMap != NULL) {
-      *GcdMemoryMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_MEMORY_SPACE_DESCRIPTOR), MemoryMap);
+      *GcdMemoryMap                    = AllocateCopyPool (NumberOfDescriptors * sizeof (EFI_GCD_MEMORY_SPACE_DESCRIPTOR), MemoryMap);
       *GcdMemoryMapNumberOfDescriptors = NumberOfDescriptors;
     }
   }
@@ -227,12 +232,13 @@ TestPointDumpGcd (
   if (DumpPrint) {
     DEBUG ((DEBUG_INFO, "GCD IO:\n"));
   }
+
   NumberOfDescriptors = 0;
   IoMap               = NULL;
-  Status = gDS->GetIoSpaceMap (
-                  &NumberOfDescriptors,
-                  &IoMap
-                  );
+  Status              = gDS->GetIoSpaceMap (
+                               &NumberOfDescriptors,
+                               &IoMap
+                               );
   if (!EFI_ERROR (Status)) {
     if (DumpPrint) {
       PrintIoDescriptorHeader ();
@@ -240,10 +246,12 @@ TestPointDumpGcd (
         PrintIoDescriptor (&IoMap[Index]);
       }
     }
+
     if (GcdMemoryMap != NULL) {
       if (GcdIoMap != NULL) {
-        *GcdIoMap = AllocateCopyPool (NumberOfDescriptors * sizeof(EFI_GCD_IO_SPACE_DESCRIPTOR), IoMap);
+        *GcdIoMap = AllocateCopyPool (NumberOfDescriptors * sizeof (EFI_GCD_IO_SPACE_DESCRIPTOR), IoMap);
       }
+
       *GcdIoMapNumberOfDescriptors = NumberOfDescriptors;
     }
   }
@@ -251,5 +259,6 @@ TestPointDumpGcd (
   if (DumpPrint) {
     DEBUG ((DEBUG_INFO, "==== TestPointDumpGcd - Exit\n"));
   }
-  return ;
+
+  return;
 }

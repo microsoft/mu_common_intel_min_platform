@@ -16,7 +16,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 BOOLEAN
 IsDevicePathExist (
-  IN EFI_DEVICE_PATH_PROTOCOL          *DevicePathTarget
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePathTarget
   );
 
 CHAR16  *mConsoleVariableList[] = {
@@ -35,9 +35,9 @@ DumpDevicePath (
   IN UINTN            Size
   )
 {
-  CHAR16 *Str;
+  CHAR16  *Str;
 
-  Str = ConvertDevicePathToText(DevicePath, TRUE, TRUE);
+  Str = ConvertDevicePathToText (DevicePath, TRUE, TRUE);
   DEBUG ((DEBUG_INFO, "%s: %s\n", Name, Str));
   if (Str != NULL) {
     FreePool (Str);
@@ -57,9 +57,9 @@ TestPointCheckConsoleVariable (
 
   Result = TRUE;
   DEBUG ((DEBUG_INFO, "==== TestPointCheckConsoleVariable - Enter\n"));
-  for (Index = 0; Index < sizeof(mConsoleVariableList)/sizeof(mConsoleVariableList[0]); Index++) {
+  for (Index = 0; Index < sizeof (mConsoleVariableList)/sizeof (mConsoleVariableList[0]); Index++) {
     Status = GetVariable2 (mConsoleVariableList[Index], &gEfiGlobalVariableGuid, &Variable, &Size);
-    if (!EFI_ERROR(Status)) {
+    if (!EFI_ERROR (Status)) {
       DumpDevicePath (mConsoleVariableList[Index], Variable, Size);
       if (!IsDevicePathExist (Variable)) {
         DEBUG ((DEBUG_ERROR, "DevicePath not found!\n"));
@@ -68,12 +68,13 @@ TestPointCheckConsoleVariable (
           PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
           NULL,
           TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL_ERROR_CODE \
-            TEST_POINT_READY_TO_BOOT \
-            TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL_ERROR_STRING
+          TEST_POINT_READY_TO_BOOT \
+          TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL_ERROR_STRING
           );
       }
     }
   }
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckConsoleVariable - Exit\n"));
 
   if (Result) {

@@ -22,7 +22,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Guid/SmiHandlerProfile.h>
 
 #define PROFILE_NAME_STRING_LENGTH  64
-CHAR8 mNameString[PROFILE_NAME_STRING_LENGTH + 1];
+CHAR8  mNameString[PROFILE_NAME_STRING_LENGTH + 1];
 
 VOID   *mSmiHandlerProfileDatabase;
 UINTN  mSmiHandlerProfileDatabaseSize;
@@ -43,79 +43,82 @@ InternalDumpData (
   Get SMI handler profile database.
 **/
 VOID
-GetSmiHandlerProfileDatabase(
+GetSmiHandlerProfileDatabase (
   VOID
   )
 {
-  EFI_STATUS                                          Status;
-  UINTN                                               CommSize;
-  UINT8                                               *CommBuffer;
-  EFI_SMM_COMMUNICATE_HEADER                          *CommHeader;
-  SMI_HANDLER_PROFILE_PARAMETER_GET_INFO              *CommGetInfo;
-  SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET    *CommGetData;
-  EFI_SMM_COMMUNICATION_PROTOCOL                      *SmmCommunication;
-  UINTN                                               MinimalSizeNeeded;
-  EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
-  UINT32                                              Index;
-  EFI_MEMORY_DESCRIPTOR                               *Entry;
-  VOID                                                *Buffer;
-  UINTN                                               Size;
-  UINTN                                               Offset;
+  EFI_STATUS                                        Status;
+  UINTN                                             CommSize;
+  UINT8                                             *CommBuffer;
+  EFI_SMM_COMMUNICATE_HEADER                        *CommHeader;
+  SMI_HANDLER_PROFILE_PARAMETER_GET_INFO            *CommGetInfo;
+  SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET  *CommGetData;
+  EFI_SMM_COMMUNICATION_PROTOCOL                    *SmmCommunication;
+  UINTN                                             MinimalSizeNeeded;
+  EDKII_PI_SMM_COMMUNICATION_REGION_TABLE           *PiSmmCommunicationRegionTable;
+  UINT32                                            Index;
+  EFI_MEMORY_DESCRIPTOR                             *Entry;
+  VOID                                              *Buffer;
+  UINTN                                             Size;
+  UINTN                                             Offset;
 
-  Status = gBS->LocateProtocol(&gEfiSmmCommunicationProtocolGuid, NULL, (VOID **)&SmmCommunication);
-  if (EFI_ERROR(Status)) {
+  Status = gBS->LocateProtocol (&gEfiSmmCommunicationProtocolGuid, NULL, (VOID **)&SmmCommunication);
+  if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_INFO, "SmiHandlerProfile: Locate SmmCommunication protocol - %r\n", Status));
-    return ;
+    return;
   }
 
   MinimalSizeNeeded = EFI_PAGE_SIZE;
 
-  Status = EfiGetSystemConfigurationTable(
+  Status = EfiGetSystemConfigurationTable (
              &gEdkiiPiSmmCommunicationRegionTableGuid,
              (VOID **)&PiSmmCommunicationRegionTable
              );
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_INFO, "SmiHandlerProfile: Get PiSmmCommunicationRegionTable - %r\n", Status));
-    return ;
+    return;
   }
-  ASSERT(PiSmmCommunicationRegionTable != NULL);
+
+  ASSERT (PiSmmCommunicationRegionTable != NULL);
   Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
-  Size = 0;
+  Size  = 0;
   for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
     if (Entry->Type == EfiConventionalMemory) {
-      Size = EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages);
+      Size = EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages);
       if (Size >= MinimalSizeNeeded) {
         break;
       }
     }
+
     Entry = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)Entry + PiSmmCommunicationRegionTable->DescriptorSize);
   }
-  ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
+
+  ASSERT (Index < PiSmmCommunicationRegionTable->NumberOfEntries);
   CommBuffer = (UINT8 *)(UINTN)Entry->PhysicalStart;
 
   //
   // Get Size
   //
   CommHeader = (EFI_SMM_COMMUNICATE_HEADER *)&CommBuffer[0];
-  CopyMem(&CommHeader->HeaderGuid, &gSmiHandlerProfileGuid, sizeof(gSmiHandlerProfileGuid));
-  CommHeader->MessageLength = sizeof(SMI_HANDLER_PROFILE_PARAMETER_GET_INFO);
+  CopyMem (&CommHeader->HeaderGuid, &gSmiHandlerProfileGuid, sizeof (gSmiHandlerProfileGuid));
+  CommHeader->MessageLength = sizeof (SMI_HANDLER_PROFILE_PARAMETER_GET_INFO);
 
-  CommGetInfo = (SMI_HANDLER_PROFILE_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data)];
-  CommGetInfo->Header.Command = SMI_HANDLER_PROFILE_COMMAND_GET_INFO;
-  CommGetInfo->Header.DataLength = sizeof(*CommGetInfo);
+  CommGetInfo                      = (SMI_HANDLER_PROFILE_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF (EFI_SMM_COMMUNICATE_HEADER, Data)];
+  CommGetInfo->Header.Command      = SMI_HANDLER_PROFILE_COMMAND_GET_INFO;
+  CommGetInfo->Header.DataLength   = sizeof (*CommGetInfo);
   CommGetInfo->Header.ReturnStatus = (UINT64)-1;
-  CommGetInfo->DataSize = 0;
+  CommGetInfo->DataSize            = 0;
 
   CommSize = OFFSET_OF (EFI_SMM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
-  Status = SmmCommunication->Communicate(SmmCommunication, CommBuffer, &CommSize);
-  if (EFI_ERROR(Status)) {
+  Status   = SmmCommunication->Communicate (SmmCommunication, CommBuffer, &CommSize);
+  if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_INFO, "SmiHandlerProfile: SmmCommunication - %r\n", Status));
-    return ;
+    return;
   }
 
   if (CommGetInfo->Header.ReturnStatus != 0) {
     DEBUG ((DEBUG_INFO, "SmiHandlerProfile: GetInfo - 0x%0x\n", CommGetInfo->Header.ReturnStatus));
-    return ;
+    return;
   }
 
   mSmiHandlerProfileDatabaseSize = (UINTN)CommGetInfo->DataSize;
@@ -123,25 +126,25 @@ GetSmiHandlerProfileDatabase(
   //
   // Get Data
   //
-  mSmiHandlerProfileDatabase = AllocateZeroPool(mSmiHandlerProfileDatabaseSize);
+  mSmiHandlerProfileDatabase = AllocateZeroPool (mSmiHandlerProfileDatabaseSize);
   if (mSmiHandlerProfileDatabase == NULL) {
     Status = EFI_OUT_OF_RESOURCES;
     DEBUG ((DEBUG_INFO, "SmiHandlerProfile: AllocateZeroPool (0x%x) for dump buffer - %r\n", mSmiHandlerProfileDatabaseSize, Status));
-    return ;
+    return;
   }
 
   CommHeader = (EFI_SMM_COMMUNICATE_HEADER *)&CommBuffer[0];
-  CopyMem(&CommHeader->HeaderGuid, &gSmiHandlerProfileGuid, sizeof(gSmiHandlerProfileGuid));
-  CommHeader->MessageLength = sizeof(SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET);
+  CopyMem (&CommHeader->HeaderGuid, &gSmiHandlerProfileGuid, sizeof (gSmiHandlerProfileGuid));
+  CommHeader->MessageLength = sizeof (SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET);
 
-  CommGetData = (SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data)];
-  CommGetData->Header.Command = SMI_HANDLER_PROFILE_COMMAND_GET_DATA_BY_OFFSET;
-  CommGetData->Header.DataLength = sizeof(*CommGetData);
+  CommGetData                      = (SMI_HANDLER_PROFILE_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF (EFI_SMM_COMMUNICATE_HEADER, Data)];
+  CommGetData->Header.Command      = SMI_HANDLER_PROFILE_COMMAND_GET_DATA_BY_OFFSET;
+  CommGetData->Header.DataLength   = sizeof (*CommGetData);
   CommGetData->Header.ReturnStatus = (UINT64)-1;
 
   CommSize = OFFSET_OF (EFI_SMM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
-  Buffer = (UINT8 *)CommHeader + CommSize;
-  Size -= CommSize;
+  Buffer   = (UINT8 *)CommHeader + CommSize;
+  Size    -= CommSize;
 
   CommGetData->DataBuffer = (PHYSICAL_ADDRESS)(UINTN)Buffer;
   CommGetData->DataOffset = 0;
@@ -152,21 +155,23 @@ GetSmiHandlerProfileDatabase(
     } else {
       CommGetData->DataSize = (UINT64)(mSmiHandlerProfileDatabaseSize - CommGetData->DataOffset);
     }
-    Status = SmmCommunication->Communicate(SmmCommunication, CommBuffer, &CommSize);
-    ASSERT_EFI_ERROR(Status);
+
+    Status = SmmCommunication->Communicate (SmmCommunication, CommBuffer, &CommSize);
+    ASSERT_EFI_ERROR (Status);
 
     if (CommGetData->Header.ReturnStatus != 0) {
-      FreePool(mSmiHandlerProfileDatabase);
+      FreePool (mSmiHandlerProfileDatabase);
       mSmiHandlerProfileDatabase = NULL;
       DEBUG ((DEBUG_INFO, "SmiHandlerProfile: GetData - 0x%x\n", CommGetData->Header.ReturnStatus));
-      return ;
+      return;
     }
-    CopyMem((UINT8 *)mSmiHandlerProfileDatabase + Offset, (VOID *)(UINTN)CommGetData->DataBuffer, (UINTN)CommGetData->DataSize);
+
+    CopyMem ((UINT8 *)mSmiHandlerProfileDatabase + Offset, (VOID *)(UINTN)CommGetData->DataBuffer, (UINTN)CommGetData->DataSize);
   }
 
   DEBUG ((DEBUG_INFO, "SmiHandlerProfileSize - 0x%x\n", mSmiHandlerProfileDatabaseSize));
 
-  return ;
+  return;
 }
 
 /**
@@ -183,14 +188,14 @@ GetSmiHandlerProfileDatabase(
 **/
 VOID
 GetShortPdbFileName (
-  IN  CHAR8     *PdbFileName,
-  OUT CHAR8     *AsciiBuffer
+  IN  CHAR8  *PdbFileName,
+  OUT CHAR8  *AsciiBuffer
   )
 {
-  UINTN IndexPdb;     // Current work location within a Pdb string.
-  UINTN IndexBuffer;  // Current work location within a Buffer string.
-  UINTN StartIndex;
-  UINTN EndIndex;
+  UINTN  IndexPdb;    // Current work location within a Pdb string.
+  UINTN  IndexBuffer; // Current work location within a Buffer string.
+  UINTN  StartIndex;
+  UINTN  EndIndex;
 
   ZeroMem (AsciiBuffer, PROFILE_NAME_STRING_LENGTH + 1);
 
@@ -198,7 +203,9 @@ GetShortPdbFileName (
     AsciiStrnCpyS (AsciiBuffer, PROFILE_NAME_STRING_LENGTH + 1, " ", 1);
   } else {
     StartIndex = 0;
-    for (EndIndex = 0; PdbFileName[EndIndex] != 0; EndIndex++);
+    for (EndIndex = 0; PdbFileName[EndIndex] != 0; EndIndex++) {
+    }
+
     for (IndexPdb = 0; PdbFileName[IndexPdb] != 0; IndexPdb++) {
       if ((PdbFileName[IndexPdb] == '\\') || (PdbFileName[IndexPdb] == '/')) {
         StartIndex = IndexPdb + 1;
@@ -238,9 +245,9 @@ GetDriverNameString (
   IN SMM_CORE_IMAGE_DATABASE_STRUCTURE  *ImageStruct
   )
 {
-  EFI_STATUS                  Status;
-  CHAR16                      *NameString;
-  UINTN                       StringSize;
+  EFI_STATUS  Status;
+  CHAR16      *NameString;
+  UINTN       StringSize;
 
   if (ImageStruct == NULL) {
     return "???";
@@ -250,7 +257,7 @@ GetDriverNameString (
   // Method 1: Get the name string from image PDB
   //
   if (ImageStruct->PdbStringOffset != 0) {
-    GetShortPdbFileName ((CHAR8 *) ((UINTN) ImageStruct + ImageStruct->PdbStringOffset), mNameString);
+    GetShortPdbFileName ((CHAR8 *)((UINTN)ImageStruct + ImageStruct->PdbStringOffset), mNameString);
     return mNameString;
   }
 
@@ -260,13 +267,13 @@ GetDriverNameString (
     //
     NameString = NULL;
     StringSize = 0;
-    Status = GetSectionFromAnyFv (
-              &ImageStruct->FileGuid,
-              EFI_SECTION_USER_INTERFACE,
-              0,
-              (VOID **) &NameString,
-              &StringSize
-              );
+    Status     = GetSectionFromAnyFv (
+                   &ImageStruct->FileGuid,
+                   EFI_SECTION_USER_INTERFACE,
+                   0,
+                   (VOID **)&NameString,
+                   &StringSize
+                   );
     if (!EFI_ERROR (Status)) {
       //
       // Method 2: Get the name string from FFS UI section
@@ -274,6 +281,7 @@ GetDriverNameString (
       if (StrLen (NameString) > PROFILE_NAME_STRING_LENGTH) {
         NameString[PROFILE_NAME_STRING_LENGTH] = 0;
       }
+
       UnicodeStrToAsciiStrS (NameString, mNameString, sizeof (mNameString));
       FreePool (NameString);
       return mNameString;
@@ -296,7 +304,7 @@ GetDriverNameString (
 **/
 SMM_CORE_IMAGE_DATABASE_STRUCTURE *
 GetImageFromRef (
-  IN UINTN ImageRef
+  IN UINTN  ImageRef
   )
 {
   SMM_CORE_IMAGE_DATABASE_STRUCTURE  *ImageStruct;
@@ -308,6 +316,7 @@ GetImageFromRef (
         return ImageStruct;
       }
     }
+
     ImageStruct = (VOID *)((UINTN)ImageStruct + ImageStruct->Header.Length);
   }
 
@@ -318,7 +327,7 @@ GetImageFromRef (
   Dump SMM loaded image information.
 **/
 VOID
-DumpSmmLoadedImage(
+DumpSmmLoadedImage (
   VOID
   )
 {
@@ -335,6 +344,7 @@ DumpSmmLoadedImage(
       if (ImageStruct->EntryPoint != 0) {
         DEBUG ((DEBUG_INFO, " EntryPoint=\"0x%lx\"", ImageStruct->EntryPoint));
       }
+
       DEBUG ((DEBUG_INFO, " FvFile=\"%g\"", &ImageStruct->FileGuid));
       DEBUG ((DEBUG_INFO, " RefId=\"0x%x\"", ImageStruct->ImageRef));
       DEBUG ((DEBUG_INFO, ">\n"));
@@ -342,6 +352,7 @@ DumpSmmLoadedImage(
         PdbString = (CHAR8 *)((UINTN)ImageStruct + ImageStruct->PdbStringOffset);
         DEBUG ((DEBUG_INFO, "    <Pdb>%a</Pdb>\n", PdbString));
       }
+
       DEBUG ((DEBUG_INFO, "  </Image>\n"));
     }
 
@@ -351,7 +362,7 @@ DumpSmmLoadedImage(
   return;
 }
 
-CHAR8 *mSxTypeString[] = {
+CHAR8  *mSxTypeString[] = {
   "SxS0",
   "SxS1",
   "SxS2",
@@ -372,15 +383,15 @@ SxTypeToString (
   IN EFI_SLEEP_TYPE  Type
   )
 {
-  if (Type >= 0 && Type <= ARRAY_SIZE(mSxTypeString)) {
+  if ((Type >= 0) && (Type <= ARRAY_SIZE (mSxTypeString))) {
     return mSxTypeString[Type];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Type);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Type);
     return mNameString;
   }
 }
 
-CHAR8 *mSxPhaseString[] = {
+CHAR8  *mSxPhaseString[] = {
   "SxEntry",
   "SxExit",
 };
@@ -394,18 +405,18 @@ CHAR8 *mSxPhaseString[] = {
 **/
 CHAR8 *
 SxPhaseToString (
-  IN EFI_SLEEP_PHASE Phase
+  IN EFI_SLEEP_PHASE  Phase
   )
 {
-  if (Phase >= 0 && Phase <= ARRAY_SIZE(mSxPhaseString)) {
+  if ((Phase >= 0) && (Phase <= ARRAY_SIZE (mSxPhaseString))) {
     return mSxPhaseString[Phase];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Phase);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Phase);
     return mNameString;
   }
 }
 
-CHAR8 *mPowerButtonPhaseString[] = {
+CHAR8  *mPowerButtonPhaseString[] = {
   "PowerButtonEntry",
   "PowerButtonExit",
 };
@@ -422,15 +433,15 @@ PowerButtonPhaseToString (
   IN EFI_POWER_BUTTON_PHASE  Phase
   )
 {
-  if (Phase >= 0 && Phase <= ARRAY_SIZE(mPowerButtonPhaseString)) {
+  if ((Phase >= 0) && (Phase <= ARRAY_SIZE (mPowerButtonPhaseString))) {
     return mPowerButtonPhaseString[Phase];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Phase);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Phase);
     return mNameString;
   }
 }
 
-CHAR8 *mStandbyButtonPhaseString[] = {
+CHAR8  *mStandbyButtonPhaseString[] = {
   "StandbyButtonEntry",
   "StandbyButtonExit",
 };
@@ -447,15 +458,15 @@ StandbyButtonPhaseToString (
   IN EFI_STANDBY_BUTTON_PHASE  Phase
   )
 {
-  if (Phase >= 0 && Phase <= ARRAY_SIZE(mStandbyButtonPhaseString)) {
+  if ((Phase >= 0) && (Phase <= ARRAY_SIZE (mStandbyButtonPhaseString))) {
     return mStandbyButtonPhaseString[Phase];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Phase);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Phase);
     return mNameString;
   }
 }
 
-CHAR8 *mIoTrapTypeString[] = {
+CHAR8  *mIoTrapTypeString[] = {
   "WriteTrap",
   "ReadTrap",
   "ReadWriteTrap",
@@ -473,15 +484,15 @@ IoTrapTypeToString (
   IN EFI_SMM_IO_TRAP_DISPATCH_TYPE  Type
   )
 {
-  if (Type >= 0 && Type <= ARRAY_SIZE(mIoTrapTypeString)) {
+  if ((Type >= 0) && (Type <= ARRAY_SIZE (mIoTrapTypeString))) {
     return mIoTrapTypeString[Type];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Type);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Type);
     return mNameString;
   }
 }
 
-CHAR8 *mUsbTypeString[] = {
+CHAR8  *mUsbTypeString[] = {
   "UsbLegacy",
   "UsbWake",
 };
@@ -495,13 +506,13 @@ CHAR8 *mUsbTypeString[] = {
 **/
 CHAR8 *
 UsbTypeToString (
-  IN EFI_USB_SMI_TYPE          Type
+  IN EFI_USB_SMI_TYPE  Type
   )
 {
-  if (Type >= 0 && Type <= ARRAY_SIZE(mUsbTypeString)) {
+  if ((Type >= 0) && (Type <= ARRAY_SIZE (mUsbTypeString))) {
     return mUsbTypeString[Type];
   } else {
-    AsciiSPrint (mNameString, sizeof(mNameString), "0x%x", Type);
+    AsciiSPrint (mNameString, sizeof (mNameString), "0x%x", Type);
     return mNameString;
   }
 }
@@ -515,22 +526,22 @@ UsbTypeToString (
 **/
 VOID
 DumpSmiChildContext (
-  IN EFI_GUID   *HandlerType,
-  IN VOID       *Context,
-  IN UINTN      ContextSize
+  IN EFI_GUID  *HandlerType,
+  IN VOID      *Context,
+  IN UINTN     ContextSize
   )
 {
-  CHAR16        *Str;
+  CHAR16  *Str;
 
   if (CompareGuid (HandlerType, &gEfiSmmSwDispatch2ProtocolGuid)) {
     DEBUG ((DEBUG_INFO, " SwSmi=\"0x%lx\"", ((SMI_HANDLER_PROFILE_SW_REGISTER_CONTEXT *)Context)->SwSmiInputValue));
   } else if (CompareGuid (HandlerType, &gEfiSmmSxDispatch2ProtocolGuid)) {
-    DEBUG ((DEBUG_INFO, " SxType=\"%a\"", SxTypeToString(((EFI_SMM_SX_REGISTER_CONTEXT *)Context)->Type)));
-    DEBUG ((DEBUG_INFO, " SxPhase=\"%a\"", SxPhaseToString(((EFI_SMM_SX_REGISTER_CONTEXT *)Context)->Phase)));
+    DEBUG ((DEBUG_INFO, " SxType=\"%a\"", SxTypeToString (((EFI_SMM_SX_REGISTER_CONTEXT *)Context)->Type)));
+    DEBUG ((DEBUG_INFO, " SxPhase=\"%a\"", SxPhaseToString (((EFI_SMM_SX_REGISTER_CONTEXT *)Context)->Phase)));
   } else if (CompareGuid (HandlerType, &gEfiSmmPowerButtonDispatch2ProtocolGuid)) {
-    DEBUG ((DEBUG_INFO, " PowerButtonPhase=\"%a\"", PowerButtonPhaseToString(((EFI_SMM_POWER_BUTTON_REGISTER_CONTEXT *)Context)->Phase)));
+    DEBUG ((DEBUG_INFO, " PowerButtonPhase=\"%a\"", PowerButtonPhaseToString (((EFI_SMM_POWER_BUTTON_REGISTER_CONTEXT *)Context)->Phase)));
   } else if (CompareGuid (HandlerType, &gEfiSmmStandbyButtonDispatch2ProtocolGuid)) {
-    DEBUG ((DEBUG_INFO, " StandbyButtonPhase=\"%a\"", StandbyButtonPhaseToString(((EFI_SMM_STANDBY_BUTTON_REGISTER_CONTEXT *)Context)->Phase)));
+    DEBUG ((DEBUG_INFO, " StandbyButtonPhase=\"%a\"", StandbyButtonPhaseToString (((EFI_SMM_STANDBY_BUTTON_REGISTER_CONTEXT *)Context)->Phase)));
   } else if (CompareGuid (HandlerType, &gEfiSmmPeriodicTimerDispatch2ProtocolGuid)) {
     DEBUG ((DEBUG_INFO, " PeriodicTimerPeriod=\"%ld\"", ((EFI_SMM_PERIODIC_TIMER_REGISTER_CONTEXT *)Context)->Period));
     DEBUG ((DEBUG_INFO, " PeriodicTimerSmiTickInterval=\"%ld\"", ((EFI_SMM_PERIODIC_TIMER_REGISTER_CONTEXT *)Context)->SmiTickInterval));
@@ -539,10 +550,10 @@ DumpSmiChildContext (
   } else if (CompareGuid (HandlerType, &gEfiSmmIoTrapDispatch2ProtocolGuid)) {
     DEBUG ((DEBUG_INFO, " IoTrapAddress=\"0x%x\"", ((EFI_SMM_IO_TRAP_REGISTER_CONTEXT *)Context)->Address));
     DEBUG ((DEBUG_INFO, " IoTrapLength=\"0x%x\"", ((EFI_SMM_IO_TRAP_REGISTER_CONTEXT *)Context)->Length));
-    DEBUG ((DEBUG_INFO, " IoTrapType=\"%a\"", IoTrapTypeToString(((EFI_SMM_IO_TRAP_REGISTER_CONTEXT *)Context)->Type)));
+    DEBUG ((DEBUG_INFO, " IoTrapType=\"%a\"", IoTrapTypeToString (((EFI_SMM_IO_TRAP_REGISTER_CONTEXT *)Context)->Type)));
   } else if (CompareGuid (HandlerType, &gEfiSmmUsbDispatch2ProtocolGuid)) {
-    DEBUG ((DEBUG_INFO, " UsbType=\"0x%x\"", UsbTypeToString(((SMI_HANDLER_PROFILE_USB_REGISTER_CONTEXT *)Context)->Type)));
-    Str = ConvertDevicePathToText((EFI_DEVICE_PATH_PROTOCOL *)(((SMI_HANDLER_PROFILE_USB_REGISTER_CONTEXT *)Context) + 1), TRUE, TRUE);
+    DEBUG ((DEBUG_INFO, " UsbType=\"0x%x\"", UsbTypeToString (((SMI_HANDLER_PROFILE_USB_REGISTER_CONTEXT *)Context)->Type)));
+    Str = ConvertDevicePathToText ((EFI_DEVICE_PATH_PROTOCOL *)(((SMI_HANDLER_PROFILE_USB_REGISTER_CONTEXT *)Context) + 1), TRUE, TRUE);
     DEBUG ((DEBUG_INFO, " UsbDevicePath=\"%s\"", Str));
     if (Str != NULL) {
       FreePool (Str);
@@ -560,8 +571,8 @@ DumpSmiChildContext (
   @param HandlerCategory  SMI handler category
 **/
 VOID
-DumpSmiHandler(
-  IN UINT32 HandlerCategory
+DumpSmiHandler (
+  IN UINT32  HandlerCategory
   )
 {
   SMM_CORE_SMI_DATABASE_STRUCTURE    *SmiStruct;
@@ -578,35 +589,42 @@ DumpSmiHandler(
       if (!IsZeroGuid (&SmiStruct->HandlerType)) {
         DEBUG ((DEBUG_INFO, " HandlerType=\"%g\"", &SmiStruct->HandlerType));
       }
+
       DEBUG ((DEBUG_INFO, ">\n"));
       for (Index = 0; Index < SmiStruct->HandlerCount; Index++) {
         DEBUG ((DEBUG_INFO, "    <SmiHandler"));
         if (SmiHandlerStruct->ContextBufferSize != 0) {
           DumpSmiChildContext (&SmiStruct->HandlerType, (UINT8 *)SmiHandlerStruct + SmiHandlerStruct->ContextBufferOffset, SmiHandlerStruct->ContextBufferSize);
         }
+
         DEBUG ((DEBUG_INFO, ">\n"));
-        ImageStruct = GetImageFromRef((UINTN)SmiHandlerStruct->ImageRef);
-        NameString = GetDriverNameString (ImageStruct);
+        ImageStruct = GetImageFromRef ((UINTN)SmiHandlerStruct->ImageRef);
+        NameString  = GetDriverNameString (ImageStruct);
         DEBUG ((DEBUG_INFO, "      <Module RefId=\"0x%x\" Name=\"%a\">\n", SmiHandlerStruct->ImageRef, NameString));
         if ((ImageStruct != NULL) && (ImageStruct->PdbStringOffset != 0)) {
           DEBUG ((DEBUG_INFO, "      <Pdb>%a</Pdb>\n", (UINT8 *)ImageStruct + ImageStruct->PdbStringOffset));
         }
+
         DEBUG ((DEBUG_INFO, "      </Module>\n"));
         DEBUG ((DEBUG_INFO, "      <Handler Address=\"0x%lx\">\n", SmiHandlerStruct->Handler));
         if (ImageStruct != NULL) {
-          DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN) (SmiHandlerStruct->Handler - ImageStruct->ImageBase)));
+          DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN)(SmiHandlerStruct->Handler - ImageStruct->ImageBase)));
         }
+
         DEBUG ((DEBUG_INFO, "      </Handler>\n", SmiHandlerStruct->Handler));
         DEBUG ((DEBUG_INFO, "      <Caller Address=\"0x%lx\">\n", SmiHandlerStruct->CallerAddr));
         if (ImageStruct != NULL) {
-          DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN) (SmiHandlerStruct->CallerAddr - ImageStruct->ImageBase)));
+          DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN)(SmiHandlerStruct->CallerAddr - ImageStruct->ImageBase)));
         }
+
         DEBUG ((DEBUG_INFO, "      </Caller>\n", SmiHandlerStruct->Handler));
         SmiHandlerStruct = (VOID *)((UINTN)SmiHandlerStruct + SmiHandlerStruct->Length);
         DEBUG ((DEBUG_INFO, "    </SmiHandler>\n"));
       }
+
       DEBUG ((DEBUG_INFO, "  </SmiEntry>\n"));
     }
+
     SmiStruct = (VOID *)((UINTN)SmiStruct + SmiStruct->Header.Length);
   }
 
@@ -621,7 +639,7 @@ TestPointCheckSmiHandlerInstrument (
 {
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmiHandlerInstrument - Enter\n"));
 
-  GetSmiHandlerProfileDatabase();
+  GetSmiHandlerProfileDatabase ();
 
   if (mSmiHandlerProfileDatabase == NULL) {
     return EFI_SUCCESS;
@@ -634,7 +652,7 @@ TestPointCheckSmiHandlerInstrument (
   DEBUG ((DEBUG_INFO, "<SmiHandlerProfile>\n"));
   DEBUG ((DEBUG_INFO, "<ImageDatabase>\n"));
   DEBUG ((DEBUG_INFO, "  <!-- SMM image loaded -->\n"));
-  DumpSmmLoadedImage();
+  DumpSmmLoadedImage ();
   DEBUG ((DEBUG_INFO, "</ImageDatabase>\n\n"));
 
   //
@@ -644,24 +662,24 @@ TestPointCheckSmiHandlerInstrument (
   DEBUG ((DEBUG_INFO, "  <!-- SMI Handler registered -->\n\n"));
   DEBUG ((DEBUG_INFO, "  <SmiHandlerCategory Name=\"RootSmi\">\n"));
   DEBUG ((DEBUG_INFO, "  <!-- The root SMI Handler registered by SmmCore -->\n"));
-  DumpSmiHandler(SmmCoreSmiHandlerCategoryRootHandler);
+  DumpSmiHandler (SmmCoreSmiHandlerCategoryRootHandler);
   DEBUG ((DEBUG_INFO, "  </SmiHandlerCategory>\n\n"));
 
   DEBUG ((DEBUG_INFO, "  <SmiHandlerCategory Name=\"GuidSmi\">\n"));
   DEBUG ((DEBUG_INFO, "  <!-- The GUID SMI Handler registered by SmmCore -->\n"));
-  DumpSmiHandler(SmmCoreSmiHandlerCategoryGuidHandler);
+  DumpSmiHandler (SmmCoreSmiHandlerCategoryGuidHandler);
   DEBUG ((DEBUG_INFO, "  </SmiHandlerCategory>\n\n"));
 
   DEBUG ((DEBUG_INFO, "  <SmiHandlerCategory Name=\"HardwareSmi\">\n"));
   DEBUG ((DEBUG_INFO, "  <!-- The hardware SMI Handler registered by SmmChildDispatcher -->\n"));
-  DumpSmiHandler(SmmCoreSmiHandlerCategoryHardwareHandler);
+  DumpSmiHandler (SmmCoreSmiHandlerCategoryHardwareHandler);
   DEBUG ((DEBUG_INFO, "  </SmiHandlerCategory>\n\n"));
 
   DEBUG ((DEBUG_INFO, "</SmiHandlerDatabase>\n"));
   DEBUG ((DEBUG_INFO, "</SmiHandlerProfile>\n"));
 
   if (mSmiHandlerProfileDatabase != NULL) {
-    FreePool(mSmiHandlerProfileDatabase);
+    FreePool (mSmiHandlerProfileDatabase);
   }
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmiHandlerInstrument - Exit\n"));

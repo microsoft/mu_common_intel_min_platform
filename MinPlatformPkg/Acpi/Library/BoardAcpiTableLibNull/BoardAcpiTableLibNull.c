@@ -10,10 +10,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 BoardUpdateAcpiTable (
-  IN OUT EFI_ACPI_COMMON_HEADER       *Table,
-  IN OUT EFI_ACPI_TABLE_VERSION       *Version
+  IN OUT EFI_ACPI_COMMON_HEADER  *Table,
+  IN OUT EFI_ACPI_TABLE_VERSION  *Version
   )
 {
   return EFI_SUCCESS;
 }
-

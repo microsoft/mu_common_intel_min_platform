@@ -6,7 +6,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-
 #include <PiPei.h>
 #include <Library/DebugLib.h>
 #include <Library/SerialPortLib.h>
@@ -23,16 +22,16 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID
 EFIAPI
 PlatformInit (
-  IN VOID                 *FspHobList,
-  IN VOID                 *StartOfRange,
-  IN VOID                 *EndOfRange
+  IN VOID  *FspHobList,
+  IN VOID  *StartOfRange,
+  IN VOID  *EndOfRange
   )
 {
   //
   // Platform initialization
   // Enable Serial port here
   //
-  if (PcdGetBool(PcdSecSerialPortDebugEnable)) {
+  if (PcdGetBool (PcdSecSerialPortDebugEnable)) {
     SerialPortInitialize ();
   }
 

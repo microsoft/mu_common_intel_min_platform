@@ -8,18 +8,18 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include "BdsPlatform.h"
 
-extern UINTN                                   mBootMenuOptionNumber;
+extern UINTN  mBootMenuOptionNumber;
 
 VOID
 ExitPmAuth (
   VOID
   )
 {
-  EFI_HANDLE                 Handle;
-  EFI_STATUS                 Status;
-  EFI_EVENT                  EndOfDxeEvent;
+  EFI_HANDLE  Handle;
+  EFI_STATUS  Status;
+  EFI_EVENT   EndOfDxeEvent;
 
-  DEBUG((DEBUG_INFO,"ExitPmAuth ()- Start\n"));
+  DEBUG ((DEBUG_INFO, "ExitPmAuth ()- Start\n"));
   //
   // Prepare S3 information, this MUST be done before ExitPmAuth/EndOfDxe
   //
@@ -37,7 +37,7 @@ ExitPmAuth (
   ASSERT_EFI_ERROR (Status);
   gBS->SignalEvent (EndOfDxeEvent);
   gBS->CloseEvent (EndOfDxeEvent);
-  DEBUG((DEBUG_INFO,"All EndOfDxe callbacks have returned successfully\n"));
+  DEBUG ((DEBUG_INFO, "All EndOfDxe callbacks have returned successfully\n"));
 
   //
   // NOTE: We need install DxeSmmReadyToLock directly here because many boot script is added via ExitPmAuth/EndOfDxe callback.
@@ -53,9 +53,8 @@ ExitPmAuth (
                   NULL
                   );
   ASSERT_EFI_ERROR (Status);
-  DEBUG((DEBUG_INFO,"ExitPmAuth ()- End\n"));
+  DEBUG ((DEBUG_INFO, "ExitPmAuth ()- End\n"));
 }
-
 
 /**
   Creates an EFI event in the BDS Event Group.
@@ -71,12 +70,12 @@ ExitPmAuth (
 EFI_STATUS
 EFIAPI
 CreateBdsEvent (
-  IN  EFI_TPL           NotifyTpl,
-  IN  EFI_GUID          *gEfiEventGuid,
-  OUT EFI_EVENT         *BdsConsoleEvent
+  IN  EFI_TPL    NotifyTpl,
+  IN  EFI_GUID   *gEfiEventGuid,
+  OUT EFI_EVENT  *BdsConsoleEvent
   )
 {
-  EFI_STATUS        Status;
+  EFI_STATUS  Status;
 
   ASSERT (BdsConsoleEvent != NULL);
 
@@ -103,8 +102,8 @@ BdsSignalEventBeforeConsoleAfterTrustedConsole (
   VOID
   )
 {
-  EFI_STATUS    Status;
-  EFI_EVENT     BdsConsoleEvent;
+  EFI_STATUS  Status;
+  EFI_EVENT   BdsConsoleEvent;
 
   DEBUG ((DEBUG_INFO, "%a \n", __FUNCTION__));
 
@@ -119,10 +118,9 @@ BdsSignalEventBeforeConsoleAfterTrustedConsole (
   if (!EFI_ERROR (Status)) {
     gBS->SignalEvent (BdsConsoleEvent);
     gBS->CloseEvent (BdsConsoleEvent);
-    DEBUG ((DEBUG_INFO,"All EventBeforeConsoleAfterTrustedConsole callbacks have returned successfully\n"));
+    DEBUG ((DEBUG_INFO, "All EventBeforeConsoleAfterTrustedConsole callbacks have returned successfully\n"));
   }
 }
-
 
 /**
   Create, Signal, and Close the Bds Before Console Before End Of Dxe
@@ -134,8 +132,8 @@ BdsSignalEventBeforeConsoleBeforeEndOfDxe (
   VOID
   )
 {
-  EFI_STATUS    Status;
-  EFI_EVENT     BdsConsoleEvent;
+  EFI_STATUS  Status;
+  EFI_EVENT   BdsConsoleEvent;
 
   DEBUG ((DEBUG_INFO, "%a \n", __FUNCTION__));
 
@@ -145,12 +143,12 @@ BdsSignalEventBeforeConsoleBeforeEndOfDxe (
              &BdsConsoleEvent
              );
 
-   ASSERT_EFI_ERROR (Status);
+  ASSERT_EFI_ERROR (Status);
 
   if (!EFI_ERROR (Status)) {
     gBS->SignalEvent (BdsConsoleEvent);
     gBS->CloseEvent (BdsConsoleEvent);
-    DEBUG ((DEBUG_INFO,"All BeforeConsoleBeforeEndOfDxe callbacks have returned successfully\n"));
+    DEBUG ((DEBUG_INFO, "All BeforeConsoleBeforeEndOfDxe callbacks have returned successfully\n"));
   }
 }
 
@@ -164,8 +162,8 @@ BdsSignalEventAfterConsoleReadyBeforeBootOption (
   VOID
   )
 {
-  EFI_STATUS    Status;
-  EFI_EVENT     BdsConsoleEvent;
+  EFI_STATUS  Status;
+  EFI_EVENT   BdsConsoleEvent;
 
   DEBUG ((DEBUG_INFO, "%a \n", __FUNCTION__));
 
@@ -180,10 +178,9 @@ BdsSignalEventAfterConsoleReadyBeforeBootOption (
   if (!EFI_ERROR (Status)) {
     gBS->SignalEvent (BdsConsoleEvent);
     gBS->CloseEvent (BdsConsoleEvent);
-    DEBUG ((DEBUG_INFO,"All AfterConsoleReadyBeforeBootOption callbacks have returned successfully\n"));
+    DEBUG ((DEBUG_INFO, "All AfterConsoleReadyBeforeBootOption callbacks have returned successfully\n"));
   }
 }
-
 
 /**
   Platform Bds init. Incude the platform firmware vendor, revision
@@ -195,7 +192,6 @@ PlatformBootManagerBeforeConsole (
   VOID
   )
 {
-
   DEBUG ((EFI_D_INFO, "PlatformBootManagerBeforeConsole\n"));
 
   //
@@ -215,16 +211,15 @@ PlatformBootManagerBeforeConsole (
   //
   // Signal End Of Dxe Event
   //
-  PERF_START_EX(NULL,"EventRec", NULL, AsmReadTsc(), 0x7020);
+  PERF_START_EX (NULL, "EventRec", NULL, AsmReadTsc (), 0x7020);
   ExitPmAuth ();
-  PERF_END_EX(NULL,"EventRec", NULL, AsmReadTsc(), 0x7021);
+  PERF_END_EX (NULL, "EventRec", NULL, AsmReadTsc (), 0x7021);
 
   //
   // Deferred 3rd party images can be dispatched in
   // an SmmReadyToLock callback
   //
 }
-
 
 /**
   The function will excute with as the platform policy, current policy
@@ -271,7 +266,7 @@ PlatformBootManagerUnableToBoot (
 VOID
 EFIAPI
 PlatformBootManagerWaitCallback (
-  UINT16          TimeoutRemain
+  UINT16  TimeoutRemain
   )
 {
   BoardBootManagerWaitCallback (TimeoutRemain);

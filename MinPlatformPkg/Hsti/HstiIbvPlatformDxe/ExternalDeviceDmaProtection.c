@@ -16,15 +16,16 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 VOID
 CheckExternalDeviceDmaProtection (
-  IN UINT32                   Role
+  IN UINT32  Role
   )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
   if ((mFeatureImplemented[2] & HSTI_BYTE2_EXTERNAL_DEVICE_DMA_PROTECTION) == 0) {
-    return ;
+    return;
   }
+
   Result = TRUE;
 
   DEBUG ((EFI_D_INFO, "  External Device DMA Protection \n"));
@@ -42,6 +43,5 @@ CheckExternalDeviceDmaProtection (
     ASSERT_EFI_ERROR (Status);
   }
 
-
-  return ;
+  return;
 }

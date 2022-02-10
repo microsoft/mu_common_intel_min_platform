@@ -35,10 +35,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 EFI_STATUS
 EFIAPI
-UpdateNameAslCode(
-  IN     UINT32                        AslSignature,
-  IN     VOID                          *Buffer,
-  IN     UINTN                         Length
+UpdateNameAslCode (
+  IN     UINT32  AslSignature,
+  IN     VOID    *Buffer,
+  IN     UINTN   Length
   );
 
 /**
@@ -58,11 +58,11 @@ UpdateNameAslCode(
 EFI_STATUS
 EFIAPI
 UpdateSsdtNameAslCode (
-  IN     UINT8                         *TableId,
-  IN     UINT8                         TableIdSize,
-  IN     UINT32                        AslSignature,
-  IN     VOID                          *Buffer,
-  IN     UINTN                         Length
+  IN     UINT8   *TableId,
+  IN     UINT8   TableIdSize,
+  IN     UINT32  AslSignature,
+  IN     VOID    *Buffer,
+  IN     UINTN   Length
   );
 
 /**
@@ -80,9 +80,9 @@ UpdateSsdtNameAslCode (
 EFI_STATUS
 EFIAPI
 UpdateMethodAslCode (
-  IN     UINT32                        AslSignature,
-  IN     VOID                          *Buffer,
-  IN     UINTN                         Length
+  IN     UINT32  AslSignature,
+  IN     VOID    *Buffer,
+  IN     UINTN   Length
   );
 
 /**
@@ -105,9 +105,9 @@ UpdateMethodAslCode (
 EFI_STATUS
 EFIAPI
 LocateAcpiTableBySignature (
-  IN      UINT32                        Signature,
-  IN OUT  EFI_ACPI_DESCRIPTION_HEADER   **Table,
-  IN OUT  UINTN                         *Handle
+  IN      UINT32                       Signature,
+  IN OUT  EFI_ACPI_DESCRIPTION_HEADER  **Table,
+  IN OUT  UINTN                        *Handle
   );
 
 #endif

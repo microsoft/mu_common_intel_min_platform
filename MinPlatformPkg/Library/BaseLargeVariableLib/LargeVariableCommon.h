@@ -25,7 +25,7 @@
 // the same size will prevent this library from limiting variable names any
 // more than the MdeModulePkg implementation of UEFI Variable Services does.
 //
-#define MAX_VARIABLE_NAME_SIZE      1024
+#define MAX_VARIABLE_NAME_SIZE  1024
 
 //
 // The 2012 Windows Hardware Requirements specified a minimum variable size of
@@ -36,13 +36,13 @@
 // size of any known NvStorage FV, choosing this number should effectively
 // enable all available NvStorage space to be used to store the given data.
 //
-#define MAX_VARIABLE_SPLIT          131072  // 0x20000
+#define MAX_VARIABLE_SPLIT  131072          // 0x20000
 
 //
 // There are 6 digits in the number 131072, which means the length of the string
 // representation of this number will be at most 6 characters long.
 //
-#define MAX_VARIABLE_SPLIT_DIGITS   6
+#define MAX_VARIABLE_SPLIT_DIGITS  6
 
 //
 // On some architectures (Ex. Itanium) there a requirement to
@@ -51,4 +51,4 @@
 //
 #define MAX_VARIABLE_NAME_PAD_SIZE  3
 
-#endif  // _LARGE_VARIABLE_COMMON_H_
+#endif // _LARGE_VARIABLE_COMMON_H_

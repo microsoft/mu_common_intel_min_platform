@@ -33,7 +33,7 @@ PlatformInitEndOfPei (
 static EFI_PEI_NOTIFY_DESCRIPTOR  mEndOfPeiNotifyList = {
   (EFI_PEI_PPI_DESCRIPTOR_NOTIFY_CALLBACK | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST),
   &gEfiEndOfPeiSignalPpiGuid,
-  (EFI_PEIM_NOTIFY_ENTRY_POINT) PlatformInitEndOfPei
+  (EFI_PEIM_NOTIFY_ENTRY_POINT)PlatformInitEndOfPei
 };
 
 /**
@@ -55,7 +55,7 @@ PlatformInitEndOfPei (
   IN VOID                       *Ppi
   )
 {
-  EFI_STATUS                    Status;
+  EFI_STATUS  Status;
 
   Status = BoardInitAfterSiliconInit ();
   ASSERT_EFI_ERROR (Status);
@@ -71,7 +71,6 @@ PlatformInitEndOfPei (
 
   return Status;
 }
-
 
 /**
   Platform Init PEI module entry point
@@ -89,7 +88,7 @@ PlatformInitPostMemEntryPoint (
   IN CONST EFI_PEI_SERVICES     **PeiServices
   )
 {
-  EFI_STATUS                       Status;
+  EFI_STATUS  Status;
 
   Status = BoardInitBeforeSiliconInit ();
   ASSERT_EFI_ERROR (Status);

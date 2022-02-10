@@ -12,7 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID *
 EFIAPI
 SiliconPolicyInitPreMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return Policy;
@@ -21,7 +21,7 @@ SiliconPolicyInitPreMem (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePreMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return RETURN_SUCCESS;
@@ -30,7 +30,7 @@ SiliconPolicyDonePreMem (
 VOID *
 EFIAPI
 SiliconPolicyInitPostMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return Policy;
@@ -39,7 +39,7 @@ SiliconPolicyInitPostMem (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePostMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return RETURN_SUCCESS;
@@ -48,7 +48,7 @@ SiliconPolicyDonePostMem (
 VOID *
 EFIAPI
 SiliconPolicyInitLate (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return Policy;
@@ -57,7 +57,7 @@ SiliconPolicyInitLate (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDoneLate (
-  IN VOID *Policy
+  IN VOID  *Policy
   )
 {
   return RETURN_SUCCESS;

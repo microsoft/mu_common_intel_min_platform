@@ -36,16 +36,16 @@ extern EFI_SMM_VARIABLE_PROTOCOL  *mVariableWriteLibSmmVariable;
 EFI_STATUS
 EFIAPI
 TraditionalMmVariableWriteLibConstructor (
-  IN EFI_HANDLE         ImageHandle,
-  IN EFI_SYSTEM_TABLE   *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  EFI_STATUS    Status;
+  EFI_STATUS  Status;
 
   //
   // Locate SmmVariableProtocol.
   //
-  Status = gSmst->SmmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **) &mVariableWriteLibSmmVariable);
+  Status = gSmst->SmmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **)&mVariableWriteLibSmmVariable);
   ASSERT_EFI_ERROR (Status);
   return Status;
 }

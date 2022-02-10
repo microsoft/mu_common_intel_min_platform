@@ -47,14 +47,14 @@ EFI_SMM_VARIABLE_PROTOCOL  *mVariableReadLibSmmVariable = NULL;
 EFI_STATUS
 EFIAPI
 VarLibGetVariable (
-  IN     CHAR16                      *VariableName,
-  IN     EFI_GUID                    *VendorGuid,
-  OUT    UINT32                      *Attributes,    OPTIONAL
+  IN     CHAR16 *VariableName,
+  IN     EFI_GUID *VendorGuid,
+  OUT    UINT32 *Attributes, OPTIONAL
   IN OUT UINTN                       *DataSize,
   OUT    VOID                        *Data           OPTIONAL
   )
 {
-  EFI_STATUS    Status = EFI_UNSUPPORTED;
+  EFI_STATUS  Status = EFI_UNSUPPORTED;
 
   if (mVariableReadLibSmmVariable != NULL) {
     Status = mVariableReadLibSmmVariable->SmmGetVariable (
@@ -65,6 +65,7 @@ VarLibGetVariable (
                                             Data
                                             );
   }
+
   return Status;
 }
 
@@ -98,12 +99,12 @@ VarLibGetVariable (
 EFI_STATUS
 EFIAPI
 VarLibGetNextVariableName (
-  IN OUT UINTN                    *VariableNameSize,
-  IN OUT CHAR16                   *VariableName,
-  IN OUT EFI_GUID                 *VendorGuid
+  IN OUT UINTN     *VariableNameSize,
+  IN OUT CHAR16    *VariableName,
+  IN OUT EFI_GUID  *VendorGuid
   )
 {
-  EFI_STATUS    Status = EFI_UNSUPPORTED;
+  EFI_STATUS  Status = EFI_UNSUPPORTED;
 
   if (mVariableReadLibSmmVariable != NULL) {
     Status = mVariableReadLibSmmVariable->SmmGetNextVariableName (
@@ -112,5 +113,6 @@ VarLibGetNextVariableName (
                                             VendorGuid
                                             );
   }
+
   return Status;
 }

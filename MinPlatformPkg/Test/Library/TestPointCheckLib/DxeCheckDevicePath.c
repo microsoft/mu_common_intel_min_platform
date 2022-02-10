@@ -24,37 +24,38 @@ TestPointDumpDevicePath (
   VOID
   )
 {
-  UINTN                             Index;
-  EFI_HANDLE                        *HandleBuf;
-  UINTN                             HandleCount;
-  EFI_DEVICE_PATH_PROTOCOL          *DevicePath;
-  EFI_STATUS                        Status;
-  CHAR16                            *Str;
-  
+  UINTN                     Index;
+  EFI_HANDLE                *HandleBuf;
+  UINTN                     HandleCount;
+  EFI_DEVICE_PATH_PROTOCOL  *DevicePath;
+  EFI_STATUS                Status;
+  CHAR16                    *Str;
+
   DEBUG ((DEBUG_INFO, "==== TestPointDumpDevicePath - Enter\n"));
   HandleBuf = NULL;
-  Status = gBS->LocateHandleBuffer (
-                  ByProtocol,
-                  &gEfiDevicePathProtocolGuid,
-                  NULL,
-                  &HandleCount,
-                  &HandleBuf
-                  );
+  Status    = gBS->LocateHandleBuffer (
+                     ByProtocol,
+                     &gEfiDevicePathProtocolGuid,
+                     NULL,
+                     &HandleCount,
+                     &HandleBuf
+                     );
   if (EFI_ERROR (Status)) {
-    goto Done ;
+    goto Done;
   }
 
   DEBUG ((DEBUG_INFO, "DeviceList:\n"));
   for (Index = 0; Index < HandleCount; Index++) {
     Status = gBS->HandleProtocol (
-                  HandleBuf[Index],
-                  &gEfiDevicePathProtocolGuid,
-                  (VOID**)&DevicePath
-                 );
+                    HandleBuf[Index],
+                    &gEfiDevicePathProtocolGuid,
+                    (VOID **)&DevicePath
+                    );
     if (EFI_ERROR (Status)) {
       continue;
     }
-    Str = ConvertDevicePathToText(DevicePath, TRUE, TRUE);
+
+    Str = ConvertDevicePathToText (DevicePath, TRUE, TRUE);
     DEBUG ((DEBUG_INFO, "  %s\n", Str));
     if (Str != NULL) {
       FreePool (Str);
@@ -68,7 +69,7 @@ Done:
 
   DEBUG ((DEBUG_INFO, "==== TestPointDumpDevicePath - Exit\n"));
 
-  return ;
+  return;
 }
 
 /**
@@ -77,71 +78,75 @@ Done:
 **/
 BOOLEAN
 IsDevicePathNodeExist (
-  IN EFI_DEVICE_PATH_PROTOCOL          *DevicePathNode,
-  IN UINTN                             DevicePathNodeSize
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePathNode,
+  IN UINTN                     DevicePathNodeSize
   )
 {
-  UINTN                             Index;
-  EFI_HANDLE                        *HandleBuf;
-  UINTN                             HandleCount;
-  EFI_DEVICE_PATH_PROTOCOL          *DevicePath;
-  EFI_STATUS                        Status;
-  BOOLEAN                           Result;
-  UINTN                             DevicePathSize;
+  UINTN                     Index;
+  EFI_HANDLE                *HandleBuf;
+  UINTN                     HandleCount;
+  EFI_DEVICE_PATH_PROTOCOL  *DevicePath;
+  EFI_STATUS                Status;
+  BOOLEAN                   Result;
+  UINTN                     DevicePathSize;
 
-  if (DevicePathType (DevicePathNode) == HARDWARE_DEVICE_PATH ||
-      DevicePathType (DevicePathNode) == ACPI_DEVICE_PATH) {
-    Result = FALSE;
+  if ((DevicePathType (DevicePathNode) == HARDWARE_DEVICE_PATH) ||
+      (DevicePathType (DevicePathNode) == ACPI_DEVICE_PATH))
+  {
+    Result    = FALSE;
     HandleBuf = NULL;
-    Status = gBS->LocateHandleBuffer (
-                    ByProtocol,
-                    &gEfiDevicePathProtocolGuid,
-                    NULL,
-                    &HandleCount,
-                    &HandleBuf
-                    );
+    Status    = gBS->LocateHandleBuffer (
+                       ByProtocol,
+                       &gEfiDevicePathProtocolGuid,
+                       NULL,
+                       &HandleCount,
+                       &HandleBuf
+                       );
     if (EFI_ERROR (Status)) {
-      goto Done ;
+      goto Done;
     }
 
     for (Index = 0; Index < HandleCount; Index++) {
       Status = gBS->HandleProtocol (
-                    HandleBuf[Index],
-                    &gEfiDevicePathProtocolGuid,
-                    (VOID**)&DevicePath
-                   );
+                      HandleBuf[Index],
+                      &gEfiDevicePathProtocolGuid,
+                      (VOID **)&DevicePath
+                      );
       if (EFI_ERROR (Status)) {
         continue;
       }
-      DevicePathSize = GetDevicePathSize(DevicePath);
-      if (DevicePathSize != DevicePathNodeSize + sizeof(EFI_DEVICE_PATH_PROTOCOL)) {
+
+      DevicePathSize = GetDevicePathSize (DevicePath);
+      if (DevicePathSize != DevicePathNodeSize + sizeof (EFI_DEVICE_PATH_PROTOCOL)) {
         continue;
       }
+
       if (CompareMem (DevicePath, DevicePathNode, DevicePathNodeSize) == 0) {
         Result = TRUE;
         break;
       }
     }
 
-  Done:
+Done:
     if (HandleBuf != NULL) {
       FreePool (HandleBuf);
     }
+
     return Result;
   }
 
   if (DevicePathType (DevicePathNode) == MESSAGING_DEVICE_PATH) {
     return TRUE;
   }
-  
+
   if (DevicePathType (DevicePathNode) == MEDIA_DEVICE_PATH) {
     return TRUE;
   }
-  
+
   if (DevicePathType (DevicePathNode) == BBS_DEVICE_PATH) {
     return TRUE;
   }
-  
+
   return TRUE;
 }
 
@@ -151,14 +156,14 @@ IsDevicePathNodeExist (
 **/
 BOOLEAN
 IsDevicePathExist (
-  IN EFI_DEVICE_PATH_PROTOCOL          *DevicePath
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
   )
 {
-  EFI_DEVICE_PATH_PROTOCOL          *TmpDevicePath;
-  EFI_DEVICE_PATH_PROTOCOL          *DevicePathNode;
-  BOOLEAN                           Result;
+  EFI_DEVICE_PATH_PROTOCOL  *TmpDevicePath;
+  EFI_DEVICE_PATH_PROTOCOL  *DevicePathNode;
+  BOOLEAN                   Result;
 
-  TmpDevicePath = DevicePath;
+  TmpDevicePath  = DevicePath;
   DevicePathNode = DevicePath;
   while (!IsDevicePathEnd (TmpDevicePath)) {
     if (IsDevicePathEndInstance (TmpDevicePath)) {
@@ -169,10 +174,13 @@ IsDevicePathExist (
       if (!Result) {
         return FALSE;
       }
+
       DevicePathNode = NextDevicePathNode (TmpDevicePath);
     }
+
     TmpDevicePath = NextDevicePathNode (TmpDevicePath);
   }
+
   Result = IsDevicePathNodeExist (DevicePathNode, (UINTN)TmpDevicePath - (UINTN)DevicePathNode);
   if (!Result) {
     return FALSE;

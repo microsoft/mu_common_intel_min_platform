@@ -16,7 +16,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/SiliconPolicyInitLib.h>
 #include <Library/SiliconPolicyUpdateLib.h>
 
-
 /**
   This function overrides the default configurations in the FSP-M UPD data region.
 
@@ -28,7 +27,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID
 EFIAPI
 UpdateFspmUpdData (
-  IN OUT VOID        *FspUpdRgnPtr
+  IN OUT VOID  *FspUpdRgnPtr
   )
 {
   SiliconPolicyInitPreMem (FspUpdRgnPtr);
@@ -45,7 +44,7 @@ UpdateFspmUpdData (
 VOID
 EFIAPI
 UpdateFspsUpdData (
-  IN OUT VOID        *FspUpdRgnPtr
+  IN OUT VOID  *FspUpdRgnPtr
   )
 {
   SiliconPolicyInitPostMem (FspUpdRgnPtr);

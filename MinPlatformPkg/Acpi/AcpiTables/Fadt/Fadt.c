@@ -19,43 +19,43 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 #define EFI_ACPI_OEM_FADT_REVISION  0x00000000
 
-#define EFI_ACPI_PREFERRED_PM_PROFILE 0x00 // To be fixed
+#define EFI_ACPI_PREFERRED_PM_PROFILE  0x00// To be fixed
 
-#define EFI_ACPI_SCI_INT              0x0009
-#define EFI_ACPI_SMI_CMD              0x000000B2
+#define EFI_ACPI_SCI_INT  0x0009
+#define EFI_ACPI_SMI_CMD  0x000000B2
 
-#define EFI_ACPI_ACPI_ENABLE          0 // To be fixed
-#define EFI_ACPI_ACPI_DISABLE         0 // To be fixed
-#define EFI_ACPI_S4_BIOS_REQ          0x00
-#define EFI_ACPI_CST_CNT              0x00
+#define EFI_ACPI_ACPI_ENABLE   0        // To be fixed
+#define EFI_ACPI_ACPI_DISABLE  0        // To be fixed
+#define EFI_ACPI_S4_BIOS_REQ   0x00
+#define EFI_ACPI_CST_CNT       0x00
 
-#define EFI_ACPI_PSTATE_CNT           0x00
-#define EFI_ACPI_GPE1_BASE            (EFI_ACPI_GPE1_BLK_BIT_WIDTH / 2)
-#define EFI_ACPI_P_LVL2_LAT           0x0065 // 101
-#define EFI_ACPI_P_LVL3_LAT           0x03E9 // 1001
-#define EFI_ACPI_FLUSH_SIZE 0x0000
-#define EFI_ACPI_FLUSH_STRIDE 0x0000
-#define EFI_ACPI_DUTY_OFFSET  0x01
-#define EFI_ACPI_DUTY_WIDTH 0x00
+#define EFI_ACPI_PSTATE_CNT    0x00
+#define EFI_ACPI_GPE1_BASE     (EFI_ACPI_GPE1_BLK_BIT_WIDTH / 2)
+#define EFI_ACPI_P_LVL2_LAT    0x0065        // 101
+#define EFI_ACPI_P_LVL3_LAT    0x03E9        // 1001
+#define EFI_ACPI_FLUSH_SIZE    0x0000
+#define EFI_ACPI_FLUSH_STRIDE  0x0000
+#define EFI_ACPI_DUTY_OFFSET   0x01
+#define EFI_ACPI_DUTY_WIDTH    0x00
 
-#define EFI_ACPI_DAY_ALRM   0x0D
-#define EFI_ACPI_MON_ALRM   0x00
-#define EFI_ACPI_CENTURY    0x32
+#define EFI_ACPI_DAY_ALRM  0x0D
+#define EFI_ACPI_MON_ALRM  0x00
+#define EFI_ACPI_CENTURY   0x32
 
 //
 // IA-PC Boot Architecture Flags
 //
-#define EFI_ACPI_IAPC_BOOT_ARCH         0 // To be fixed
+#define EFI_ACPI_IAPC_BOOT_ARCH  0        // To be fixed
 
 //
 // ARM Boot Architecture Flags
 //
-#define EFI_ACPI_ARM_BOOT_ARCH          0 // To be fixed
+#define EFI_ACPI_ARM_BOOT_ARCH  0         // To be fixed
 
 //
 // Fixed Feature Flags
 //
-#define EFI_ACPI_FIXED_FEATURE_FLAGS    0 // To be fixed
+#define EFI_ACPI_FIXED_FEATURE_FLAGS  0   // To be fixed
 
 //
 // PM1A Event Register Block Generic Address Information
@@ -92,10 +92,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // PM2 Control Register Block Generic Address Information
 //
-#define EFI_ACPI_PM2_CNT_BLK_ADDRESS_SPACE_ID EFI_ACPI_6_3_SYSTEM_IO
-#define EFI_ACPI_PM2_CNT_BLK_BIT_WIDTH        0x08
-#define EFI_ACPI_PM2_CNT_BLK_BIT_OFFSET       0x00
-#define EFI_ACPI_PM2_CNT_BLK_ADDRESS          0 // To be fixed
+#define EFI_ACPI_PM2_CNT_BLK_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
+#define EFI_ACPI_PM2_CNT_BLK_BIT_WIDTH         0x08
+#define EFI_ACPI_PM2_CNT_BLK_BIT_OFFSET        0x00
+#define EFI_ACPI_PM2_CNT_BLK_ADDRESS           0// To be fixed
 
 //
 // Power Management Timer Control Register Block Generic Address
@@ -126,11 +126,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // Reset Register Generic Address Information
 //
-#define EFI_ACPI_RESET_REG_ADDRESS_SPACE_ID EFI_ACPI_6_3_SYSTEM_IO
-#define EFI_ACPI_RESET_REG_BIT_WIDTH        0x08
-#define EFI_ACPI_RESET_REG_BIT_OFFSET       0x00
-#define EFI_ACPI_RESET_REG_ADDRESS          0x00000CF9
-#define EFI_ACPI_RESET_VALUE                0x06
+#define EFI_ACPI_RESET_REG_ADDRESS_SPACE_ID  EFI_ACPI_6_3_SYSTEM_IO
+#define EFI_ACPI_RESET_REG_BIT_WIDTH         0x08
+#define EFI_ACPI_RESET_REG_BIT_OFFSET        0x00
+#define EFI_ACPI_RESET_REG_ADDRESS           0x00000CF9
+#define EFI_ACPI_RESET_VALUE                 0x06
 
 //
 // Number of bytes decoded by PM1 event blocks (a and b)
@@ -150,24 +150,24 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // Number of bytes decoded by PM timer block
 //
-#define EFI_ACPI_PM_TMR_LEN (EFI_ACPI_PM_TMR_BLK_BIT_WIDTH / 8)
+#define EFI_ACPI_PM_TMR_LEN  (EFI_ACPI_PM_TMR_BLK_BIT_WIDTH / 8)
 
 //
 // Number of bytes decoded by GPE0 block
 //
-#define EFI_ACPI_GPE0_BLK_LEN (EFI_ACPI_GPE0_BLK_BIT_WIDTH / 8)
+#define EFI_ACPI_GPE0_BLK_LEN  (EFI_ACPI_GPE0_BLK_BIT_WIDTH / 8)
 
 //
 // Number of bytes decoded by GPE1 block
 //
-#define EFI_ACPI_GPE1_BLK_LEN (EFI_ACPI_GPE1_BLK_BIT_WIDTH / 8)
+#define EFI_ACPI_GPE1_BLK_LEN  (EFI_ACPI_GPE1_BLK_BIT_WIDTH / 8)
 
 //
 // Fixed ACPI Description Table
 // Please modify all values in Fadt.h only.
 //
 
-EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
+EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE  Fadt = {
   {
     EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE,
     sizeof (EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE),
@@ -340,9 +340,9 @@ EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     EFI_ACPI_GPE1_BLK_ADDRESS
   },
   {
-  //
-  // Sleep Control Reg - update in DXE driver
-  //
+    //
+    // Sleep Control Reg - update in DXE driver
+    //
     0,
     0,
     0,
@@ -350,9 +350,9 @@ EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE Fadt = {
     0
   },
   {
-  //
-  // Sleep Status Reg - update in DXE driver
-  //
+    //
+    // Sleep Status Reg - update in DXE driver
+    //
     0,
     0,
     0,

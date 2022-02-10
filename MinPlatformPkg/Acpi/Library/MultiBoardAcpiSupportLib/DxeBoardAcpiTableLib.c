@@ -14,22 +14,23 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 EFI_STATUS
 EFIAPI
 BoardUpdateAcpiTable (
-  IN OUT EFI_ACPI_COMMON_HEADER       *Table,
-  IN OUT EFI_ACPI_TABLE_VERSION       *Version
+  IN OUT EFI_ACPI_COMMON_HEADER  *Table,
+  IN OUT EFI_ACPI_TABLE_VERSION  *Version
   )
 {
-  BOARD_ACPI_TABLE_FUNC    *BoardAcpiTableFunc;
-  EFI_STATUS               Status;
+  BOARD_ACPI_TABLE_FUNC  *BoardAcpiTableFunc;
+  EFI_STATUS             Status;
 
   Status = gBS->LocateProtocol (
                   &gBoardAcpiTableGuid,
                   NULL,
                   (VOID **)&BoardAcpiTableFunc
                   );
-  if (!EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
     if (BoardAcpiTableFunc->BoardUpdateAcpiTable != NULL) {
       return BoardAcpiTableFunc->BoardUpdateAcpiTable (Table, Version);
     }
   }
+
   return EFI_SUCCESS;
 }

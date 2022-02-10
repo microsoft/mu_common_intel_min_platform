@@ -17,14 +17,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 VOID
 DumpTestPoint (
-  IN VOID                     *TestPointData
+  IN VOID  *TestPointData
   )
 {
-  ADAPTER_INFO_PLATFORM_TEST_POINT *TestPoint;
-  UINT8                            *Features;
-  CHAR16                           *ErrorString;
-  UINTN                            Index;
-  CHAR16                           ErrorChar;
+  ADAPTER_INFO_PLATFORM_TEST_POINT  *TestPoint;
+  UINT8                             *Features;
+  CHAR16                            *ErrorString;
+  UINTN                             Index;
+  CHAR16                            ErrorChar;
 
   TestPoint = TestPointData;
   Print (L"TestPoint\n");
@@ -38,6 +38,7 @@ DumpTestPoint (
   for (Index = 0; Index < TestPoint->FeaturesSize; Index++) {
     Print (L"%02x ", Features[Index]);
   }
+
   Print (L"\n");
 
   Features = (UINT8 *)(Features + TestPoint->FeaturesSize);
@@ -45,12 +46,13 @@ DumpTestPoint (
   for (Index = 0; Index < TestPoint->FeaturesSize; Index++) {
     Print (L"%02x ", Features[Index]);
   }
+
   Print (L"\n");
 
   ErrorString = (CHAR16 *)(Features + TestPoint->FeaturesSize);
   Print (L"  ErrorString                 - \"");
-  CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
-  for (; ErrorChar != 0;) {
+  CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
+  for ( ; ErrorChar != 0;) {
     if (ErrorChar == L'\r') {
       Print (L"\\r");
     } else if (ErrorChar == L'\n') {
@@ -58,16 +60,18 @@ DumpTestPoint (
     } else {
       Print (L"%c", ErrorChar);
     }
+
     ErrorString++;
-    CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
+    CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
   }
+
   Print (L"\"\n");
 }
 
 VOID
 DumpTestPointDataDxe (
-  IN UINT32                   Role OPTIONAL,
-  IN CHAR16                   *ImplementationID OPTIONAL
+  IN UINT32  Role OPTIONAL,
+  IN CHAR16  *ImplementationID OPTIONAL
   )
 {
   EFI_STATUS                        Status;
@@ -91,12 +95,12 @@ DumpTestPointDataDxe (
                   &Handles
                   );
   if (EFI_ERROR (Status)) {
-    return ;
+    return;
   }
 
-  TestPoint = NULL;
-  Aip = NULL;
-  InformationBlock = NULL;
+  TestPoint            = NULL;
+  Aip                  = NULL;
+  InformationBlock     = NULL;
   InformationBlockSize = 0;
   for (Index = 0; Index < NoHandles; Index++) {
     Status = gBS->HandleProtocol (
@@ -127,6 +131,7 @@ DumpTestPointDataDxe (
         break;
       }
     }
+
     FreePool (InfoTypesBuffer);
 
     if (AipCandidate == NULL) {
@@ -136,7 +141,7 @@ DumpTestPointDataDxe (
     //
     // Check Role
     //
-    Aip = AipCandidate;
+    Aip    = AipCandidate;
     Status = Aip->GetInformation (
                     Aip,
                     &gAdapterInfoPlatformTestPointGuid,
@@ -150,20 +155,23 @@ DumpTestPointDataDxe (
     TestPoint = InformationBlock;
 
     if ((Role == 0) ||
-        ((TestPoint->Role == Role) && 
-         ((ImplementationID == NULL) || (StrCmp (ImplementationID, TestPoint->ImplementationID) == 0)))) {
+        ((TestPoint->Role == Role) &&
+         ((ImplementationID == NULL) || (StrCmp (ImplementationID, TestPoint->ImplementationID) == 0))))
+    {
       DumpTestPoint (TestPoint);
     }
+
     FreePool (InformationBlock);
   }
+
   FreePool (Handles);
 }
 
 EFI_STATUS
 EFIAPI
 TestPointDumpAppEntrypoint (
-  IN EFI_HANDLE           ImageHandle,
-  IN EFI_SYSTEM_TABLE     *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
   DumpTestPointDataDxe (0, NULL);

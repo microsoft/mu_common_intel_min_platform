@@ -33,8 +33,8 @@ OnPciEnumerationComplete (
   IN VOID       *Context
   )
 {
-  EFI_STATUS          Status;
-  VOID                *Interface;
+  EFI_STATUS  Status;
+  VOID        *Interface;
 
   //
   // Try to locate it because gEfiPciEnumerationCompleteProtocolGuid will trigger it once when registration.
@@ -46,11 +46,11 @@ OnPciEnumerationComplete (
                   &Interface
                   );
   if (EFI_ERROR (Status)) {
-    return ;
+    return;
   }
 
   Status = BoardInitAfterPciEnumeration ();
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
   TestPointPciEnumerationDonePciBusMasterDisabled ();
 
@@ -94,8 +94,8 @@ OnDxeSmmReadyToLock (
   IN VOID       *Context
   )
 {
-  EFI_STATUS          Status;
-  VOID                *Interface;
+  EFI_STATUS  Status;
+  VOID        *Interface;
 
   //
   // Try to locate it because gEfiPciEnumerationCompleteProtocolGuid will trigger it once when registration.
@@ -107,7 +107,7 @@ OnDxeSmmReadyToLock (
                   &Interface
                   );
   if (EFI_ERROR (Status)) {
-    return ;
+    return;
   }
 
   TestPointDxeSmmReadyToLockSmramAligned ();
@@ -174,15 +174,15 @@ OnReadyToBoot (
   IN VOID       *Context
   )
 {
-  EFI_STATUS                        Status;
-  EFI_EVENT                         ReadyToBootLaterEvent;
+  EFI_STATUS  Status;
+  EFI_EVENT   ReadyToBootLaterEvent;
 
   DEBUG ((DEBUG_INFO, "OnReadyToBoot\n"));
 
   gBS->CloseEvent (Event);
 
   Status = BoardInitReadyToBoot ();
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
   Status = gBS->CreateEvent (
                   EVT_NOTIFY_SIGNAL,
@@ -212,12 +212,12 @@ OnEndOfFirmware (
   IN VOID       *Context
   )
 {
-  EFI_STATUS                        Status;
+  EFI_STATUS  Status;
 
   gBS->CloseEvent (Event);
 
   Status = BoardInitEndOfFirmware ();
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
   TestPointExitBootServices ();
 }
@@ -239,14 +239,14 @@ BoardNotificationInitEntryPoint (
   VOID
   )
 {
-  EFI_STATUS Status;
-  EFI_EVENT  ReadyToBootEvent;
-  VOID       *Registration;
-  EFI_EVENT  ProtocolNotifyEvent;
-  EFI_EVENT  ExitBootServicesEvent;
-  EFI_EVENT  EndOfDxeEvent;
-  VOID       *SmmReadyToLockRegistration;
-  EFI_EVENT  SmmReadyToLockEvent;
+  EFI_STATUS  Status;
+  EFI_EVENT   ReadyToBootEvent;
+  VOID        *Registration;
+  EFI_EVENT   ProtocolNotifyEvent;
+  EFI_EVENT   ExitBootServicesEvent;
+  EFI_EVENT   EndOfDxeEvent;
+  VOID        *SmmReadyToLockRegistration;
+  EFI_EVENT   SmmReadyToLockEvent;
 
   ProtocolNotifyEvent = EfiCreateProtocolNotifyEvent (
                           &gEfiPciEnumerationCompleteProtocolGuid,
@@ -267,7 +267,7 @@ BoardNotificationInitEntryPoint (
                   );
   ASSERT_EFI_ERROR (Status);
 
-  SmmReadyToLockEvent = EfiCreateProtocolNotifyEvent  (
+  SmmReadyToLockEvent = EfiCreateProtocolNotifyEvent (
                           &gEfiDxeSmmReadyToLockProtocolGuid,
                           TPL_CALLBACK,
                           OnDxeSmmReadyToLock,
@@ -311,8 +311,8 @@ BoardNotificationInitEntryPoint (
 EFI_STATUS
 EFIAPI
 PlatformInitDxeEntryPoint (
-  IN EFI_HANDLE       ImageHandle,
-  IN EFI_SYSTEM_TABLE *SystemTable
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
   BoardNotificationInitEntryPoint ();

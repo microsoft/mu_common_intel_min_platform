@@ -32,7 +32,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID *
 EFIAPI
 SiliconPolicyInitPreMem (
-  IN OUT VOID *Policy OPTIONAL
+  IN OUT VOID  *Policy OPTIONAL
   );
 
 /*
@@ -40,7 +40,7 @@ SiliconPolicyInitPreMem (
   Silicon code can do initialization based upon the policy data.
 
   The input Policy must be returned by SiliconPolicyInitPreMem().
-  
+
   @param[in] Policy       Pointer to policy.
 
   @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
@@ -48,7 +48,7 @@ SiliconPolicyInitPreMem (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePreMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   );
 
 /**
@@ -75,7 +75,7 @@ SiliconPolicyDonePreMem (
 VOID *
 EFIAPI
 SiliconPolicyInitPostMem (
-  IN OUT VOID *Policy OPTIONAL
+  IN OUT VOID  *Policy OPTIONAL
   );
 
 /*
@@ -83,7 +83,7 @@ SiliconPolicyInitPostMem (
   Silicon code can do initialization based upon the policy data.
 
   The input Policy must be returned by SiliconPolicyInitPostMem().
-  
+
   @param[in] Policy       Pointer to policy.
 
   @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
@@ -91,7 +91,7 @@ SiliconPolicyInitPostMem (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDonePostMem (
-  IN VOID *Policy
+  IN VOID  *Policy
   );
 
 /**
@@ -113,7 +113,7 @@ SiliconPolicyDonePostMem (
 VOID *
 EFIAPI
 SiliconPolicyInitLate (
-  IN OUT VOID *Policy OPTIONAL
+  IN OUT VOID  *Policy OPTIONAL
   );
 
 /*
@@ -121,7 +121,7 @@ SiliconPolicyInitLate (
   Silicon code can do initialization based upon the policy data.
 
   The input Policy must be returned by SiliconPolicyInitLate().
-  
+
   @param[in] Policy       Pointer to policy.
 
   @retval RETURN_SUCCESS The policy is handled consumed by silicon code.
@@ -129,7 +129,7 @@ SiliconPolicyInitLate (
 RETURN_STATUS
 EFIAPI
 SiliconPolicyDoneLate (
-  IN VOID *Policy
+  IN VOID  *Policy
   );
 
 #endif

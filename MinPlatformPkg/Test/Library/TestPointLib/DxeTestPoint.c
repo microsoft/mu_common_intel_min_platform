@@ -25,10 +25,10 @@
 **/
 VOID *
 InternalTestPointFindAip (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID OPTIONAL,
-  OUT VOID                    **TestPointData OPTIONAL,
-  OUT UINTN                   *TestPointSize OPTIONAL
+  IN UINT32  Role,
+  IN CHAR16  *ImplementationID OPTIONAL,
+  OUT VOID   **TestPointData OPTIONAL,
+  OUT UINTN  *TestPointSize OPTIONAL
   )
 {
   EFI_STATUS                        Status;
@@ -55,9 +55,9 @@ InternalTestPointFindAip (
     return NULL;
   }
 
-  TestPoint = NULL;
-  Aip = NULL;
-  InformationBlock = NULL;
+  TestPoint            = NULL;
+  Aip                  = NULL;
+  InformationBlock     = NULL;
   InformationBlockSize = 0;
   for (Index = 0; Index < NoHandles; Index++) {
     Status = gBS->HandleProtocol (
@@ -88,6 +88,7 @@ InternalTestPointFindAip (
         break;
       }
     }
+
     FreePool (InfoTypesBuffer);
 
     if (AipCandidate == NULL) {
@@ -97,7 +98,7 @@ InternalTestPointFindAip (
     //
     // Check Role
     //
-    Aip = AipCandidate;
+    Aip    = AipCandidate;
     Status = Aip->GetInformation (
                     Aip,
                     &gAdapterInfoPlatformTestPointGuid,
@@ -109,8 +110,9 @@ InternalTestPointFindAip (
     }
 
     TestPoint = InformationBlock;
-    if ((TestPoint->Role == Role) && 
-        ((ImplementationID == NULL) || (StrCmp (ImplementationID, TestPoint->ImplementationID) == 0))) {
+    if ((TestPoint->Role == Role) &&
+        ((ImplementationID == NULL) || (StrCmp (ImplementationID, TestPoint->ImplementationID) == 0)))
+    {
       break;
     } else {
       TestPoint = NULL;
@@ -118,6 +120,7 @@ InternalTestPointFindAip (
       continue;
     }
   }
+
   FreePool (Handles);
 
   if (TestPoint == NULL) {
@@ -127,9 +130,11 @@ InternalTestPointFindAip (
   if (TestPointData != NULL) {
     *TestPointData = InformationBlock;
   }
+
   if (TestPointSize != NULL) {
     *TestPointSize = InformationBlockSize;
   }
+
   return Aip;
 }
 
@@ -144,16 +149,16 @@ InternalTestPointFindAip (
 **/
 BOOLEAN
 InternalTestPointIsValidTable (
-  IN VOID                     *TestPointData,
-  IN UINTN                    TestPointSize
+  IN VOID   *TestPointData,
+  IN UINTN  TestPointSize
   )
 {
-  ADAPTER_INFO_PLATFORM_TEST_POINT *TestPoint;
-  UINTN                            Index;
-  CHAR16                           *ErrorString;
-  CHAR16                           ErrorChar;
-  UINTN                            ErrorStringSize;
-  UINTN                            ErrorStringLength;
+  ADAPTER_INFO_PLATFORM_TEST_POINT  *TestPoint;
+  UINTN                             Index;
+  CHAR16                            *ErrorString;
+  CHAR16                            ErrorChar;
+  UINTN                             ErrorStringSize;
+  UINTN                             ErrorStringLength;
 
   TestPoint = TestPointData;
 
@@ -164,11 +169,13 @@ InternalTestPointIsValidTable (
     DEBUG ((EFI_D_ERROR, "TestPointData == NULL\n"));
     return FALSE;
   }
-  if (TestPointSize < sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) {
+
+  if (TestPointSize < sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT)) {
     DEBUG ((EFI_D_ERROR, "TestPointSize < sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)\n"));
     return FALSE;
   }
-  if (((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / TEST_POINT_FEATURES_ITEM_NUMBER) < TestPoint->FeaturesSize) {
+
+  if (((TestPointSize - sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT)) / TEST_POINT_FEATURES_ITEM_NUMBER) < TestPoint->FeaturesSize) {
     DEBUG ((EFI_D_ERROR, "((TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT)) / TEST_POINT_FEATURES_ITEM_NUMBER) < FeaturesSize\n"));
     return FALSE;
   }
@@ -185,7 +192,8 @@ InternalTestPointIsValidTable (
   // Check Role
   //
   if ((TestPoint->Role < PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE) ||
-      (TestPoint->Role > PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM)) {
+      (TestPoint->Role > PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM))
+  {
     DEBUG ((EFI_D_ERROR, "Role < PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE ||\n"));
     DEBUG ((EFI_D_ERROR, "Role > PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM\n"));
     return FALSE;
@@ -194,18 +202,19 @@ InternalTestPointIsValidTable (
   //
   // Check ImplementationID
   //
-  for (Index = 0; Index < sizeof(TestPoint->ImplementationID)/sizeof(TestPoint->ImplementationID[0]); Index++) {
+  for (Index = 0; Index < sizeof (TestPoint->ImplementationID)/sizeof (TestPoint->ImplementationID[0]); Index++) {
     if (TestPoint->ImplementationID[Index] == 0) {
       break;
     }
   }
-  if (Index == sizeof(TestPoint->ImplementationID)/sizeof(TestPoint->ImplementationID[0])) {
+
+  if (Index == sizeof (TestPoint->ImplementationID)/sizeof (TestPoint->ImplementationID[0])) {
     DEBUG ((EFI_D_ERROR, "ImplementationID is no NUL CHAR\n"));
     return FALSE;
   }
 
-  ErrorStringSize = TestPointSize - sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
-  ErrorString = (CHAR16 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER);
+  ErrorStringSize = TestPointSize - sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
+  ErrorString     = (CHAR16 *)((UINTN)TestPoint + sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT) - TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER);
 
   //
   // basic check for ErrorString
@@ -214,6 +223,7 @@ InternalTestPointIsValidTable (
     DEBUG ((EFI_D_ERROR, "ErrorStringSize == 0\n"));
     return FALSE;
   }
+
   if ((ErrorStringSize & BIT0) != 0) {
     DEBUG ((EFI_D_ERROR, "(ErrorStringSize & BIT0) != 0\n"));
     return FALSE;
@@ -222,10 +232,10 @@ InternalTestPointIsValidTable (
   //
   // ErrorString might not be CHAR16 aligned.
   //
-  CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
+  CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
   for (ErrorStringLength = 0; (ErrorChar != 0) && (ErrorStringLength < (ErrorStringSize/2)); ErrorStringLength++) {
     ErrorString++;
-    CopyMem (&ErrorChar, ErrorString, sizeof(ErrorChar));
+    CopyMem (&ErrorChar, ErrorString, sizeof (ErrorChar));
   }
 
   //
@@ -235,6 +245,7 @@ InternalTestPointIsValidTable (
     DEBUG ((EFI_D_ERROR, "ErrorString has no NUL CHAR\n"));
     return FALSE;
   }
+
   if (ErrorStringLength == (ErrorStringSize/2)) {
     DEBUG ((EFI_D_ERROR, "ErrorString Length incorrect\n"));
     return FALSE;
@@ -259,16 +270,16 @@ InternalTestPointIsValidTable (
 EFI_STATUS
 EFIAPI
 TestPointLibSetTable (
-  IN VOID                     *TestPoint,
-  IN UINTN                    TestPointSize
+  IN VOID   *TestPoint,
+  IN UINTN  TestPointSize
   )
 {
-  EFI_STATUS                       Status;
-  EFI_HANDLE                       Handle;
-  TEST_POINT_AIP_PRIVATE_DATA      *TestPointAip;
-  EFI_ADAPTER_INFORMATION_PROTOCOL *Aip;
-  UINT32                           Role;
-  CHAR16                           *ImplementationID;
+  EFI_STATUS                        Status;
+  EFI_HANDLE                        Handle;
+  TEST_POINT_AIP_PRIVATE_DATA       *TestPointAip;
+  EFI_ADAPTER_INFORMATION_PROTOCOL  *Aip;
+  UINT32                            Role;
+  CHAR16                            *ImplementationID;
 
   DEBUG ((EFI_D_ERROR, "TestPointLibSetTable\n"));
 
@@ -277,18 +288,19 @@ TestPointLibSetTable (
     return EFI_VOLUME_CORRUPTED;
   }
 
-  Role = ((ADAPTER_INFO_PLATFORM_TEST_POINT *)TestPoint)->Role;
+  Role             = ((ADAPTER_INFO_PLATFORM_TEST_POINT *)TestPoint)->Role;
   ImplementationID = ((ADAPTER_INFO_PLATFORM_TEST_POINT *)TestPoint)->ImplementationID;
-  Aip = InternalTestPointFindAip (Role, ImplementationID, NULL, NULL);
+  Aip              = InternalTestPointFindAip (Role, ImplementationID, NULL, NULL);
   if (Aip != NULL) {
     DEBUG ((EFI_D_ERROR, "Aip (0x%x, %S) is found\n", Role, ImplementationID));
     return EFI_ALREADY_STARTED;
   }
 
-  TestPointAip = AllocateZeroPool (sizeof(TEST_POINT_AIP_PRIVATE_DATA));
+  TestPointAip = AllocateZeroPool (sizeof (TEST_POINT_AIP_PRIVATE_DATA));
   if (TestPointAip == NULL) {
     return EFI_OUT_OF_RESOURCES;
   }
+
   TestPointAip->TestPoint = AllocateCopyPool (TestPointSize, TestPoint);
   if (TestPointAip->TestPoint == NULL) {
     FreePool (TestPointAip);
@@ -296,10 +308,10 @@ TestPointLibSetTable (
   }
 
   TestPointAip->Signature = TEST_POINT_AIP_PRIVATE_SIGNATURE;
-  CopyMem (&TestPointAip->Aip, &mDxeAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
-  TestPointAip->TestPointSize = TestPointSize;
+  CopyMem (&TestPointAip->Aip, &mDxeAdapterInformationProtocol, sizeof (EFI_ADAPTER_INFORMATION_PROTOCOL));
+  TestPointAip->TestPointSize    = TestPointSize;
   TestPointAip->TestPointMaxSize = TestPointSize;
-  
+
   Handle = NULL;
   Status = gBS->InstallMultipleProtocolInterfaces (
                   &Handle,
@@ -334,18 +346,19 @@ TestPointLibSetTable (
 EFI_STATUS
 EFIAPI
 TestPointLibGetTable (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID OPTIONAL,
-  OUT VOID                    **TestPoint,
-  OUT UINTN                   *TestPointSize
+  IN UINT32  Role,
+  IN CHAR16  *ImplementationID OPTIONAL,
+  OUT VOID   **TestPoint,
+  OUT UINTN  *TestPointSize
   )
 {
-  EFI_ADAPTER_INFORMATION_PROTOCOL *Aip;
+  EFI_ADAPTER_INFORMATION_PROTOCOL  *Aip;
 
   Aip = InternalTestPointFindAip (Role, ImplementationID, TestPoint, TestPointSize);
   if (Aip == NULL) {
     return EFI_NOT_FOUND;
   }
+
   return EFI_SUCCESS;
 }
 
@@ -368,18 +381,18 @@ TestPointLibGetTable (
 **/
 EFI_STATUS
 InternalTestPointRecordFeaturesVerified (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN UINT32                   ByteIndex,
   IN UINT8                    Bit,
   IN BOOLEAN                  Set
   )
 {
-  EFI_ADAPTER_INFORMATION_PROTOCOL *Aip;
-  ADAPTER_INFO_PLATFORM_TEST_POINT *TestPoint;
-  UINTN                            TestPointSize;
-  UINT8                            *FeaturesVerified;
-  EFI_STATUS                       Status;
+  EFI_ADAPTER_INFORMATION_PROTOCOL  *Aip;
+  ADAPTER_INFO_PLATFORM_TEST_POINT  *TestPoint;
+  UINTN                             TestPointSize;
+  UINT8                             *FeaturesVerified;
+  EFI_STATUS                        Status;
 
   Aip = InternalTestPointFindAip (Role, ImplementationID, (VOID **)&TestPoint, &TestPointSize);
   if (Aip == NULL) {
@@ -390,7 +403,7 @@ InternalTestPointRecordFeaturesVerified (
     return EFI_UNSUPPORTED;
   }
 
-  FeaturesVerified = (UINT8 *)((UINTN)TestPoint + sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * 1);
+  FeaturesVerified = (UINT8 *)((UINTN)TestPoint + sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * 1);
 
   if (Set) {
     FeaturesVerified[ByteIndex] = (UINT8)(FeaturesVerified[ByteIndex] | (Bit));
@@ -425,8 +438,8 @@ InternalTestPointRecordFeaturesVerified (
 EFI_STATUS
 EFIAPI
 TestPointLibSetFeaturesVerified (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN UINT32                   ByteIndex,
   IN UINT8                    BitMask
   )
@@ -459,8 +472,8 @@ TestPointLibSetFeaturesVerified (
 EFI_STATUS
 EFIAPI
 TestPointLibClearFeaturesVerified (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN UINT32                   ByteIndex,
   IN UINT8                    BitMask
   )
@@ -493,20 +506,20 @@ TestPointLibClearFeaturesVerified (
 **/
 EFI_STATUS
 InternalTestPointRecordErrorString (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN CHAR16                   *ErrorString,
   IN BOOLEAN                  Append
   )
 {
-  EFI_ADAPTER_INFORMATION_PROTOCOL *Aip;
-  ADAPTER_INFO_PLATFORM_TEST_POINT *TestPoint;
-  UINTN                            TestPointSize;
-  UINTN                            StringSize;
-  VOID                             *NewTestPoint;
-  UINTN                            NewTestPointSize;
-  UINTN                            Offset;
-  EFI_STATUS                       Status;
+  EFI_ADAPTER_INFORMATION_PROTOCOL  *Aip;
+  ADAPTER_INFO_PLATFORM_TEST_POINT  *TestPoint;
+  UINTN                             TestPointSize;
+  UINTN                             StringSize;
+  VOID                              *NewTestPoint;
+  UINTN                             NewTestPointSize;
+  UINTN                             Offset;
+  EFI_STATUS                        Status;
 
   Aip = InternalTestPointFindAip (Role, ImplementationID, (VOID **)&TestPoint, &TestPointSize);
   if (Aip == NULL) {
@@ -514,14 +527,15 @@ InternalTestPointRecordErrorString (
   }
 
   if (Append) {
-    Offset = TestPointSize - sizeof(CHAR16);
+    Offset = TestPointSize - sizeof (CHAR16);
   } else {
-    Offset = sizeof(ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
+    Offset = sizeof (ADAPTER_INFO_PLATFORM_TEST_POINT) + TestPoint->FeaturesSize * TEST_POINT_FEATURES_ITEM_NUMBER;
   }
+
   StringSize = StrSize (ErrorString);
 
   NewTestPointSize = Offset + StringSize;
-  NewTestPoint = AllocatePool (NewTestPointSize);
+  NewTestPoint     = AllocatePool (NewTestPointSize);
   if (NewTestPoint == NULL) {
     return EFI_OUT_OF_RESOURCES;
   }
@@ -555,8 +569,8 @@ InternalTestPointRecordErrorString (
 EFI_STATUS
 EFIAPI
 TestPointLibAppendErrorString (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN CHAR16                   *ErrorString
   )
 {
@@ -586,8 +600,8 @@ TestPointLibAppendErrorString (
 EFI_STATUS
 EFIAPI
 TestPointLibSetErrorString (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN CHAR16                   *ErrorString
   )
 {

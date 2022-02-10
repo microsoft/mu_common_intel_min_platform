@@ -60,5 +60,6 @@ CheckAcpiHpet (
     DEBUG ((DEBUG_ERROR, "HPET resource (0x%x) is not reported correctly.\n", Hpet->BaseAddressLower32Bit.Address));
     return EFI_NOT_STARTED;
   }
+
   return EFI_SUCCESS;
 }

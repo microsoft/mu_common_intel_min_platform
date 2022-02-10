@@ -15,7 +15,7 @@
 VOID
 EFIAPI
 BoardBootManagerWaitCallback (
-  IN UINT16          TimeoutRemain
+  IN UINT16  TimeoutRemain
   )
 {
   return;
@@ -35,4 +35,3 @@ BoardBootManagerUnableToBoot (
 {
   return;
 }
-

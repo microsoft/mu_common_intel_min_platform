@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define _HOB_VARIABLE_LIB_H_
 
 /**
-  This function finds the default data and create GUID hob for it. 
+  This function finds the default data and create GUID hob for it.
 
   @retval EFI_SUCCESS           The matched default data is found.
   @retval EFI_NOT_FOUND         The matched default data is not found.
@@ -23,7 +23,7 @@ CreateVariableHob (
   );
 
 /**
-  This function finds the matched default data and create GUID hob for it. 
+  This function finds the matched default data and create GUID hob for it.
 
   @param StoreId  Specifies the type of defaults to retrieve.
   @param SkuId    Specifies the platform board of defaults to retrieve.
@@ -64,9 +64,9 @@ CreateDefaultVariableHob (
 EFI_STATUS
 EFIAPI
 GetVariableFromHob (
-  IN     CHAR16                 *VariableName,
-  IN     EFI_GUID               *VendorGuid,
-  OUT    UINT32                 *Attributes, OPTIONAL
+  IN     CHAR16 *VariableName,
+  IN     EFI_GUID *VendorGuid,
+  OUT    UINT32 *Attributes, OPTIONAL
   IN OUT UINTN                  *DataSize,
   OUT    VOID                   *Data
   );
@@ -95,9 +95,9 @@ GetVariableFromHob (
 EFI_STATUS
 EFIAPI
 SetVariableToHob (
-  IN CHAR16                     *VariableName,
-  IN EFI_GUID                   *VendorGuid,
-  IN UINT32                     *Attributes, OPTIONAL
+  IN CHAR16 *VariableName,
+  IN EFI_GUID *VendorGuid,
+  IN UINT32 *Attributes, OPTIONAL
   IN UINTN                      DataSize,
   IN VOID                       *Data
   );

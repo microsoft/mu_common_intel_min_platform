@@ -20,23 +20,23 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // ADAPTER_INFO_PLATFORM_TEST_POINT is similar to ADAPTER_INFO_PLATFORM_SECURITY.
 //
 
-#define PLATFORM_TEST_POINT_VERSION               0x00000001
+#define PLATFORM_TEST_POINT_VERSION  0x00000001
 
-#define PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE 0x00000001
-#define PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV       0x00000002
-#define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_OEM    0x00000003 
-#define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM    0x00000004  
+#define PLATFORM_TEST_POINT_ROLE_PLATFORM_REFERENCE  0x00000001
+#define PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV        0x00000002
+#define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_OEM     0x00000003
+#define PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_ODM     0x00000004
 
-#define TEST_POINT_FEATURES_ITEM_NUMBER 2
+#define TEST_POINT_FEATURES_ITEM_NUMBER  2
 
 typedef struct {
-  UINT32  Version;
-  UINT32  Role;
-  CHAR16  ImplementationID[256];
-  UINT32  FeaturesSize;
-//UINT8   FeaturesImplemented[];
-//UINT8   FeaturesVerified[];
-//CHAR16  ErrorString[];
+  UINT32    Version;
+  UINT32    Role;
+  CHAR16    ImplementationID[256];
+  UINT32    FeaturesSize;
+  // UINT8   FeaturesImplemented[];
+  // UINT8   FeaturesVerified[];
+  // CHAR16  ErrorString[];
 } ADAPTER_INFO_PLATFORM_TEST_POINT;
 
 //
@@ -59,8 +59,8 @@ typedef struct {
 EFI_STATUS
 EFIAPI
 TestPointLibSetTable (
-  IN VOID                     *TestPoint,
-  IN UINTN                    TestPointSize
+  IN VOID   *TestPoint,
+  IN UINTN  TestPointSize
   );
 
 /**
@@ -82,10 +82,10 @@ TestPointLibSetTable (
 EFI_STATUS
 EFIAPI
 TestPointLibGetTable (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID OPTIONAL,
-  OUT VOID                    **TestPoint,
-  OUT UINTN                   *TestPointSize
+  IN UINT32  Role,
+  IN CHAR16  *ImplementationID OPTIONAL,
+  OUT VOID   **TestPoint,
+  OUT UINTN  *TestPointSize
   );
 
 /**
@@ -106,8 +106,8 @@ TestPointLibGetTable (
 EFI_STATUS
 EFIAPI
 TestPointLibSetFeaturesVerified (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN UINT32                   ByteIndex,
   IN UINT8                    BitMask
   );
@@ -130,8 +130,8 @@ TestPointLibSetFeaturesVerified (
 EFI_STATUS
 EFIAPI
 TestPointLibClearFeaturesVerified (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN UINT32                   ByteIndex,
   IN UINT8                    BitMask
   );
@@ -153,8 +153,8 @@ TestPointLibClearFeaturesVerified (
 EFI_STATUS
 EFIAPI
 TestPointLibAppendErrorString (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN CHAR16                   *ErrorString
   );
 
@@ -175,21 +175,21 @@ TestPointLibAppendErrorString (
 EFI_STATUS
 EFIAPI
 TestPointLibSetErrorString (
-  IN UINT32                   Role,
-  IN CHAR16                   *ImplementationID, OPTIONAL
+  IN UINT32 Role,
+  IN CHAR16 *ImplementationID, OPTIONAL
   IN CHAR16                   *ErrorString
   );
 
 //
 // TEST POINT SMM Communication command
 //
-#define SMI_HANDLER_TEST_POINT_COMMAND_GET_INFO           0x1
-#define SMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET 0x2
+#define SMI_HANDLER_TEST_POINT_COMMAND_GET_INFO            0x1
+#define SMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET  0x2
 
 typedef struct {
-  UINT32                            Command;
-  UINT32                            DataLength;
-  UINT64                            ReturnStatus;
+  UINT32    Command;
+  UINT32    DataLength;
+  UINT64    ReturnStatus;
 } SMI_HANDLER_TEST_POINT_PARAMETER_HEADER;
 
 typedef struct {
@@ -212,6 +212,6 @@ typedef struct {
   UINT64                                     DataOffset;
 } SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
 
-extern EFI_GUID gAdapterInfoPlatformTestPointGuid;
+extern EFI_GUID  gAdapterInfoPlatformTestPointGuid;
 
 #endif

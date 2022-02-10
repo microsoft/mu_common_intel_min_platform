@@ -33,8 +33,8 @@ RegisterBoardDetect (
   IN BOARD_DETECT_FUNC  *BoardDetect
   )
 {
-  EFI_STATUS                 Status;
-  EFI_PEI_PPI_DESCRIPTOR     *PpiListBoardDetect;
+  EFI_STATUS              Status;
+  EFI_PEI_PPI_DESCRIPTOR  *PpiListBoardDetect;
 
   if (BoardDetect == NULL) {
     return EFI_INVALID_PARAMETER;
@@ -78,8 +78,8 @@ RegisterBoardPreMemInit (
   IN BOARD_PRE_MEM_INIT_FUNC  *BoardPreMemInit
   )
 {
-  EFI_STATUS                 Status;
-  EFI_PEI_PPI_DESCRIPTOR     *PpiListBoardInitPreMem;
+  EFI_STATUS              Status;
+  EFI_PEI_PPI_DESCRIPTOR  *PpiListBoardInitPreMem;
 
   if (BoardPreMemInit == NULL) {
     return EFI_OUT_OF_RESOURCES;
@@ -123,8 +123,8 @@ RegisterBoardPostMemInit (
   IN BOARD_POST_MEM_INIT_FUNC  *BoardPostMemInit
   )
 {
-  EFI_STATUS                 Status;
-  EFI_PEI_PPI_DESCRIPTOR     *PpiListBoardInitPostMem;
+  EFI_STATUS              Status;
+  EFI_PEI_PPI_DESCRIPTOR  *PpiListBoardInitPostMem;
 
   if (BoardPostMemInit == NULL) {
     return EFI_INVALID_PARAMETER;

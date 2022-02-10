@@ -28,14 +28,14 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #pragma pack(1)
 typedef struct {
-  UINT32  Version;
-  UINT32  Role;
-  CHAR16  ImplementationID[256];
-  UINT32  SecurityFeaturesSize;
-  UINT8   SecurityFeaturesRequired[HSTI_SECURITY_FEATURE_SIZE];
-  UINT8   SecurityFeaturesImplemented[HSTI_SECURITY_FEATURE_SIZE];
-  UINT8   SecurityFeaturesVerified[HSTI_SECURITY_FEATURE_SIZE];
-  CHAR16  End;
+  UINT32    Version;
+  UINT32    Role;
+  CHAR16    ImplementationID[256];
+  UINT32    SecurityFeaturesSize;
+  UINT8     SecurityFeaturesRequired[HSTI_SECURITY_FEATURE_SIZE];
+  UINT8     SecurityFeaturesImplemented[HSTI_SECURITY_FEATURE_SIZE];
+  UINT8     SecurityFeaturesVerified[HSTI_SECURITY_FEATURE_SIZE];
+  CHAR16    End;
 } ADAPTER_INFO_PLATFORM_SECURITY_STRUCT;
 #pragma pack()
 
@@ -53,9 +53,9 @@ extern UINT8  mFeatureImplemented[HSTI_SECURITY_FEATURE_SIZE];
 CHAR16 *
 EFIAPI
 BuildHstiErrorString (
-  IN  CHAR16                   *ErrorCodeString,
-  IN  CHAR16                   *ErrorCategoryString,
-  IN  CHAR16                   *ErrorString
+  IN  CHAR16  *ErrorCodeString,
+  IN  CHAR16  *ErrorCategoryString,
+  IN  CHAR16  *ErrorString
   );
 
 /**
@@ -64,7 +64,7 @@ BuildHstiErrorString (
 **/
 VOID
 CheckFirmwareTrustContinuationCryptoStrength (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 /**
@@ -73,7 +73,7 @@ CheckFirmwareTrustContinuationCryptoStrength (
 **/
 VOID
 CheckNoTestKeyVerification (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 /**
@@ -82,7 +82,7 @@ CheckNoTestKeyVerification (
 **/
 VOID
 CheckFirmwareVersionRollbackProtection (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 /**
@@ -91,7 +91,7 @@ CheckFirmwareVersionRollbackProtection (
 **/
 VOID
 CheckSecureBootBypass (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 /**
@@ -100,7 +100,7 @@ CheckSecureBootBypass (
 **/
 VOID
 CheckExternalDeviceDmaProtection (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 /**
@@ -109,7 +109,7 @@ CheckExternalDeviceDmaProtection (
 **/
 VOID
 CheckMorSupport (
-  IN UINT32                   Role
+  IN UINT32  Role
   );
 
 #endif

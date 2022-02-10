@@ -19,7 +19,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 typedef
 EFI_STATUS
-(EFIAPI *BOARD_DETECT) (
+(EFIAPI *BOARD_DETECT)(
   VOID
   );
 
@@ -32,7 +32,7 @@ EFI_STATUS
 **/
 typedef
 EFI_STATUS
-(EFIAPI *BOARD_INIT) (
+(EFIAPI *BOARD_INIT)(
   VOID
   );
 
@@ -45,32 +45,32 @@ EFI_STATUS
 **/
 typedef
 EFI_BOOT_MODE
-(EFIAPI *BOARD_BOOT_MODE_DETECT) (
+(EFIAPI *BOARD_BOOT_MODE_DETECT)(
   VOID
   );
 
 typedef struct {
-  BOARD_DETECT  BoardDetect;
+  BOARD_DETECT    BoardDetect;
 } BOARD_DETECT_FUNC;
 
 typedef struct {
-  BOARD_INIT              BoardDebugInit;
-  BOARD_BOOT_MODE_DETECT  BoardBootModeDetect;
-  BOARD_INIT              BoardInitBeforeMemoryInit;
-  BOARD_INIT              BoardInitAfterMemoryInit;
-  BOARD_INIT              BoardInitBeforeTempRamExit;
-  BOARD_INIT              BoardInitAfterTempRamExit;
+  BOARD_INIT                BoardDebugInit;
+  BOARD_BOOT_MODE_DETECT    BoardBootModeDetect;
+  BOARD_INIT                BoardInitBeforeMemoryInit;
+  BOARD_INIT                BoardInitAfterMemoryInit;
+  BOARD_INIT                BoardInitBeforeTempRamExit;
+  BOARD_INIT                BoardInitAfterTempRamExit;
 } BOARD_PRE_MEM_INIT_FUNC;
 
 typedef struct {
-  BOARD_INIT              BoardInitBeforeSiliconInit;
-  BOARD_INIT              BoardInitAfterSiliconInit;
+  BOARD_INIT    BoardInitBeforeSiliconInit;
+  BOARD_INIT    BoardInitAfterSiliconInit;
 } BOARD_POST_MEM_INIT_FUNC;
 
 typedef struct {
-  BOARD_INIT              BoardInitAfterPciEnumeration;
-  BOARD_INIT              BoardInitReadyToBoot;
-  BOARD_INIT              BoardInitEndOfFirmware;
+  BOARD_INIT    BoardInitAfterPciEnumeration;
+  BOARD_INIT    BoardInitReadyToBoot;
+  BOARD_INIT    BoardInitEndOfFirmware;
 } BOARD_NOTIFICATION_INIT_FUNC;
 
 /**

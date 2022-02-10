@@ -52,10 +52,10 @@
 EFI_STATUS
 EFIAPI
 GetLargeVariable (
-  IN     CHAR16                      *VariableName,
-  IN     EFI_GUID                    *VendorGuid,
-  IN OUT UINTN                       *DataSize,
-  OUT    VOID                        *Data           OPTIONAL
+  IN     CHAR16    *VariableName,
+  IN     EFI_GUID  *VendorGuid,
+  IN OUT UINTN     *DataSize,
+  OUT    VOID      *Data           OPTIONAL
   );
 
-#endif  // _LARGE_VARIABLE_READ_LIB_H_
+#endif // _LARGE_VARIABLE_READ_LIB_H_

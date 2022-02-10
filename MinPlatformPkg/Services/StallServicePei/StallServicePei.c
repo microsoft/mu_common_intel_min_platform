@@ -12,7 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/TimerLib.h>
 #include <Library/PeiServicesLib.h>
 
-#define PEI_STALL_RESOLUTION   1
+#define PEI_STALL_RESOLUTION  1
 
 /**
   The Stall() function provides a blocking stall for at least the number
@@ -34,7 +34,7 @@ Stall (
   IN UINTN                    Microseconds
   );
 
-EFI_PEI_STALL_PPI mStallPpi = {
+EFI_PEI_STALL_PPI  mStallPpi = {
   PEI_STALL_RESOLUTION,
   Stall
 };
@@ -78,7 +78,7 @@ StallServiceEntryPoint (
   IN CONST EFI_PEI_SERVICES     **PeiServices
   )
 {
-  EFI_STATUS   Status;
+  EFI_STATUS  Status;
 
   Status = PeiServicesInstallPpi (&mPeiInstallStallPpi);
   ASSERT_EFI_ERROR (Status);

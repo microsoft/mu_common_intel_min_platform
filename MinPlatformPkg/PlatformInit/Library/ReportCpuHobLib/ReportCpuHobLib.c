@@ -15,13 +15,13 @@ ReportCpuHob (
   VOID
   )
 {
-  UINT8                         PhysicalAddressBits;
-  UINT32                        RegEax;
+  UINT8   PhysicalAddressBits;
+  UINT32  RegEax;
 
   AsmCpuid (0x80000000, &RegEax, NULL, NULL, NULL);
   if (RegEax >= 0x80000008) {
     AsmCpuid (0x80000008, &RegEax, NULL, NULL, NULL);
-    PhysicalAddressBits = (UINT8) RegEax;
+    PhysicalAddressBits = (UINT8)RegEax;
   } else {
     PhysicalAddressBits = 36;
   }

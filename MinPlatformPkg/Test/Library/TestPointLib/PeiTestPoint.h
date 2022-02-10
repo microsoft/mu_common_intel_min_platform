@@ -31,8 +31,8 @@
 **/
 BOOLEAN
 InternalTestPointIsValidTable (
-  IN VOID                     *TestPointData,
-  IN UINTN                    TestPointSize
+  IN VOID   *TestPointData,
+  IN UINTN  TestPointSize
   );
 
 #endif

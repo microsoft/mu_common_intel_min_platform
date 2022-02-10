@@ -27,7 +27,7 @@ RegisterBoardAcpiTableFunc (
                   EFI_NATIVE_INTERFACE,
                   BoardAcpiTableFunc
                   );
-  ASSERT_EFI_ERROR(Status);
+  ASSERT_EFI_ERROR (Status);
 
   return EFI_SUCCESS;
 }
