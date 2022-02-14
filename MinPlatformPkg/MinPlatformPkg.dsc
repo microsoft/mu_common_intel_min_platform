@@ -216,10 +216,6 @@
   MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
-  MinPlatformPkg/Tcg/Library/PeiDxeTpmPlatformHierarchyLib/PeiDxeTpmPlatformHierarchyLib.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformPei/Tcg2PlatformPei.inf
-  MinPlatformPkg/Tcg/Tcg2PlatformDxe/Tcg2PlatformDxe.inf
-
   MinPlatformPkg/Library/BaseVariableReadLibNull/BaseVariableReadLibNull.inf
   MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
   MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
