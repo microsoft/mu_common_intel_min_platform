@@ -10,7 +10,7 @@
 # Using this library allows code to be written in a generic manner that can be
 # used in DXE or SMM without modification.
 #
-# Copyright (c) 2021, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2021 - 2022, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -24,6 +24,7 @@
   MODULE_TYPE                    = DXE_RUNTIME_DRIVER
   LIBRARY_CLASS                  = VariableWriteLib|DXE_CORE DXE_DRIVER DXE_RUNTIME_DRIVER UEFI_APPLICATION UEFI_DRIVER
   CONSTRUCTOR                    = DxeRuntimeVariableWriteLibConstructor
+  DESTRUCTOR                     = DxeRuntimeVariableWriteLibDestructor
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -37,13 +38,14 @@
   UefiLib
   UefiBootServicesTableLib
   UefiRuntimeServicesTableLib
+  VariablePolicyHelperLib
 
 [Guids]
   gEfiEventExitBootServicesGuid       ## CONSUMES ## Event
 
 [Protocols]
   gEfiVariableWriteArchProtocolGuid   ## CONSUMES
-  gEdkiiVariableLockProtocolGuid      ## CONSUMES
+  gEdkiiVariablePolicyProtocolGuid    ## CONSUMES
 
 [Depex]
-  gEfiVariableWriteArchProtocolGuid AND gEdkiiVariableLockProtocolGuid
+  gEfiVariableWriteArchProtocolGuid AND gEdkiiVariablePolicyProtocolGuid

@@ -10,7 +10,7 @@
   integer number will be added to the end of the variable name. This number
   will be incremented for each variable as needed to store the entire data set.
 
-  Copyright (c) 2021, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2021 - 2022, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -245,7 +245,7 @@ Done:
   @retval EFI_DEVICE_ERROR       The variable could not be retrieved due to a hardware error.
   @retval EFI_WRITE_PROTECTED    The variable in question is read-only.
   @retval EFI_WRITE_PROTECTED    The variable in question cannot be deleted.
-
+  @retval EFI_ABORTED            LockVariable was requested but failed.
   @retval EFI_NOT_FOUND          The variable trying to be updated or deleted was not found.
 
 **/
@@ -323,6 +323,13 @@ SetLargeVariable (
     }
     if (LockVariable) {
       Status = VarLibVariableRequestToLock (VariableName, VendorGuid);
+      if (EFI_ERROR (Status)) {
+        //
+        // Do not delete Variable when failed to lock. Caller is responsible to do this.
+        //
+        DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error locking variable: Status = %r\n", Status));
+        Status = EFI_ABORTED;
+      }
     }
   } else {
     //
@@ -402,7 +409,7 @@ SetLargeVariable (
         DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error writting variable: Status = %r\n", Status));
         goto Done;
       }
-      VariablesSaved  = Index;
+      VariablesSaved++;
       BytesRemaining -= SizeToSave;
       OffsetPtr += SizeToSave;
     }   // End of for loop
@@ -420,6 +427,10 @@ SetLargeVariable (
         Status = VarLibVariableRequestToLock (TempVariableName, VendorGuid);
         if (EFI_ERROR (Status)) {
           DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error locking variable: Status = %r\n", Status));
+          //
+          // Do not delete Variable when failed to lock. Caller is responsible to do this.
+          //
+          Status = EFI_ABORTED;
           VariablesSaved = 0;
           goto Done;
         }
@@ -442,9 +453,132 @@ Done:
                   0,
                   NULL
                   );
-    DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error deleting variable: Status = %r\n", Status2));
+      if (EFI_ERROR (Status2)) {
+        DEBUG ((DEBUG_ERROR, "SetLargeVariable: Error deleting variable: Status = %r\n", Status2));
+      }
     }
   }
   DEBUG ((DEBUG_ERROR, "SetLargeVariable: Status = %r\n", Status));
   return Status;
+}
+
+/**
+  Locks the existing large variable.
+
+  @param[in]  VariableName       A Null-terminated string that is the name of the vendor's variable.
+                                 Each VariableName is unique for each VendorGuid. VariableName must
+                                 contain 1 or more characters. If VariableName is an empty string,
+                                 then EFI_INVALID_PARAMETER is returned.
+  @param[in]  VendorGuid         A unique identifier for the vendor.
+  @retval EFI_SUCCESS            The firmware has successfully locked the variable.
+  @retval EFI_INVALID_PARAMETER  An invalid combination of variable name and GUID was supplied
+  @retval EFI_OUT_OF_RESOURCES   The VariableName is longer than 1018 characters
+  @retval EFI_UNSUPPORTED        The service for locking variable is not ready.
+  @retval EFI_NOT_FOUND          The targeting variable for locking is not present.
+  @retval EFI_ABORTED            Fail to lock variable.
+**/
+EFI_STATUS
+EFIAPI
+LockLargeVariable (
+  IN  CHAR16                       *VariableName,
+  IN  EFI_GUID                     *VendorGuid
+  )
+{
+  CHAR16        TempVariableName[MAX_VARIABLE_NAME_SIZE];
+  UINT64        VariableSize;
+  EFI_STATUS    Status;
+  UINTN         Index;
+
+  //
+  // Check input parameters.
+  //
+  if (VariableName == NULL || VariableName[0] == 0 || VendorGuid == NULL) {
+    return EFI_INVALID_PARAMETER;
+  }
+
+  //
+  // Check the length of the variable name is short enough to allow an integer
+  // to be appended.
+  //
+  if (StrLen (VariableName) >= (MAX_VARIABLE_NAME_SIZE - MAX_VARIABLE_SPLIT_DIGITS)) {
+    DEBUG ((DEBUG_ERROR, "LockLargeVariable: Variable name too long\n"));
+    return EFI_OUT_OF_RESOURCES;
+  }
+
+  if (!VarLibIsVariableRequestToLockSupported ()) {
+    return EFI_UNSUPPORTED;
+  }
+
+  //
+  // Check if it is single variable scenario.
+  //
+  VariableSize = 0;
+  Status = VarLibGetVariable (VariableName, VendorGuid, NULL, &VariableSize, NULL);
+  if (Status == EFI_BUFFER_TOO_SMALL) {
+    //
+    // Lock single variable.
+    //
+    DEBUG ((DEBUG_INFO, "Locking %s, Guid = %g\n", VariableName, VendorGuid));
+    Status = VarLibVariableRequestToLock (VariableName, VendorGuid);
+    if (EFI_ERROR (Status)) {
+      //
+      // Do not delete Variable when failed to lock. Caller is responsible to do this.
+      //
+      DEBUG ((DEBUG_ERROR, "LockLargeVariable: Failed! Satus = %r\n", Status));
+      return EFI_ABORTED;
+    }
+    return EFI_SUCCESS;
+  } else {
+    //
+    // Check if it is multiple variables scenario.
+    //
+    Index = 0;
+    ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
+    UnicodeSPrint (TempVariableName, MAX_VARIABLE_NAME_SIZE, L"%s%d", VariableName, Index);
+    VariableSize = 0;
+    Status = VarLibGetVariable (TempVariableName, VendorGuid, NULL, &VariableSize, NULL);
+    if (Status == EFI_BUFFER_TOO_SMALL) {
+      //
+      // Lock first variable and continue to rest of the variables.
+      //
+      DEBUG ((DEBUG_INFO, "Locking %s, Guid = %g\n", TempVariableName, VendorGuid));
+      Status = VarLibVariableRequestToLock (TempVariableName, VendorGuid);
+      if (EFI_ERROR (Status)) {
+        //
+        // Do not delete Variable when failed to lock. Caller is responsible to do this.
+        //
+        DEBUG ((DEBUG_ERROR, "LockLargeVariable: Failed! Satus = %r\n", Status));
+        return EFI_ABORTED;
+      }
+      for (Index = 1; Index < MAX_VARIABLE_SPLIT; Index++) {
+        ZeroMem (TempVariableName, MAX_VARIABLE_NAME_SIZE);
+        UnicodeSPrint (TempVariableName, MAX_VARIABLE_NAME_SIZE, L"%s%d", VariableName, Index);
+
+        VariableSize = 0;
+        Status = VarLibGetVariable (TempVariableName, VendorGuid, NULL, &VariableSize, NULL);
+        if (Status == EFI_BUFFER_TOO_SMALL) {
+          DEBUG ((DEBUG_INFO, "Locking %s, Guid = %g\n", TempVariableName, VendorGuid));
+          Status = VarLibVariableRequestToLock (TempVariableName, VendorGuid);
+          if (EFI_ERROR (Status)) {
+            //
+            // Do not delete Variable when failed to lock. Caller is responsible to do this.
+            //
+            DEBUG ((DEBUG_ERROR, "LockLargeVariable: Failed! Satus = %r\n", Status));
+            return EFI_ABORTED;
+          }
+        } else if (Status == EFI_NOT_FOUND) {
+          //
+          // No more variables need to lock.
+          //
+          return EFI_SUCCESS;
+        }
+      }   // End of for loop
+    }
+  }
+
+  //
+  // Here probably means variable not present.
+  //
+  return Status;
+
 }

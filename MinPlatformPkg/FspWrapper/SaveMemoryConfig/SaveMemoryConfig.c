@@ -2,13 +2,14 @@
   This is the driver that locates the MemoryConfigurationData HOB, if it
   exists, and saves the data to nvRAM.
 
-Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2022, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include <Base.h>
 #include <Uefi.h>
+#include <Library/BaseLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/HobLib.h>
@@ -18,6 +19,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/LargeVariableReadLib.h>
 #include <Library/LargeVariableWriteLib.h>
+#include <Library/VariableWriteLib.h>
 #include <Guid/FspNonVolatileStorageHob2.h>
 
 /**
@@ -86,6 +88,23 @@ SaveMemoryConfigEntryPoint (
             Status = GetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, &BufferSize, VariableData);
             if (!EFI_ERROR (Status) && (BufferSize == DataSize) && (0 == CompareMem (HobData, VariableData, DataSize))) {
               DataIsIdentical = TRUE;
+              //
+              // No need to update Variable, only lock it.
+              //
+              Status = LockLargeVariable (L"FspNvsBuffer",  &gFspNvsBufferVariableGuid);
+              if (EFI_ERROR (Status)) {
+                //
+                // Fail to lock variable is security vulnerability and should not happen.
+                //
+                ASSERT_EFI_ERROR (Status);
+                //
+                // When building without ASSERT_EFI_ERROR hang, delete the variable so it will not be consumed.
+                //
+                DEBUG ((DEBUG_ERROR, "Delete variable!\n"));
+                DataSize = 0;
+                Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, FALSE, DataSize, HobData);
+                ASSERT_EFI_ERROR (Status);
+              }
             }
             FreePool (VariableData);
           }
@@ -95,6 +114,18 @@ SaveMemoryConfigEntryPoint (
 
       if (!DataIsIdentical) {
         Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, TRUE, DataSize, HobData);
+        if (Status == EFI_ABORTED) {
+          //
+          // Fail to lock variable! This should not happen.
+          //
+          ASSERT_EFI_ERROR (Status);
+          //
+          // When building without ASSERT_EFI_ERROR hang, delete the variable so it will not be consumed.
+          //
+          DEBUG ((DEBUG_ERROR, "Delete variable!\n"));
+          DataSize = 0;
+          Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, FALSE, DataSize, HobData);
+        }
         ASSERT_EFI_ERROR (Status);
         DEBUG ((DEBUG_INFO, "Saved size of FSP / MRC Training Data: 0x%x\n", DataSize));
       } else {
@@ -106,7 +137,7 @@ SaveMemoryConfigEntryPoint (
   }
 
   //
-  // This driver cannot be unloaded because DxeRuntimeVariableWriteLib constructor will register ExitBootServices callback.
+  // This driver does not produce any protocol services, so always unload it.
   //
-  return EFI_SUCCESS;
+  return EFI_REQUEST_UNLOAD_IMAGE;
 }

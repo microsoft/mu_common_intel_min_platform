@@ -16,7 +16,7 @@
   is possible, adjusting the value of PcdMaxVariableSize may provide a simpler
   solution to this problem.
 
-  Copyright (c) 2021, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2021 - 2022, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -52,7 +52,7 @@
   @retval EFI_DEVICE_ERROR       The variable could not be retrieved due to a hardware error.
   @retval EFI_WRITE_PROTECTED    The variable in question is read-only.
   @retval EFI_WRITE_PROTECTED    The variable in question cannot be deleted.
-
+  @retval EFI_ABORTED            LockVariable was requested but failed.
   @retval EFI_NOT_FOUND          The variable trying to be updated or deleted was not found.
 
 **/
@@ -64,6 +64,28 @@ SetLargeVariable (
   IN  BOOLEAN                      LockVariable,
   IN  UINTN                        DataSize,
   IN  VOID                         *Data
+  );
+
+/**
+  Locks the existing large variable.
+
+  @param[in]  VariableName       A Null-terminated string that is the name of the vendor's variable.
+                                 Each VariableName is unique for each VendorGuid. VariableName must
+                                 contain 1 or more characters. If VariableName is an empty string,
+                                 then EFI_INVALID_PARAMETER is returned.
+  @param[in]  VendorGuid         A unique identifier for the vendor.
+  @retval EFI_SUCCESS            The firmware has successfully locked the variable.
+  @retval EFI_INVALID_PARAMETER  An invalid combination of variable name and GUID was supplied
+  @retval EFI_OUT_OF_RESOURCES   The VariableName is longer than 1018 characters
+  @retval EFI_UNSUPPORTED        The service for locking variable is not ready.
+  @retval EFI_NOT_FOUND          The targeting variable for locking is not present.
+  @retval EFI_ABORTED            Fail to lock variable.
+**/
+EFI_STATUS
+EFIAPI
+LockLargeVariable (
+  IN  CHAR16                       *VariableName,
+  IN  EFI_GUID                     *VendorGuid
   );
 
 #endif  // _LARGE_VARIABLE_WRITE_LIB_H_

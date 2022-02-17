@@ -10,7 +10,7 @@
   Using this library allows code to be written in a generic manner that can be
   used in DXE or SMM without modification.
 
-  Copyright (c) 2021, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2021 - 2022, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -18,14 +18,16 @@
 #include <Uefi.h>
 
 #include <Guid/EventGroup.h>
-#include <Protocol/VariableLock.h>
+#include <Library/VariablePolicyHelperLib.h>
 
 #include <Library/UefiLib.h>
 #include <Library/DebugLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 
-STATIC EDKII_VARIABLE_LOCK_PROTOCOL  *mVariableWriteLibVariableLock = NULL;
+STATIC EDKII_VARIABLE_POLICY_PROTOCOL  *mVariableWriteLibVariablePolicy = NULL;
+EFI_EVENT                              mExitBootServiceEvent;
+EFI_EVENT                              mLegacyBootEvent;
 
 /**
   Sets the value of a variable.
@@ -144,7 +146,7 @@ VarLibIsVariableRequestToLockSupported (
   VOID
   )
 {
-  if (mVariableWriteLibVariableLock != NULL) {
+  if (mVariableWriteLibVariablePolicy != NULL) {
     return TRUE;
   } else {
     return FALSE;
@@ -178,14 +180,43 @@ VarLibVariableRequestToLock (
 {
   EFI_STATUS    Status = EFI_UNSUPPORTED;
 
-  if (mVariableWriteLibVariableLock != NULL) {
-    Status = mVariableWriteLibVariableLock->RequestToLock (
-                                              mVariableWriteLibVariableLock,
-                                              VariableName,
-                                              VendorGuid
-                                              );
+  if (mVariableWriteLibVariablePolicy != NULL) {
+    Status = RegisterBasicVariablePolicy (
+               mVariableWriteLibVariablePolicy,
+               (CONST EFI_GUID*) VendorGuid,
+               (CONST CHAR16 *) VariableName,
+               VARIABLE_POLICY_NO_MIN_SIZE,
+               VARIABLE_POLICY_NO_MAX_SIZE,
+               VARIABLE_POLICY_NO_MUST_ATTR,
+               VARIABLE_POLICY_NO_CANT_ATTR,
+               VARIABLE_POLICY_TYPE_LOCK_NOW
+               );
   }
   return Status;
+}
+
+/**
+  Close events when driver unloaded.
+
+  @param[in] ImageHandle  A handle for the image that is initializing this driver
+  @param[in] SystemTable  A pointer to the EFI system table
+
+  @retval    EFI_SUCCESS  The initialization finished successfully.
+**/
+EFI_STATUS
+EFIAPI
+DxeRuntimeVariableWriteLibDestructor (
+  IN EFI_HANDLE        ImageHandle,
+  IN EFI_SYSTEM_TABLE  *SystemTable
+  )
+{
+  if (mExitBootServiceEvent != 0) {
+    gBS->CloseEvent (mExitBootServiceEvent);
+  }
+  if (mLegacyBootEvent != 0) {
+    gBS->CloseEvent (mLegacyBootEvent);
+  }
+  return EFI_SUCCESS;
 }
 
 /**
@@ -202,7 +233,7 @@ DxeRuntimeVariableWriteLibOnExitBootServices (
   IN  VOID                         *Context
   )
 {
-  mVariableWriteLibVariableLock = NULL;
+  mVariableWriteLibVariablePolicy = NULL;
 }
 
 /**
@@ -227,13 +258,11 @@ DxeRuntimeVariableWriteLibConstructor (
   )
 {
   EFI_STATUS    Status;
-  EFI_EVENT     ExitBootServiceEvent;
-  EFI_EVENT     LegacyBootEvent;
 
   //
   // Locate VariableLockProtocol.
   //
-  Status = gBS->LocateProtocol (&gEdkiiVariableLockProtocolGuid, NULL, (VOID **)&mVariableWriteLibVariableLock);
+  Status = gBS->LocateProtocol (&gEdkiiVariablePolicyProtocolGuid, NULL, (VOID **)&mVariableWriteLibVariablePolicy);
   ASSERT_EFI_ERROR (Status);
 
   //
@@ -245,7 +274,7 @@ DxeRuntimeVariableWriteLibConstructor (
              DxeRuntimeVariableWriteLibOnExitBootServices,
              NULL,
              &gEfiEventExitBootServicesGuid,
-             &ExitBootServiceEvent
+             &mExitBootServiceEvent
              );
   ASSERT_EFI_ERROR (Status);
 
@@ -257,7 +286,7 @@ DxeRuntimeVariableWriteLibConstructor (
              TPL_NOTIFY,
              DxeRuntimeVariableWriteLibOnExitBootServices,
              NULL,
-             &LegacyBootEvent
+             &mLegacyBootEvent
              );
   ASSERT_EFI_ERROR (Status);
 
