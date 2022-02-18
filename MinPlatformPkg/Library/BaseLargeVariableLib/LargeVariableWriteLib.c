@@ -485,7 +485,7 @@ LockLargeVariable (
   )
 {
   CHAR16        TempVariableName[MAX_VARIABLE_NAME_SIZE];
-  UINT64        VariableSize;
+  UINTN         VariableSize;
   EFI_STATUS    Status;
   UINTN         Index;
 
