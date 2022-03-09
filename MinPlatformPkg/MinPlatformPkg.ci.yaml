@@ -96,5 +96,11 @@
     "MarkdownLintCheck": {
         "IgnoreFiles": [
         ]            # package root relative file, folder, or glob pattern to ignore
+    },
+
+    ## Disabling uncrustify until edk2-platforms updates
+    ## options defined .pytool/Plugin/UncrustifyCheck
+    "UncrustifyCheck": {
+        "AuditOnly": True,
     }
 }
