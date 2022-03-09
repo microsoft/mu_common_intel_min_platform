@@ -53,13 +53,15 @@ Bug Fixes-dev
 2202_CIBuild Changes
 --------------------
 
-- None
+- Removed Uncrustify CI check while edk2-platforms doesn't follow uncrustify
 
 2202_Rebase Changes
 -------------------
 
 | Starting commit: 1584a46f ("Updated references to Tcg libraries to use MU_TIANO_PLUS library that was moved out of this repo", 2022-02-15)
 | Destination commit: 7e07c136 ("MinPlatformPkg/SaveMemoryConfig: Fix GCC build failure.", 2022-02-17)
+  
+  Needed to cherry-pick changes from 2102 branch that were left out of 2111
   - Removed TCBZ3033 added in upstream and reverted locally
   - Cherry-picked 53dcee339d TCBZ3612 MinPlatformPkg/Test: Fix mis-parsed HSTI structures (#13) from 202102 release
   - Cherry-picked fb992e8ebc Implement a Dxe TestPoint library to allow for Platform specific tests
