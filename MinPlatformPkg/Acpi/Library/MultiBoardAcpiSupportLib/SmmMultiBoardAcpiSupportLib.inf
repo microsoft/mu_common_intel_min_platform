@@ -20,7 +20,7 @@
   BaseLib
   PcdLib
   DebugLib
-  SmmServicesTableLib
+  MmServicesTableLib
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
@@ -29,7 +29,7 @@
 [Sources]
   SmmMultiBoardAcpiSupportLib.c
   SmmBoardAcpiEnableLib.c
-  
+
 [Guids]
   gBoardAcpiEnableGuid
 
