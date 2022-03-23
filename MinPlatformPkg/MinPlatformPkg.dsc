@@ -211,6 +211,13 @@
   MinPlatformPkg/Library/BaseVariableReadLibNull/BaseVariableReadLibNull.inf
   MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
   MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
+  MinPlatformPkg/Library/PeiVariableReadLib/PeiVariableReadLib.inf
+  MinPlatformPkg/Library/DxeRuntimeVariableReadLib/DxeRuntimeVariableReadLib.inf
+  MinPlatformPkg/Library/DxeRuntimeVariableWriteLib/DxeRuntimeVariableWriteLib.inf
+  MinPlatformPkg/Library/SmmVariableReadLib/TraditionalMmVariableReadLib.inf
+  MinPlatformPkg/Library/SmmVariableWriteLib/TraditionalMmVariableWriteLib.inf
+  MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableReadLib.inf
+  MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableWriteLib.inf
 
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
