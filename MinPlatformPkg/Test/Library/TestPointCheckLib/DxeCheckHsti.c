@@ -40,6 +40,16 @@ DumpHsti (
   DEBUG ((DEBUG_INFO, "  SecurityFeaturesSize        - 0x%08x\n", Hsti->SecurityFeaturesSize));
 
   SecurityFeatures = (UINT8 *) (Hsti + 1);
+
+  if (Hsti->Role == PLATFORM_SECURITY_ROLE_PLATFORM_REFERENCE) {
+    DEBUG ((DEBUG_INFO, "  SecurityFeaturesRequired    - "));
+    for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
+      DEBUG ((DEBUG_INFO, "%02x ", SecurityFeatures[Index]));
+    }
+    DEBUG ((DEBUG_INFO, "\n"));
+    SecurityFeatures = (UINT8 *) (SecurityFeatures + Hsti->SecurityFeaturesSize);
+  }
+
   DEBUG ((DEBUG_INFO, "  SecurityFeaturesImplemented - "));
   for (Index = 0; Index < Hsti->SecurityFeaturesSize; Index++) {
     DEBUG ((DEBUG_INFO, "%02x ", SecurityFeatures[Index]));
@@ -81,7 +91,7 @@ TestPointCheckHsti (
   EFI_STATUS  Status;
   UINTN       Index;
   BOOLEAN     Result;
-  
+
   Result = TRUE;
   DEBUG ((DEBUG_INFO, "==== TestPointCheckHsti - Enter\n"));
   for (Index = 0; Index < sizeof(mRole)/sizeof(mRole[0]); Index++) {
