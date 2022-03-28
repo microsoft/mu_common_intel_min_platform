@@ -1,0 +1,47 @@
+## @file
+# SMM instance of TestPoint Library.
+#
+# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = StandaloneMmTestPointLib
+  FILE_GUID                      = E5E3411D-1243-46FD-A658-22717EA20A7A
+  MODULE_TYPE                    = MM_STANDALONE
+  VERSION_STRING                 = 1.0
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  LIBRARY_CLASS                  = TestPointLib
+
+[Sources]
+  StandaloneMmTestPointCommunication.c
+  StandaloneMmTestPointAip.c
+  StandaloneMmTestPoint.c
+  StandaloneMmTestPoint.h
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+  StandaloneMmPkg/StandaloneMmPkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  MmServicesTableLib
+  MemLib
+
+[Guids]
+## SOMETIMES_PRODUCES ## GUID
+## SOMETIMES_CONSUMES ## GUID
+  gAdapterInfoPlatformTestPointGuid
+
+[Protocols]
+## SOMETIMES_PRODUCES
+## SOMETIMES_CONSUMES
+  gEfiAdapterInformationProtocolGuid
+

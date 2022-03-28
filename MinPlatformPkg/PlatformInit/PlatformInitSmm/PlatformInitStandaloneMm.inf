@@ -1,0 +1,45 @@
+### @file
+# Module Information file for the PlatformInit DXE driver.
+#
+# Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+###
+
+[Defines]
+  INF_VERSION                    = 0x00010017
+  BASE_NAME                      = PlatformInitStandaloneMm
+  FILE_GUID                      = 5E18EA86-2E7B-4223-8B30-665592448337
+  VERSION_STRING                 = 1.0
+  MODULE_TYPE                    = MM_STANDALONE
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  ENTRY_POINT                    = PlatformInitStandaloneMmEntryPoint
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  MemoryAllocationLib
+  PcdLib
+  MmServicesTableLib
+  StandaloneMmDriverEntryPoint
+  #BoardInitLib
+  TestPointCheckLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[Sources]
+  PlatformInitStandaloneMm.c
+
+[Protocols]
+  gEfiMmReadyToLockProtocolGuid
+  gEfiMmEndOfDxeProtocolGuid
+  gEdkiiSmmReadyToBootProtocolGuid
+  gEdkiiSmmExitBootServicesProtocolGuid
+
+[Depex]
+  TRUE
