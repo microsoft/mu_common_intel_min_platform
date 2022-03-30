@@ -81,7 +81,7 @@ SaveMemoryConfigEntryPoint (
 
   DeleteObsoleteVariables (); //MU_CHANGE: attempt to remove variables created by previous versions of this driver.
 
-  //
+//.
   // Search for the Memory Configuration GUID HOB.  If it is not present, then
   // there's nothing we can do. It may not exist on the update path.
   // Firstly check version2 FspNvsHob.
