@@ -8,8 +8,8 @@
 
 #include <PiMm.h>
 
-#include <Protocol/SmmReadyToLock.h>
-#include <Protocol/SmmEndOfDxe.h>
+#include <Protocol/MmReadyToLock.h>
+#include <Protocol/MmEndOfDxe.h>
 #include <Protocol/SmmReadyToBoot.h>
 #include <Protocol/SmmExitBootServices.h>
 
@@ -130,7 +130,7 @@ PlatformInitStandaloneMmEntryPoint (
   //VOID       *MmReadyToLockRegistration;
   VOID       *MmReadyToBootRegistration;
   VOID       *MmExitBootServicesRegistration;
-  
+
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmEndOfDxeProtocolGuid,
                     MmEndOfDxeEventNotify,
@@ -138,13 +138,14 @@ PlatformInitStandaloneMmEntryPoint (
                     );
   ASSERT_EFI_ERROR (Status);
   
-  // Causes problems with standalone MM.  Look into.
-  /*Status = gMmst->MmRegisterProtocolNotify (
+  // Causes problems with standalone MM.  Look into
+  /*.
+  Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
                     MmReadyToLockEventNotify,
                     &MmReadyToLockRegistration
                     );
-  ASSERT_EFI_ERROR (Status);*/
+  ASSERT_EFI_ERROR (Status); */
   
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEdkiiSmmReadyToBootProtocolGuid,

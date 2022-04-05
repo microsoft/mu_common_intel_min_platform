@@ -815,6 +815,7 @@ TestPointReadyToBootMemoryTypeInformationFunctional (
     Result = FALSE;
   }
   TestPointDumpUefiMemoryMap (NULL, NULL, NULL, TRUE);
+  // Invalid memory type information reported here
   Status = TestPointCheckUefiMemoryMap ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
