@@ -81,7 +81,7 @@ SaveMemoryConfigEntryPoint (
 
   DeleteObsoleteVariables (); //MU_CHANGE: attempt to remove variables created by previous versions of this driver.
 
-//.
+  //
   // Search for the Memory Configuration GUID HOB.  If it is not present, then
   // there's nothing we can do. It may not exist on the update path.
   // Firstly check version2 FspNvsHob.
@@ -145,7 +145,9 @@ SaveMemoryConfigEntryPoint (
         Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, FALSE, 0, NULL);
         // Delete failure is unexpected, so assert; but proceed to attempt SetVariable anyway if failure occurs in
         // a build without ASSERT_EFI_ERROR hang.
-        ASSERT_EFI_ERROR (Status);
+        if (EFI_ERROR (Status) && (Status != EFI_NOT_FOUND)) {
+          ASSERT_EFI_ERROR (Status);
+        }
         //MU_CHANGE: End
 
         Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, TRUE, DataSize, HobData);
