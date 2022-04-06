@@ -22,6 +22,32 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/VariableWriteLib.h>
 #include <Guid/FspNonVolatileStorageHob2.h>
 
+//MU_CHANGE - Remove variables created by previous versions of this driver.
+/**
+  Remove variables created by previous versions of this driver.
+
+  @retval    None - errors are handled internally to the function.
+**/
+VOID
+DeleteObsoleteVariables (
+  VOID
+  )
+{
+  EFI_STATUS Status;
+  UINTN      BufferSize;
+
+  BufferSize = 0;
+  Status = GetLargeVariable(L"MemoryConfig", &gFspNonVolatileStorageHobGuid, &BufferSize, NULL);
+  if (Status == EFI_BUFFER_TOO_SMALL) {
+    //Old variable exists; remove it.
+    Status = SetLargeVariable(L"MemoryConfig", &gFspNonVolatileStorageHobGuid, FALSE, 0, NULL);
+    ASSERT_EFI_ERROR (Status); // Error here is unexpected but non-fatal, assert for debug.
+  } else if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status); // Error status other than EFI_NOT_FOUND is unexpected but non-fatal, assert for debug.
+  }
+}
+//MU_CHANGE - End
+
 /**
   This is the standard EFI driver point that detects whether there is a
   MemoryConfigurationData HOB and, if so, saves its data to nvRAM.
@@ -52,6 +78,8 @@ SaveMemoryConfigEntryPoint (
   GuidHob         = NULL;
   HobData         = NULL;
   DataIsIdentical = FALSE;
+
+  DeleteObsoleteVariables (); //MU_CHANGE: attempt to remove variables created by previous versions of this driver.
 
   //
   // Search for the Memory Configuration GUID HOB.  If it is not present, then
@@ -113,6 +141,15 @@ SaveMemoryConfigEntryPoint (
       Status = EFI_SUCCESS;
 
       if (!DataIsIdentical) {
+        //MU_CHANGE: Delete the variable first to allow reclaim of its space for the new version if needed.
+        Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, FALSE, 0, NULL);
+        // Delete failure is unexpected, so assert; but proceed to attempt SetVariable anyway if failure occurs in
+        // a build without ASSERT_EFI_ERROR hang.
+        if (EFI_ERROR (Status) && (Status != EFI_NOT_FOUND)) {
+          ASSERT_EFI_ERROR (Status);
+        }
+        //MU_CHANGE: End
+
         Status = SetLargeVariable (L"FspNvsBuffer", &gFspNvsBufferVariableGuid, TRUE, DataSize, HobData);
         if (Status == EFI_ABORTED) {
           //
