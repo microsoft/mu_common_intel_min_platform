@@ -163,7 +163,8 @@ DeleteLargeVariableInternal (
     Status = VarLibSetVariable (
                 VariableName,
                 VendorGuid,
-                EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
+                //EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS, //MU_CHANGE
+                0, //MU_CHANGE - use zero attribute when deleting a variable.
                 0,
                 NULL
                 );
@@ -198,7 +199,8 @@ DeleteLargeVariableInternal (
         Status2 = VarLibSetVariable (
                     TempVariableName,
                     VendorGuid,
-                    EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS,
+                    //EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS, //MU_CHANGE
+                    0, //MU_CHANGE - use zero attribute when deleting a variable.
                     0,
                     NULL
                     );
