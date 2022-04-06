@@ -303,6 +303,8 @@ StandaloneMmTestPointSmiHandler (
 
   DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler Enter\n"));
 
+  // PROBLEM HERE FOR TESTPOINT
+
   //
   // If input is invalid, stop processing this SMI
   //

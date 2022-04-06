@@ -21,7 +21,6 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
-  MmSupervisorPkg/MmSupervisorPkg.dec
 
 [LibraryClasses]
   UefiDriverEntryPoint
@@ -38,7 +37,6 @@
 [Guids]
   gAdapterInfoPlatformTestPointGuid
   gEdkiiPiSmmCommunicationRegionTableGuid
-  gMmSupervisorCommunicationRegionTableGuid
 
 [Protocols]
   gEfiAdapterInformationProtocolGuid

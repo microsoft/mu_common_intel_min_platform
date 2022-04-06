@@ -87,7 +87,7 @@ GetTestPointDataStandaloneMm (
   MinimalSizeNeeded = EFI_PAGE_SIZE;
 
   Status = EfiGetSystemConfigurationTable(
-             &gMmSupervisorCommunicationRegionTableGuid,
+             &gEdkiiPiSmmCommunicationRegionTableGuid,
              (VOID **)&PiSmmCommunicationRegionTable
              );
   if (EFI_ERROR(Status)) {
