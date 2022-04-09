@@ -63,6 +63,7 @@
 
 [Guids]
   gEfiMemoryTypeInformationGuid
+  gEfiMemoryTypeMinimumAllocationGuid  #MU_CHANGE - Add minimum memory type allocations
 
 [Depex]
   gEfiPeiReadOnlyVariable2PpiGuid
