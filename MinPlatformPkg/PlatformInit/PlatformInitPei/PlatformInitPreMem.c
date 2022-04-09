@@ -223,6 +223,17 @@ BuildMemoryTypeInformation (
     MemoryData,
     DataSize
     );
+
+  //MU_CHANGE - Add minimum memory type allocations
+  //
+  // Publish default memory types as minimum allocations.
+  //
+  BuildGuidDataHob (
+    &gEfiMemoryTypeMinimumAllocationGuid,
+    mDefaultMemoryTypeInformation,
+    sizeof (mDefaultMemoryTypeInformation)
+    );
+  //MU_CHANGE - END
 }
 
 EFI_STATUS
