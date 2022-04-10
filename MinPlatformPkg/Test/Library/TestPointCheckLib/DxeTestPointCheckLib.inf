@@ -79,6 +79,7 @@
   gEfiAcpi20TableGuid
   gEfiAcpi10TableGuid
   gEfiMemoryTypeInformationGuid
+  gEfiMemoryTypeMinimumAllocationGuid  #MU_CHANGE - Add minimum memory type allocations
   gEfiSystemResourceTableGuid
   gEfiMemoryOverwriteControlDataGuid
   gEfiMemoryOverwriteRequestControlLockGuid
