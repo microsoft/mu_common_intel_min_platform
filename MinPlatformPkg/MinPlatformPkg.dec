@@ -115,6 +115,21 @@
   gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
   gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
   gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
+  #
+  # FADT Duty Offset - The zero-based index of where the processor's duty cycle
+  # setting is within the processor's P_CNT register.
+  #
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtDutyOffset|0x01|UINT8|0x90000028
+  #
+  # FADT Duty Width - The bit width of the processor's duty cycle setting value in the P_CNT
+  # register. Each processor's duty cycle setting allows the software to select a nominal
+  # processor frequency below its absolute frequency. A duty width value of zero indicates
+  # the processor continuously runs at its base frequency.
+  #
+  # For more details about how the frequency is calculated, refer to the Fixed ACPI Description
+  # Table (FADT) section of the ACPI Specification.
+  #
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtDutyWidth|0x00|UINT8|0x90000029
 
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize|0x65|UINT32|0x20000500
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiNvsMemorySize|0x30|UINT32|0x20000501
