@@ -64,6 +64,8 @@
   gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile
   gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch
   gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtDutyOffset
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtDutyWidth
 
   gPcAtChipsetPkgTokenSpaceGuid.PcdHpetBaseAddress
   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress

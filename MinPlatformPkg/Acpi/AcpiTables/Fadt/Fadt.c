@@ -35,8 +35,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define EFI_ACPI_P_LVL3_LAT           0x03E9 // 1001
 #define EFI_ACPI_FLUSH_SIZE 0x0000
 #define EFI_ACPI_FLUSH_STRIDE 0x0000
-#define EFI_ACPI_DUTY_OFFSET  0x01
-#define EFI_ACPI_DUTY_WIDTH 0x00
+#define EFI_ACPI_DUTY_OFFSET          0x00  // To be fixed during boot
+#define EFI_ACPI_DUTY_WIDTH           0x00  // To be fixed during boot
 
 #define EFI_ACPI_DAY_ALRM   0x0D
 #define EFI_ACPI_MON_ALRM   0x00
