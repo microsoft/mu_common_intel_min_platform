@@ -12,7 +12,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/MemoryAllocationLib.h>
-//#include <Library/UefiLib.h>
 #include <Library/StandaloneMmMemLib.h>
 #include <Library/MmServicesTableLib.h>
 #include <Guid/MemoryAttributesTable.h>
@@ -112,10 +111,9 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[5] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
-
   DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmEndOfDxeSmrrFunctional - Enter\n"));
 
   Result = TRUE;
@@ -159,7 +157,7 @@ TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -205,7 +203,7 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
   //EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable;
   //UINTN                        MemoryAttributesTableSize;
 
-  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -253,7 +251,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
@@ -317,7 +315,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
   TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
   UINTN                                               TempCommBufferSize;
 
-  if ((mFeatureImplemented[6] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 

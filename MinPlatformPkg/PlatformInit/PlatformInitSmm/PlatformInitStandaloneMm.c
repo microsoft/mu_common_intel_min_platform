@@ -60,8 +60,9 @@ MmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
+  // TESTING THESE FUNCTIONS
   TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional ();
-  TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
+  //TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
@@ -127,7 +128,7 @@ PlatformInitStandaloneMmEntryPoint (
 {
   EFI_STATUS Status;
   VOID       *MmEndOfDxeRegistration;
-  //VOID       *MmReadyToLockRegistration;
+  VOID       *MmReadyToLockRegistration;
   VOID       *MmReadyToBootRegistration;
   VOID       *MmExitBootServicesRegistration;
 
@@ -139,13 +140,12 @@ PlatformInitStandaloneMmEntryPoint (
   ASSERT_EFI_ERROR (Status);
   
   // Causes problems with standalone MM.  Look into
-  /*.
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
                     MmReadyToLockEventNotify,
                     &MmReadyToLockRegistration
                     );
-  ASSERT_EFI_ERROR (Status); */
+  ASSERT_EFI_ERROR (Status);
   
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEdkiiSmmReadyToBootProtocolGuid,
