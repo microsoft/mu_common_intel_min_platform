@@ -5,7 +5,7 @@ Project Mu Intel Common MinPlatform Repo
 ============================= ================= =============== ===================
  Host Type & Toolchain        Build Status      Test Status     Code Coverage
 ============================= ================= =============== ===================
-Windows_VS2019_               |WindowsCiBuild|  |WindowsCiTest| |WindowsCiCoverage|
+Windows_VS2022_               |WindowsCiBuild|  |WindowsCiTest| |WindowsCiCoverage|
 Ubuntu_GCC5_                  |UbuntuCiBuild|   |UbuntuCiTest|  |UbuntuCiCoverage|
 ============================= ================= =============== ===================
 
@@ -60,7 +60,7 @@ Bug Fixes-dev
 
 | Starting commit: 1584a46f ("Updated references to Tcg libraries to use MU_TIANO_PLUS library that was moved out of this repo", 2022-02-15)
 | Destination commit: 7e07c136 ("MinPlatformPkg/SaveMemoryConfig: Fix GCC build failure.", 2022-02-17)
-  
+
   Needed to cherry-pick changes from 2102 branch that were left out of 2111
   - Removed TCBZ3033 added in upstream and reverted locally
   - Cherry-picked 53dcee339d TCBZ3612 MinPlatformPkg/Test: Fix mis-parsed HSTI structures (#13) from 202102 release
@@ -178,8 +178,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .. CoreCI
 
-.. _Windows_VS2019: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202202
-.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2019?branchName=release%2F202202
+.. _Windows_VS2022: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202202
+.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2022?branchName=release%2F202202
 .. |WindowsCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/71.svg
 .. |WindowsCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
 
