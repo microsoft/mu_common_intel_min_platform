@@ -636,6 +636,26 @@ TestPointSmmEndOfDxeSmrrFunctional (
 }
 
 /**
+  This service verifies SMRR configuration at the End of DXE.
+
+  Test subject: SMRR.
+  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps SMRR and SMRAM_INFO.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointStandaloneMmEndOfDxeSmrrFunctional(
+    VOID
+)
+{
+    return EFI_SUCCESS;
+}
+
+/**
   This service verifies the validity of the SMM memory atttribute table at SMM Ready To Lock.
 
   Test subject: SMM memory attribute table.
@@ -655,6 +675,29 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   )
 {
   return EFI_SUCCESS;
+}
+
+/**
+  This service verifies the validity of the StandaloneMm memory atttribute table at StandaloneMm 
+  Ready To Lock.
+
+  Test subject: StandaloneMm memory attribute table.
+  Test overview: Verify the StandaloneMm memory attribute table is reported.
+                 Verify image code/data is consistent with the StandaloneMm memory attribute table.
+                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the StandaloneMm memory attribute table and StandaloneMm image information.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional(
+    VOID
+)
+{
+    return EFI_SUCCESS;
 }
 
 /**
@@ -697,6 +740,28 @@ TestPointSmmReadyToBootSmmPageProtection (
 }
 
 /**
+  This service verifies the validity of the StandaloneMm page table at StandaloneMm
+  Ready To Boot.
+
+  Test subject: StandaloneMm page table.
+  Test overview: Verify the StandaloneMm page table matches the StandaloneMm memory 
+  attribute table.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Reports an error message upon checking.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
+    VOID
+)
+{
+    return EFI_SUCCESS;
+}
+
+/**
   This service verifies the system state after Exit Boot Services is invoked.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
@@ -722,4 +787,18 @@ TestPointSmmExitBootServices (
   )
 {
   return EFI_SUCCESS;
+}
+
+/**
+  This service verifies the system state within SMM after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
+EFI_STATUS
+EFIAPI
+TestPointStandaloneMmExitBootServices(
+    VOID
+)
+{
+    return EFI_SUCCESS;
 }

@@ -178,7 +178,6 @@ TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional (
       TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
       );
   }
-
   DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLock - Exit\n"));
   return EFI_SUCCESS;
 }
