@@ -115,6 +115,40 @@
   gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
   gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
   gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
+
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress|0x1804|UINT16|0x0001037
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress|0x0000|UINT16|0x00010038
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress|0x1850|UINT16|0x00010039
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPmTimerBlockAddress|0x1808|UINT16|0x0001003A
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress|0x1880|UINT16|0x0001003B
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockLength|0x00|UINT8|0x0001003C
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress|0x0000|UINT16|0x0001003D
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1Base|0x00|UINT8|0x00010040
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiResetRegAccessSize|0x00|UINT8|0x00010042
+
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1aEvtBlkAccessSize|0x00|UINT8|0x00010043
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1bEvtBlkAccessSize|0x00|UINT8|0x00010044
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1aCntBlkAccessSize|0x00|UINT8|0x00010045
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1bCntBlkAccessSize|0x00|UINT8|0x00010046
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm2CntBlkAccessSize|0x00|UINT8|0x00010047
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPmTmrBlkAccessSize|0x00|UINT8|0x00010048
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize|0x00|UINT8|0x00010049
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize|0x00|UINT8|0x0001004A
+
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegAddressSpaceId|0x00|UINT8|0x0001004B
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegRegisterBitWidth|0x00|UINT8|0x0001004C
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegRegisterBitOffset|0x00|UINT8|0x0001004D
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegAccessSize|0x00|UINT8|0x0001004E
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegAddress|0x0000000000000000|UINT64|0x0001004F
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepStatusRegAddressSpaceId|0x00|UINT8|0x00010050
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepStatusRegRegisterBitWidth|0x00|UINT8|0x00010051
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepStatusRegRegisterBitOffset|0x00|UINT8|0x00010052
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepStatusRegAccessSize|0x00|UINT8|0x00010053
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepStatusRegAddress|0x0000000000000000|UINT64|0x00010054
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiS4BiosReq|0x0000|UINT8|0x00010055
+
   #
   # FADT Duty Offset - The zero-based index of where the processor's duty cycle
   # setting is within the processor's P_CNT register.
@@ -259,15 +293,6 @@
   gMinPlatformPkgTokenSpaceGuid.PcdPciResourceAssigned         |FALSE|BOOLEAN|0x4001004D
   gMinPlatformPkgTokenSpaceGuid.PcdPciSegmentCount             |0x1    |UINT8|0x4001004E
   gMinPlatformPkgTokenSpaceGuid.PcdRandomizePlatformHierarchy  |TRUE |BOOLEAN|0x4001004F
-
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AEventBlockAddress|0x1800|UINT16|0x00010035
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BEventBlockAddress|0x0000|UINT16|0x00010036
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1AControlBlockAddress|0x1804|UINT16|0x0001037
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm1BControlBlockAddress|0x0000|UINT16|0x00010038
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPm2ControlBlockAddress|0x1850|UINT16|0x00010039
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiPmTimerBlockAddress|0x1808|UINT16|0x0001003A
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress|0x1880|UINT16|0x0001003B
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress|0x0000|UINT16|0x0001003C
 
   gMinPlatformPkgTokenSpaceGuid.PcdPciExpressRegionLength|0x10000000|UINT32|0x0010004
   gMinPlatformPkgTokenSpaceGuid.PcdFspCpuPeiApWakeupBufferAddr|0x9f000|UINT32|0x30000008
