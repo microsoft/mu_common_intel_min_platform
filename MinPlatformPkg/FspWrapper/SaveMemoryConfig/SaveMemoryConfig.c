@@ -10,6 +10,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Base.h>
 #include <Uefi.h>
 #include <Library/BaseLib.h>
+#include <Library/CompressLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/HobLib.h>
@@ -19,6 +20,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/LargeVariableReadLib.h>
 #include <Library/LargeVariableWriteLib.h>
+#include <Library/PcdLib.h>
 #include <Library/VariableWriteLib.h>
 #include <Guid/FspNonVolatileStorageHob2.h>
 
@@ -64,20 +66,26 @@ SaveMemoryConfigEntryPoint (
   IN EFI_SYSTEM_TABLE   *SystemTable
   )
 {
-  EFI_STATUS        Status;
-  EFI_HOB_GUID_TYPE *GuidHob;
-  VOID              *HobData;
-  VOID              *VariableData;
-  UINTN             DataSize;
-  UINTN             BufferSize;
-  BOOLEAN           DataIsIdentical;
+  EFI_STATUS         Status;
+  EFI_HOB_GUID_TYPE  *GuidHob;
+  VOID               *HobData;
+  VOID               *VariableData;
+  UINTN              DataSize;
+  UINTN              BufferSize;
+  BOOLEAN            DataIsIdentical;
+  VOID               *CompressedData;
+  UINTN              CompressedSize;
+  UINTN              CompressedAllocationPages;
 
-  DataSize        = 0;
-  BufferSize      = 0;
-  VariableData    = NULL;
-  GuidHob         = NULL;
-  HobData         = NULL;
-  DataIsIdentical = FALSE;
+  DataSize                  = 0;
+  BufferSize                = 0;
+  VariableData              = NULL;
+  GuidHob                   = NULL;
+  HobData                   = NULL;
+  DataIsIdentical           = FALSE;
+  CompressedData            = NULL;
+  CompressedSize            = 0;
+  CompressedAllocationPages = 0;
 
   DeleteObsoleteVariables (); //MU_CHANGE: attempt to remove variables created by previous versions of this driver.
 
@@ -99,6 +107,29 @@ SaveMemoryConfigEntryPoint (
       HobData  = GET_GUID_HOB_DATA (GuidHob);
       DataSize = GET_GUID_HOB_DATA_SIZE (GuidHob);
     }
+  }
+
+  if (PcdGetBool (PcdEnableCompressedFspNvsBuffer)) {
+    if (DataSize > 0) {
+      CompressedAllocationPages = EFI_SIZE_TO_PAGES (DataSize);
+      CompressedData            = AllocatePages (CompressedAllocationPages);
+      if (CompressedData == NULL) {
+        DEBUG ((DEBUG_ERROR, "[%a] - Failed to allocate compressed data.\n", __FUNCTION__));
+        ASSERT_EFI_ERROR (EFI_OUT_OF_RESOURCES);
+        return EFI_OUT_OF_RESOURCES;
+      }
+
+      CompressedSize = EFI_PAGES_TO_SIZE (CompressedAllocationPages);
+      Status         = Compress (HobData, DataSize, CompressedData, &CompressedSize);
+      if (EFI_ERROR (Status)) {
+        DEBUG ((DEBUG_ERROR, "[%a] - failed to compress data. Status = %r\n", __FUNCTION__, Status));
+        ASSERT_EFI_ERROR (Status);
+        return Status;
+      }
+    }
+
+    HobData  = CompressedData;
+    DataSize = CompressedSize;
   }
 
   if (HobData != NULL) {
@@ -171,6 +202,10 @@ SaveMemoryConfigEntryPoint (
     }
   } else {
     DEBUG((DEBUG_ERROR, "Memory S3 Data HOB was not found\n"));
+  }
+
+  if (CompressedData != NULL) {
+    FreePages (CompressedData, CompressedAllocationPages);
   }
 
   //
