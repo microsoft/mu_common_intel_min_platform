@@ -74,7 +74,7 @@ SaveMemoryConfigEntryPoint (
   UINTN              BufferSize;
   BOOLEAN            DataIsIdentical;
   VOID               *CompressedData;
-  UINTN              CompressedSize;
+  UINT64             CompressedSize;
   UINTN              CompressedAllocationPages;
 
   DataSize                  = 0;
@@ -129,7 +129,7 @@ SaveMemoryConfigEntryPoint (
     }
 
     HobData  = CompressedData;
-    DataSize = CompressedSize;
+    DataSize = (UINTN)CompressedSize;
   }
 
   if (HobData != NULL) {
