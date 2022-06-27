@@ -217,9 +217,17 @@
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemoryBase|0x00000000|UINT32|0x20000004
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemorySize|0x00000000|UINT32|0x20000005
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPreMemoryOffset|0x00000000|UINT32|0x20000006
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspPreMemorySize|0x00000000|UINT32|0x20000030
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspPreMemoryBase|0x00000000|UINT32|0x20000031
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspPreMemoryOffset|0x00000000|UINT32|0x20000032
+
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryBase|0x00000000|UINT32|0x20000007
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemorySize|0x00000000|UINT32|0x20000008
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvPostMemoryOffset|0x00000000|UINT32|0x20000009
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspSize|0x00000000|UINT32|0x20000033
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspBase|0x00000000|UINT32|0x20000034
+  gMinPlatformPkgTokenSpaceGuid.PcdFlashFvBspOffset|0x00000000|UINT32|0x20000035
+
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootBase|0x00000000|UINT32|0x2000000A
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootSize|0x00000000|UINT32|0x2000000B
   gMinPlatformPkgTokenSpaceGuid.PcdFlashFvUefiBootOffset|0x00000000|UINT32|0x2000000C
