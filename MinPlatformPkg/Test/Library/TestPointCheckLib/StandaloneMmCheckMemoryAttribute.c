@@ -154,7 +154,6 @@ TestPointCheckImageMemoryAttribute (
   if (PdbPointer != NULL) {
     DEBUG ((EFI_D_INFO, "  Image - %a\n", PdbPointer));
   }
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST #1\n"));
   //
   // Check PE/COFF image
   //
@@ -169,7 +168,6 @@ TestPointCheckImageMemoryAttribute (
     DEBUG ((EFI_D_INFO, "Hdr.Pe32->Signature invalid - 0x%x\n", Hdr.Pe32->Signature));
     return EFI_INVALID_PARAMETER;
   }
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST #2\n"));
   //
   // Measuring PE/COFF Image Header;
   // But CheckSum field and SECURITY data directory (certificate) are excluded
@@ -195,7 +193,6 @@ TestPointCheckImageMemoryAttribute (
     }
     return EFI_INVALID_PARAMETER;
   }
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST #3\n"));
   Section = (EFI_IMAGE_SECTION_HEADER *) (
                (UINT8 *) (UINTN) ImageAddress +
                PeCoffHeaderOffset +
@@ -211,9 +208,7 @@ TestPointCheckImageMemoryAttribute (
              FALSE,
              IsFromSmm
              );
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST #4\n"));
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_ERROR, "THIS IS A TEST #5\n"));
     ReturnStatus = Status;
   }
 
@@ -265,7 +260,6 @@ TestPointCheckImageMemoryAttribute (
                  );
     }
     if (EFI_ERROR(Status)) {
-      DEBUG ((DEBUG_ERROR, "THIS IS A TEST #6\n"));
       ReturnStatus = Status;
     }
   }
@@ -327,7 +321,6 @@ TestPointCheckStandaloneMmMemoryAttributesTable (
   DEBUG ((DEBUG_INFO, "==== TestPointDumpStandaloneMmLoadedImage - Enter\n"));
   HandleBuf = NULL;
   HandleBufSize = 0;
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST #6\n"));
   Status = gMmst->MmLocateHandle (
                     ByProtocol,
                     &gEfiLoadedImageProtocolGuid,
@@ -364,8 +357,11 @@ TestPointCheckStandaloneMmMemoryAttributesTable (
     if (EFI_ERROR(Status)) {
       continue;
     }
+    //
+    //
     // Failing here
-    DEBUG ((DEBUG_ERROR, "THIS IS A TEST #7\n"));
+    //
+    //
     Status = TestPointCheckImageMemoryAttribute (
                MemoryAttributesTable,
                (EFI_PHYSICAL_ADDRESS)(UINTN)LoadedImage->ImageBase,
@@ -410,17 +406,13 @@ StandaloneMmGetSystemConfigurationTable (
   ASSERT (Table != NULL);
 
   *Table = NULL;
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST ME #1\n"));
   DEBUG ((DEBUG_ERROR, "The number of table entries is : %lx\n", gMmst->NumberOfTableEntries));
   for (Index = 0; Index < gMmst->NumberOfTableEntries; Index++) {
-    DEBUG ((DEBUG_ERROR, "THIS IS A TEST ME #2\n"));
     if (CompareGuid (TableGuid, &(gMmst->MmConfigurationTable[Index].VendorGuid))) {
-      DEBUG ((DEBUG_ERROR, "THIS IS A TEST ME #3\n"));
       *Table = gMmst->MmConfigurationTable[Index].VendorTable;
       return EFI_SUCCESS;
     }
   }
-  DEBUG ((DEBUG_ERROR, "THIS IS A TEST ME #4\n"));
   return EFI_NOT_FOUND;
 }
 

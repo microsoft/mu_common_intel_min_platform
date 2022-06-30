@@ -223,7 +223,7 @@ StandaloneMmTestPointSmiHandlerGetDataByOffset (
   //
   // Sanity check
   //
-  if (!MmIsBufferOutsideMmValid((UINTN)SmiHandlerTestPointGetDataByOffset.DataBuffer, (UINTN)SmiHandlerTestPointGetDataByOffset.DataSize)) {
+  if (!MmCommBufferValid((UINTN)SmiHandlerTestPointGetDataByOffset.DataBuffer, (UINTN)SmiHandlerTestPointGetDataByOffset.DataSize)) {
     DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandlerGetDataByOffset: StandaloneMmTestPoint get data in SMRAM or overflow!\n"));
     SmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_ACCESS_DENIED;
     goto Done;
@@ -319,7 +319,7 @@ StandaloneMmTestPointSmiHandler (
     return EFI_SUCCESS;
   }
 
-  if (!MmIsBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
+  if (!MmCommBufferValid((UINTN)CommBuffer, TempCommBufferSize)) {
     DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler: StandaloneMm communication buffer in SMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }

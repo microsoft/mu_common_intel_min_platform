@@ -327,7 +327,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
     return EFI_SUCCESS;
   }
 
-  if (!MmIsBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
+  if (!MmCommBufferValid((UINTN)CommBuffer, TempCommBufferSize)) {
     DEBUG((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: SMM communication buffer in SMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }
