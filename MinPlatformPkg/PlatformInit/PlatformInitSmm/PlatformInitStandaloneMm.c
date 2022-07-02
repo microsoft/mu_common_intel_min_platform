@@ -61,8 +61,7 @@ MmReadyToLockEventNotify (
   )
 {
   // TESTING THESE FUNCTIONS
-  TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional ();
-  //TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
+  TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
