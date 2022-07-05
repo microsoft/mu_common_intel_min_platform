@@ -120,15 +120,15 @@ MmExitBootServicesEventNotify (
 EFI_STATUS
 EFIAPI
 PlatformInitStandaloneMmEntryPoint (
-  IN EFI_HANDLE          ImageHandle,
-  IN EFI_MM_SYSTEM_TABLE *MmSystemTable
+  IN EFI_HANDLE           ImageHandle,
+  IN EFI_MM_SYSTEM_TABLE  *MmSystemTable
   )
 {
-  EFI_STATUS Status;
-  VOID       *MmEndOfDxeRegistration;
-  VOID       *MmReadyToLockRegistration;
-  VOID       *MmReadyToBootRegistration;
-  VOID       *MmExitBootServicesRegistration;
+  EFI_STATUS  Status;
+  VOID        *MmEndOfDxeRegistration;
+  VOID        *MmReadyToLockRegistration;
+  VOID        *MmReadyToBootRegistration;
+  VOID        *MmExitBootServicesRegistration;
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmEndOfDxeProtocolGuid,
@@ -136,21 +136,21 @@ PlatformInitStandaloneMmEntryPoint (
                     &MmEndOfDxeRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
                     MmReadyToLockEventNotify,
                     &MmReadyToLockRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEdkiiSmmReadyToBootProtocolGuid,
                     MmReadyToBootEventNotify,
                     &MmReadyToBootRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
+
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEdkiiSmmExitBootServicesProtocolGuid,
                     MmExitBootServicesEventNotify,
