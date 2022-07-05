@@ -48,34 +48,9 @@ TestPointCheckStandaloneMmCommunicationBuffer (
   IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
   );
 
-// Removed as Gcd not supported by Standalone MM
-/*VOID
-TestPointDumpGcd (
-  OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
-  OUT UINTN                           *GcdMemoryMapNumberOfDescriptors,  OPTIONAL
-  OUT EFI_GCD_IO_SPACE_DESCRIPTOR     **GcdIoMap,  OPTIONAL
-  OUT UINTN                           *GcdIoMapNumberOfDescriptors,  OPTIONAL
-  IN  BOOLEAN                         DumpPrint
-  );*/
-
-//Removed temporarily for functionality
-/*
-VOID
-TestPointDumpUefiMemoryMap (
-  OUT EFI_MEMORY_DESCRIPTOR **UefiMemoryMap, OPTIONAL
-  OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
-  OUT UINTN                 *UefiDescriptorSize, OPTIONAL
-  IN  BOOLEAN               DumpPrint
-  ); */
-
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiMemoryMapSize;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiDescriptorSize;
-
-//GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
-//GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
-GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdMemoryMapNumberOfDescriptors;
-GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdIoMapNumberOfDescriptors;
 
 EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
 
@@ -136,53 +111,6 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
 }
 
 /**
-  This service verifies the validity of the Standalone MM memory atttribute table at Standalone MM Ready To Lock.
-
-  Test subject: Standalone MM memory attribute table.
-  Test overview: Verify the Standalone MM memory attribute table is reported.
-                 Verify image code/data is consistent with the Standalone MM memory attribute table.
-                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the Standalone MM memory attribute table and Standalone MM image information.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional (
-  VOID
-  )
-{
-  EFI_STATUS  Status;
-  BOOLEAN     Result;
-
-  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL) == 0) {
-    return EFI_SUCCESS;
-  }
-
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLock - Enter\n"));
-
-  Result = TRUE;
-  TestPointDumpStandaloneMmLoadedImage ();
-  Status = TestPointCheckStandaloneMmMemAttribute ();
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-
-  if (Result) {
-    TestPointLibSetFeaturesVerified (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      6,
-      TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
-      );
-  }
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLock - Exit\n"));
-  return EFI_SUCCESS;
-}
-
-/**
   This service verifies the security of Standalone MM communication buffers at Standalone MM Ready To Lock.
 
   Test subject: Standalone MM communication buffer.
@@ -198,10 +126,6 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
   VOID
   )
 {
-  //EFI_STATUS                   Status;
-  //EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable;
-  //UINTN                        MemoryAttributesTableSize;
-
   if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
     return EFI_SUCCESS;
   }
@@ -211,20 +135,7 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
   //
   // Collect information here, because it is last chance to access outside SMRAM.
   //
-  // Check if there are Standalone MM equivalents for this
-  //TestPointDumpUefiMemoryMap (&mUefiMemoryMap, &mUefiMemoryMapSize, &mUefiDescriptorSize, TRUE);
-  //TestPointDumpGcd (&mGcdMemoryMap, &mGcdMemoryMapNumberOfDescriptors, &mGcdIoMap, &mGcdIoMapNumberOfDescriptors, TRUE);
-
-  // Removed uefilib function
-  /*Status = EfiGetSystemConfigurationTable (&gEfiMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
-  if (!EFI_ERROR (Status)) {
-    MemoryAttributesTableSize = sizeof(EFI_MEMORY_ATTRIBUTES_TABLE) + MemoryAttributesTable->DescriptorSize * MemoryAttributesTable->NumberOfEntries;
-    mUefiMemoryAttributesTable = AllocateCopyPool (MemoryAttributesTableSize, MemoryAttributesTable);
-    ASSERT (mUefiMemoryAttributesTable != NULL);
-  } */
-  //
-  // Defer the validation to TestPointStandaloneMmReadyToBootSecureStandaloneMmCommunicationBuffer, because page table setup later.
-  //
+  // Previous memory collection is allowed in StandaloneMm but leaving this function for possible future collection
 
   DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer - Exit\n"));
   return EFI_SUCCESS;

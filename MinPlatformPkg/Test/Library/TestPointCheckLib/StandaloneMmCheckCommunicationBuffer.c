@@ -19,12 +19,6 @@ extern EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
 extern UINTN                 mUefiMemoryMapSize;
 extern UINTN                 mUefiDescriptorSize;
 
-// Removed as Gcd not supported by Standalone MM
-//extern EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
-//extern EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
-extern UINTN                           mGcdMemoryMapNumberOfDescriptors;
-extern UINTN                           mGcdIoMapNumberOfDescriptors;
-
 EFI_STATUS
 TestPointCheckPageTable (
   IN EFI_PHYSICAL_ADDRESS   BaseAddress,

@@ -36,7 +36,6 @@
 
 [Sources]
   StandaloneMmTestPointCheckLib.c
-  StandaloneMmCheckMemoryAttribute.c
   StandaloneMmCheckLoadedImage.c
   StandaloneMmCheckSmrr.c
   StandaloneMmCheckPaging.c

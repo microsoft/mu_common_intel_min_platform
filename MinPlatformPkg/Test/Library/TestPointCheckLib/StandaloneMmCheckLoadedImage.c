@@ -231,10 +231,10 @@ TestPointDumpStandaloneMmLoadedImage (
       continue;
     }
 
-    /*Status = gMmst->MmHandleProtocol (LoadedImage->DeviceHandle, &gEfiDevicePathProtocolGuid, (VOID **)&DevicePath);
+    Status = gMmst->MmHandleProtocol (LoadedImage->DeviceHandle, &gEfiDevicePathProtocolGuid, (VOID **)&DevicePath);
     if (EFI_ERROR(Status)) {
       DevicePath = NULL;
-    }*/
+    }
     DevicePath = NULL;
 
     Status = gMmst->MmHandleProtocol (HandleBuf[Index], &gEfiLoadedImageDevicePathProtocolGuid, (VOID **)&LoadedImageDevicePath);

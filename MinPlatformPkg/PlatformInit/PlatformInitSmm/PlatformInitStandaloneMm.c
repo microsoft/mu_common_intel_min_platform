@@ -60,7 +60,6 @@ MmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  // TESTING THESE FUNCTIONS
   TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
@@ -138,7 +137,6 @@ PlatformInitStandaloneMmEntryPoint (
                     );
   ASSERT_EFI_ERROR (Status);
   
-  // Causes problems with standalone MM.  Look into
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
                     MmReadyToLockEventNotify,

@@ -24,7 +24,6 @@
   PcdLib
   MmServicesTableLib
   StandaloneMmDriverEntryPoint
-  #BoardInitLib
   TestPointCheckLib
 
 [Packages]

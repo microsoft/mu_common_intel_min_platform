@@ -380,14 +380,16 @@ TestPointCheckStandaloneMmPaging (
   )
 {
   EFI_STATUS  Status;
-  VOID        *MemoryAttributesTable;
+  //VOID        *MemoryAttributesTable;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckStandaloneMmPaging - Enter\n"));
 
-  Status = StandaloneMmGetSystemConfigurationTable (&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
+  /*Status = StandaloneMmGetSystemConfigurationTable(&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID**)&MemoryAttributesTable);
   if (!EFI_ERROR (Status)) {
     Status = TestPointCheckPagingWithMemoryAttributesTable(MemoryAttributesTable);
-  }
+  }*/
+  // Permanent error for this test currently as there isn't a memory attribute table for Standalone MM.
+  Status = EFI_UNSUPPORTED;
 
   if (EFI_ERROR (Status)) {
     TestPointLibAppendErrorString (
