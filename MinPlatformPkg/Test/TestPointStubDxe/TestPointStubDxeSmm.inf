@@ -12,10 +12,10 @@
   FILE_GUID                      = C034A2CB-1190-4638-9DDF-6F297824741E
   VERSION_STRING                 = 1.0
   MODULE_TYPE                    = DXE_DRIVER
-  ENTRY_POINT                    = TestPointStubDxeEntryPoint
+  ENTRY_POINT                    = TestPointStubDxeSmmEntryPoint
 
 [Sources]
-  TestPointStubDxe.c
+  TestPointStubDxeSmm.c
 
 [Packages]
   MdePkg/MdePkg.dec
