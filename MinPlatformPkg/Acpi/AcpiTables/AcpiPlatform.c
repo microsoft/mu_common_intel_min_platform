@@ -1068,7 +1068,7 @@ InstallMcfgFromScratch (
              &McfgTable->Header,
              EFI_ACPI_3_0_PCI_EXPRESS_MEMORY_MAPPED_CONFIGURATION_SPACE_BASE_ADDRESS_DESCRIPTION_TABLE_SIGNATURE,
              EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_SPACE_ACCESS_TABLE_REVISION,
-             0
+             FixedPcdGet32 (PcdAcpiDefaultOemRevision)
              );
   if (EFI_ERROR (Status)) {
     return Status;
@@ -1195,6 +1195,7 @@ PlatformUpdateTables (
     FadtHeader->PreferredPmProfile                = PcdGet8 (PcdFadtPreferredPmProfile);
     FadtHeader->IaPcBootArch                      = PcdGet16 (PcdFadtIaPcBootArch);
     FadtHeader->Flags                             = PcdGet32 (PcdFadtFlags);
+    FadtHeader->SmiCmd                            = PcdGet32 (PcdFadtSmiCmd);
     FadtHeader->AcpiEnable                        = PcdGet8 (PcdAcpiEnableSwSmi);
     FadtHeader->AcpiDisable                       = PcdGet8 (PcdAcpiDisableSwSmi);
     FadtHeader->Pm1aEvtBlk                        = PcdGet16 (PcdAcpiPm1AEventBlockAddress);
@@ -1209,6 +1210,7 @@ PlatformUpdateTables (
     FadtHeader->Gpe1Base                          = PcdGet8 (PcdAcpiGpe1Base);
 
     FadtHeader->XPm1aEvtBlk.Address               = PcdGet16 (PcdAcpiPm1AEventBlockAddress);
+    FadtHeader->XPm1bEvtBlk.Address               = PcdGet16 (PcdAcpiPm1BEventBlockAddress);
     FadtHeader->XPm1aCntBlk.Address               = PcdGet16 (PcdAcpiPm1AControlBlockAddress);
     FadtHeader->XPm1bCntBlk.Address               = PcdGet16 (PcdAcpiPm1BControlBlockAddress);
     FadtHeader->XPm2CntBlk.Address                = PcdGet16 (PcdAcpiPm2ControlBlockAddress);
@@ -1216,7 +1218,7 @@ PlatformUpdateTables (
     FadtHeader->XGpe0Blk.Address                  = PcdGet16 (PcdAcpiGpe0BlockAddress);
     FadtHeader->XGpe1Blk.Address                  = PcdGet16 (PcdAcpiGpe1BlockAddress);
 
-    FadtHeader->ResetReg.AccessSize               = PcdGet8 (PcdAcpiResetRegAccessSize);
+    FadtHeader->ResetReg.AccessSize               = PcdGet8 (PcdAcpiResetRegisterAccessSize);
     FadtHeader->XPm1aEvtBlk.AccessSize            = PcdGet8 (PcdAcpiXPm1aEvtBlkAccessSize);
     FadtHeader->XPm1bEvtBlk.AccessSize            = PcdGet8 (PcdAcpiXPm1bEvtBlkAccessSize);
     FadtHeader->XPm1aCntBlk.AccessSize            = PcdGet8 (PcdAcpiXPm1aCntBlkAccessSize);
@@ -1226,22 +1228,23 @@ PlatformUpdateTables (
     FadtHeader->XGpe0Blk.AccessSize               = PcdGet8 (PcdAcpiXGpe0BlkAccessSize);
     FadtHeader->XGpe1Blk.AccessSize               = PcdGet8 (PcdAcpiXGpe1BlkAccessSize);
 
-    FadtHeader->SleepControlReg.AddressSpaceId    = PcdGet8 (PcdAcpiSleepControlRegAddressSpaceId);
-    FadtHeader->SleepControlReg.RegisterBitOffset = PcdGet8 (PcdAcpiSleepControlRegRegisterBitOffset);
-    FadtHeader->SleepControlReg.AccessSize        = PcdGet8 (PcdAcpiSleepControlRegAccessSize);
-    FadtHeader->SleepControlReg.Address           = PcdGet64 (PcdAcpiSleepControlRegAddress);
-    FadtHeader->SleepStatusReg.AddressSpaceId     = PcdGet8 (PcdAcpiSleepStatusRegAddressSpaceId);
-    FadtHeader->SleepStatusReg.RegisterBitWidth   = PcdGet8 (PcdAcpiSleepStatusRegRegisterBitWidth);
-    FadtHeader->SleepStatusReg.RegisterBitOffset  = PcdGet8 (PcdAcpiSleepStatusRegRegisterBitOffset);
-    FadtHeader->SleepStatusReg.AccessSize         = PcdGet8 (PcdAcpiSleepStatusRegAccessSize);
-    FadtHeader->SleepStatusReg.Address            = PcdGet64 (PcdAcpiSleepStatusRegAddress);
+    FadtHeader->SleepControlReg.AddressSpaceId    = PcdGet8 (PcdAcpiSleepControlRegisterAddressSpaceId);
+    FadtHeader->SleepControlReg.RegisterBitWidth  = PcdGet8 (PcdAcpiSleepControlRegisterBitWidth);
+    FadtHeader->SleepControlReg.RegisterBitOffset = PcdGet8 (PcdAcpiSleepControlRegisterBitOffset);
+    FadtHeader->SleepControlReg.AccessSize        = PcdGet8 (PcdAcpiSleepControlRegisterAccessSize);
+    FadtHeader->SleepControlReg.Address           = PcdGet64 (PcdAcpiSleepControlRegisterAddress);
+    FadtHeader->SleepStatusReg.AddressSpaceId     = PcdGet8 (PcdAcpiSleepStatusRegisterAddressSpaceId);
+    FadtHeader->SleepStatusReg.RegisterBitWidth   = PcdGet8 (PcdAcpiSleepStatusRegisterBitWidth);
+    FadtHeader->SleepStatusReg.RegisterBitOffset  = PcdGet8 (PcdAcpiSleepStatusRegisterBitOffset);
+    FadtHeader->SleepStatusReg.AccessSize         = PcdGet8 (PcdAcpiSleepStatusRegisterAccessSize);
+    FadtHeader->SleepStatusReg.Address            = PcdGet64 (PcdAcpiSleepStatusRegisterAddress);
 
     FadtHeader->S4BiosReq                         = PcdGet8 (PcdAcpiS4BiosReq);
     FadtHeader->XPm1aEvtBlk.Address               = PcdGet16 (PcdAcpiPm1AEventBlockAddress);
     FadtHeader->XPm1bEvtBlk.Address               = PcdGet16 (PcdAcpiPm1BEventBlockAddress);
 
-    FadtHeader->DutyOffset = PcdGet8 (PcdFadtDutyOffset);
-    FadtHeader->DutyWidth = PcdGet8 (PcdFadtDutyWidth);
+    FadtHeader->DutyOffset                        = PcdGet8 (PcdFadtDutyOffset);
+    FadtHeader->DutyWidth                         = PcdGet8 (PcdFadtDutyWidth);
 
     DEBUG ((DEBUG_INFO, "ACPI FADT table @ address 0x%x\n", Table));
     DEBUG ((DEBUG_INFO, "  IaPcBootArch 0x%x\n", FadtHeader->IaPcBootArch));
