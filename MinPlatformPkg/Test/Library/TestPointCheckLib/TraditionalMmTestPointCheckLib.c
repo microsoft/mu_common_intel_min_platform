@@ -19,36 +19,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include "TestPointInternal.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
-
-EFI_STATUS
-TestPointCheckSmrr (
-  VOID
-  );
-
-EFI_STATUS
-TestPointDumpSmmLoadedImage (
-  VOID
-  );
-
-EFI_STATUS
-TestPointCheckSmmMemAttribute (
-  VOID
-  );
-
-EFI_STATUS
-TestPointCheckSmmPaging (
-  VOID
-  );
-
-EFI_STATUS
-TestPointCheckSmmCommunicationBuffer (
-  IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
-  IN UINTN                        UefiMemoryMapSize,
-  IN UINTN                        UefiDescriptorSize,
-  IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
-  );
-
 VOID
 TestPointDumpGcd (
   OUT EFI_GCD_MEMORY_SPACE_DESCRIPTOR **GcdMemoryMap,  OPTIONAL
@@ -66,28 +36,10 @@ TestPointDumpUefiMemoryMap (
   IN  BOOLEAN               DumpPrint
   );
 
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
-GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiMemoryMapSize;
-GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiDescriptorSize;
-
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdMemoryMapNumberOfDescriptors;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdIoMapNumberOfDescriptors;
-
-EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
-
-GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
-  PLATFORM_TEST_POINT_VERSION,
-  PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-  {TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM},
-  TEST_POINT_FEATURE_SIZE,
-  {0}, // FeaturesImplemented
-  {0}, // FeaturesVerified
-  0,
-};
-
-GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
 
 /**
   This service verifies SMRR configuration at the End of DXE.
@@ -106,32 +58,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   VOID
   )
 {
-  EFI_STATUS  Status;
-  BOOLEAN     Result;
-
-  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
-    return EFI_SUCCESS;
-  }
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmEndOfDxeSmrrFunctional - Enter\n"));
-
-  Result = TRUE;
-  Status = TestPointCheckSmrr ();
-  if (EFI_ERROR(Status)) {
-    Result = FALSE;
-  }
-
-  if (Result) {
-    TestPointLibSetFeaturesVerified (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      TEST_POINT_INDEX_BYTE6_SMM,
-      TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
-      );
-  }
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmEndOfDxe - Exit\n"));
-  return EFI_SUCCESS;
+  TestPointMmEndOfDxeSmrrFunctional ();
 }
 
 /**
@@ -250,19 +177,19 @@ TestPointSmmReadyToBootSmmPageProtection (
   EFI_STATUS  Status;
   BOOLEAN     Result;
 
-  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM]
-    & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Enter\n"));
 
   Result = TRUE;
 
-  Status = TestPointCheckSmmPaging ();
-  if (EFI_ERROR(Status)) {
+  Status = TestPointCheckMmPaging ();
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
+
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -276,9 +203,10 @@ TestPointSmmReadyToBootSmmPageProtection (
     Result = TRUE;
 
     Status = TestPointCheckSmmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
-    if (EFI_ERROR(Status)) {
+    if (EFI_ERROR (Status)) {
       Result = FALSE;
     }
+
     if (Result) {
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -288,7 +216,8 @@ TestPointSmmReadyToBootSmmPageProtection (
         );
     }
   }
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Exit\n"));
+
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -310,107 +239,7 @@ TestPointSmmReadyToBootSmmPageProtectionHandler (
   IN OUT UINTN   *CommBufferSize  OPTIONAL
   )
 {
-  EFI_STATUS  Status;
-  BOOLEAN     Result;
-  TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO      *CommData;
-  UINTN                                               TempCommBufferSize;
-
-  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM]
-    & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
-    return EFI_SUCCESS;
-  }
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtectionHandler - Enter\n"));
-
-  TempCommBufferSize = *CommBufferSize;
-
-  if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: SMM communication buffer size invalid!\n"));
-    return EFI_SUCCESS;
-  }
-
-  if (!SmmIsBufferOutsideSmmValid((UINTN)CommBuffer, TempCommBufferSize)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: SMM communication buffer in SMRAM or overflow!\n"));
-    return EFI_SUCCESS;
-  }
-  DEBUG ((DEBUG_INFO, "TempCommBufferSize - 0x%x\n", TempCommBufferSize));
-  CommData = AllocateCopyPool (TempCommBufferSize, CommBuffer);
-  if (CommData == NULL) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: SMM communication buffer size too big!\n"));
-    return EFI_SUCCESS;
-  }
-  if (CommData->UefiMemoryMapOffset != sizeof(TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryMapOffset invalid!\n"));
-    goto Done;
-  }
-  if (CommData->UefiMemoryMapSize >= TempCommBufferSize - CommData->UefiMemoryMapOffset) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryMapSize invalid!\n"));
-    goto Done;
-  }
-  if (CommData->GcdMemoryMapOffset != CommData->UefiMemoryMapOffset + CommData->UefiMemoryMapSize) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdMemoryMapOffset invalid!\n"));
-    goto Done;
-  }
-  if (CommData->GcdMemoryMapSize >= TempCommBufferSize - CommData->GcdMemoryMapOffset) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdMemoryMapSize invalid!\n"));
-    goto Done;
-  }
-  if (CommData->GcdIoMapOffset != CommData->GcdMemoryMapOffset + CommData->GcdMemoryMapSize) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdIoMapOffset invalid!\n"));
-    goto Done;
-  }
-  if (CommData->GcdIoMapSize >= TempCommBufferSize - CommData->GcdIoMapOffset) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: GcdIoMapSize invalid!\n"));
-    goto Done;
-  }
-  if (CommData->UefiMemoryAttributeTableOffset != CommData->GcdIoMapOffset + CommData->GcdIoMapSize) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryAttributeTableOffset invalid!\n"));
-    goto Done;
-  }
-  if (CommData->UefiMemoryAttributeTableSize != TempCommBufferSize - CommData->UefiMemoryAttributeTableOffset) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmReadyToBootSmmPageProtectionHandler: UefiMemoryAttributeTableSize invalid!\n"));
-    goto Done;
-  }
-
-  if (CommData->UefiMemoryMapSize != 0) {
-    //
-    // The SpeculationBarrier() call here is to ensure the previous range/content
-    // checks for the CommBuffer (copied in to CommData) have been completed before
-    // calling into TestPointCheckSmmCommunicationBuffer().
-    //
-    SpeculationBarrier ();
-    Result = TRUE;
-
-    Status = TestPointCheckSmmCommunicationBuffer (
-               (EFI_MEMORY_DESCRIPTOR *)(UINTN)((UINTN)CommData + CommData->UefiMemoryMapOffset),
-               (UINTN)CommData->UefiMemoryMapSize,
-               mUefiDescriptorSize,
-               (CommData->UefiMemoryAttributeTableSize != 0) ? (EFI_MEMORY_ATTRIBUTES_TABLE *)(UINTN)((UINTN)CommData + CommData->UefiMemoryAttributeTableOffset) : NULL
-               );
-    if (EFI_ERROR(Status)) {
-      Result = FALSE;
-    }
-    if (Result) {
-      TestPointLibSetFeaturesVerified (
-        PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-        NULL,
-        TEST_POINT_INDEX_BYTE6_SMM,
-        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
-        );
-    } else {
-      TestPointLibClearFeaturesVerified (
-        PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-        NULL,
-        TEST_POINT_INDEX_BYTE6_SMM,
-        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
-        );
-    }
-  }
-Done:
-  FreePool (CommData);
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtectionHandler - Exit\n"));
-  return EFI_SUCCESS;
+  TestPointMmReadyToBootMmPageProtectionHandler (CommBuffer, CommBufferSize);
 }
 
 /**
@@ -437,32 +266,7 @@ TestPointSmmHandler (
   IN OUT UINTN   *CommBufferSize  OPTIONAL
   )
 {
-  TEST_POINT_SMM_COMMUNICATION_HEADER      CommData;
-  UINTN                                    TempCommBufferSize;
-
-  //
-  // If input is invalid, stop processing this SMI
-  //
-  if (CommBuffer == NULL || CommBufferSize == NULL) {
-    return EFI_SUCCESS;
-  }
-
-  TempCommBufferSize = *CommBufferSize;
-
-  if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_HEADER)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication buffer size invalid!\n"));
-    return EFI_SUCCESS;
-  }
-  CopyMem (&CommData, CommBuffer, sizeof(CommData));
-  if (CommData.Version != TEST_POINT_SMM_COMMUNICATION_VERSION) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication Version invalid!\n"));
-    return EFI_SUCCESS;
-  }
-  switch (CommData.FuncId) {
-  case TEST_POINT_SMM_COMMUNICATION_FUNC_ID_UEFI_GCD_MAP_INFO:
-    return TestPointSmmReadyToBootSmmPageProtectionHandler (CommBuffer, CommBufferSize);
-  }
-  return EFI_SUCCESS;
+  TestPointMmHandler (DispatchHandle, Context, CommBuffer, CommBufferSize);
 }
 
 /**
@@ -476,10 +280,7 @@ TestPointSmmExitBootServices (
   VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmExitBootServices - Enter\n"));
-
-  DEBUG ((DEBUG_INFO, "======== TestPointSmmExitBootServices - Exit\n"));
-  return EFI_SUCCESS;
+  TestPointMmExitBootServices ();
 }
 
 /**
@@ -490,43 +291,7 @@ RegisterSmmTestPointHandler (
   VOID
   )
 {
-  EFI_STATUS    Status;
-  EFI_HANDLE    DispatchHandle;
-
-  Status = gSmst->SmiHandlerRegister (
-                    TestPointSmmHandler,
-                    &mTestPointSmmCommunciationGuid,
-                    &DispatchHandle
-                    );
-  ASSERT_EFI_ERROR (Status);
-}
-
-/**
-  Initialize feature data.
-
-  @param[in]  Role    The test point role being requested.
-**/
-VOID
-InitData (
-  IN UINT32                   Role
-  )
-{
-  EFI_STATUS                             Status;
-
-  ASSERT (PcdGetSize(PcdTestPointIbvPlatformFeature) == sizeof(mFeatureImplemented));
-  CopyMem (mFeatureImplemented, PcdGetPtr(PcdTestPointIbvPlatformFeature), sizeof(mFeatureImplemented));
-
-  mTestPointStruct.Role = Role;
-  CopyMem (mTestPointStruct.FeaturesImplemented, mFeatureImplemented, sizeof(mFeatureImplemented));
-  Status = TestPointLibSetTable (
-             &mTestPointStruct,
-             sizeof(mTestPointStruct)
-             );
-  if (EFI_ERROR (Status)) {
-    if (Status != EFI_ALREADY_STARTED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  }
+  RegisterMmTestPointHandler ();
 }
 
 /**
@@ -547,9 +312,5 @@ SmmTestPointCheckLibConstructor (
   IN EFI_SYSTEM_TABLE *SystemTable
   )
 {
-  InitData (PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV);
-
-  RegisterSmmTestPointHandler ();
-
-  return EFI_SUCCESS;
+  MmTestPointCheckLibConstructor ();
 }

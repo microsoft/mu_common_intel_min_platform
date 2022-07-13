@@ -33,6 +33,7 @@
 
 [Sources]
   PlatformInitStandaloneMm.c
+  PlatformInitMm.c
 
 [Protocols]
   gEfiMmReadyToLockProtocolGuid

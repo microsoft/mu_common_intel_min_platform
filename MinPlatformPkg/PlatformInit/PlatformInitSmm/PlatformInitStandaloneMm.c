@@ -23,27 +23,6 @@
 #include <Library/HobLib.h>
 
 /**
-  Standalone MM End Of Dxe event notification handler.
-
-  @param[in] Protocol   Points to the protocol's unique identifier.
-  @param[in] Interface  Points to the interface instance.
-  @param[in] Handle     The handle on which the interface was installed.
-
-  @retval EFI_SUCCESS   Notification handler runs successfully.
-**/
-EFI_STATUS
-EFIAPI
-MmEndOfDxeEventNotify (
-  IN CONST EFI_GUID  *Protocol,
-  IN VOID            *Interface,
-  IN EFI_HANDLE      Handle
-  )
-{
-  TestPointStandaloneMmEndOfDxeSmrrFunctional ();
-  return EFI_SUCCESS;
-}
-
-/**
   Standalone MM Ready To Lock event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
@@ -60,7 +39,7 @@ MmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
+  TestPointMmReadyToLockSecureMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
@@ -81,28 +60,7 @@ MmReadyToBootEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointStandaloneMmReadyToBootStandaloneMmPageProtection ();
-  return EFI_SUCCESS;
-}
-
-/**
-  Standalone MM Exit Boot Services event notification handler.
-
-  @param[in] Protocol   Points to the protocol's unique identifier.
-  @param[in] Interface  Points to the interface instance.
-  @param[in] Handle     The handle on which the interface was installed.
-
-  @retval EFI_SUCCESS   Notification handler runs successfully.
-**/
-EFI_STATUS
-EFIAPI
-MmExitBootServicesEventNotify (
-  IN CONST EFI_GUID  *Protocol,
-  IN VOID            *Interface,
-  IN EFI_HANDLE      Handle
-  )
-{
-  TestPointStandaloneMmExitBootServices ();
+  TestPointMmReadyToBootMmPageProtection ();
   return EFI_SUCCESS;
 }
 
@@ -125,17 +83,10 @@ PlatformInitStandaloneMmEntryPoint (
   )
 {
   EFI_STATUS  Status;
-  VOID        *MmEndOfDxeRegistration;
   VOID        *MmReadyToLockRegistration;
   VOID        *MmReadyToBootRegistration;
-  VOID        *MmExitBootServicesRegistration;
 
-  Status = gMmst->MmRegisterProtocolNotify (
-                    &gEfiMmEndOfDxeProtocolGuid,
-                    MmEndOfDxeEventNotify,
-                    &MmEndOfDxeRegistration
-                    );
-  ASSERT_EFI_ERROR (Status);
+  PlatformInitMmEntryPoint ();
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
@@ -148,13 +99,6 @@ PlatformInitStandaloneMmEntryPoint (
                     &gEdkiiSmmReadyToBootProtocolGuid,
                     MmReadyToBootEventNotify,
                     &MmReadyToBootRegistration
-                    );
-  ASSERT_EFI_ERROR (Status);
-
-  Status = gMmst->MmRegisterProtocolNotify (
-                    &gEdkiiSmmExitBootServicesProtocolGuid,
-                    MmExitBootServicesEventNotify,
-                    &MmExitBootServicesRegistration
                     );
   ASSERT_EFI_ERROR (Status);
 

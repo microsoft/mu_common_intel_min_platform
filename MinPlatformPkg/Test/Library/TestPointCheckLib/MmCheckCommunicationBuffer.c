@@ -47,7 +47,7 @@ IsUefiPageNotPresent (
 }
 
 EFI_STATUS
-TestPointCheckStandaloneMmCommunicationBuffer (
+TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
   IN UINTN                        UefiMemoryMapSize,
   IN UINTN                        UefiDescriptorSize,
@@ -61,7 +61,7 @@ TestPointCheckStandaloneMmCommunicationBuffer (
   UINTN                  Index;
   EFI_MEMORY_DESCRIPTOR  *Entry;
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckStandaloneMmCommunicationBuffer - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmCommunicationBuffer - Enter\n"));
 
   ReturnStatus        = EFI_SUCCESS;
   MemoryMapEntryCount = UefiMemoryMapSize/UefiDescriptorSize;
@@ -115,6 +115,6 @@ TestPointCheckStandaloneMmCommunicationBuffer (
       );
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckStandaloneMmCommunicationBuffer - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmCommunicationBuffer - Exit\n"));
   return EFI_SUCCESS;
 }

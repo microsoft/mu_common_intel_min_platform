@@ -647,6 +647,39 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
   );
 
 /**
+  This service verifies SMRR configuration at the End of DXE.
+
+  Test subject: SMRR.
+  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps SMRR and SMRAM_INFO.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmEndOfDxeSmrrFunctional (
+  VOID
+  );
+
+/**
+  This service verifies the system state within SMM after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmExitBootServices (
+  VOID
+  );
+
+EFI_STATUS
+PlatformInitMmEntryPoint (
+  VOID
+  );
+
+/**
   This service verifies the validity of the Standalone MM memory atttribute table at Standalone MM Ready To Lock.
 
   Test subject: Standalone MM memory attribute table.
@@ -666,26 +699,26 @@ TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional (
   );
 
 /**
-  This service verifies the security of Standalone MM communication buffers at Standalone MM Ready To Lock.
+  This service verifies the security of MM communication buffers at MM Ready To Lock.
 
-  Test subject: Standalone MM communication buffer.
+  Test subject: MM communication buffer.
   Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
-  Reporting mechanism: Dumps the memory map and GCD map at StandaloneMmReadyToLock and checks at StandaloneMmReadyToBoot.
+  Reporting mechanism: Dumps the memory map and GCD map at MmReadyToLock and checks at MmReadyToBoot.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
+TestPointMmReadyToLockSecureMmCommunicationBuffer (
   VOID
   );
 
 /**
-  This service verifies the validity of the Standalone MM page table at Standalone MM Ready To Boot.
+  This service verifies the validity of the MM page table at MM Ready To Boot.
 
-  Test subject: Standalone MM page table.
-  Test overview: Verify the Standalone MM page table matches the Standalone MM memory attribute table.
+  Test subject: MM page table.
+  Test overview: Verify the MM page table matches the MM memory attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
 
@@ -694,7 +727,12 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
+TestPointMmReadyToBootMmPageProtection (
+  VOID
+  );
+
+VOID
+TestPointDumpMmLoadedImage (
   VOID
   );
 

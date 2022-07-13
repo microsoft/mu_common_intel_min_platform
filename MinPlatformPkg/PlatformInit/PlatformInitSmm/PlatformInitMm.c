@@ -6,15 +6,15 @@
 
 **/
 
-#include <PiSmm.h>
+#include <PiMm.h>
 
-#include <Protocol/SmmReadyToLock.h>
-#include <Protocol/SmmEndOfDxe.h>
+#include <Protocol/MmReadyToLock.h>
+#include <Protocol/MmEndOfDxe.h>
 #include <Protocol/SmmReadyToBoot.h>
 #include <Protocol/SmmExitBootServices.h>
 
-#include <Library/UefiDriverEntryPoint.h>
-#include <Library/SmmServicesTableLib.h>
+#include <Library/StandaloneMmDriverEntryPoint.h>
+#include <Library/MmServicesTableLib.h>
 #include <Library/DebugLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/BoardInitLib.h>
@@ -23,7 +23,7 @@
 #include <Library/HobLib.h>
 
 /**
-  SMM Ready To Lock event notification handler.
+  Standalone MM End Of Dxe event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
@@ -33,19 +33,18 @@
 **/
 EFI_STATUS
 EFIAPI
-SmmReadyToLockEventNotify (
+MmEndOfDxeEventNotify (
   IN CONST EFI_GUID  *Protocol,
   IN VOID            *Interface,
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointTraditionalMmReadyToLockSmmMemoryAttributeTableFunctional ();
-  TestPointTraditionalMmReadyToLockSecureSmmCommunicationBuffer ();
+  TestPointMmEndOfDxeSmrrFunctional ();
   return EFI_SUCCESS;
 }
 
 /**
-  SMM Ready To Boot event notification handler.
+  Standalone MM Exit Boot Services event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
@@ -55,21 +54,18 @@ SmmReadyToLockEventNotify (
 **/
 EFI_STATUS
 EFIAPI
-SmmReadyToBootEventNotify (
+MmExitBootServicesEventNotify (
   IN CONST EFI_GUID  *Protocol,
   IN VOID            *Interface,
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointTraditionalMmReadyToBootSmmPageProtection ();
+  TestPointMmExitBootServices ();
   return EFI_SUCCESS;
 }
 
 /**
-  Initialize  SMM Platform.
-
-  @param[in] ImageHandle       Image handle of this driver.
-  @param[in] SystemTable       Global system service table.
+  Initialize  Shared MM Platform.
 
   @retval EFI_SUCCESS           Initialization complete.
   @exception EFI_UNSUPPORTED       The chipset is unsupported by this driver.
@@ -78,28 +74,25 @@ SmmReadyToBootEventNotify (
 **/
 EFI_STATUS
 EFIAPI
-PlatformInitSmmEntryPoint (
-  IN EFI_HANDLE       ImageHandle,
-  IN EFI_SYSTEM_TABLE *SystemTable
+PlatformInitMmEntryPoint (
+  VOID
   )
 {
-  EFI_STATUS Status;
-  VOID       *SmmReadyToLockRegistration;
-  VOID       *SmmReadyToBootRegistration;
+  EFI_STATUS  Status;
+  VOID        *MmEndOfDxeRegistration;
+  VOID        *MmExitBootServicesRegistration;
 
-  PlatformInitMmEntryPoint ();
-  
-  Status = gSmst->SmmRegisterProtocolNotify (
-                    &gEfiSmmReadyToLockProtocolGuid,
-                    SmmReadyToLockEventNotify,
-                    &SmmReadyToLockRegistration
+  Status = gMmst->MmRegisterProtocolNotify (
+                    &gEfiMmEndOfDxeProtocolGuid,
+                    MmEndOfDxeEventNotify,
+                    &MmEndOfDxeRegistration
                     );
   ASSERT_EFI_ERROR (Status);
-  
-  Status = gSmst->SmmRegisterProtocolNotify (
-                    &gEdkiiSmmReadyToBootProtocolGuid,
-                    SmmReadyToBootEventNotify,
-                    &SmmReadyToBootRegistration
+
+  Status = gMmst->MmRegisterProtocolNotify (
+                    &gEdkiiSmmExitBootServicesProtocolGuid,
+                    MmExitBootServicesEventNotify,
+                    &MmExitBootServicesRegistration
                     );
   ASSERT_EFI_ERROR (Status);
 

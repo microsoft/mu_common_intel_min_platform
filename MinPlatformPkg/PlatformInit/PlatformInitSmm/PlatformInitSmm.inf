@@ -35,6 +35,7 @@
 
 [Sources]
   PlatformInitSmm.c
+  PlatformInitMm.c
 
 [Protocols]
   gEfiSmmReadyToLockProtocolGuid

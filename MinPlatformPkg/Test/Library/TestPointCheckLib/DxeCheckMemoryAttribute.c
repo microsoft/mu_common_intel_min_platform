@@ -66,7 +66,7 @@ TestPointCheckMemoryAttribute (
   IN EFI_PHYSICAL_ADDRESS            Base,
   IN UINT64                          Size,
   IN BOOLEAN                         IsCode,
-  IN BOOLEAN                         IsFromSmm
+  IN BOOLEAN                         IsFromMm
   )
 {
   UINTN                 Index;
@@ -76,7 +76,7 @@ TestPointCheckMemoryAttribute (
   Entry = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
   for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
     if (Base >= Entry->PhysicalStart && Base+Size <= Entry->PhysicalStart+MultU64x64 (SIZE_4KB,Entry->NumberOfPages)) {
-      if (IsFromSmm) {
+      if (IsFromMm) {
         if (IsCode) {
           if (Entry->Type != EfiRuntimeServicesCode) {
             DEBUG ((DEBUG_ERROR, "Invalid Entry->Type %d\n", Entry->Type));
@@ -124,7 +124,7 @@ TestPointCheckImageMemoryAttribute (
   IN EFI_MEMORY_ATTRIBUTES_TABLE     *MemoryAttributesTable,
   IN EFI_PHYSICAL_ADDRESS            ImageBase,
   IN UINT64                          ImageSize,
-  IN BOOLEAN                         IsFromSmm
+  IN BOOLEAN                         IsFromMm
   )
 {
   EFI_STATUS                           Status;
@@ -204,7 +204,7 @@ TestPointCheckImageMemoryAttribute (
              (UINTN)ImageAddress,
              (UINTN)&Section[Hdr.Pe32->FileHeader.NumberOfSections] - (UINTN)ImageAddress,
              FALSE,
-             IsFromSmm
+             IsFromMm
              );
   if (EFI_ERROR(Status)) {
     ReturnStatus = Status;
@@ -243,7 +243,7 @@ TestPointCheckImageMemoryAttribute (
                  (UINTN)ImageAddress + Section[Index].VirtualAddress,
                  Section[Index].SizeOfRawData,
                  TRUE,
-                 IsFromSmm
+                 IsFromMm
                  );
     } else {
       //
@@ -254,7 +254,7 @@ TestPointCheckImageMemoryAttribute (
                  (UINTN)ImageAddress + Section[Index].VirtualAddress,
                  Section[Index].SizeOfRawData,
                  FALSE,
-                 IsFromSmm
+                 IsFromMm
                  );
     }
     if (EFI_ERROR(Status)) {

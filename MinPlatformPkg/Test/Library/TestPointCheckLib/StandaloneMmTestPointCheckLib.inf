@@ -14,8 +14,8 @@
   MODULE_TYPE                    = MM_STANDALONE
   VERSION_STRING                 = 1.0
   PI_SPECIFICATION_VERSION       = 0x00010032
-  LIBRARY_CLASS                  = TestPointCheckLib|MM_STANDALONE DXE_SMM_DRIVER
-  CONSTRUCTOR                    = StandaloneMmTestPointCheckLibConstructor
+  LIBRARY_CLASS                  = TestPointCheckLib|MM_STANDALONE
+  CONSTRUCTOR                    = MmTestPointCheckLibConstructor
 
 [LibraryClasses]
   BaseLib
@@ -35,11 +35,15 @@
   StandaloneMmPkg/StandaloneMmPkg.dec
 
 [Sources]
-  StandaloneMmTestPointCheckLib.c
   StandaloneMmCheckLoadedImage.c
-  StandaloneMmCheckSmrr.c
+  StandaloneMmCheckMemoryAttribute.c
   StandaloneMmCheckPaging.c
-  StandaloneMmCheckCommunicationBuffer.c
+  MmTestPointCheckLib.c
+  #MmCheckMemoryAttribute.c
+  MmCheckLoadedImage.c
+  MmCheckSmrr.c
+  MmCheckPaging.c
+  MmCheckCommunicationBuffer.c
   TestPointHelp.c
   TestPointInternal.h
 

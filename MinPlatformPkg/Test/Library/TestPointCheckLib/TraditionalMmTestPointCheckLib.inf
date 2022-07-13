@@ -34,12 +34,14 @@
   UefiCpuPkg/UefiCpuPkg.dec
 
 [Sources]
-  SmmTestPointCheckLib.c
-  SmmCheckMemoryAttribute.c
-  SmmCheckLoadedImage.c
-  SmmCheckSmrr.c
-  SmmCheckPaging.c
-  SmmCheckCommunicationBuffer.c
+  TraditionalMmTestPointCheckLib.c
+  TraditionalMmCheckLoadedImage.c
+  MmCheckMemoryAttribute.c
+  MmTestPointCheckLib.c
+  MmCheckLoadedImage.c
+  MmCheckSmrr.c
+  MmCheckPaging.c
+  MmCheckCommunicationBuffer.c
   DxeCheckMemoryAttribute.c
   DxeCheckMemoryMap.c
   DxeCheckLoadedImage.c

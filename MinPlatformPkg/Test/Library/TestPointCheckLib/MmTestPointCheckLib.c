@@ -10,7 +10,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/TestPointLib.h>
 #include <Library/BaseLib.h>
 #include <Library/DebugLib.h>
-#include <Library/BaseMemoryLib.h>
+#include <Library/BaseMemoryLib.h> 
 #include <Library/MemoryAllocationLib.h>
 #include <Library/StandaloneMmMemLib.h>
 #include <Library/MmServicesTableLib.h>
@@ -25,23 +25,23 @@ TestPointCheckSmrr (
   VOID
   );
 
-EFI_STATUS
-TestPointDumpStandaloneMmLoadedImage (
+VOID
+TestPointDumpMmLoadedImage (
   VOID
   );
 
 EFI_STATUS
-TestPointCheckStandaloneMmMemAttribute (
+TestPointCheckMmMemAttribute (
   VOID
   );
 
 EFI_STATUS
-TestPointCheckStandaloneMmPaging (
+TestPointCheckMmPaging (
   VOID
   );
 
 EFI_STATUS
-TestPointCheckStandaloneMmCommunicationBuffer (
+TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
   IN UINTN                        UefiMemoryMapSize,
   IN UINTN                        UefiDescriptorSize,
@@ -79,7 +79,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmEndOfDxeSmrrFunctional (
+TestPointMmEndOfDxeSmrrFunctional (
   VOID
   )
 {
@@ -90,7 +90,7 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmEndOfDxeSmrrFunctional - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmEndOfDxeSmrrFunctional - Enter\n"));
 
   Result = TRUE;
   Status = TestPointCheckSmrr ();
@@ -102,28 +102,28 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      5,
+      TEST_POINT_INDEX_BYTE6_SMM,
       TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmEndOfDxe - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmEndOfDxe - Exit\n"));
   return EFI_SUCCESS;
 }
 
 /**
-  This service verifies the security of Standalone MM communication buffers at Standalone MM Ready To Lock.
+  This service verifies the security of MM communication buffers at MM Ready To Lock.
 
-  Test subject: Standalone MM communication buffer.
+  Test subject: MM communication buffer.
   Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
-  Reporting mechanism: Dumps the memory map and GCD map at StandaloneMmReadyToLock and checks at StandaloneMmReadyToBoot.
+  Reporting mechanism: Dumps the memory map and GCD map at MmReadyToLock and checks at MmReadyToBoot.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
+TestPointMmReadyToLockSecureMmCommunicationBuffer (
   VOID
   )
 {
@@ -131,22 +131,22 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToLockSecureMmCommunicationBuffer - Enter\n"));
 
   //
   // Collect information here, because it is last chance to access outside SMRAM.
   //
-  // Previous memory collection is allowed in StandaloneMm but leaving this function for possible future collection
+  // Previous memory collection is allowed in MM but leaving this function for possible future collection
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToLockSecureMmCommunicationBuffer - Exit\n"));
   return EFI_SUCCESS;
 }
 
 /**
-  This service verifies the validity of the Standalone MM page table at Standalone MM Ready To Boot.
+  This service verifies the validity of the MM page table at MM Ready To Boot.
 
-  Test subject: Standalone MM page table.
-  Test overview: Verify the Standalone MM page table matches the Standalone MM memory attribute table.
+  Test subject: MM page table.
+  Test overview: Verify the MM page table matches the MM memory attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
 
@@ -155,7 +155,7 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
+TestPointMmReadyToBootMmPageProtection (
   VOID
   )
 {
@@ -166,11 +166,11 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToBootStandaloneMmPageProtection - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Enter\n"));
 
   Result = TRUE;
 
-  Status = TestPointCheckStandaloneMmPaging ();
+  Status = TestPointCheckMmPaging ();
   if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
@@ -179,7 +179,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
-      6,
+      TEST_POINT_INDEX_BYTE6_SMM,
       TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
       );
   }
@@ -187,7 +187,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
   if (mUefiMemoryMap != NULL) {
     Result = TRUE;
 
-    Status = TestPointCheckStandaloneMmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
+    Status = TestPointCheckMmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
     if (EFI_ERROR (Status)) {
       Result = FALSE;
     }
@@ -196,13 +196,13 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        6,
+        TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     }
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToBootStandaloneMmPageProtection - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -219,7 +219,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
   @retval EFI_SUCCESS Command is handled successfully.
 **/
 EFI_STATUS
-TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
+TestPointMmReadyToBootMmPageProtectionHandler (
   IN OUT VOID   *CommBuffer      OPTIONAL,
   IN OUT UINTN  *CommBufferSize  OPTIONAL
   )
@@ -233,64 +233,64 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
     return EFI_SUCCESS;
   }
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtectionHandler - Enter\n"));
 
   TempCommBufferSize = *CommBufferSize;
 
   if (TempCommBufferSize < sizeof (TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO)) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: SMM communication buffer size invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: SMM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
   }
 
   if (!MmCommBufferValid ((UINTN)CommBuffer, TempCommBufferSize)) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: SMM communication buffer in SMRAM or overflow!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: SMM communication buffer in SMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }
 
   DEBUG ((DEBUG_INFO, "TempCommBufferSize - 0x%x\n", TempCommBufferSize));
   CommData = AllocateCopyPool (TempCommBufferSize, CommBuffer);
   if (CommData == NULL) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: SMM communication buffer size too big!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: SMM communication buffer size too big!\n"));
     return EFI_SUCCESS;
   }
 
   if (CommData->UefiMemoryMapOffset != sizeof (TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO)) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: UefiMemoryMapOffset invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: UefiMemoryMapOffset invalid!\n"));
     goto Done;
   }
 
   if (CommData->UefiMemoryMapSize >= TempCommBufferSize - CommData->UefiMemoryMapOffset) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: UefiMemoryMapSize invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: UefiMemoryMapSize invalid!\n"));
     goto Done;
   }
 
   if (CommData->GcdMemoryMapOffset != CommData->UefiMemoryMapOffset + CommData->UefiMemoryMapSize) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: GcdMemoryMapOffset invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: GcdMemoryMapOffset invalid!\n"));
     goto Done;
   }
 
   if (CommData->GcdMemoryMapSize >= TempCommBufferSize - CommData->GcdMemoryMapOffset) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: GcdMemoryMapSize invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: GcdMemoryMapSize invalid!\n"));
     goto Done;
   }
 
   if (CommData->GcdIoMapOffset != CommData->GcdMemoryMapOffset + CommData->GcdMemoryMapSize) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: GcdIoMapOffset invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: GcdIoMapOffset invalid!\n"));
     goto Done;
   }
 
   if (CommData->GcdIoMapSize >= TempCommBufferSize - CommData->GcdIoMapOffset) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: GcdIoMapSize invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: GcdIoMapSize invalid!\n"));
     goto Done;
   }
 
   if (CommData->UefiMemoryAttributeTableOffset != CommData->GcdIoMapOffset + CommData->GcdIoMapSize) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: UefiMemoryAttributeTableOffset invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: UefiMemoryAttributeTableOffset invalid!\n"));
     goto Done;
   }
 
   if (CommData->UefiMemoryAttributeTableSize != TempCommBufferSize - CommData->UefiMemoryAttributeTableOffset) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler: UefiMemoryAttributeTableSize invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmReadyToBootMmPageProtectionHandler: UefiMemoryAttributeTableSize invalid!\n"));
     goto Done;
   }
 
@@ -298,12 +298,12 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
     //
     // The SpeculationBarrier() call here is to ensure the previous range/content
     // checks for the CommBuffer (copied in to CommData) have been completed before
-    // calling into TestPointCheckStandaloneMmCommunicationBuffer().
+    // calling into TestPointCheckMmCommunicationBuffer().
     //
     SpeculationBarrier ();
     Result = TRUE;
 
-    Status = TestPointCheckStandaloneMmCommunicationBuffer (
+    Status = TestPointCheckMmCommunicationBuffer (
                (EFI_MEMORY_DESCRIPTOR *)(UINTN)((UINTN)CommData + CommData->UefiMemoryMapOffset),
                (UINTN)CommData->UefiMemoryMapSize,
                mUefiDescriptorSize,
@@ -317,14 +317,14 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        6,
+        TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     } else {
       TestPointLibClearFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
         NULL,
-        6,
+        TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     }
@@ -333,7 +333,7 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (
 Done:
   FreePool (CommData);
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtectionHandler - Exit\n"));
   return EFI_SUCCESS;
 }
 
@@ -354,7 +354,7 @@ Done:
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmHandler (
+TestPointMmHandler (
   IN EFI_HANDLE  DispatchHandle,
   IN CONST VOID  *Context         OPTIONAL,
   IN OUT VOID    *CommBuffer      OPTIONAL,
@@ -374,19 +374,19 @@ TestPointStandaloneMmHandler (
   TempCommBufferSize = *CommBufferSize;
 
   if (TempCommBufferSize < sizeof (TEST_POINT_SMM_COMMUNICATION_HEADER)) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmHandler: SMM communication buffer size invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmHandler: SMM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
   }
 
   CopyMem (&CommData, CommBuffer, sizeof (CommData));
   if (CommData.Version != TEST_POINT_SMM_COMMUNICATION_VERSION) {
-    DEBUG ((DEBUG_ERROR, "TestPointStandaloneMmHandler: SMM communication Version invalid!\n"));
+    DEBUG ((DEBUG_ERROR, "TestPointMmHandler: SMM communication Version invalid!\n"));
     return EFI_SUCCESS;
   }
 
   switch (CommData.FuncId) {
     case TEST_POINT_SMM_COMMUNICATION_FUNC_ID_UEFI_GCD_MAP_INFO:
-      return TestPointStandaloneMmReadyToBootStandaloneMmPageProtectionHandler (CommBuffer, CommBufferSize);
+      return TestPointMmReadyToBootMmPageProtectionHandler (CommBuffer, CommBufferSize);
   }
 
   return EFI_SUCCESS;
@@ -399,21 +399,21 @@ TestPointStandaloneMmHandler (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmExitBootServices (
+TestPointMmExitBootServices (
   VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmExitBootServices - Enter\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmExitBootServices - Enter\n"));
 
-  DEBUG ((DEBUG_INFO, "======== TestPointStandaloneMmExitBootServices - Exit\n"));
+  DEBUG ((DEBUG_INFO, "======== TestPointMmExitBootServices - Exit\n"));
   return EFI_SUCCESS;
 }
 
 /**
-  Register StandaloneMM Test Point handler.
+  Register Mm Test Point handler.
 **/
 VOID
-RegisterStandaloneMmTestPointHandler (
+RegisterMmTestPointHandler (
   VOID
   )
 {
@@ -421,7 +421,7 @@ RegisterStandaloneMmTestPointHandler (
   EFI_HANDLE  DispatchHandle;
 
   Status = gMmst->MmiHandlerRegister (
-                    TestPointStandaloneMmHandler,
+                    TestPointMmHandler,
                     &mTestPointSmmCommunciationGuid,
                     &DispatchHandle
                     );
@@ -469,14 +469,14 @@ InitData (
 **/
 EFI_STATUS
 EFIAPI
-StandaloneMmTestPointCheckLibConstructor (
+MmTestPointCheckLibConstructor (
   IN EFI_HANDLE           ImageHandle,
   IN EFI_MM_SYSTEM_TABLE  *SystemTable
   )
 {
   InitData (PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV);
 
-  RegisterStandaloneMmTestPointHandler ();
+  RegisterMmTestPointHandler ();
 
   return EFI_SUCCESS;
 }
