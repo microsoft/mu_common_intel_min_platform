@@ -5,7 +5,7 @@
 
 **/
 
-#include "StandaloneMmTestPoint.h"
+#include "MmTestPoint.h"
 
 /**
   Returns the current state information for the adapter.
@@ -162,7 +162,7 @@ TestPointAipGetSupportedTypes (
   return EFI_SUCCESS;
 }
 
-EFI_ADAPTER_INFORMATION_PROTOCOL mStandaloneMmAdapterInformationProtocol = {
+EFI_ADAPTER_INFORMATION_PROTOCOL mMmAdapterInformationProtocol = {
   TestPointAipGetInfo,
   TestPointAipSetInfo,
   TestPointAipGetSupportedTypes,

@@ -16,10 +16,12 @@
   LIBRARY_CLASS                  = TestPointLib
 
 [Sources]
-  SmmTestPointCommunication.c
-  SmmTestPointAip.c
-  SmmTestPoint.c
+  MmTestPointCommunication.c
+  MmTestPointAip.c
+  MmTestPoint.c
+  MmTestPoint.h
   SmmTestPoint.h
+  SmmTestPointCommunication.c
 
 [Packages]
   MdePkg/MdePkg.dec

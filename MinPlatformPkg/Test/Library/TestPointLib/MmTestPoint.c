@@ -5,7 +5,7 @@
 
 **/
 
-#include "StandaloneMmTestPoint.h"
+#include "MmTestPoint.h"
 
 /**
   Find TestPoint table in AIP protocol, and return the data.
@@ -315,7 +315,7 @@ TestPointLibSetTable (
   }
 
   TestPointAip->Signature = TEST_POINT_AIP_PRIVATE_SIGNATURE;
-  CopyMem (&TestPointAip->Aip, &mStandaloneMmAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
+  CopyMem (&TestPointAip->Aip, &mMmAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
   TestPointAip->TestPointSize = TestPointSize;
   TestPointAip->TestPointMaxSize = TestPointSize;
   
@@ -332,7 +332,7 @@ TestPointLibSetTable (
   }
 
   if (!EFI_ERROR(Status)) {
-    RegisterStandaloneMmTestPointSmiHandler ();
+    RegisterMmTestPointSmiHandler ();
   }
 
   return Status;

@@ -5,10 +5,10 @@
 
 **/
 
-#include "StandaloneMmTestPoint.h"
+#include "MmTestPoint.h"
 
 EFI_STATUS
-GetAllStandaloneMmTestPointData (
+GetAllMmTestPointData (
   IN OUT UINTN  *DataSize,
   IN OUT VOID   *Data
   )
@@ -137,13 +137,13 @@ Done:
 }
 
 /**
-  StandaloneMm test point SMI handler to get info.
+  MM test point SMI handler to get info.
 
-  @param SmiHandlerTestPointParameterGetInfo The parameter of StandaloneMm test point SMI handler get info.
+  @param SmiHandlerTestPointParameterGetInfo The parameter of MM test point SMI handler get info.
 
 **/
 VOID
-StandaloneMmTestPointSmiHandlerGetInfo (
+MmTestPointSmiHandlerGetInfo (
   IN SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO   *SmiHandlerTestPointParameterGetInfo
   )
 {
@@ -151,7 +151,7 @@ StandaloneMmTestPointSmiHandlerGetInfo (
   EFI_STATUS  Status;
   
   DataSize = 0;
-  Status = GetAllStandaloneMmTestPointData (&DataSize, NULL);
+  Status = GetAllMmTestPointData (&DataSize, NULL);
   if (Status == EFI_BUFFER_TOO_SMALL) {
     SmiHandlerTestPointParameterGetInfo->DataSize = DataSize;
     SmiHandlerTestPointParameterGetInfo->Header.ReturnStatus = 0;
@@ -162,9 +162,9 @@ StandaloneMmTestPointSmiHandlerGetInfo (
 }
 
 /**
-  Copy StandaloneMm Test Point data.
+  Copy MM Test Point data.
 
-  @param DataBuffer  The buffer to hold StandaloneMm Test Point data.
+  @param DataBuffer  The buffer to hold MM Test Point data.
   @param DataSize    On input, data buffer size.
                      On output, actual data buffer size copied.
   @param DataOffset  On input, data buffer offset to copy.
@@ -197,13 +197,13 @@ SmiHandlerTestPointCopyData (
 }
 
 /**
-  StandaloneMm test point SMI handler to get data by offset.
+  MM test point SMI handler to get data by offset.
 
-  @param SmiHandlerTestPointParameterGetDataByOffset   The parameter of StandaloneMm test point SMI handler get data by offset.
+  @param SmiHandlerTestPointParameterGetDataByOffset   The parameter of MM test point SMI handler get data by offset.
 
 **/
 VOID
-StandaloneMmTestPointSmiHandlerGetDataByOffset (
+MmTestPointSmiHandlerGetDataByOffset (
   IN SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET     *SmiHandlerTestPointParameterGetDataByOffset
   )
 {
@@ -224,13 +224,13 @@ StandaloneMmTestPointSmiHandlerGetDataByOffset (
   // Sanity check
   //
   if (!MmCommBufferValid((UINTN)SmiHandlerTestPointGetDataByOffset.DataBuffer, (UINTN)SmiHandlerTestPointGetDataByOffset.DataSize)) {
-    DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandlerGetDataByOffset: StandaloneMmTestPoint get data in SMRAM or overflow!\n"));
+    DEBUG((DEBUG_ERROR, "MmTestPointSmiHandlerGetDataByOffset: MmTestPoint get data in SMRAM or overflow!\n"));
     SmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_ACCESS_DENIED;
     goto Done;
   }
   
   DataSize = 0;
-  Status = GetAllStandaloneMmTestPointData (&DataSize, NULL);
+  Status = GetAllMmTestPointData (&DataSize, NULL);
   if (Status != EFI_BUFFER_TOO_SMALL) {
     SmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_NOT_FOUND;
     goto Done;
@@ -240,7 +240,7 @@ StandaloneMmTestPointSmiHandlerGetDataByOffset (
     SmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_OUT_OF_RESOURCES;
     goto Done;
   }
-  Status = GetAllStandaloneMmTestPointData (&DataSize, Data);
+  Status = GetAllMmTestPointData (&DataSize, Data);
   if (EFI_ERROR(Status)) {
     SmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)Status;
     goto Done;
@@ -284,14 +284,14 @@ Done:
   @param Context         Points to an optional handler context which was specified when the
                          handler was registered.
   @param CommBuffer      A pointer to a collection of data in memory that will
-                         be conveyed from a non-StandlaoneMm environment into an StandaloneMm environment.
+                         be conveyed from a non-StandlaoneMm environment into an MM environment.
   @param CommBufferSize  The size of the CommBuffer.
 
   @retval EFI_SUCCESS Command is handled successfully.
 **/
 EFI_STATUS
 EFIAPI
-StandaloneMmTestPointSmiHandler (
+MmTestPointSmiHandler (
   IN EFI_HANDLE  DispatchHandle,
   IN CONST VOID  *Context         OPTIONAL,
   IN OUT VOID    *CommBuffer      OPTIONAL,
@@ -301,9 +301,7 @@ StandaloneMmTestPointSmiHandler (
   SMI_HANDLER_TEST_POINT_PARAMETER_HEADER     *SmiHandlerTestPointParameterHeader;
   UINTN                                       TempCommBufferSize;
 
-  DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler Enter\n"));
-
-  // PROBLEM HERE FOR TESTPOINT
+  DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler Enter\n"));
 
   //
   // If input is invalid, stop processing this SMI
@@ -315,12 +313,12 @@ StandaloneMmTestPointSmiHandler (
   TempCommBufferSize = *CommBufferSize;
 
   if (TempCommBufferSize < sizeof(SMI_HANDLER_TEST_POINT_PARAMETER_HEADER)) {
-    DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler: StandaloneMm communication buffer size invalid!\n"));
+    DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler: MM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
   }
 
   if (!MmCommBufferValid((UINTN)CommBuffer, TempCommBufferSize)) {
-    DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler: StandaloneMm communication buffer in SMRAM or overflow!\n"));
+    DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler: MM communication buffer in SMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }
 
@@ -331,33 +329,33 @@ StandaloneMmTestPointSmiHandler (
   case SMI_HANDLER_TEST_POINT_COMMAND_GET_INFO:
     DEBUG((DEBUG_ERROR, "SmiHandlerTestPointHandlerGetInfo\n"));
     if (TempCommBufferSize != sizeof(SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO)) {
-      DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler: StandaloneMm communication buffer size invalid!\n"));
+      DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler: MM communication buffer size invalid!\n"));
       return EFI_SUCCESS;
     }
-    StandaloneMmTestPointSmiHandlerGetInfo((SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)(UINTN)CommBuffer);
+    MmTestPointSmiHandlerGetInfo((SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)(UINTN)CommBuffer);
     break;
   case SMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET:
     DEBUG((DEBUG_ERROR, "SmiHandlerTestPointHandlerGetDataByOffset\n"));
     if (TempCommBufferSize != sizeof(SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET)) {
-      DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler: StandaloneMm communication buffer size invalid!\n"));
+      DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler: MM communication buffer size invalid!\n"));
       return EFI_SUCCESS;
     }
-    StandaloneMmTestPointSmiHandlerGetDataByOffset((SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)(UINTN)CommBuffer);
+    MmTestPointSmiHandlerGetDataByOffset((SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)(UINTN)CommBuffer);
     break;
   default:
     break;
   }
 
-  DEBUG((DEBUG_ERROR, "StandaloneMmTestPointSmiHandler Exit\n"));
+  DEBUG((DEBUG_ERROR, "MmTestPointSmiHandler Exit\n"));
 
   return EFI_SUCCESS;
 }
 
 /**
-  Register StandaloneMm TestPoint handler.
+  Register MM TestPoint handler.
 **/
 VOID
-RegisterStandaloneMmTestPointSmiHandler (
+RegisterMmTestPointSmiHandler (
   VOID
   )
 {
@@ -370,7 +368,7 @@ RegisterStandaloneMmTestPointSmiHandler (
   }
   
   Status = gMmst->MmiHandlerRegister (
-                    StandaloneMmTestPointSmiHandler,
+                    MmTestPointSmiHandler,
                     &gAdapterInfoPlatformTestPointGuid,
                     &DispatchHandle
                     );

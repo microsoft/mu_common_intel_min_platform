@@ -5,8 +5,8 @@
 
 **/
 
-#ifndef _STANDALONE_MM_TEST_POINT_H_
-#define _STANDALONE_MM_TEST_POINT_H_
+#ifndef _MM_TEST_POINT_H_
+#define _MM_TEST_POINT_H_
 
 #include <PiMm.h>
 #include <Library/BaseLib.h>
@@ -36,7 +36,7 @@ typedef struct {
       TEST_POINT_AIP_PRIVATE_SIGNATURE \
       )
 
-extern EFI_ADAPTER_INFORMATION_PROTOCOL mStandaloneMmAdapterInformationProtocol;
+extern EFI_ADAPTER_INFORMATION_PROTOCOL mMmAdapterInformationProtocol;
 
 /**
   Return if input TestPoint data is valid.
@@ -54,10 +54,10 @@ InternalTestPointIsValidTable (
   );
 
 /**
-  Register StandaloneMm TestPoint handler.
+  Register MM TestPoint handler.
 **/
 VOID
-RegisterStandaloneMmTestPointSmiHandler (
+RegisterMmTestPointSmiHandler (
   VOID
   );
 

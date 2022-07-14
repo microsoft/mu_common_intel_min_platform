@@ -112,7 +112,7 @@
   CompressLib|MinPlatformPkg/Library/CompressLib/CompressLib.inf
 
 [LibraryClasses.common.DXE_SMM_DRIVER]
-  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
+  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/TraditionalMmTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
 
 [LibraryClasses.common.MM_STANDALONE]
@@ -125,7 +125,7 @@
   StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
   VariableReadLib|MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
   VariableWriteLib|MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
-  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/StandaloneMmTestPointCheckLib.inf
+  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/MmTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/StandaloneMmTestPointLib.inf
 
 ###################################################################################################
@@ -221,8 +221,8 @@
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/DxeTestPointCheckLib.inf
-  MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
-  MinPlatformPkg/Test/Library/TestPointCheckLib/StandaloneMmTestPointCheckLib.inf
+  MinPlatformPkg/Test/Library/TestPointCheckLib/TraditionalMmTestPointCheckLib.inf
+  MinPlatformPkg/Test/Library/TestPointCheckLib/MmTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
