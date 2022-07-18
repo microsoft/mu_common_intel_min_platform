@@ -22,7 +22,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID
 EFIAPI
 CallFspWrapperResetSystem (
-  UINT32    ResetType
+  EFI_STATUS    ResetType
   )
 {
   EFI_RESET_TYPE             EfiResetType;
