@@ -38,14 +38,12 @@
 #
 ################################################################################
 
-[PcdsFeatureFlag]
-  # configuration
-    gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly|FALSE
-    gMinPlatformPkgTokenSpaceGuid.PcdUefiSecureBootEnable|FALSE
-    gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable|FALSE
-    gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable|FALSE
-    gMinPlatformPkgTokenSpaceGuid.PcdSmiHandlerProfileEnable|FALSE
-    gMinPlatformPkgTokenSpaceGuid.PcdSerialTerminalEnable|FALSE
+#
+# MinPlatform common include for required feature PCD
+# These PCD must be set before the core include files, CoreCommonLib,
+# CorePeiLib, and CoreDxeLib.
+#
+!include MinPlatformPkg/Include/Dsc/MinPlatformFeaturesPcd.dsc.inc
 
 ################################################################################
 #
