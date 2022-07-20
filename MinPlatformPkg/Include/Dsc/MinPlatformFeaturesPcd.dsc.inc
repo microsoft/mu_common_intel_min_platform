@@ -22,5 +22,4 @@
  gMinPlatformPkgTokenSpaceGuid.PcdUefiSecureBootEnable          |FALSE
  gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable                    |FALSE
 
- gMinPlatformPkgTokenSpaceGuid.PcdSmiHandlerProfileEnable       |FALSE
  gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable             |FALSE
