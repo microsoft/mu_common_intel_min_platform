@@ -39,7 +39,7 @@ StandaloneMmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointMmReadyToLockSecureMmCommunicationBuffer ();
+  TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
