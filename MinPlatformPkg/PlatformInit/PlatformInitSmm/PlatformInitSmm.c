@@ -39,8 +39,8 @@ SmmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointTraditionalMmReadyToLockSmmMemoryAttributeTableFunctional ();
-  TestPointTraditionalMmReadyToLockSecureSmmCommunicationBuffer ();
+  TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional ();
+  TestPointSmmReadyToLockSecureSmmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
@@ -61,7 +61,7 @@ SmmReadyToBootEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointTraditionalMmReadyToBootSmmPageProtection ();
+  TestPointSmmReadyToBootSmmPageProtection ();
   return EFI_SUCCESS;
 }
 

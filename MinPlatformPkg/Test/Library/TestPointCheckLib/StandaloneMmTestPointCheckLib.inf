@@ -15,7 +15,7 @@
   VERSION_STRING                 = 1.0
   PI_SPECIFICATION_VERSION       = 0x00010032
   LIBRARY_CLASS                  = TestPointCheckLib|MM_STANDALONE
-  CONSTRUCTOR                    = MmTestPointCheckLibConstructor
+  CONSTRUCTOR                    = StandaloneMmTestPointCheckLibConstructor
 
 [LibraryClasses]
   BaseLib
@@ -38,6 +38,7 @@
   StandaloneMmCheckLoadedImage.c
   StandaloneMmCheckMemoryAttribute.c
   StandaloneMmCheckPaging.c
+  StandaloneMmTestPointCheckLib.c
   MmTestPointCheckLib.c
   #MmCheckMemoryAttribute.c
   MmCheckLoadedImage.c

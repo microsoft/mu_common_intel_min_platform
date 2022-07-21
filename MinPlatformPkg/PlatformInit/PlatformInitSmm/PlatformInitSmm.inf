@@ -23,6 +23,7 @@
   DxeServicesTableLib
   MemoryAllocationLib
   PcdLib
+  MmServicesTableLib
   SmmServicesTableLib
   UefiDriverEntryPoint
   BoardInitLib
@@ -39,7 +40,7 @@
 
 [Protocols]
   gEfiSmmReadyToLockProtocolGuid
-  gEfiSmmEndOfDxeProtocolGuid
+  gEfiMmEndOfDxeProtocolGuid
   gEdkiiSmmReadyToBootProtocolGuid
   gEdkiiSmmExitBootServicesProtocolGuid
 

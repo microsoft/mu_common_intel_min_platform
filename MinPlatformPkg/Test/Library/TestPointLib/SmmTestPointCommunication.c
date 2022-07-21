@@ -5,7 +5,27 @@
 
 **/
 
+#include "MmTestPoint.h"
 #include "SmmTestPoint.h"
+
+/**
+  This function check if the buffer is valid per processor architecture and not overlap with SMRAM.
+
+  @param Buffer  The buffer start address to be checked.
+  @param Length  The buffer length to be checked.
+
+  @retval TRUE  This buffer is valid per processor architecture and not overlap with SMRAM.
+  @retval FALSE This buffer is not valid per processor architecture or overlap with SMRAM.
+**/
+BOOLEAN
+EFIAPI
+MmIsBufferOutsideMmValid (
+  IN EFI_PHYSICAL_ADDRESS  Buffer,
+  IN UINT64                Length
+  )
+{
+  return SmmIsBufferOutsideSmmValid (Buffer, Length);
+}
 
 EFI_STATUS
 GetAllSmmTestPointData (
@@ -178,23 +198,7 @@ SmiHandlerTestPointCopyData (
   OUT VOID      *DataBuffer,
   IN OUT UINT64 *DataSize,
   IN OUT UINT64 *DataOffset
-  )
-{
-  if (*DataOffset >= InputDataSize) {
-    *DataOffset = InputDataSize;
-    return;
-  }
-  if (InputDataSize - *DataOffset < *DataSize) {
-    *DataSize = InputDataSize - *DataOffset;
-  }
-
-  CopyMem(
-    DataBuffer,
-    (UINT8 *)InputData + *DataOffset,
-    (UINTN)*DataSize
-    );
-  *DataOffset = *DataOffset + *DataSize;
-}
+  );
 
 /**
   SMM test point SMI handler to get data by offset.

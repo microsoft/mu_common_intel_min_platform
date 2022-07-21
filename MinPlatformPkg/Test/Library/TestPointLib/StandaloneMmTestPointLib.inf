@@ -21,6 +21,8 @@
   MmTestPointAip.c
   MmTestPoint.c
   MmTestPoint.h
+  StandaloneMmTestPointCommunication.c
+  StandaloneMmTestPoint.h
 
 [Packages]
   MdePkg/MdePkg.dec

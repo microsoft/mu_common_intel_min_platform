@@ -33,7 +33,7 @@
 **/
 EFI_STATUS
 EFIAPI
-MmReadyToLockEventNotify (
+StandaloneMmReadyToLockEventNotify (
   IN CONST EFI_GUID  *Protocol,
   IN VOID            *Interface,
   IN EFI_HANDLE      Handle
@@ -54,13 +54,13 @@ MmReadyToLockEventNotify (
 **/
 EFI_STATUS
 EFIAPI
-MmReadyToBootEventNotify (
+StandaloneMmReadyToBootEventNotify (
   IN CONST EFI_GUID  *Protocol,
   IN VOID            *Interface,
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointMmReadyToBootMmPageProtection ();
+  TestPointStandaloneMmReadyToBootStandaloneMmPageProtection ();
   return EFI_SUCCESS;
 }
 
@@ -90,14 +90,14 @@ PlatformInitStandaloneMmEntryPoint (
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,
-                    MmReadyToLockEventNotify,
+                    StandaloneMmReadyToLockEventNotify,
                     &MmReadyToLockRegistration
                     );
   ASSERT_EFI_ERROR (Status);
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEdkiiSmmReadyToBootProtocolGuid,
-                    MmReadyToBootEventNotify,
+                    StandaloneMmReadyToBootEventNotify,
                     &MmReadyToBootRegistration
                     );
   ASSERT_EFI_ERROR (Status);

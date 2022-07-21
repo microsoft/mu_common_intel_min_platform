@@ -727,7 +727,7 @@ TestPointMmReadyToLockSecureMmCommunicationBuffer (
 **/
 EFI_STATUS
 EFIAPI
-TestPointMmReadyToBootMmPageProtection (
+TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
   VOID
   );
 
