@@ -1,7 +1,8 @@
 ## @file
-# Component information file for Board Init Test Library
+# Component information file for the Standalone MM Test Point Check Library
 #
 # Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2022, Microsoft Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -28,11 +29,11 @@
   TestPointLib
 
 [Packages]
-  MinPlatformPkg/MinPlatformPkg.dec
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   UefiCpuPkg/UefiCpuPkg.dec
   StandaloneMmPkg/StandaloneMmPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
   StandaloneMmCheckLoadedImage.c
@@ -61,4 +62,3 @@
   gEfiLoadedImageProtocolGuid
   gEfiLoadedImageDevicePathProtocolGuid
   gEfiDevicePathProtocolGuid
-  gEfiRuntimeArchProtocolGuid

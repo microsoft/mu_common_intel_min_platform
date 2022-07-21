@@ -2,6 +2,7 @@
   This driver will register two callbacks to call fsp's notifies.
 
   Copyright (c) 2014 - 2016, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2022, Microsoft Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/

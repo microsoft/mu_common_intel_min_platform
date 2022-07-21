@@ -1,7 +1,8 @@
 ### @file
-# Module Information file for the PlatformInit DXE driver.
+# Module Information file for the PlatformInit Standalone MM driver.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2022, Microsoft Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
