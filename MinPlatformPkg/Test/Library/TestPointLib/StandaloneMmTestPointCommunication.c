@@ -7,6 +7,7 @@
 
 #include "MmTestPoint.h"
 #include "StandaloneMmTestPoint.h"
+#include <Library/StandaloneMmMemLib.h>
 
 /**
   This function check if the buffer is valid per processor architecture and not overlap with SMRAM.
