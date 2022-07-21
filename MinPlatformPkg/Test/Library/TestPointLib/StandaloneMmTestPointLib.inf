@@ -21,7 +21,7 @@
   MmTestPointAip.c
   MmTestPoint.c
   MmTestPoint.h
-  StandaloneMmTestPointCommunication.c
+  #StandaloneMmTestPointCommunication.c
   StandaloneMmTestPoint.h
 
 [Packages]

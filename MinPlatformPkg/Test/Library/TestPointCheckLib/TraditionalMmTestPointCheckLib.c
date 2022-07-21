@@ -17,8 +17,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include "TestPointInternal.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
-
 EFI_STATUS
 TestPointCheckSmrr (
   VOID
