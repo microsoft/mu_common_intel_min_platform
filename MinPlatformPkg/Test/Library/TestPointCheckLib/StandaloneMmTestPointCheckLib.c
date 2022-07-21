@@ -85,7 +85,7 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional (
   if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
-  TestPointMmEndOfDxeSmrrFunctional ();
+  return TestPointMmEndOfDxeSmrrFunctional ();
 }
 
 /**
@@ -108,7 +108,7 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
   if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER) == 0) {
     return EFI_SUCCESS;
   }
- TestPointMmReadyToLockSecureMmCommunicationBuffer ();
+ return TestPointMmReadyToLockSecureMmCommunicationBuffer ();
 }
 
 /**

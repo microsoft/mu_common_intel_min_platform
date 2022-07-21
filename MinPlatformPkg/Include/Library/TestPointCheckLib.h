@@ -715,6 +715,22 @@ TestPointMmReadyToLockSecureMmCommunicationBuffer (
   );
 
 /**
+  This service verifies the security of MM communication buffers at MM Ready To Lock.
+
+  Test subject: MM communication buffer.
+  Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
+  Reporting mechanism: Dumps the memory map and GCD map at MmReadyToLock and checks at MmReadyToBoot.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
+  VOID
+  );
+
+/**
   This service verifies the validity of the MM page table at MM Ready To Boot.
 
   Test subject: MM page table.
