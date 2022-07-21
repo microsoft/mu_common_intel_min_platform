@@ -86,7 +86,8 @@ PlatformInitStandaloneMmEntryPoint (
   VOID        *MmReadyToLockRegistration;
   VOID        *MmReadyToBootRegistration;
 
-  PlatformInitMmEntryPoint ();
+  Status = PlatformInitMmEntryPoint ();
+  ASSERT_EFI_ERROR (Status);
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmReadyToLockProtocolGuid,

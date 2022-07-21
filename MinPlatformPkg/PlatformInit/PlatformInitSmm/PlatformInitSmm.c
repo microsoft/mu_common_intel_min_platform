@@ -87,7 +87,8 @@ PlatformInitSmmEntryPoint (
   VOID       *SmmReadyToLockRegistration;
   VOID       *SmmReadyToBootRegistration;
 
-  PlatformInitMmEntryPoint ();
+  Status = PlatformInitMmEntryPoint ();
+  ASSERT_EFI_ERROR (Status);
   
   Status = gSmst->SmmRegisterProtocolNotify (
                     &gEfiSmmReadyToLockProtocolGuid,

@@ -675,6 +675,7 @@ TestPointMmExitBootServices (
   );
 
 EFI_STATUS
+EFIAPI
 PlatformInitMmEntryPoint (
   VOID
   );
