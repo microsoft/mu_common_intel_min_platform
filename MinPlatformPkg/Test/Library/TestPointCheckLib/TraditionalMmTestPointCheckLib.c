@@ -106,7 +106,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
   if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM] & TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL) == 0) {
     return EFI_SUCCESS;
   }
-  TestPointMmEndOfDxeSmrrFunctional ();
+  return TestPointMmEndOfDxeSmrrFunctional ();
 }
 
 /**
@@ -436,7 +436,7 @@ TestPointSmmExitBootServices (
   VOID
   )
 {
-  TestPointMmExitBootServices ();
+  return TestPointMmExitBootServices ();
 }
 
 /**
