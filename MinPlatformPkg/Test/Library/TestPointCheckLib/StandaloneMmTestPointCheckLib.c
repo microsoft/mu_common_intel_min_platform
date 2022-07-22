@@ -48,12 +48,6 @@ TestPointCheckMmPaging (
   );
 
 EFI_STATUS
-EFIAPI
-TestPointStandaloneMmExitBootServices (
-  VOID
-  );
-
-EFI_STATUS
 TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
   IN UINTN                        UefiMemoryMapSize,

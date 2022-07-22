@@ -41,13 +41,13 @@
   StandaloneMmCheckPaging.c
   StandaloneMmTestPointCheckLib.c
   MmTestPointCheckLib.c
-  #MmCheckMemoryAttribute.c
   MmCheckLoadedImage.c
   MmCheckSmrr.c
   MmCheckPaging.c
   MmCheckCommunicationBuffer.c
   TestPointHelp.c
   TestPointInternal.h
+  TestPointImageDump.c
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

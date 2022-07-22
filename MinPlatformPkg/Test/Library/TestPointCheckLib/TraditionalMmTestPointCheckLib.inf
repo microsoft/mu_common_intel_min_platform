@@ -49,6 +49,7 @@
   DxeCheckGcd.c
   TestPointHelp.c
   TestPointInternal.h
+  TestPointImageDump.c
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

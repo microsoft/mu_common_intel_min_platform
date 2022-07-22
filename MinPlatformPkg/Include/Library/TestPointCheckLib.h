@@ -682,25 +682,6 @@ PlatformInitMmEntryPoint (
   );
 
 /**
-  This service verifies the validity of the Standalone MM memory atttribute table at Standalone MM Ready To Lock.
-
-  Test subject: Standalone MM memory attribute table.
-  Test overview: Verify the Standalone MM memory attribute table is reported.
-                 Verify image code/data is consistent with the Standalone MM memory attribute table.
-                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the Standalone MM memory attribute table and Standalone MM image information.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional (
-  VOID
-  );
-
-/**
   This service verifies the security of MM communication buffers at MM Ready To Lock.
 
   Test subject: MM communication buffer.

@@ -12,10 +12,10 @@
   FILE_GUID                      = 6D515FCA-4311-4034-A5B9-F4065B412461
   VERSION_STRING                 = 1.0
   MODULE_TYPE                    = DXE_DRIVER
-  ENTRY_POINT                    = TestPointStubDxeStandaloneMmEntryPoint
+  ENTRY_POINT                    = TestPointStubDxeMmEntryPoint
 
 [Sources]
-  TestPointStubDxeStandaloneMm.c
+  TestPointStubDxeMm.c
 
 [Packages]
   MdePkg/MdePkg.dec

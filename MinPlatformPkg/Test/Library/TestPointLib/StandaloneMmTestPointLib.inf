@@ -1,5 +1,5 @@
 ## @file
-# SMM instance of TestPoint Library.
+# Standalone MM instance of TestPoint Library.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 # Copyright (c) 2022, Microsoft Corporation. All rights reserved.<BR>

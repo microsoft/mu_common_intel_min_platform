@@ -648,7 +648,7 @@ TestPointSmmEndOfDxeSmrrFunctional (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmEndOfDxeSmrrFunctional(
+TestPointStandaloneMmEndOfDxeSmrrFunctional (
     VOID
 )
 {
@@ -656,7 +656,7 @@ TestPointStandaloneMmEndOfDxeSmrrFunctional(
 }
 
 /**
-  This service verifies the validity of the SMM memory atttribute table at SMM Ready To Lock.
+  This service verifies the validity of the SMM memory attribute table at SMM Ready To Lock.
 
   Test subject: SMM memory attribute table.
   Test overview: Verify the SMM memory attribute table is reported.
@@ -675,29 +675,6 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
   )
 {
   return EFI_SUCCESS;
-}
-
-/**
-  This service verifies the validity of the StandaloneMm memory atttribute table at StandaloneMm 
-  Ready To Lock.
-
-  Test subject: StandaloneMm memory attribute table.
-  Test overview: Verify the StandaloneMm memory attribute table is reported.
-                 Verify image code/data is consistent with the StandaloneMm memory attribute table.
-                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the StandaloneMm memory attribute table and StandaloneMm image information.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointStandaloneMmReadyToLockStandaloneMmMemoryAttributeTableFunctional(
-    VOID
-)
-{
-    return EFI_SUCCESS;
 }
 
 /**
@@ -790,15 +767,15 @@ TestPointSmmExitBootServices (
 }
 
 /**
-  This service verifies the system state within SMM after Exit Boot Services is invoked.
+  This service verifies the system state within StandaloneM after Exit Boot Services is invoked.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmExitBootServices(
-    VOID
-)
+TestPointStandaloneMmExitBootServices (
+  VOID
+  )
 {
-    return EFI_SUCCESS;
+  return EFI_SUCCESS;
 }

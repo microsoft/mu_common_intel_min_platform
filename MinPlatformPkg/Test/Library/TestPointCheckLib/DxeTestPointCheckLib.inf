@@ -72,6 +72,7 @@
   DxeCheckDmaProtection.c
   TestPointHelp.c
   TestPointInternal.h
+  TestPointImageDump.c
 
 [Guids]
   gEfiMemoryAttributesTableGuid
