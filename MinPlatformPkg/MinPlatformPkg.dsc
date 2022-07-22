@@ -227,8 +227,7 @@
   MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/StandaloneMmTestPointLib.inf
-  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxeSmm.inf
-  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxeStandaloneMm.inf
+  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxeMm.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
 
   MinPlatformPkg/Library/BaseVariableReadLibNull/BaseVariableReadLibNull.inf
