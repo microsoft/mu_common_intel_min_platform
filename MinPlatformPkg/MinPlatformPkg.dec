@@ -134,6 +134,7 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPmTmrBlkAccessSize|0x00|UINT8|0x00010048
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize|0x00|UINT8|0x00010049
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize|0x00|UINT8|0x0001004A
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkRegisterBitWidth|0x00|UINT8|0x00010056
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiS4BiosReq|0x0000|UINT8|0x00010055
 
   #
@@ -266,9 +267,6 @@
 
 [PcdsDynamic, PcdsDynamicEx]
   gMinPlatformPkgTokenSpaceGuid.PcdPcIoApicEnable|0x0|UINT32|0x90000019
-  gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
-  gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
-  gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterAddressSpaceId|0x00|UINT8|0x0001004B
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitWidth|0x00|UINT8|0x0001004C
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitOffset|0x00|UINT8|0x0001004D
@@ -337,6 +335,11 @@
   #   //Header<BR>
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
   gMinPlatformPkgTokenSpaceGuid.PcdTrustedStorageDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x17, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x3000010
+
+  ## ACPI
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
+  gMinPlatformPkgTokenSpaceGuid.PcdFadtFlags|0x000086A5|UINT32|0x90000027
 
 [PcdsFixedAtBuild]
 
