@@ -1,7 +1,6 @@
 /** @file
 
-  Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
-  Copyright (c) 2022, Microsoft Corporation. All rights reserved.<BR>
+  Copyright (c) Microsoft Corporation.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -12,7 +11,7 @@
 #include <PiMm.h>
 
 /**
-  Standalone MM Ready To Lock event notification handler.
+  MM Ready To Lock event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
@@ -29,7 +28,7 @@ MmReadyToLockEventNotify (
   );
 
 /**
-  Standalone MM Ready To Boot event notification handler.
+  MM Ready To Boot event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
