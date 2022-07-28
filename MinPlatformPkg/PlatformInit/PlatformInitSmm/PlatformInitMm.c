@@ -9,6 +9,7 @@
 
 #include <PiMm.h>
 
+#include "EventNotify.h"
 #include <Protocol/MmReadyToLock.h>
 #include <Protocol/MmEndOfDxe.h>
 #include <Protocol/SmmReadyToBoot.h>
@@ -81,12 +82,28 @@ PlatformInitMmEntryPoint (
 {
   EFI_STATUS  Status;
   VOID        *MmEndOfDxeRegistration;
+  VOID        *MmReadyToLockRegistration;
+  VOID        *MmReadyToBootRegistration;
   VOID        *MmExitBootServicesRegistration;
 
   Status = gMmst->MmRegisterProtocolNotify (
                     &gEfiMmEndOfDxeProtocolGuid,
                     MmEndOfDxeEventNotify,
                     &MmEndOfDxeRegistration
+                    );
+  ASSERT_EFI_ERROR (Status);
+
+  Status = gMmst->MmRegisterProtocolNotify (
+                    &gEfiMmReadyToLockProtocolGuid,
+                    MmReadyToLockEventNotify,
+                    &MmReadyToLockRegistration
+                    );
+  ASSERT_EFI_ERROR (Status);
+
+  Status = gMmst->MmRegisterProtocolNotify (
+                    &gEdkiiSmmReadyToBootProtocolGuid,
+                    MmReadyToBootEventNotify,
+                    &MmReadyToBootRegistration
                     );
   ASSERT_EFI_ERROR (Status);
 

@@ -38,7 +38,6 @@
 [Sources]
   StandaloneMmCheckLoadedImage.c
   StandaloneMmCheckMemoryAttribute.c
-  StandaloneMmCheckPaging.c
   StandaloneMmTestPointCheckLib.c
   MmTestPointCheckLib.c
   MmCheckLoadedImage.c
@@ -48,6 +47,7 @@
   TestPointHelp.c
   TestPointInternal.h
   TestPointImageDump.c
+  TestPointImageDump.h
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

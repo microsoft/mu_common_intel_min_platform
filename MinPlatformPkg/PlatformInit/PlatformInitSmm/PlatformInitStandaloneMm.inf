@@ -33,6 +33,7 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
+  EventNotify.h
   PlatformInitStandaloneMm.c
   PlatformInitMm.c
 

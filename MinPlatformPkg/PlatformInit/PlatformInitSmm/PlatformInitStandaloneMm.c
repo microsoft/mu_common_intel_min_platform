@@ -7,6 +7,7 @@
 
 **/
 
+#include "EventNotify.h"
 #include <PiMm.h>
 
 #include <Protocol/MmReadyToLock.h>
@@ -22,6 +23,68 @@
 #include <Library/TestPointCheckLib.h>
 #include <Library/PerformanceLib.h>
 #include <Library/HobLib.h>
+
+EFI_STATUS
+EFIAPI
+StandaloneMmReadyToBootEventNotify (
+  IN CONST EFI_GUID  *Protocol,
+  IN VOID            *Interface,
+  IN EFI_HANDLE      Handle
+  );
+
+EFI_STATUS
+EFIAPI
+StandaloneMmReadyToLockEventNotify (
+  IN CONST EFI_GUID  *Protocol,
+  IN VOID            *Interface,
+  IN EFI_HANDLE      Handle
+  );
+
+/**
+  Standalone MM Ready To Lock event notification handler.
+
+  @param[in] Protocol   Points to the protocol's unique identifier.
+  @param[in] Interface  Points to the interface instance.
+  @param[in] Handle     The handle on which the interface was installed.
+
+  @retval EFI_SUCCESS   Notification handler runs successfully.
+**/
+EFI_STATUS
+EFIAPI
+MmReadyToLockEventNotify (
+  IN CONST EFI_GUID  *Protocol,
+  IN VOID            *Interface,
+  IN EFI_HANDLE      Handle
+  )
+{
+  EFI_STATUS Status;
+
+  Status = StandaloneMmReadyToLockEventNotify (Protocol, Interface, Handle);
+  return Status;
+}
+
+/**
+  Standalone MM Ready To Boot event notification handler.
+
+  @param[in] Protocol   Points to the protocol's unique identifier.
+  @param[in] Interface  Points to the interface instance.
+  @param[in] Handle     The handle on which the interface was installed.
+
+  @retval EFI_SUCCESS   Notification handler runs successfully.
+**/
+EFI_STATUS
+EFIAPI
+MmReadyToBootEventNotify (
+  IN CONST EFI_GUID  *Protocol,
+  IN VOID            *Interface,
+  IN EFI_HANDLE      Handle
+  )
+{
+  EFI_STATUS Status;
+
+  Status = StandaloneMmReadyToBootEventNotify (Protocol, Interface, Handle);
+  return Status;
+}
 
 /**
   Standalone MM Ready To Lock event notification handler.
@@ -40,7 +103,7 @@ StandaloneMmReadyToLockEventNotify (
   IN EFI_HANDLE      Handle
   )
 {
-  TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer ();
+  TestPointMmReadyToLockSecureMmCommunicationBuffer ();
   return EFI_SUCCESS;
 }
 
@@ -83,26 +146,8 @@ PlatformInitStandaloneMmEntryPoint (
   IN EFI_MM_SYSTEM_TABLE  *MmSystemTable
   )
 {
-  EFI_STATUS  Status;
-  VOID        *MmReadyToLockRegistration;
-  VOID        *MmReadyToBootRegistration;
+  PlatformInitMmEntryPoint ();
 
-  Status = PlatformInitMmEntryPoint ();
-  ASSERT_EFI_ERROR (Status);
-
-  Status = gMmst->MmRegisterProtocolNotify (
-                    &gEfiMmReadyToLockProtocolGuid,
-                    StandaloneMmReadyToLockEventNotify,
-                    &MmReadyToLockRegistration
-                    );
-  ASSERT_EFI_ERROR (Status);
-
-  Status = gMmst->MmRegisterProtocolNotify (
-                    &gEdkiiSmmReadyToBootProtocolGuid,
-                    StandaloneMmReadyToBootEventNotify,
-                    &MmReadyToBootRegistration
-                    );
-  ASSERT_EFI_ERROR (Status);
-
+  // Always succeeds
   return EFI_SUCCESS;
 }

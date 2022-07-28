@@ -18,13 +18,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PeCoffGetEntryPointLib.h>
 #include <Protocol/LoadedImage.h>
 
-VOID
-DumpLoadedImageInternal (
-  IN UINTN                                  Index,
-  IN EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage,
-  IN EFI_DEVICE_PATH_PROTOCOL               *DevicePath,
-  IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
-  );
+#include "TestPointImageDump.h"
 
 EFI_STATUS
 TestPointCheckNon3rdPartyImage (
@@ -32,17 +26,6 @@ TestPointCheckNon3rdPartyImage (
   IN EFI_DEVICE_PATH_PROTOCOL   *DevicePath,
   IN EFI_DEVICE_PATH_PROTOCOL   *LoadedImageDevicePath
   );
-
-VOID
-DumpLoadedImage (
-  IN UINTN                                  Index,
-  IN EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage,
-  IN EFI_DEVICE_PATH_PROTOCOL               *DevicePath,
-  IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
-  )
-{
-  DumpLoadedImageInternal (Index, LoadedImage, DevicePath, LoadedImageDevicePath);
-}
 
 EFI_STATUS
 TestPointCheckLoadedImage (

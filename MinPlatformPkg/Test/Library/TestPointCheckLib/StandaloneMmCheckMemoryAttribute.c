@@ -24,14 +24,6 @@ TestPointDumpMemoryAttributesTable (
   IN EFI_MEMORY_ATTRIBUTES_TABLE                     *MemoryAttributesTable
   );
 
-EFI_STATUS
-TestPointCheckImageMemoryAttribute (
-  IN EFI_MEMORY_ATTRIBUTES_TABLE     *MemoryAttributesTable,
-  IN EFI_PHYSICAL_ADDRESS            ImageBase,
-  IN UINT64                          ImageSize,
-  IN BOOLEAN                         IsFromMm
-  );
-
 VOID
 TestPointDumpMemoryAttributesTable (
   IN EFI_MEMORY_ATTRIBUTES_TABLE                     *MemoryAttributesTable
@@ -66,40 +58,6 @@ TestPointDumpMemoryAttributesTable (
   DEBUG ((DEBUG_INFO, "  RT_Code   : %14ld Pages (%ld Bytes)\n", Pages[EfiRuntimeServicesCode],     MultU64x64(SIZE_4KB, Pages[EfiRuntimeServicesCode])));
   DEBUG ((DEBUG_INFO, "  RT_Data   : %14ld Pages (%ld Bytes)\n", Pages[EfiRuntimeServicesData],     MultU64x64(SIZE_4KB, Pages[EfiRuntimeServicesData])));
   DEBUG ((DEBUG_INFO, "              -------------- \n"));
-}
-
-/**
-  Retrieves a pointer to the system configuration table from the MM System Table
-  based on a specified GUID.
-
-  @param[in]   TableGuid       The pointer to table's GUID type.
-  @param[out]  Table           The pointer to the table associated with TableGuid in the EFI System Table.
-
-  @retval EFI_SUCCESS     A configuration table matching TableGuid was found.
-  @retval EFI_NOT_FOUND   A configuration table matching TableGuid could not be found.
-
-**/
-EFI_STATUS
-EFIAPI
-MmGetSystemConfigurationTable (
-  IN  EFI_GUID  *TableGuid,
-  OUT VOID      **Table
-  )
-{
-  UINTN             Index;
-
-  ASSERT (TableGuid != NULL);
-  ASSERT (Table != NULL);
-
-  *Table = NULL;
-  for (Index = 0; Index < gMmst->NumberOfTableEntries; Index++) {
-    if (CompareGuid (TableGuid, &(gMmst->MmConfigurationTable[Index].VendorGuid))) {
-      *Table = gMmst->MmConfigurationTable[Index].VendorTable;
-      return EFI_SUCCESS;
-    }
-  }
-
-  return EFI_NOT_FOUND;
 }
 
 EFI_STATUS

@@ -36,11 +36,12 @@
   MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
+  EventNotify.h
   PlatformInitSmm.c
   PlatformInitMm.c
 
 [Protocols]
-  gEfiSmmReadyToLockProtocolGuid
+  gEfiMmReadyToLockProtocolGuid
   gEfiMmEndOfDxeProtocolGuid
   gEdkiiSmmReadyToBootProtocolGuid
   gEdkiiSmmExitBootServicesProtocolGuid

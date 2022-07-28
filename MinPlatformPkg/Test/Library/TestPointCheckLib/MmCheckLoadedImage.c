@@ -18,13 +18,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Protocol/LoadedImage.h>
 #include <Protocol/DevicePath.h>
 
-VOID
-DumpLoadedImage (
-  IN UINTN                                  Index,
-  IN EFI_LOADED_IMAGE_PROTOCOL              *LoadedImage,
-  IN EFI_DEVICE_PATH_PROTOCOL               *DevicePath,
-  IN EFI_DEVICE_PATH_PROTOCOL               *LoadedImageDevicePath
-  );
+#include "TestPointImageDump.h"
 
 VOID
 TestPointDumpMmLoadedImage (

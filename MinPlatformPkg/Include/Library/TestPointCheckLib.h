@@ -540,54 +540,21 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   );
 
 /**
-  This service verifies SMRR configuration at the End of DXE.
+  This service verifies the validity of the MM memory attribute table at MM Ready To Lock.
 
-  Test subject: SMRR.
-  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps SMRR and SMRAM_INFO.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointSmmEndOfDxeSmrrFunctional (
-  VOID
-  );
-
-/**
-  This service verifies the validity of the SMM memory atttribute table at SMM Ready To Lock.
-
-  Test subject: SMM memory attribute table.
-  Test overview: Verify the SMM memory attribute table is reported.
-                 Verify image code/data is consistent with the SMM memory attribute table.
+  Test subject: MM memory attribute table.
+  Test overview: Verify the MM memory attribute table is reported.
+                 Verify image code/data is consistent with the MM memory attribute table.
                  Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the SMM memory attribute table and SMM image information.
+                       Dumps the MM memory attribute table and MM image information.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
-  VOID
-  );
-
-/**
-  This service verifies the security of SMM communication buffers at SMM Ready To Lock.
-
-  Test subject: SMM communication buffer.
-  Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
-  Reporting mechanism: Dumps the memory map and GCD map at SmmReadyToLock and checks at SmmReadyToBoot.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
+TestPointMmReadyToLockSmmMemoryAttributeTableFunctional (
   VOID
   );
 
@@ -616,34 +583,6 @@ TestPointSmmReadyToBootSmmPageProtection (
 EFI_STATUS
 EFIAPI
 TestPointExitBootServices (
-  VOID
-  );
-
-/**
-  This service verifies the system state within SMM after Exit Boot Services is invoked.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-**/
-EFI_STATUS
-EFIAPI
-TestPointSmmExitBootServices (
-  VOID
-  );
-
-/**
-  This service verifies SMRR configuration at the End of DXE.
-
-  Test subject: SMRR.
-  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps SMRR and SMRAM_INFO.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointStandaloneMmEndOfDxeSmrrFunctional (
   VOID
   );
 
@@ -698,18 +637,34 @@ TestPointMmReadyToLockSecureMmCommunicationBuffer (
   );
 
 /**
-  This service verifies the security of MM communication buffers at MM Ready To Lock.
-
-  Test subject: MM communication buffer.
-  Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
-  Reporting mechanism: Dumps the memory map and GCD map at MmReadyToLock and checks at MmReadyToBoot.
-
+  This service verifies the validity of the SMM memory attribute table at MM Ready To Lock.
+  Test subject: MM memory attribute table.
+  Test overview: Verify the MM memory attribute table is reported.
+                 Verify image code/data is consistent with the SMM memory attribute table.
+                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps the MM memory attribute table and SMM image information.
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
+TestPointMmReadyToLockMmMemoryAttributeTableFunctional (
+  VOID
+  );
+
+/**
+  This service verifies the validity of the SMM page table at SMM Ready To Boot.
+  Test subject: SMM page table.
+  Test overview: Verify the SMM page table matches the SMM memory attribute table.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Reports an error message upon checking.
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmReadyToBootMmPageProtection (
   VOID
   );
 
@@ -732,17 +687,6 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
 
 VOID
 TestPointDumpMmLoadedImage (
-  VOID
-  );
-
-/**
-  This service verifies the system state within SMM after Exit Boot Services is invoked.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-**/
-EFI_STATUS
-EFIAPI
-TestPointStandaloneMmExitBootServices (
   VOID
   );
 
