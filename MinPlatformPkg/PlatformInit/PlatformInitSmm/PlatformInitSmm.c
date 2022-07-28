@@ -60,7 +60,7 @@ MmReadyToLockEventNotify (
   EFI_STATUS Status;
 
   Status = SmmReadyToLockEventNotify (Protocol, Interface, Handle);
-  return EFI_SUCCESS;
+  return Status;
 }
 
 /**
