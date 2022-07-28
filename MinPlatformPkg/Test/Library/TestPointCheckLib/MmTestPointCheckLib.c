@@ -19,7 +19,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include "TestPointInternal.h"
 #include "TestPointMm.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID  mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID  mTestPointSmmCommunicationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
 
 GLOBAL_REMOVE_IF_UNREFERENCED UINT8  mFeatureImplemented[TEST_POINT_FEATURE_SIZE];
 
@@ -297,7 +297,7 @@ RegisterMmTestPointHandler (
 
   Status = gMmst->MmiHandlerRegister (
                     TestPointMmHandler,
-                    &mTestPointSmmCommunciationGuid,
+                    &mTestPointSmmCommunicationGuid,
                     &DispatchHandle
                     );
   ASSERT_EFI_ERROR (Status);
