@@ -22,11 +22,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 VOID
 TestPointDumpMemoryAttributesTable (
   IN EFI_MEMORY_ATTRIBUTES_TABLE                     *MemoryAttributesTable
-  );
-
-VOID
-TestPointDumpMemoryAttributesTable (
-  IN EFI_MEMORY_ATTRIBUTES_TABLE                     *MemoryAttributesTable
   )
 {
   UINTN                 Index;

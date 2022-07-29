@@ -183,22 +183,22 @@ TestPointLibSetErrorString (
 //
 // TEST POINT SMM Communication command
 //
-#define SMI_HANDLER_TEST_POINT_COMMAND_GET_INFO           0x1
-#define SMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET 0x2
+#define MMI_HANDLER_TEST_POINT_COMMAND_GET_INFO           0x1
+#define MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET 0x2
 
 typedef struct {
   UINT32                            Command;
   UINT32                            DataLength;
   UINT64                            ReturnStatus;
-} SMI_HANDLER_TEST_POINT_PARAMETER_HEADER;
+} MMI_HANDLER_TEST_POINT_PARAMETER_HEADER;
 
 typedef struct {
-  SMI_HANDLER_TEST_POINT_PARAMETER_HEADER    Header;
+  MMI_HANDLER_TEST_POINT_PARAMETER_HEADER    Header;
   UINT64                                     DataSize;
-} SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO;
+} MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO;
 
 typedef struct {
-  SMI_HANDLER_TEST_POINT_PARAMETER_HEADER    Header;
+  MMI_HANDLER_TEST_POINT_PARAMETER_HEADER    Header;
   //
   // On input, data buffer size.
   // On output, actual data buffer size copied.
@@ -210,7 +210,7 @@ typedef struct {
   // On output, next time data buffer offset to copy.
   //
   UINT64                                     DataOffset;
-} SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
+} MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
 
 extern EFI_GUID gAdapterInfoPlatformTestPointGuid;
 

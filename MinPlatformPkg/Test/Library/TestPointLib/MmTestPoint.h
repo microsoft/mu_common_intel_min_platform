@@ -57,7 +57,7 @@ InternalTestPointIsValidTable (
   Register MM TestPoint handler.
 **/
 VOID
-RegisterMmTestPointSmiHandler (
+RegisterMmTestPointMmiHandler (
   VOID
   );
 
@@ -72,7 +72,7 @@ RegisterMmTestPointSmiHandler (
 **/
 BOOLEAN
 EFIAPI
-MmIsBufferOutsideMmValid (
+IsBufferOutsideMmValid (
   IN EFI_PHYSICAL_ADDRESS  Buffer,
   IN UINT64                Length
   );

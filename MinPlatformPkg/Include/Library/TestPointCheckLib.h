@@ -540,25 +540,6 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   );
 
 /**
-  This service verifies the validity of the MM memory attribute table at MM Ready To Lock.
-
-  Test subject: MM memory attribute table.
-  Test overview: Verify the MM memory attribute table is reported.
-                 Verify image code/data is consistent with the MM memory attribute table.
-                 Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
-  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the MM memory attribute table and MM image information.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
-**/
-EFI_STATUS
-EFIAPI
-TestPointMmReadyToLockSmmMemoryAttributeTableFunctional (
-  VOID
-  );
-
-/**
   This service verifies the validity of the SMM page table at SMM Ready To Boot.
 
   Test subject: SMM page table.
@@ -604,7 +585,7 @@ TestPointMmEndOfDxeSmrrFunctional (
   );
 
 /**
-  This service verifies the system state within SMM after Exit Boot Services is invoked.
+  This service verifies the system state within MM after Exit Boot Services is invoked.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
 **/
@@ -614,6 +595,12 @@ TestPointMmExitBootServices (
   VOID
   );
 
+
+/**
+  Shared PlatformInit entry point between SMM and Standalone MM.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
 EFI_STATUS
 EFIAPI
 PlatformInitMmEntryPoint (
@@ -637,10 +624,10 @@ TestPointMmReadyToLockSecureMmCommunicationBuffer (
   );
 
 /**
-  This service verifies the validity of the SMM memory attribute table at MM Ready To Lock.
+  This service verifies the validity of the MM memory attribute table at MM Ready To Lock.
   Test subject: MM memory attribute table.
   Test overview: Verify the MM memory attribute table is reported.
-                 Verify image code/data is consistent with the SMM memory attribute table.
+                 Verify image code/data is consistent with the MM memory attribute table.
                  Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Dumps the MM memory attribute table and SMM image information.
@@ -685,6 +672,9 @@ TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
   VOID
   );
 
+/**
+   Prints out the MM loaded image
+ */
 VOID
 TestPointDumpMmLoadedImage (
   VOID

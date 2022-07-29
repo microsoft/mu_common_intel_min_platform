@@ -333,7 +333,7 @@ TestPointLibSetTable (
   }
 
   if (!EFI_ERROR(Status)) {
-    RegisterMmTestPointSmiHandler ();
+    RegisterMmTestPointMmiHandler ();
   }
 
   return Status;

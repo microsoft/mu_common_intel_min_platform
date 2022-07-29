@@ -122,7 +122,7 @@ TestPointStandaloneMmReadyToLockSecureStandaloneMmCommunicationBuffer (
   VOID
   )
 {
-  return EFI_SUCCESS;
+  return EFI_UNSUPPORTED;
 }
 
 /**

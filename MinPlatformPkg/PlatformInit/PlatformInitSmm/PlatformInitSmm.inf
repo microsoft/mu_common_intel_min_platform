@@ -25,7 +25,6 @@
   MemoryAllocationLib
   PcdLib
   MmServicesTableLib
-  SmmServicesTableLib
   UefiDriverEntryPoint
   BoardInitLib
   TestPointCheckLib

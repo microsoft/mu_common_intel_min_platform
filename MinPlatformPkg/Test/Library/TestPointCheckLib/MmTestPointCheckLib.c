@@ -38,27 +38,9 @@ TestPointCheckSmrr (
   VOID
   );
 
-VOID
-TestPointDumpMmLoadedImage (
-  VOID
-  );
-
 EFI_STATUS
 TestPointCheckMmMemAttribute (
   VOID
-  );
-
-EFI_STATUS
-TestPointCheckMmPaging (
-  VOID
-  );
-
-EFI_STATUS
-TestPointCheckMmCommunicationBuffer (
-  IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
-  IN UINTN                        UefiMemoryMapSize,
-  IN UINTN                        UefiDescriptorSize,
-  IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
   );
 
 /**

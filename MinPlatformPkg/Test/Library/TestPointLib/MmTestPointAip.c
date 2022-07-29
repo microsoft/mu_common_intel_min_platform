@@ -41,7 +41,7 @@ TestPointAipGetInfo (
 {
   TEST_POINT_AIP_PRIVATE_DATA  *TestPointAip;
 
-  if ((This == NULL) || (InformationBlock == NULL) || (InformationBlockSize == NULL)) {
+  if ((This == NULL) || (InformationBlock == NULL) || (InformationBlockSize == NULL) || (InformationType == NULL)) {
     return EFI_INVALID_PARAMETER;
   }
   if (!CompareGuid (InformationType, &gAdapterInfoPlatformTestPointGuid)) {

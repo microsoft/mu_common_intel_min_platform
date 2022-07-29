@@ -68,8 +68,8 @@ GetTestPointDataMm (
   UINTN                                               CommSize;
   UINT8                                               *CommBuffer;
   EFI_MM_COMMUNICATE_HEADER                          *CommHeader;
-  SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO           *CommGetInfo;
-  SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *CommGetData;
+  MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO           *CommGetInfo;
+  MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *CommGetData;
   EFI_MM_COMMUNICATION_PROTOCOL                      *MmCommunication;
   UINTN                                               MinimalSizeNeeded;
   EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
@@ -81,7 +81,7 @@ GetTestPointDataMm (
 
   Status = gBS->LocateProtocol(&gEfiMmCommunicationProtocolGuid, NULL, (VOID **)&MmCommunication);
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: Locate MmCommunication protocol - %r\n", Status));
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Locate MmCommunication protocol - %r\n", Status));
     return ;
   }
 
@@ -92,7 +92,7 @@ GetTestPointDataMm (
              (VOID **)&PiSmmCommunicationRegionTable
              );
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
     return ;
   }
   ASSERT(PiSmmCommunicationRegionTable != NULL);
@@ -115,10 +115,10 @@ GetTestPointDataMm (
   //
   CommHeader = (EFI_MM_COMMUNICATE_HEADER *)&CommBuffer[0];
   CopyMem(&CommHeader->HeaderGuid, &gAdapterInfoPlatformTestPointGuid, sizeof(gAdapterInfoPlatformTestPointGuid));
-  CommHeader->MessageLength = sizeof(SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO);
+  CommHeader->MessageLength = sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO);
 
-  CommGetInfo = (SMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
-  CommGetInfo->Header.Command = SMI_HANDLER_TEST_POINT_COMMAND_GET_INFO;
+  CommGetInfo = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
+  CommGetInfo->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_INFO;
   CommGetInfo->Header.DataLength = sizeof(*CommGetInfo);
   CommGetInfo->Header.ReturnStatus = (UINT64)-1;
   CommGetInfo->DataSize = 0;
@@ -126,12 +126,12 @@ GetTestPointDataMm (
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
   Status = MmCommunication->Communicate(MmCommunication, CommBuffer, &CommSize);
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: MmCommunication - %r\n", Status));
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: MmCommunication - %r\n", Status));
     return ;
   }
 
   if (CommGetInfo->Header.ReturnStatus != 0) {
-    DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: GetInfo - 0x%0x\n", CommGetInfo->Header.ReturnStatus));
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: GetInfo - 0x%0x\n", CommGetInfo->Header.ReturnStatus));
     return ;
   }
 
@@ -143,16 +143,16 @@ GetTestPointDataMm (
   mMmTestPointDatabase = AllocateZeroPool(mMmTestPointDatabaseSize);
   if (mMmTestPointDatabase == NULL) {
     Status = EFI_OUT_OF_RESOURCES;
-    DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: AllocateZeroPool (0x%x) for dump buffer - %r\n", mMmTestPointDatabaseSize, Status));
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: AllocateZeroPool (0x%x) for dump buffer - %r\n", mMmTestPointDatabaseSize, Status));
     return ;
   }
 
   CommHeader = (EFI_MM_COMMUNICATE_HEADER *)&CommBuffer[0];
   CopyMem(&CommHeader->HeaderGuid, &gAdapterInfoPlatformTestPointGuid, sizeof(gAdapterInfoPlatformTestPointGuid));
-  CommHeader->MessageLength = sizeof(SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET);
+  CommHeader->MessageLength = sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET);
 
-  CommGetData = (SMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
-  CommGetData->Header.Command = SMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET;
+  CommGetData = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
+  CommGetData->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET;
   CommGetData->Header.DataLength = sizeof(*CommGetData);
   CommGetData->Header.ReturnStatus = (UINT64)-1;
 
@@ -175,7 +175,7 @@ GetTestPointDataMm (
     if (CommGetData->Header.ReturnStatus != 0) {
       FreePool(mMmTestPointDatabase);
       mMmTestPointDatabase = NULL;
-      DEBUG ((DEBUG_INFO, "SmiHandlerTestPoint: GetData - 0x%x\n", CommGetData->Header.ReturnStatus));
+      DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: GetData - 0x%x\n", CommGetData->Header.ReturnStatus));
       return ;
     }
     CopyMem((UINT8 *)mMmTestPointDatabase + Offset, (VOID *)(UINTN)CommGetData->DataBuffer, (UINTN)CommGetData->DataSize);

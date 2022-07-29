@@ -284,7 +284,7 @@ TestPointSmmReadyToBootSmmPageProtection (
 }
 
 /**
-  Dispatch function for a Software SMI handler.
+  Dispatch function for a Software MMI handler.
   Caution: This function may receive untrusted input.
   Communicate buffer and buffer size are external input, so this function will do basic validation.
   @param CommBuffer      A pointer to a collection of data in memory that will
@@ -397,10 +397,10 @@ Done:
 }
 
 /**
-  Dispatch function for a Software SMI handler.
+  Dispatch function for a Software MMI handler.
   Caution: This function may receive untrusted input.
   Communicate buffer and buffer size are external input, so this function will do basic validation.
-  @param DispatchHandle  The unique handle assigned to this handler by SmiHandlerRegister().
+  @param DispatchHandle  The unique handle assigned to this handler by MmiHandlerRegister().
   @param Context         Points to an optional handler context which was specified when the
                          handler was registered.
   @param CommBuffer      A pointer to a collection of data in memory that will
@@ -421,7 +421,7 @@ TestPointSmmHandler (
   UINTN                                    TempCommBufferSize;
 
   //
-  // If input is invalid, stop processing this SMI
+  // If input is invalid, stop processing this MMI
   //
   if (CommBuffer == NULL || CommBufferSize == NULL) {
     return EFI_SUCCESS;
