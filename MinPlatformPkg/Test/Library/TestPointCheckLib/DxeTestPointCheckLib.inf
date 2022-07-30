@@ -37,11 +37,12 @@
   PlatformConfigCheckLib # MU_CHANGE: Support platform level configuration testing
 
 [Packages]
-  MinPlatformPkg/MinPlatformPkg.dec
   MdePkg/MdePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
   MsCorePkg/MsCorePkg.dec
+  SignedDataStructurePkg/SignedDataStructurePkg.dec
 
 [Sources]
   DxeTestPointCheckLib.c

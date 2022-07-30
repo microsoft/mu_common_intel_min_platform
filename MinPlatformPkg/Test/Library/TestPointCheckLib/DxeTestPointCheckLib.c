@@ -16,6 +16,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/DeviceSpecificBusInfoLib.h>
 #include <Library/SecuredCoreProductDataAccessLib.h>      // GetNextProductDataItem
+#include <Library/MemoryAllocationLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
@@ -1330,7 +1331,7 @@ TestPointPciEnumerationDonePcieGenSpeed ()
   UINTN                    Dev;
   UINTN                    Fun;
   UINTN                    NumDevices;
-  UINTN                    DevicesLength;
+  UINT32                   DevicesLength;
   UINTN                    OuterLoop;
   UINTN                    InnerLoop;
   EFI_PCI_IO_PROTOCOL      *PciIoDev;
