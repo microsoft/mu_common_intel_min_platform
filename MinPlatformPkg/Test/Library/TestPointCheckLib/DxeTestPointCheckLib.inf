@@ -41,6 +41,7 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
+  MsCorePkg/MsCorePkg.dec
 
 [Sources]
   DxeTestPointCheckLib.c
