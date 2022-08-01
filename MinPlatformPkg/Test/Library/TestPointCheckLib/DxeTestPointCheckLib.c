@@ -1357,9 +1357,13 @@ TestPointPciEnumerationDonePcieGenSpeed ()
   DEBUG ((DEBUG_INFO, "======== TestPointPciEnumerationDonePcieGenSpeed - Enter\n"));
 
   // Get the product data of devices to check
-  if (EFI_ERROR (GetNextProductDataItem (ItemIdTestPointPciSpeed,&Devices, &DevicesLength))) {
+  Status = GetNextProductDataItem (ItemIdTestPointPciSpeed, &Devices, &DevicesLength);
+
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_INFO, "[%a]: GetNextProductDataItem: %r\n", __FUNCTION__, Status));
     goto CLEANUP;
   }
+
   // TODO: complain if multiple productdatas, because we are only looking at the first?
   // Or handle multiple (probably not since having those in multiple locations sounds unnecessarily confusing for maintenance).
 
@@ -1435,7 +1439,7 @@ TestPointPciEnumerationDonePcieGenSpeed ()
 
   if (AllDevicesFound == TRUE) {
     Status = TestPointLibSetFeaturesVerified (
-               PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_OEM,
+               PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
                NULL,
                3,
                TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED
@@ -1446,7 +1450,7 @@ TestPointPciEnumerationDonePcieGenSpeed ()
     }
   } else {
     Status = TestPointLibAppendErrorString (
-               PLATFORM_TEST_POINT_ROLE_IMPLEMENTOR_OEM,
+               PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
                TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE,
                TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED_ERROR_CODE \
                TEST_POINT_PCI_ENUMERATION_DONE \
