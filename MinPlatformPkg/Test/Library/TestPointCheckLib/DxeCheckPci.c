@@ -19,7 +19,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <IndustryStandard/Pci.h>
 #include <Library/PcdLib.h>
 #include <Library/UefiLib.h>
-#include <Library/DeviceSpecificBusInfoLib.h>
+#include <Library/TestPointPciSpeedInfoLib.h>
 
 #pragma pack(1)
 
@@ -557,7 +557,7 @@ TestPointCheckPciSpeed ()
   EFI_PCI_IO_PROTOCOL      **ProtocolList = NULL;
 
   // Array of pci info pointers. The ARRAY is freed, but the individual struct pointers pointed to
-  // from within the array are not. This is to make the structs within the DeviceSpecificBusInfoLib
+  // from within the array are not. This is to make the structs within the TestPointPciSpeedInfoLib
   // simpler by declaring them as globals
   DEVICE_PCI_INFO          *Devices = NULL;
 
@@ -605,7 +605,7 @@ TestPointCheckPciSpeed ()
       continue;
     }
 
-    // For each device supplied by DeviceSpecificBusInfoLib...
+    // For each device supplied by TestPointPciSpeedInfoLib...
     for (InnerLoop = 0; InnerLoop < NumDevices; InnerLoop++) {
       // Check if that device matches the current protocol in OuterLoop
       if (Seg == Devices[InnerLoop].SegmentNumber && Bus == Devices[InnerLoop].BusNumber &&
@@ -630,7 +630,7 @@ TestPointCheckPciSpeed ()
     }
   }
 
-  // For each device supplied by DeviceSpecificBusInfoLib...
+  // For each device supplied by TestPointPciSpeedInfoLib...
   AllDevicesFound = TRUE;
   for(OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
 

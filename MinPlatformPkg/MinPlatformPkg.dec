@@ -89,6 +89,7 @@
   VariableWriteLib|Include/Library/VariableWriteLib.h
   LargeVariableReadLib|Include/Library/LargeVariableReadLib.h
   LargeVariableWriteLib|Include/Library/LargeVariableWriteLib.h
+  TestPointPciSpeedInfoLib|Include/Library/TestPointPciSpeedInfoLib.h
 
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 

@@ -222,6 +222,7 @@
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
   MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
+  MinPlatformPkg/Library/TestPointPciSpeedInfoLibNull/TestPointPciSpeedInfoLibNull.inf
 
   MinPlatformPkg/Library/BaseVariableReadLibNull/BaseVariableReadLibNull.inf
   MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf

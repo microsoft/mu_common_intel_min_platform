@@ -35,14 +35,13 @@
   PciSegmentInfoLib
   SafeIntLib
   PlatformConfigCheckLib # MU_CHANGE: Support platform level configuration testing
-  DeviceSpecificBusInfoLib
+  TestPointPciSpeedInfoLib
 
 [Packages]
   MdePkg/MdePkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
-  MsCorePkg/MsCorePkg.dec
   SignedDataStructurePkg/SignedDataStructurePkg.dec
 
 [Sources]
