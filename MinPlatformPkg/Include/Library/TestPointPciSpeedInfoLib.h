@@ -12,8 +12,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-#ifndef _DEVICE_SPECIFIC_BUS_INFO_LIB_H_
-#define _DEVICE_SPECIFIC_BUS_INFO_LIB_H_
+#ifndef _TEST_POINT_PCI_SPEED_INFO_LIB_H_
+#define _TEST_POINT_PCI_SPEED_INFO_LIB_H_
 #include <Uefi.h>
 
 typedef enum {
