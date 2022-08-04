@@ -17,7 +17,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PciSegmentLib.h>
 #include <Library/PciSegmentInfoLib.h>
 #include <IndustryStandard/Pci.h>
-#include <Library/PcdLib.h>
 #include <Library/UefiLib.h>
 #include <Library/TestPointPciSpeedInfoLib.h>
 

@@ -42,7 +42,6 @@
   MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
-  SignedDataStructurePkg/SignedDataStructurePkg.dec
 
 [Sources]
   DxeTestPointCheckLib.c

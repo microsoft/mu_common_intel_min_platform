@@ -14,13 +14,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/SafeIntLib.h>
 #include <Library/UefiBootServicesTableLib.h>
-#include <Library/MemoryAllocationLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
-#include <IndustryStandard/PciExpress21.h>
 #include <Protocol/SmmCommunication.h>
-#include <Protocol/PciIo.h>
 #include <Guid/MemoryAttributesTable.h>
 #include <Guid/PiSmmCommunicationRegionTable.h>
 
