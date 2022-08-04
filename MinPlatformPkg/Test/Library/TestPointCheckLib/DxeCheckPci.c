@@ -17,8 +17,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PciSegmentLib.h>
 #include <Library/PciSegmentInfoLib.h>
 #include <IndustryStandard/Pci.h>
-#include <Library/DeviceSpecificBusInfoLib.h>
 #include <Library/PcdLib.h>
+#include <Library/UefiLib.h>
+#include <Library/DeviceSpecificBusInfoLib.h>
 
 #pragma pack(1)
 
@@ -564,15 +565,12 @@ TestPointCheckPciSpeed ()
   BOOLEAN                  *DeviceFound = NULL;
   BOOLEAN                  AllDevicesFound = FALSE;
 
-  // Get the number of devices to check the speed of
-  NumDevices = PcdGetSize (PcdTestPointIbvPlatformPciSpeed);
 
-  // Validate the PCD contains a whole number of data structures
-  ASSERT (NumDevices % sizeof(DEVICE_PCI_INFO) == 0);
-
+  DEBUG ((DEBUG_INFO, "[%a] pre-GetPciCheckDevices()\n", __FUNCTION__));
   // Get a pointer to the array of data structures
-  Devices = PcdGetPtr (PcdTestPointIbvPlatformPciSpeed);
+  NumDevices = GetPciCheckDevices(&Devices);
 
+  DEBUG ((DEBUG_INFO, "[%a] post-GetPciCheckDevices()\n", __FUNCTION__));
   // Array to track which devices we've found
   DeviceFound = AllocateZeroPool (sizeof(BOOLEAN) * NumDevices);
 
@@ -581,6 +579,21 @@ TestPointCheckPciSpeed ()
     EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID*) &ProtocolList))) {
     Status = EFI_NOT_FOUND;
     goto CLEANUP;
+  }
+
+
+  for (OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
+    DEBUG ((
+        DEBUG_INFO,
+        "[%a] - %a Segment: %d  Bus: %d  Device: %d  Function: %d, MinimumLinkSpeed: %d\n",
+        __FUNCTION__,
+        Devices[OuterLoop].DeviceName,
+        Devices[OuterLoop].SegmentNumber,
+        Devices[OuterLoop].BusNumber,
+        Devices[OuterLoop].DeviceNumber,
+        Devices[OuterLoop].FunctionNumber,
+        Devices[OuterLoop].MinimumLinkSpeed
+        ));
   }
 
   // For each device protocol found...

@@ -14,7 +14,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/SafeIntLib.h>
 #include <Library/UefiBootServicesTableLib.h>
-#include <Library/DeviceSpecificBusInfoLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
@@ -162,7 +161,7 @@ TestPointGetAcpi (
 
 EFI_STATUS
 EFIAPI
-TestPointPciEnumerationDonePcieGenSpeed (
+TestPointCheckPciSpeed (
   VOID
   );
 

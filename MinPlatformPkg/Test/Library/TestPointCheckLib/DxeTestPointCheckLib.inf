@@ -35,6 +35,7 @@
   PciSegmentInfoLib
   SafeIntLib
   PlatformConfigCheckLib # MU_CHANGE: Support platform level configuration testing
+  DeviceSpecificBusInfoLib
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -113,4 +114,3 @@
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformExemptPciBme # MU_CHANGE - TCBZ3541
-  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformPciSpeed

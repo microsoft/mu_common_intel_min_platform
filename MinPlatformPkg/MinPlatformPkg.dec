@@ -301,8 +301,6 @@
 
   gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer|FALSE|BOOLEAN|0x30000011
 
-  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformPciSpeed|{0}|VOID*|0x30000012
-
 [PcdsFixedAtBuild]
 
   ## MinPlatform Boot Stage Selector
