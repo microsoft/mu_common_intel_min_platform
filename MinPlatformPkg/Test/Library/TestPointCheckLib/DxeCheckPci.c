@@ -565,12 +565,9 @@ TestPointCheckPciSpeed ()
   BOOLEAN                  *DeviceFound = NULL;
   BOOLEAN                  AllDevicesFound = FALSE;
 
-
-  DEBUG ((DEBUG_INFO, "[%a] pre-GetPciCheckDevices()\n", __FUNCTION__));
   // Get a pointer to the array of data structures
   NumDevices = GetPciCheckDevices(&Devices);
 
-  DEBUG ((DEBUG_INFO, "[%a] post-GetPciCheckDevices()\n", __FUNCTION__));
   // Array to track which devices we've found
   DeviceFound = AllocateZeroPool (sizeof(BOOLEAN) * NumDevices);
 
@@ -579,21 +576,6 @@ TestPointCheckPciSpeed ()
     EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID*) &ProtocolList))) {
     Status = EFI_NOT_FOUND;
     goto CLEANUP;
-  }
-
-
-  for (OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
-    DEBUG ((
-        DEBUG_INFO,
-        "[%a] - %a Segment: %d  Bus: %d  Device: %d  Function: %d, MinimumLinkSpeed: %d\n",
-        __FUNCTION__,
-        Devices[OuterLoop].DeviceName,
-        Devices[OuterLoop].SegmentNumber,
-        Devices[OuterLoop].BusNumber,
-        Devices[OuterLoop].DeviceNumber,
-        Devices[OuterLoop].FunctionNumber,
-        Devices[OuterLoop].MinimumLinkSpeed
-        ));
   }
 
   // For each device protocol found...
