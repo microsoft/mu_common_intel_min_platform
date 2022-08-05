@@ -22,8 +22,8 @@ ShortNameOfMemoryType(
 
 VOID
 DumpMemoryTypeInfoSummary (
-  IN EFI_MEMORY_TYPE_INFORMATION *CurrentMemoryTypeInformation,
-  IN EFI_MEMORY_TYPE_INFORMATION *PreviousMemoryTypeInformation
+  IN CONST  EFI_MEMORY_TYPE_INFORMATION *CurrentMemoryTypeInformation,
+  IN CONST  EFI_MEMORY_TYPE_INFORMATION *PreviousMemoryTypeInformation
   )
 {
   UINTN                        Index;
@@ -83,7 +83,6 @@ DumpMemoryTypeInfoSummary (
     }
 
     if (Next != Previous) {
-      PreviousMemoryTypeInformation[Index].NumberOfPages = Next;
       MemoryTypeInformationModified = TRUE;
     }
 
@@ -110,7 +109,7 @@ TestPointCheckMemoryTypeInformation (
   VOID                    *CurrentMemoryTypeInformation;
   VOID                    *PreviousMemoryTypeInformation;
   VOID                    *VariableMemoryTypeInformation;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckMemoryTypeInformation - Enter\n"));
   CurrentMemoryTypeInformation = NULL;
   PreviousMemoryTypeInformation = NULL;
