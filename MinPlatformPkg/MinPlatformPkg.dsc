@@ -87,6 +87,7 @@
   PlatformConfigCheckLib|MinPlatformPkg/Test/Library/PlatformConfigCheckLibNull/PlatformConfigCheckLibNull.inf
   # MU_CHANGE [END]
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
+  TestPointPciSpeedInfoLib|MinPlatformPkg/Library/TestPointPciSpeedInfoLibNull/TestPointPciSpeedInfoLibNull.inf
 
 [LibraryClasses.common.SEC]
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
