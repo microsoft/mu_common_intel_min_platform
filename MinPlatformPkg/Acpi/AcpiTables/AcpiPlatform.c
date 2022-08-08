@@ -243,46 +243,54 @@ SortCpuLocalApicInTable (
     }
   }
 
-  //
-  // 1. Sort TempCpuApicIdOrderTable,
-  //    sort it by using ApicId from minimum to maximum (Socket0 to SocketN), and the BSP must in the fist location of the table.
-  //    So, start sorting the table from the second element and total elements are mNumberOfCpus-1.
-  //
+  /*
+      1. Sort TempCpuApicIdOrderTable,
+        Sort it by using ApicId from minimum to maximum (Socket0 to SocketN), and the BSP must be in the fist location of the table.
+
+      2. Sort and map all the enabled threads after BSP in CpuApicIdOrderTable
+
+      3. Threads that are not enabled are placed in the bottom of CpuApicIdOrderTable
+
+      4. Re-assign AcpiProcessorId for AcpiProcessorUid uses purpose.
+  */
+
   PerformQuickSort ((TempCpuApicIdOrderTable + 1), (mNumberOfCpus - 1), sizeof (EFI_CPU_ID_ORDER_MAP), (SORT_COMPARE) ApicIdCompareFunction);
 
-  //
-  // 2. Sort and map the primary threads to the front of the CpuApicIdOrderTable
-  //
   for (CurrProcessor = 0, Index = 0; Index < mNumberOfCpus; Index++) {
-    if ((TempCpuApicIdOrderTable[Index].Thread) == 0) { // primary thread
+    if ((TempCpuApicIdOrderTable[Index].Thread) == 0) {
       CopyMem (&mCpuApicIdOrderTable[CurrProcessor], &TempCpuApicIdOrderTable[Index], sizeof (EFI_CPU_ID_ORDER_MAP));
       CurrProcessor++;
     }
   }
 
-  //
-  // 3. Sort and map the second threads to the middle of the CpuApicIdOrderTable
-  //
   for (Index = 0; Index < mNumberOfCpus; Index++) {
-    if ((TempCpuApicIdOrderTable[Index].Thread) == 1) { //second thread
+    if ((TempCpuApicIdOrderTable[Index].Thread) == 1) {
       CopyMem (&mCpuApicIdOrderTable[CurrProcessor], &TempCpuApicIdOrderTable[Index], sizeof (EFI_CPU_ID_ORDER_MAP));
       CurrProcessor++;
     }
   }
 
-  //
-  // 4. Sort and map the not enabled threads to the bottom of the CpuApicIdOrderTable
-  //
   for (Index = 0; Index < mNumberOfCpus; Index++) {
-    if (TempCpuApicIdOrderTable[Index].Flags == 0) { // not enabled
+    if ((TempCpuApicIdOrderTable[Index].Thread) == 2) {
       CopyMem (&mCpuApicIdOrderTable[CurrProcessor], &TempCpuApicIdOrderTable[Index], sizeof (EFI_CPU_ID_ORDER_MAP));
       CurrProcessor++;
     }
   }
 
-  //
-  // 5. Re-assign AcpiProcessorId for AcpiProcessorUid uses purpose.
-  //
+  for (Index = 0; Index < mNumberOfCpus; Index++) {
+    if ((TempCpuApicIdOrderTable[Index].Thread) == 3) {
+      CopyMem (&mCpuApicIdOrderTable[CurrProcessor], &TempCpuApicIdOrderTable[Index], sizeof (EFI_CPU_ID_ORDER_MAP));
+      CurrProcessor++;
+    }
+  }
+
+  for (Index = 0; Index < mNumberOfCpus; Index++) {
+    if (TempCpuApicIdOrderTable[Index].Flags == 0) {
+      CopyMem (&mCpuApicIdOrderTable[CurrProcessor], &TempCpuApicIdOrderTable[Index], sizeof (EFI_CPU_ID_ORDER_MAP));
+      CurrProcessor++;
+    }
+  }
+
   for (Socket = 0; Socket < FixedPcdGet32 (PcdMaxCpuSocketCount); Socket++) {
     for (CurrProcessor = 0, Index = 0; CurrProcessor < mNumberOfCpus; CurrProcessor++) {
       if (mCpuApicIdOrderTable[CurrProcessor].Flags && (mCpuApicIdOrderTable[CurrProcessor].SocketNum == Socket)) {
@@ -292,7 +300,6 @@ SortCpuLocalApicInTable (
     }
   }
 
-  //keep for debug purpose
   DEBUG ((DEBUG_INFO, "APIC ID Order Table ReOrdered\n"));
   DebugDisplayReOrderTable (mCpuApicIdOrderTable);
 
