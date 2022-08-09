@@ -537,61 +537,64 @@ FindPciCapabilityPtr (
 **/
 EFI_STATUS
 EFIAPI
-TestPointCheckPciSpeed ()
+TestPointCheckPciSpeed (
+  VOID
+  )
 {
-  EFI_STATUS               Status;
-  UINTN                    ProtocolCount;
-  UINTN                    Seg;
-  UINTN                    Bus;
-  UINTN                    Dev;
-  UINTN                    Fun;
-  UINTN                    NumDevices;
-  UINTN                    OuterLoop;
-  UINTN                    InnerLoop;
-  EFI_PCI_IO_PROTOCOL      *PciIoDev;
-  PCI_REG_PCIE_LINK_STATUS PcieLinkStatusReg;
-  UINT32                   Offset;
+  EFI_STATUS                Status;
+  UINTN                     ProtocolCount;
+  UINTN                     Seg;
+  UINTN                     Bus;
+  UINTN                     Dev;
+  UINTN                     Fun;
+  UINTN                     NumDevices;
+  UINTN                     OuterLoop;
+  UINTN                     InnerLoop;
+  EFI_PCI_IO_PROTOCOL       *PciIoDev;
+  PCI_REG_PCIE_LINK_STATUS  PcieLinkStatusReg;
+  UINT32                    Offset;
 
   // To store protocols
-  EFI_PCI_IO_PROTOCOL      **ProtocolList = NULL;
+  EFI_PCI_IO_PROTOCOL  **ProtocolList = NULL;
 
   // Array of pci info pointers. The ARRAY is freed, but the individual struct pointers pointed to
   // from within the array are not. This is to make the structs within the TestPointPciSpeedInfoLib
   // simpler by declaring them as globals
-  DEVICE_PCI_INFO          *Devices = NULL;
+  DEVICE_PCI_INFO  *Devices = NULL;
 
   // Array parallel to Devices which we will use to check off which devices we've found
-  BOOLEAN                  *DeviceFound = NULL;
-  BOOLEAN                  AllDevicesFound = FALSE;
+  BOOLEAN  *DeviceFound    = NULL;
+  BOOLEAN  AllDevicesFound = FALSE;
 
   // Get a pointer to the array of data structures
-  NumDevices = GetPciCheckDevices(&Devices);
+  NumDevices = GetPciCheckDevices (&Devices);
 
   // Array to track which devices we've found
-  DeviceFound = AllocateZeroPool (sizeof(BOOLEAN) * NumDevices);
+  DeviceFound = AllocateZeroPool (sizeof (BOOLEAN) * NumDevices);
 
   // Ensure that all necessary pointers have been populated, abort to cleanup if not
-  if(Devices == NULL || DeviceFound == NULL || NumDevices == 0 ||
-    EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID*) &ProtocolList))) {
+  if ((Devices == NULL) || (DeviceFound == NULL) || (NumDevices == 0) ||
+      EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID *)&ProtocolList)))
+  {
     Status = EFI_NOT_FOUND;
     goto CLEANUP;
   }
 
   // For each device protocol found...
-  for(OuterLoop = 0; OuterLoop < ProtocolCount; OuterLoop++) {
+  for (OuterLoop = 0; OuterLoop < ProtocolCount; OuterLoop++) {
     PciIoDev = ProtocolList[OuterLoop];
 
     // Get device location
-    if(EFI_ERROR (PciIoDev->GetLocation (PciIoDev, &Seg, &Bus, &Dev, &Fun))) {
+    if (EFI_ERROR (PciIoDev->GetLocation (PciIoDev, &Seg, &Bus, &Dev, &Fun))) {
       continue;
     }
 
     // For each device supplied by TestPointPciSpeedInfoLib...
     for (InnerLoop = 0; InnerLoop < NumDevices; InnerLoop++) {
       // Check if that device matches the current protocol in OuterLoop
-      if (Seg == Devices[InnerLoop].SegmentNumber && Bus == Devices[InnerLoop].BusNumber &&
-          Dev == Devices[InnerLoop].DeviceNumber  && Fun == Devices[InnerLoop].FunctionNumber) {
-
+      if ((Seg == Devices[InnerLoop].SegmentNumber) && (Bus == Devices[InnerLoop].BusNumber) &&
+          (Dev == Devices[InnerLoop].DeviceNumber) && (Fun == Devices[InnerLoop].FunctionNumber))
+      {
         // Also check link speed.
         Status = FindPciCapabilityPtr (
                    PciIoDev,
@@ -613,10 +616,9 @@ TestPointCheckPciSpeed ()
 
   // For each device supplied by TestPointPciSpeedInfoLib...
   AllDevicesFound = TRUE;
-  for(OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
-
+  for (OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
     // Check if the previous loop found that device
-    if(DeviceFound[OuterLoop] == FALSE) {
+    if (DeviceFound[OuterLoop] == FALSE) {
       AllDevicesFound = FALSE;
 
       DEBUG ((
@@ -630,7 +632,6 @@ TestPointCheckPciSpeed ()
         Devices[OuterLoop].FunctionNumber,
         Devices[OuterLoop].MinimumLinkSpeed
         ));
-
     }
   }
 

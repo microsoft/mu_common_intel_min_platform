@@ -1278,7 +1278,9 @@ TestPointExitBootServices (
 **/
 EFI_STATUS
 EFIAPI
-TestPointPciEnumerationDonePcieGenSpeed ()
+TestPointPciEnumerationDonePcieGenSpeed (
+  VOID
+  )
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
@@ -1291,17 +1293,17 @@ TestPointPciEnumerationDonePcieGenSpeed ()
 
   Result = TRUE;
   Status = TestPointCheckPciSpeed ();
-  if (EFI_ERROR(Status)) {
+  if (EFI_ERROR (Status)) {
     Result = FALSE;
   }
 
   if (Result) {
     Status = TestPointLibSetFeaturesVerified (
-      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
-      3,
-      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED
-      );
+               PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+               NULL,
+               3,
+               TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED
+               );
   }
 
   DEBUG ((DEBUG_INFO, "======== TestPointPciEnumerationDonePcieGenSpeed - Exit\n"));
