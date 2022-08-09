@@ -502,10 +502,10 @@ TestPointCheckPciBusMaster (
 **/
 EFI_STATUS
 FindPciCapabilityPtr (
-  EFI_PCI_IO_PROTOCOL *PciIoDev,
-  UINT8 DesiredPciCapId,
-  UINT32 *Offset
-)
+  IN EFI_PCI_IO_PROTOCOL *PciIoDev,
+  IN UINT8 DesiredPciCapId,
+  OUT UINT32 *Offset
+  )
 {
   UINT8 PciCapNext;
   UINT8 PciCapId;
@@ -577,7 +577,7 @@ TestPointCheckPciSpeed (
       EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID *)&ProtocolList)))
   {
     Status = EFI_NOT_FOUND;
-    goto CLEANUP;
+    goto Cleanup;
   }
 
   // For each device protocol found...
@@ -648,7 +648,7 @@ TestPointCheckPciSpeed (
       );
   }
 
-CLEANUP:
+Cleanup:
   // Make sure everything is freed
   if (DeviceFound != NULL) {
     FreePool (DeviceFound);

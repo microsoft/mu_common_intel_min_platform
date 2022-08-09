@@ -39,9 +39,9 @@
 
 [Packages]
   MdePkg/MdePkg.dec
-  MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
   DxeTestPointCheckLib.c
