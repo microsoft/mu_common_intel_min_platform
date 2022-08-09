@@ -534,6 +534,8 @@ FindPciCapabilityPtr (
  Test that required devices have trained to the required link speed.
 
  @retval EFI_SUCCESS            Test was performed and flagged as verified or error logged.
+ @retval EFI_NOT_FOUND          GetPciCheckDevices returned 0 or a NULL pointer, or Allocating array failed.
+ @retval EFI_DEVICE_ERROR       A PCI device was not found or was not up at the required speed.
 **/
 EFI_STATUS
 EFIAPI
