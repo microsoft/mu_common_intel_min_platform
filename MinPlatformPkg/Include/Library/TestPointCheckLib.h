@@ -629,6 +629,17 @@ TestPointSmmExitBootServices (
   VOID
   );
 
+/**
+ Test that required devices have trained to the required link speed.
+
+ @retval EFI_SUCCESS         Test was performed and flagged as verified or error logged.
+**/
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePcieGenSpeed (
+  VOID
+  );
+
 //
 // Below is detail definition for MinPlatform implementation
 //
@@ -689,6 +700,7 @@ TestPointSmmExitBootServices (
 #define TEST_POINT_BYTE3_END_OF_DXE_NO_THIRD_PARTY_PCI_OPTION_ROM                           BIT2
 #define TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL                               BIT3
 #define TEST_POINT_BYTE3_END_OF_DXE_DMA_PROTECTION_ENABLED                                  BIT4
+#define TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED                                BIT5
 #define   TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED_ERROR_CODE                    L"0x03000000"
 #define   TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_RESOURCE_ALLOCATED_ERROR_STRING                  L"Invalid PCI Resource\r\n"
 #define   TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_BUS_MASTER_DISABLED_ERROR_CODE                   L"0x03010000"
@@ -699,6 +711,8 @@ TestPointSmmExitBootServices (
 #define   TEST_POINT_BYTE3_END_OF_DXE_DMA_ACPI_TABLE_FUNCTIONAL_ERROR_STRING                     L"No DMA ACPI table\r\n"
 #define   TEST_POINT_BYTE3_END_OF_DXE_DMA_PROTECTION_ENABLED_ERROR_CODE                          L"0x03040000"
 #define   TEST_POINT_BYTE3_END_OF_DXE_DXE_DMA_PROTECTION_ENABLED_ERROR_STRING                    L"DMA protection disabled\r\n"
+#define   TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED_ERROR_CODE                        L"0x03050000"
+#define   TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED_ERROR_STRING                      L"PCI device not at minimum speed\r\n"
 
 #define TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL                   BIT0
 #define TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL               BIT1
