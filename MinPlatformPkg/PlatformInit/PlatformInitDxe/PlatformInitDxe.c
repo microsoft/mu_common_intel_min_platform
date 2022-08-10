@@ -55,6 +55,8 @@ OnPciEnumerationComplete (
   TestPointPciEnumerationDonePciBusMasterDisabled ();
 
   TestPointPciEnumerationDonePciResourceAllocated ();
+
+  TestPointPciEnumerationDonePcieGenSpeed ();
 }
 
 /**

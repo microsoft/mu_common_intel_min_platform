@@ -17,6 +17,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PciSegmentLib.h>
 #include <Library/PciSegmentInfoLib.h>
 #include <IndustryStandard/Pci.h>
+#include <Library/UefiLib.h>
+#include <Library/TestPointPciSpeedInfoLib.h>
 
 #pragma pack(1)
 
@@ -482,6 +484,180 @@ TestPointCheckPciBusMaster (
         }
       }
     }
+  }
+
+  return Status;
+}
+
+
+/**
+ Find a target capability block in PCI configuration space.
+
+ @param[in]  PciIoDev           Pointer to EFI_PCI_IO_PROTOCOL
+ @param[in]  DesiredPciCapId    Desired PCI capability ID
+ @param[out] Offset             Pointer to Offset of Capability ID
+
+ @retval EFI_SUCCESS            Capability was located and offset stored in *Offset
+ @retval EFI_NOT_FOUND          Did not find the desired PCI capability
+**/
+EFI_STATUS
+FindPciCapabilityPtr (
+  IN EFI_PCI_IO_PROTOCOL *PciIoDev,
+  IN UINT8 DesiredPciCapId,
+  OUT UINT32 *Offset
+  )
+{
+  UINT8 PciCapNext;
+  UINT8 PciCapId;
+  UINT16 PciCapHeader = 0;
+
+  PciCapId = 0;
+  PciIoDev->Pci.Read (PciIoDev, EfiPciIoWidthUint8, PCI_CAPBILITY_POINTER_OFFSET, 1, &PciCapNext);
+  while ((PciCapId != DesiredPciCapId) && (PciCapNext != 0)) {
+    PciIoDev->Pci.Read (PciIoDev, EfiPciIoWidthUint16, PciCapNext, 1, &PciCapHeader);
+    PciCapId = PciCapHeader & 0xff;
+    if (PciCapId == DesiredPciCapId) {
+      break;
+    }
+    PciCapNext = PciCapHeader >> 8;
+  }
+
+  if (PciCapId == DesiredPciCapId) {
+    *Offset = PciCapNext;
+    return EFI_SUCCESS;
+  }
+
+  return EFI_NOT_FOUND;
+}
+
+/**
+ Test that required devices have trained to the required link speed.
+
+ @retval EFI_SUCCESS            Test was performed and flagged as verified or error logged.
+ @retval EFI_NOT_FOUND          GetPciCheckDevices returned 0 or a NULL pointer, or Allocating array failed.
+ @retval EFI_DEVICE_ERROR       A PCI device was not found or was not up at the required speed.
+**/
+EFI_STATUS
+EFIAPI
+TestPointCheckPciSpeed (
+  VOID
+  )
+{
+  EFI_STATUS                Status;
+  UINTN                     ProtocolCount;
+  UINTN                     Seg;
+  UINTN                     Bus;
+  UINTN                     Dev;
+  UINTN                     Fun;
+  UINTN                     NumDevices;
+  UINTN                     OuterLoop;
+  UINTN                     InnerLoop;
+  EFI_PCI_IO_PROTOCOL       *PciIoDev;
+  PCI_REG_PCIE_LINK_STATUS  PcieLinkStatusReg;
+  UINT32                    Offset;
+
+  // To store protocols
+  EFI_PCI_IO_PROTOCOL  **ProtocolList = NULL;
+
+  // Array of pci info pointers. The ARRAY is freed, but the individual struct pointers pointed to
+  // from within the array are not. This is to make the structs within the TestPointPciSpeedInfoLib
+  // simpler by declaring them as globals
+  DEVICE_PCI_INFO  *Devices = NULL;
+
+  // Array parallel to Devices which we will use to check off which devices we've found
+  BOOLEAN  *DeviceFound    = NULL;
+  BOOLEAN  AllDevicesFound = FALSE;
+
+  // Get a pointer to the array of data structures
+  NumDevices = GetPciCheckDevices (&Devices);
+
+  // Array to track which devices we've found
+  DeviceFound = AllocateZeroPool (sizeof (BOOLEAN) * NumDevices);
+
+  // Ensure that all necessary pointers have been populated, abort to cleanup if not
+  if ((Devices == NULL) || (DeviceFound == NULL) || (NumDevices == 0) ||
+      EFI_ERROR (EfiLocateProtocolBuffer (&gEfiPciIoProtocolGuid, &ProtocolCount, (VOID *)&ProtocolList)))
+  {
+    Status = EFI_NOT_FOUND;
+    goto Cleanup;
+  }
+
+  // For each device protocol found...
+  for (OuterLoop = 0; OuterLoop < ProtocolCount; OuterLoop++) {
+    PciIoDev = ProtocolList[OuterLoop];
+
+    // Get device location
+    if (EFI_ERROR (PciIoDev->GetLocation (PciIoDev, &Seg, &Bus, &Dev, &Fun))) {
+      continue;
+    }
+
+    // For each device supplied by TestPointPciSpeedInfoLib...
+    for (InnerLoop = 0; InnerLoop < NumDevices; InnerLoop++) {
+      // Check if that device matches the current protocol in OuterLoop
+      if ((Seg == Devices[InnerLoop].SegmentNumber) && (Bus == Devices[InnerLoop].BusNumber) &&
+          (Dev == Devices[InnerLoop].DeviceNumber) && (Fun == Devices[InnerLoop].FunctionNumber))
+      {
+        // Also check link speed.
+        Status = FindPciCapabilityPtr (
+                   PciIoDev,
+                   EFI_PCI_CAPABILITY_ID_PCIEXP,
+                   &Offset
+                   );
+        ASSERT_EFI_ERROR (Status);
+
+        Offset += OFFSET_OF (PCI_CAPABILITY_PCIEXP, LinkStatus);
+        PciIoDev->Pci.Read (PciIoDev, EfiPciIoWidthUint16, Offset, 1, &PcieLinkStatusReg.Uint16);
+        DEBUG ((DEBUG_INFO, "[%a] LinkStatusReg = %04x\n", __FUNCTION__, PcieLinkStatusReg.Uint16));
+        if (PcieLinkStatusReg.Bits.CurrentLinkSpeed >= Devices[InnerLoop].MinimumLinkSpeed) {
+          // If it matches, check it off in the parallel array
+          DeviceFound[InnerLoop] = TRUE;
+        }
+      }
+    }
+  }
+
+  // For each device supplied by TestPointPciSpeedInfoLib...
+  AllDevicesFound = TRUE;
+  for (OuterLoop = 0; OuterLoop < NumDevices; OuterLoop++) {
+    // Check if the previous loop found that device
+    if (DeviceFound[OuterLoop] == FALSE) {
+      AllDevicesFound = FALSE;
+
+      DEBUG ((
+        DEBUG_INFO,
+        "%a - %a not found. Expected Segment: %d  Bus: %d  Device: %d  Function: %d, MinimumLinkSpeed: %d\n",
+        __FUNCTION__,
+        Devices[OuterLoop].DeviceName,
+        Devices[OuterLoop].SegmentNumber,
+        Devices[OuterLoop].BusNumber,
+        Devices[OuterLoop].DeviceNumber,
+        Devices[OuterLoop].FunctionNumber,
+        Devices[OuterLoop].MinimumLinkSpeed
+        ));
+    }
+  }
+
+  if (AllDevicesFound == TRUE) {
+    Status = EFI_SUCCESS;
+  } else {
+    Status = EFI_DEVICE_ERROR;
+    TestPointLibAppendErrorString (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      NULL,
+      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED_ERROR_CODE \
+      TEST_POINT_PCI_ENUMERATION_DONE \
+      TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED_ERROR_STRING
+      );
+  }
+
+Cleanup:
+  // Make sure everything is freed
+  if (DeviceFound != NULL) {
+    FreePool (DeviceFound);
+  }
+
+  if (ProtocolList != NULL) {
+    FreePool (ProtocolList);
   }
 
   return Status;
