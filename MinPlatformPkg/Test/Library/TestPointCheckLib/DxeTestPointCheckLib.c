@@ -156,6 +156,12 @@ TestPointGetAcpi (
   IN UINT32  Signature
   );
 
+EFI_STATUS
+EFIAPI
+TestPointCheckPciSpeed (
+  VOID
+  );
+
 GLOBAL_REMOVE_IF_UNREFERENCED ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT  mTestPointStruct = {
   PLATFORM_TEST_POINT_VERSION,
   PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -1262,6 +1268,45 @@ TestPointExitBootServices (
 
   DEBUG ((DEBUG_INFO, "======== TestPointExitBootServices - Exit\n"));
 
+  return EFI_SUCCESS;
+}
+
+/**
+ Test that required devices have trained to the required link speed.
+
+ @retval EFI_SUCCESS            Test was performed and flagged as verified or error logged.
+**/
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePcieGenSpeed (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+
+  if ((mFeatureImplemented[3] & TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointPciEnumerationDonePcieGenSpeed - Enter\n"));
+
+  Result = TRUE;
+  Status = TestPointCheckPciSpeed ();
+  if (EFI_ERROR (Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    Status = TestPointLibSetFeaturesVerified (
+               PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+               NULL,
+               3,
+               TEST_POINT_BYTE3_PCI_ENUMERATION_DONE_PCIE_GEN_SPEED
+               );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointPciEnumerationDonePcieGenSpeed - Exit\n"));
   return EFI_SUCCESS;
 }
 
