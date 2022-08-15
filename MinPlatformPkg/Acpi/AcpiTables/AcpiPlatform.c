@@ -88,7 +88,7 @@ EFI_STATUS
 AppendCpuMapTableEntry (
     IN VOID   *ApicPtr,
     IN UINT32 LocalApicCounter,
-    IN EFI_CPU_ID_ORDER_MAP *CpuApicIdOrderTable 
+    IN EFI_CPU_ID_ORDER_MAP *CpuApicIdOrderTable
   )
 {
   EFI_STATUS    Status;
@@ -1111,6 +1111,7 @@ PlatformUpdateTables (
     FadtHeader->Gpe0Blk                           = PcdGet16 (PcdAcpiGpe0BlockAddress);
     FadtHeader->Gpe0BlkLen                        = PcdGet8 (PcdAcpiGpe0BlockLength);
     FadtHeader->Gpe1Blk                           = PcdGet16 (PcdAcpiGpe1BlockAddress);
+    FadtHeader->Gpe1BlkLen                        = PcdGet8 (PcdAcpiGpe1BlockLength);
     FadtHeader->Gpe1Base                          = PcdGet8 (PcdAcpiGpe1Base);
 
     FadtHeader->XPm1aEvtBlk.Address               = PcdGet16 (PcdAcpiPm1AEventBlockAddress);

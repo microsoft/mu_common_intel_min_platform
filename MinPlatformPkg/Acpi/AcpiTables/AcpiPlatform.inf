@@ -84,6 +84,7 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockLength
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockLength
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiResetRegisterAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1aEvtBlkAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPm1bEvtBlkAccessSize

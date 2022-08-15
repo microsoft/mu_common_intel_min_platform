@@ -123,6 +123,7 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockAddress|0x1880|UINT16|0x0001003B
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe0BlockLength|0x00|UINT8|0x0001003C
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockAddress|0x0000|UINT16|0x0001003D
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1BlockLength|0x00|UINT8|0x0001003E
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiGpe1Base|0x00|UINT8|0x00010040
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiResetRegisterAccessSize|0x00|UINT8|0x00010042
 
