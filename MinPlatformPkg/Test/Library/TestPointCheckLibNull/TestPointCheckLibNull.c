@@ -723,3 +723,17 @@ TestPointSmmExitBootServices (
 {
   return EFI_SUCCESS;
 }
+
+/**
+ Test that required devices have trained to the required link speed.
+
+ @retval EFI_SUCCESS         Test was performed and flagged as verified or error logged.
+**/
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePcieGenSpeed (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
