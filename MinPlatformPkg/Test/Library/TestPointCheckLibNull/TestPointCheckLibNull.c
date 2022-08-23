@@ -624,7 +624,7 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
                  Verify image code/data is consistent with the MM memory attribute table.
                  Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
-                       Dumps the SMM memory attribute table and SMM image information.
+                       Dumps the MM memory attribute table and MM image information.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
@@ -639,10 +639,10 @@ TestPointMmReadyToLockMmMemoryAttributeTableFunctional (
 }
 
 /**
-  This service verifies the security of SMM communication buffers at SMM Ready To Lock.
+  This service verifies the security of MM communication buffers at MM Ready To Lock.
 
-  Test subject: SMM page table.
-  Test overview: Verify the SMM page table matches the SMM memory attribute table.
+  Test subject: MM page table.
+  Test overview: Verify the MM page table matches the MM memory attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
 
@@ -688,20 +688,6 @@ TestPointMmReadyToBootMmPageProtection (
 EFI_STATUS
 EFIAPI
 TestPointExitBootServices (
-  VOID
-  )
-{
-  return EFI_SUCCESS;
-}
-
-/**
-  This service verifies the system state within SMM after Exit Boot Services is invoked.
-
-  @retval EFI_SUCCESS         The test point check was performed successfully.
-**/
-EFI_STATUS
-EFIAPI
-TestPointSmmExitBootServices (
   VOID
   )
 {
