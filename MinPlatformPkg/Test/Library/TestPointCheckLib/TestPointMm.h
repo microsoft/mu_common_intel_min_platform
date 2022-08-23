@@ -51,4 +51,16 @@ TestPointReadyToBootMmPageProtectionHandler (
   IN OUT UINTN   *CommBufferSize  OPTIONAL
   );
 
+/**
+  The MM library constructor.
+  The function does the necessary initialization work for this library
+  instance.
+  @retval     EFI_SUCCESS       The function always return EFI_SUCCESS.
+**/
+EFI_STATUS
+EFIAPI
+MmTestPointCheckLibConstructor (
+  VOID
+  );
+
 #endif

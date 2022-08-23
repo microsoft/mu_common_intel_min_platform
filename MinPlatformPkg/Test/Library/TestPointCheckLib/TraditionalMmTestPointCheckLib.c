@@ -54,18 +54,6 @@ TestPointDumpUefiMemoryMap (
   IN  BOOLEAN               DumpPrint
   );
 
-/**
-  The MM library constructor.
-  The function does the necessary initialization work for this library
-  instance.
-  @retval     EFI_SUCCESS       The function always return EFI_SUCCESS.
-**/
-EFI_STATUS
-EFIAPI
-MmTestPointCheckLibConstructor (
-  VOID
-  );
-
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiMemoryMapSize;
 GLOBAL_REMOVE_IF_UNREFERENCED UINTN                 mUefiDescriptorSize;
