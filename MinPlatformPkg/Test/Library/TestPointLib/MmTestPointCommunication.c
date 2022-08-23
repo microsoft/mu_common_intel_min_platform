@@ -1,4 +1,6 @@
 /** @file
+  This file tests the comm buffer for both Traditional
+  and Standalone MM.
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
   Copyright (c) Microsoft Corporation.

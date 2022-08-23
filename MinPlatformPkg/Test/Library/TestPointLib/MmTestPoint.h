@@ -1,4 +1,8 @@
 /** @file
+  Header file for the MM tests shared between Traditional and
+  Standalone MM.  Also includes the wrapper functions that are
+  used to separate different functionality between Traditional
+  and Standalone MM.
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
   Copyright (c) Microsoft Corporation.

@@ -651,7 +651,7 @@ TestPointMmReadyToLockMmMemoryAttributeTableFunctional (
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToBootSmmPageProtection (
+TestPointReadyToBootMmPageProtection (
   VOID
   )
 {
@@ -659,11 +659,11 @@ TestPointSmmReadyToBootSmmPageProtection (
 }
 
 /**
-  This service verifies the validity of the StandaloneMm page table at StandaloneMm
+  This service verifies the validity of the MM page table at MM
   Ready To Boot.
 
-  Test subject: StandaloneMm page table.
-  Test overview: Verify the StandaloneMm page table matches the StandaloneMm memory 
+  Test subject: MM page table.
+  Test overview: Verify the MM page table matches the MM memory 
   attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
@@ -673,11 +673,11 @@ TestPointSmmReadyToBootSmmPageProtection (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
-    VOID
+TestPointMmReadyToBootMmPageProtection (
+  VOID
 )
 {
-    return EFI_SUCCESS;
+  return EFI_SUCCESS;
 }
 
 /**

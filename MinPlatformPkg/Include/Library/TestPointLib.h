@@ -181,7 +181,7 @@ TestPointLibSetErrorString (
   );
 
 //
-// TEST POINT SMM Communication command
+// TEST POINT MM Communication command
 //
 #define MMI_HANDLER_TEST_POINT_COMMAND_GET_INFO           0x1
 #define MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET 0x2

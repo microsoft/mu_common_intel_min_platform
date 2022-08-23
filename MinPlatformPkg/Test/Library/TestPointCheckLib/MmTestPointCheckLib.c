@@ -1,4 +1,7 @@
 /** @file
+This file contains all the testpoint checks for MM.  Traditional or
+Standalone MM exclusive checks are abstracted away as necessary but
+are called from here.
 
 Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.
@@ -251,12 +254,12 @@ TestPointMmHandler (
   TempCommBufferSize = *CommBufferSize;
 
   if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_HEADER)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication buffer size invalid!\n"));
+    DEBUG((DEBUG_ERROR, "TestPointMmHandler: MM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
   }
   CopyMem (&CommData, CommBuffer, sizeof(CommData));
   if (CommData.Version != TEST_POINT_SMM_COMMUNICATION_VERSION) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication Version invalid!\n"));
+    DEBUG((DEBUG_ERROR, "TestPointMmHandler: MM communication Version invalid!\n"));
     return EFI_SUCCESS;
   }
   switch (CommData.FuncId) {

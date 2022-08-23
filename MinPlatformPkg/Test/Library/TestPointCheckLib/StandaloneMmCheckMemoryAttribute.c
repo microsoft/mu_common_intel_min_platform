@@ -1,4 +1,5 @@
 /** @file
+Memory Attribute table test for Standalone MM.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.

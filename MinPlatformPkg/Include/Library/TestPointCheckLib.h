@@ -540,10 +540,10 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
   );
 
 /**
-  This service verifies the validity of the SMM page table at SMM Ready To Boot.
+  This service verifies the validity of the MM page table at MM Ready To Boot.
 
-  Test subject: SMM page table.
-  Test overview: Verify the SMM page table matches the SMM memory attribute table.
+  Test subject: MM page table.
+  Test overview: Verify the MM page table matches the MM memory attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
 
@@ -552,7 +552,7 @@ TestPointDxeSmmReadyToBootSmiHandlerInstrument (
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToBootSmmPageProtection (
+TestPointReadyToBootMmPageProtection (
   VOID
   );
 
@@ -668,7 +668,7 @@ TestPointMmReadyToBootMmPageProtection (
 **/
 EFI_STATUS
 EFIAPI
-TestPointStandaloneMmReadyToBootStandaloneMmPageProtection (
+TestPointMmReadyToBootMmPageProtection (
   VOID
   );
 

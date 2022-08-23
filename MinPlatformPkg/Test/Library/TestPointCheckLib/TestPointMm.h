@@ -1,4 +1,6 @@
 /** @file
+File that includes function prototypes used by both Traditional and
+Standalone MM
 
 Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent

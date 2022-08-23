@@ -1,5 +1,7 @@
 /** @file
-  This driver will register two callbacks to call fsp's notifies.
+  This driver will register four callbacks to run different testpoint tests.
+  This is a common file between traditional and standalone MM that is a wrapper
+  for different callbacks.
 
   Copyright (c) 2014 - 2016, Intel Corporation. All rights reserved.<BR>
   Copyright (c) Microsoft Corporation.
@@ -25,7 +27,7 @@
 #include <Library/HobLib.h>
 
 /**
-  Standalone MM End Of Dxe event notification handler.
+  MM End Of Dxe event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
@@ -46,7 +48,7 @@ MmEndOfDxeEventNotify (
 }
 
 /**
-  Standalone MM Exit Boot Services event notification handler.
+  MM Exit Boot Services event notification handler.
 
   @param[in] Protocol   Points to the protocol's unique identifier.
   @param[in] Interface  Points to the interface instance.
@@ -67,12 +69,9 @@ MmExitBootServicesEventNotify (
 }
 
 /**
-  Initialize  Shared MM Platform.
+  Initialize Shared MM Platform.
 
   @retval EFI_SUCCESS           Initialization complete.
-  @exception EFI_UNSUPPORTED       The chipset is unsupported by this driver.
-  @retval EFI_OUT_OF_RESOURCES  Do not have enough resources to initialize the driver.
-  @retval EFI_DEVICE_ERROR      Device error, driver exits abnormally.
 **/
 EFI_STATUS
 EFIAPI

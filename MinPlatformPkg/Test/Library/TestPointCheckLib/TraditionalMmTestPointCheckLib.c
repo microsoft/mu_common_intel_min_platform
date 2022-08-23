@@ -30,12 +30,6 @@ TestPointCheckMmMemAttribute (
   );
 
 EFI_STATUS
-TestPointSmmReadyToBootSmmPageProtectionHandler (
-  IN OUT VOID   *CommBuffer      OPTIONAL,
-  IN OUT UINTN  *CommBufferSize  OPTIONAL
-  );
-
-EFI_STATUS
 TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
   IN UINTN                        UefiMemoryMapSize,
@@ -58,18 +52,6 @@ TestPointDumpUefiMemoryMap (
   OUT UINTN                 *UefiMemoryMapSize, OPTIONAL
   OUT UINTN                 *UefiDescriptorSize, OPTIONAL
   IN  BOOLEAN               DumpPrint
-  );
-
-EFI_STATUS
-EFIAPI
-TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
-  VOID
-  );
-
-EFI_STATUS
-EFIAPI
-TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
-  VOID
   );
 
 /**
@@ -96,18 +78,6 @@ GLOBAL_REMOVE_IF_UNREFERENCED UINTN                           mGcdIoMapNumberOfD
 EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
 
 /**
-  Wrapper function for Memory Attribute table checking
-**/
-EFI_STATUS
-EFIAPI
-TestPointReadyToLockMmMemoryAttributeTableFunctional (
-  VOID
-  )
-{
-  return TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional ();
-}
-
-/**
   This service verifies the validity of the SMM memory attribute table at SMM Ready To Lock.
   Test subject: SMM memory attribute table.
   Test overview: Verify the SMM memory attribute table is reported.
@@ -120,7 +90,7 @@ TestPointReadyToLockMmMemoryAttributeTableFunctional (
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
+TestPointReadyToLockMmMemoryAttributeTableFunctional (
   VOID
   )
 {
@@ -150,42 +120,6 @@ TestPointSmmReadyToLockSmmMemoryAttributeTableFunctional (
 }
 
 /**
-  Wrapper function for checking the MM communication buffer
-**/
-EFI_STATUS
-EFIAPI
-TestPointReadyToLockSecureMmCommunicationBuffer (
-  VOID
-  )
-{
-  return TestPointSmmReadyToLockSecureSmmCommunicationBuffer ();
-}
-
-/**
-  Wrapper function for MM Page Protection
-**/
-EFI_STATUS
-EFIAPI
-TestPointReadyToBootMmPageProtection (
-  VOID
-  )
-{
-  return TestPointSmmReadyToBootSmmPageProtection ();
-}
-
-/**
-  Wrapper function for the MM Page Protection Handler
-**/
-EFI_STATUS
-TestPointReadyToBootMmPageProtectionHandler (
-  IN OUT VOID    *CommBuffer      OPTIONAL,
-  IN OUT UINTN   *CommBufferSize  OPTIONAL
-  )
-{
-  return TestPointSmmReadyToBootSmmPageProtectionHandler (CommBuffer, CommBufferSize);
-}
-
-/**
   This service verifies the security of SMM communication buffers at SMM Ready To Lock.
   Test subject: SMM communication buffer.
   Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
@@ -195,7 +129,7 @@ TestPointReadyToBootMmPageProtectionHandler (
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
+TestPointReadyToLockSecureMmCommunicationBuffer (
   VOID
   )
 {
@@ -236,7 +170,7 @@ TestPointSmmReadyToLockSecureSmmCommunicationBuffer (
 **/
 EFI_STATUS
 EFIAPI
-TestPointSmmReadyToBootSmmPageProtection (
+TestPointReadyToBootMmPageProtection (
   VOID
   )
 {
@@ -293,7 +227,7 @@ TestPointSmmReadyToBootSmmPageProtection (
   @retval EFI_SUCCESS Command is handled successfully.
 **/
 EFI_STATUS
-TestPointSmmReadyToBootSmmPageProtectionHandler (
+TestPointReadyToBootMmPageProtectionHandler (
   IN OUT VOID    *CommBuffer      OPTIONAL,
   IN OUT UINTN   *CommBufferSize  OPTIONAL
   )
@@ -393,55 +327,6 @@ Done:
   FreePool (CommData);
 
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtectionHandler - Exit\n"));
-  return EFI_SUCCESS;
-}
-
-/**
-  Dispatch function for a Software MMI handler.
-  Caution: This function may receive untrusted input.
-  Communicate buffer and buffer size are external input, so this function will do basic validation.
-  @param DispatchHandle  The unique handle assigned to this handler by MmiHandlerRegister().
-  @param Context         Points to an optional handler context which was specified when the
-                         handler was registered.
-  @param CommBuffer      A pointer to a collection of data in memory that will
-                         be conveyed from a non-SMM environment into an SMM environment.
-  @param CommBufferSize  The size of the CommBuffer.
-  @retval EFI_SUCCESS Command is handled successfully.
-**/
-EFI_STATUS
-EFIAPI
-TestPointSmmHandler (
-  IN EFI_HANDLE  DispatchHandle,
-  IN CONST VOID  *Context         OPTIONAL,
-  IN OUT VOID    *CommBuffer      OPTIONAL,
-  IN OUT UINTN   *CommBufferSize  OPTIONAL
-  )
-{
-  TEST_POINT_SMM_COMMUNICATION_HEADER      CommData;
-  UINTN                                    TempCommBufferSize;
-
-  //
-  // If input is invalid, stop processing this MMI
-  //
-  if (CommBuffer == NULL || CommBufferSize == NULL) {
-    return EFI_SUCCESS;
-  }
-
-  TempCommBufferSize = *CommBufferSize;
-
-  if (TempCommBufferSize < sizeof(TEST_POINT_SMM_COMMUNICATION_HEADER)) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication buffer size invalid!\n"));
-    return EFI_SUCCESS;
-  }
-  CopyMem (&CommData, CommBuffer, sizeof(CommData));
-  if (CommData.Version != TEST_POINT_SMM_COMMUNICATION_VERSION) {
-    DEBUG((DEBUG_ERROR, "TestPointSmmHandler: SMM communication Version invalid!\n"));
-    return EFI_SUCCESS;
-  }
-  switch (CommData.FuncId) {
-  case TEST_POINT_SMM_COMMUNICATION_FUNC_ID_UEFI_GCD_MAP_INFO:
-    return TestPointSmmReadyToBootSmmPageProtectionHandler (CommBuffer, CommBufferSize);
-  }
   return EFI_SUCCESS;
 }
 

@@ -1,4 +1,5 @@
 /** @file
+  Header function that is necessary for linking libraries.
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
   Copyright (c) Microsoft Corporation.

@@ -1,4 +1,5 @@
 /** @file
+Dumps the current loaded MM images information for debug purposes.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.

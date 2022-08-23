@@ -7,15 +7,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 
 #include <Uefi.h>
-#include <Library/TestPointCheckLib.h>
-#include <Library/TestPointLib.h>
-#include <Library/DebugLib.h>
-#include <Library/DevicePathLib.h>
-#include <Library/MemoryAllocationLib.h>
-#include <Library/PeCoffGetEntryPointLib.h>
-
 #include <Protocol/LoadedImage.h>
 #include <Protocol/DevicePath.h>
+
+#ifndef _TEST_POINT_IMAGE_DUMP_H_
+#define _TEST_POINT_IMAGE_DUMP_H_
 
 BOOLEAN
 IsRuntimeImage (
@@ -29,3 +25,12 @@ DumpLoadedImage (
   IN EFI_DEVICE_PATH_PROTOCOL   *DevicePath,
   IN EFI_DEVICE_PATH_PROTOCOL   *LoadedImageDevicePath
   );
+
+EFI_STATUS
+TestPointCheckNon3rdPartyImage (
+  IN EFI_LOADED_IMAGE_PROTOCOL  *LoadedImage,
+  IN EFI_DEVICE_PATH_PROTOCOL   *DevicePath,
+  IN EFI_DEVICE_PATH_PROTOCOL   *LoadedImageDevicePath
+  );
+
+#endif

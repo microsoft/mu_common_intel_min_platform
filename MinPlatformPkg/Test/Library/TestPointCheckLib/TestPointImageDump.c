@@ -1,10 +1,19 @@
 /** @file
+This file includes helper functions for dumping images for the differing
+implementations of Traditional and Standalone MM.
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
+
+#include <Library/TestPointCheckLib.h>
+#include <Library/TestPointLib.h>
+#include <Library/DebugLib.h>
+#include <Library/DevicePathLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/PeCoffGetEntryPointLib.h>
 
 #include "TestPointImageDump.h"
 
