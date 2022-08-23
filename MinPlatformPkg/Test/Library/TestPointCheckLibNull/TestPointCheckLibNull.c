@@ -639,7 +639,7 @@ TestPointMmReadyToLockMmMemoryAttributeTableFunctional (
 }
 
 /**
-  This service verifies the validity of the SMM page table at SMM Ready To Boot.
+  This service verifies the security of SMM communication buffers at SMM Ready To Lock.
 
   Test subject: SMM page table.
   Test overview: Verify the SMM page table matches the SMM memory attribute table.
@@ -688,6 +688,34 @@ TestPointMmReadyToBootMmPageProtection (
 EFI_STATUS
 EFIAPI
 TestPointExitBootServices (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+/**
+  This service verifies the system state within SMM after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
+EFI_STATUS
+EFIAPI
+TestPointSmmExitBootServices (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+/**
+ Test that required devices have trained to the required link speed.
+
+ @retval EFI_SUCCESS         Test was performed and flagged as verified or error logged.
+**/
+EFI_STATUS
+EFIAPI
+TestPointPciEnumerationDonePcieGenSpeed (
   VOID
   )
 {
