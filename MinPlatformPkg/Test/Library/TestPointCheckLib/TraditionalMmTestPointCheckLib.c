@@ -1,5 +1,5 @@
 /** @file
- * 
+
 Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
@@ -69,6 +69,7 @@ EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
 
 /**
   This service verifies the validity of the SMM memory attribute table at SMM Ready To Lock.
+
   Test subject: SMM memory attribute table.
   Test overview: Verify the SMM memory attribute table is reported.
                  Verify image code/data is consistent with the SMM memory attribute table.
@@ -193,10 +194,9 @@ TestPointReadyToBootMmPageProtection (
     Result = TRUE;
 
     Status = TestPointCheckMmCommunicationBuffer (mUefiMemoryMap, mUefiMemoryMapSize, mUefiDescriptorSize, mUefiMemoryAttributesTable);
-    if (EFI_ERROR (Status)) {
+    if (EFI_ERROR(Status)) {
       Result = FALSE;
     }
-
     if (Result) {
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -333,7 +333,6 @@ Done:
 
   @param[in]  ImageHandle       The firmware allocated handle for the UEFI image.
   @param[in]  SystemTable       A pointer to the EFI system table.
-  
   @retval     EFI_SUCCESS       The function always return EFI_SUCCESS.
 **/
 EFI_STATUS

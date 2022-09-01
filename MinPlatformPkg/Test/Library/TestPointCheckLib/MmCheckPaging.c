@@ -62,9 +62,9 @@ typedef struct {
 } PAGE_ATTRIBUTE_TABLE;
 
 PAGE_ATTRIBUTE_TABLE mPageAttributeTable[] = {
-  {Page4K, SIZE_4KB, PAGING_4K_ADDRESS_MASK_64},
-  {Page2M, SIZE_2MB, PAGING_2M_ADDRESS_MASK_64},
-  {Page1G, SIZE_1GB, PAGING_1G_ADDRESS_MASK_64},
+  {Page4K,  SIZE_4KB, PAGING_4K_ADDRESS_MASK_64},
+  {Page2M,  SIZE_2MB, PAGING_2M_ADDRESS_MASK_64},
+  {Page1G,  SIZE_1GB, PAGING_1G_ADDRESS_MASK_64},
 };
 
 /**
@@ -146,18 +146,18 @@ PageAttributeToLength (
 **/
 VOID *
 GetPageTableEntry (
-  IN  PHYSICAL_ADDRESS              Address,
-  OUT PAGE_ATTRIBUTE                *PageAttribute
+  IN  PHYSICAL_ADDRESS                  Address,
+  OUT PAGE_ATTRIBUTE                    *PageAttribute
   )
 {
-  UINTN               Index1;
-  UINTN               Index2;
-  UINTN               Index3;
-  UINTN               Index4;
-  UINT64              *L1PageTable;
-  UINT64              *L2PageTable;
-  UINT64              *L3PageTable;
-  UINT64              *L4PageTable;
+  UINTN                 Index1;
+  UINTN                 Index2;
+  UINTN                 Index3;
+  UINTN                 Index4;
+  UINT64                *L1PageTable;
+  UINT64                *L2PageTable;
+  UINT64                *L3PageTable;
+  UINT64                *L4PageTable;
 
   Index4 = ((UINTN)RShiftU64 (Address, 39)) & PAGING_PAE_INDEX_MASK;
   Index3 = ((UINTN)Address >> 30) & PAGING_PAE_INDEX_MASK;
@@ -234,14 +234,14 @@ SetupSmBaseBuffer (
   volatile SMBASE_SHARED_BUFFER      SmBaseBuffer;
   EFI_STATUS                         Status;
   UINTN                              Index;
-  UINTN                              Base  = 0;
+  UINTN                              Base = 0;
   UINTN                              Delta = 0;
 
   if (mSmBaseBuffer != NULL) {
     return ;
   }
 
-  mSmBaseBuffer = AllocatePool (sizeof (UINT64) * gMmst->NumberOfCpus);
+  mSmBaseBuffer = AllocatePool (sizeof(UINT64) * gMmst->NumberOfCpus);
   ASSERT(mSmBaseBuffer != NULL);
 
   for (Index = 0; Index < gMmst->NumberOfCpus; Index++) {
@@ -277,7 +277,7 @@ SetupSmBaseBuffer (
 
 BOOLEAN
 IsMmSaveState (
-  IN EFI_PHYSICAL_ADDRESS BaseAddress
+  IN EFI_PHYSICAL_ADDRESS   BaseAddress
   )
 {
   UINTN                              Index;
@@ -298,7 +298,6 @@ IsMmSaveState (
     if (Index == gMmst->NumberOfCpus - 1) {
       TileSize = SIZE_32KB;
     }
-
     if ((BaseAddress >= mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileCodeSize) &&
         (BaseAddress <  mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileSize)) {
       return TRUE;
@@ -398,7 +397,6 @@ TestPointCheckPagingWithMemoryAttributesTable (
     if (EFI_ERROR(Status)) {
       ReturnStatus = Status;
     }
-
     Entry = NEXT_MEMORY_DESCRIPTOR (Entry, MemoryAttributesTable->DescriptorSize);
   }
 

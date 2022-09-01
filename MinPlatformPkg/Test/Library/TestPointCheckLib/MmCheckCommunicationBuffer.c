@@ -22,10 +22,10 @@ extern UINTN                  mUefiDescriptorSize;
 
 EFI_STATUS
 TestPointCheckPageTable (
-  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
-  IN UINTN                 Length,
-  IN BOOLEAN               IsCode,
-  IN BOOLEAN               IsOutsideSmram
+  IN EFI_PHYSICAL_ADDRESS   BaseAddress,
+  IN UINTN                  Length,
+  IN BOOLEAN                IsCode,
+  IN BOOLEAN                IsOutsideSmram
   );
 
 BOOLEAN
@@ -69,7 +69,7 @@ TestPointCheckMmCommunicationBuffer (
   MemoryMap = UefiMemoryMap;
   for (Index = 0; Index < MemoryMapEntryCount; Index++) {
     if (IsUefiPageNotPresent(MemoryMap)) {
-      DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE (MemoryMap->NumberOfPages)));
+      DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE(MemoryMap->NumberOfPages)));
       Status = TestPointCheckPageTable (
                  MemoryMap->PhysicalStart,
                  EFI_PAGES_TO_SIZE((UINTN)MemoryMap->NumberOfPages),
@@ -80,7 +80,7 @@ TestPointCheckMmCommunicationBuffer (
         ReturnStatus = Status;
       }
     }
-    MemoryMap = NEXT_MEMORY_DESCRIPTOR (MemoryMap, UefiDescriptorSize);
+    MemoryMap = NEXT_MEMORY_DESCRIPTOR(MemoryMap, UefiDescriptorSize);
   }
 
   if (MemoryAttributesTable != NULL) {
