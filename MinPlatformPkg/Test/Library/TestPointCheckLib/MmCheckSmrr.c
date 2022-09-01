@@ -36,15 +36,15 @@ TestPointCheckSmrr (
   VOID
   )
 {
-  UINT64  SmrrBase;
-  UINT64  SmrrMask;
-  UINT64  Length;
+  UINT64      SmrrBase;
+  UINT64      SmrrMask;
+  UINT64      Length;
 
-  UINT32   RegEax;
-  UINT32   RegEdx;
-  UINTN    FamilyId;
-  UINTN    ModelId;
-  BOOLEAN  Result;
+  UINT32  RegEax;
+  UINT32  RegEdx;
+  UINTN   FamilyId;
+  UINTN   ModelId;
+  BOOLEAN Result;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Enter\n"));
 
@@ -54,7 +54,7 @@ TestPointCheckSmrr (
   AsmCpuid (CPUID_VERSION_INFO, &RegEax, NULL, NULL, &RegEdx);
   FamilyId = (RegEax >> 8) & 0xf;
   ModelId  = (RegEax >> 4) & 0xf;
-  if ((FamilyId == 0x06) || (FamilyId == 0x0f)) {
+  if (FamilyId == 0x06 || FamilyId == 0x0f) {
     ModelId = ModelId | ((RegEax >> 12) & 0xf0);
   }
 
@@ -78,7 +78,7 @@ TestPointCheckSmrr (
   // SMRR Physical Base and SMM Physical Mask MSRs are not available.
   //
   if (FamilyId == 0x06) {
-    if ((ModelId == 0x1C) || (ModelId == 0x26) || (ModelId == 0x27) || (ModelId == 0x35) || (ModelId == 0x36)) {
+    if (ModelId == 0x1C || ModelId == 0x26 || ModelId == 0x27 || ModelId == 0x35 || ModelId == 0x36) {
       mSmrrSupported = FALSE;
     }
   }
@@ -91,7 +91,7 @@ TestPointCheckSmrr (
   // Processor Family MSRs
   //
   if (FamilyId == 0x06) {
-    if ((ModelId == 0x17) || (ModelId == 0x0f)) {
+    if (ModelId == 0x17 || ModelId == 0x0f) {
       mSmrrPhysBaseMsr = SMM_FEATURES_LIB_IA32_CORE_SMRR_PHYSBASE;
       mSmrrPhysMaskMsr = SMM_FEATURES_LIB_IA32_CORE_SMRR_PHYSMASK;
     }
@@ -106,7 +106,6 @@ TestPointCheckSmrr (
   }
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Exit\n"));
-
   Result = TRUE;
   if (!mSmrrSupported) {
     Result = FALSE;
@@ -120,14 +119,13 @@ TestPointCheckSmrr (
       DEBUG ((DEBUG_ERROR, "Smrr is not aligned\n"));
     }
   }
-
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL_ERROR_CODE \
-      TEST_POINT_SMM_END_OF_DXE \
-      TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL_ERROR_STRING
+        TEST_POINT_SMM_END_OF_DXE \
+        TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL_ERROR_STRING
       );
     return EFI_INVALID_PARAMETER;
   }

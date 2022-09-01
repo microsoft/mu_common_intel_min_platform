@@ -675,7 +675,7 @@ EFI_STATUS
 EFIAPI
 TestPointMmReadyToBootMmPageProtection (
   VOID
-)
+  )
 {
   return EFI_SUCCESS;
 }

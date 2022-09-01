@@ -25,18 +25,18 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 ///
 /// Page Table Entry
 ///
-#define IA32_PG_P       BIT0
-#define IA32_PG_RW      BIT1
-#define IA32_PG_U       BIT2
-#define IA32_PG_WT      BIT3
-#define IA32_PG_CD      BIT4
-#define IA32_PG_A       BIT5
-#define IA32_PG_D       BIT6
-#define IA32_PG_PS      BIT7
-#define IA32_PG_PAT_2M  BIT12
-#define IA32_PG_PAT_4K  IA32_PG_PS
-#define IA32_PG_PMNT    BIT62
-#define IA32_PG_NX      BIT63
+#define IA32_PG_P                   BIT0
+#define IA32_PG_RW                  BIT1
+#define IA32_PG_U                   BIT2
+#define IA32_PG_WT                  BIT3
+#define IA32_PG_CD                  BIT4
+#define IA32_PG_A                   BIT5
+#define IA32_PG_D                   BIT6
+#define IA32_PG_PS                  BIT7
+#define IA32_PG_PAT_2M              BIT12
+#define IA32_PG_PAT_4K              IA32_PG_PS
+#define IA32_PG_PMNT                BIT62
+#define IA32_PG_NX                  BIT63
 
 #define PAGING_4K_MASK  0xFFF
 #define PAGING_2M_MASK  0x1FFFFF
@@ -44,9 +44,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #define PAGING_PAE_INDEX_MASK  0x1FF
 
-#define PAGING_4K_ADDRESS_MASK_64  0x000FFFFFFFFFF000ull
-#define PAGING_2M_ADDRESS_MASK_64  0x000FFFFFFFE00000ull
-#define PAGING_1G_ADDRESS_MASK_64  0x000FFFFFC0000000ull
+#define PAGING_4K_ADDRESS_MASK_64 0x000FFFFFFFFFF000ull
+#define PAGING_2M_ADDRESS_MASK_64 0x000FFFFFFFE00000ull
+#define PAGING_1G_ADDRESS_MASK_64 0x000FFFFFC0000000ull
 
 typedef enum {
   PageNone,
@@ -56,15 +56,15 @@ typedef enum {
 } PAGE_ATTRIBUTE;
 
 typedef struct {
-  PAGE_ATTRIBUTE    Attribute;
-  UINT64            Length;
-  UINT64            AddressMask;
+  PAGE_ATTRIBUTE   Attribute;
+  UINT64           Length;
+  UINT64           AddressMask;
 } PAGE_ATTRIBUTE_TABLE;
 
-PAGE_ATTRIBUTE_TABLE  mPageAttributeTable[] = {
-  { Page4K, SIZE_4KB, PAGING_4K_ADDRESS_MASK_64 },
-  { Page2M, SIZE_2MB, PAGING_2M_ADDRESS_MASK_64 },
-  { Page1G, SIZE_1GB, PAGING_1G_ADDRESS_MASK_64 },
+PAGE_ATTRIBUTE_TABLE mPageAttributeTable[] = {
+  {Page4K, SIZE_4KB, PAGING_4K_ADDRESS_MASK_64},
+  {Page2M, SIZE_2MB, PAGING_2M_ADDRESS_MASK_64},
+  {Page1G, SIZE_1GB, PAGING_1G_ADDRESS_MASK_64},
 };
 
 /**
@@ -128,12 +128,11 @@ PageAttributeToLength (
 {
   UINTN  Index;
 
-  for (Index = 0; Index < sizeof (mPageAttributeTable)/sizeof (mPageAttributeTable[0]); Index++) {
+  for (Index = 0; Index < sizeof(mPageAttributeTable)/sizeof(mPageAttributeTable[0]); Index++) {
     if (PageAttribute == mPageAttributeTable[Index].Attribute) {
       return (UINTN)mPageAttributeTable[Index].Length;
     }
   }
-
   return 0;
 }
 
@@ -147,25 +146,25 @@ PageAttributeToLength (
 **/
 VOID *
 GetPageTableEntry (
-  IN  PHYSICAL_ADDRESS  Address,
-  OUT PAGE_ATTRIBUTE    *PageAttribute
+  IN  PHYSICAL_ADDRESS              Address,
+  OUT PAGE_ATTRIBUTE                *PageAttribute
   )
 {
-  UINTN   Index1;
-  UINTN   Index2;
-  UINTN   Index3;
-  UINTN   Index4;
-  UINT64  *L1PageTable;
-  UINT64  *L2PageTable;
-  UINT64  *L3PageTable;
-  UINT64  *L4PageTable;
+  UINTN               Index1;
+  UINTN               Index2;
+  UINTN               Index3;
+  UINTN               Index4;
+  UINT64              *L1PageTable;
+  UINT64              *L2PageTable;
+  UINT64              *L3PageTable;
+  UINT64              *L4PageTable;
 
   Index4 = ((UINTN)RShiftU64 (Address, 39)) & PAGING_PAE_INDEX_MASK;
   Index3 = ((UINTN)Address >> 30) & PAGING_PAE_INDEX_MASK;
   Index2 = ((UINTN)Address >> 21) & PAGING_PAE_INDEX_MASK;
   Index1 = ((UINTN)Address >> 12) & PAGING_PAE_INDEX_MASK;
 
-  if (sizeof (UINTN) == sizeof (UINT64)) {
+  if (sizeof(UINTN) == sizeof(UINT64)) {
     L4PageTable = (UINT64 *)GetPageTableBase ();
     if (L4PageTable[Index4] == 0) {
       *PageAttribute = Page1G;
@@ -176,12 +175,10 @@ GetPageTableEntry (
   } else {
     L3PageTable = (UINT64 *)GetPageTableBase ();
   }
-
   if (L3PageTable[Index3] == 0) {
     *PageAttribute = Page1G;
     return NULL;
   }
-
   if ((L3PageTable[Index3] & IA32_PG_PS) != 0) {
     // 1G
     *PageAttribute = Page1G;
@@ -193,7 +190,6 @@ GetPageTableEntry (
     *PageAttribute = Page2M;
     return NULL;
   }
-
   if ((L2PageTable[Index2] & IA32_PG_PS) != 0) {
     // 2M
     *PageAttribute = Page2M;
@@ -206,14 +202,13 @@ GetPageTableEntry (
     *PageAttribute = Page4K;
     return NULL;
   }
-
   *PageAttribute = Page4K;
   return &L1PageTable[Index1];
 }
 
 typedef struct {
-  volatile BOOLEAN    Valid;
-  volatile UINT64     SmBase;
+  volatile BOOLEAN  Valid;
+  volatile UINT64   SmBase;
 } SMBASE_SHARED_BUFFER;
 
 VOID
@@ -224,9 +219,9 @@ GetSmBaseOnCurrentProcessor (
 {
   SMBASE_SHARED_BUFFER  *SmBaseBuffer;
 
-  SmBaseBuffer         = Buffer;
+  SmBaseBuffer = Buffer;
   SmBaseBuffer->SmBase = AsmReadMsr64 (MSR_IA32_SMBASE);
-  SmBaseBuffer->Valid  = TRUE;
+  SmBaseBuffer->Valid = TRUE;
 }
 
 UINT64  *mSmBaseBuffer;
@@ -236,21 +231,21 @@ SetupSmBaseBuffer (
   VOID
   )
 {
-  volatile SMBASE_SHARED_BUFFER  SmBaseBuffer;
-  EFI_STATUS                     Status;
-  UINTN                          Index;
-  UINTN                          Base  = 0;
-  UINTN                          Delta = 0;
+  volatile SMBASE_SHARED_BUFFER      SmBaseBuffer;
+  EFI_STATUS                         Status;
+  UINTN                              Index;
+  UINTN                              Base  = 0;
+  UINTN                              Delta = 0;
 
   if (mSmBaseBuffer != NULL) {
-    return;
+    return ;
   }
 
   mSmBaseBuffer = AllocatePool (sizeof (UINT64) * gMmst->NumberOfCpus);
-  ASSERT (mSmBaseBuffer != NULL);
+  ASSERT(mSmBaseBuffer != NULL);
 
   for (Index = 0; Index < gMmst->NumberOfCpus; Index++) {
-    ZeroMem ((VOID *)&SmBaseBuffer, sizeof (SmBaseBuffer));
+    ZeroMem ((VOID *)&SmBaseBuffer, sizeof(SmBaseBuffer));
     if (Index == gMmst->CurrentlyExecutingCpu) {
       GetSmBaseOnCurrentProcessor ((VOID *)&SmBaseBuffer);
       DEBUG ((DEBUG_INFO, "SmbaseBsp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
@@ -259,19 +254,16 @@ SetupSmBaseBuffer (
       if (!FeaturePcdGet (PcdCpuHotPlugSupport)) {
         ASSERT_EFI_ERROR (Status);
       }
-
-      if (EFI_ERROR (Status)) {
+      if (EFI_ERROR(Status)) {
         SmBaseBuffer.SmBase = Base + Delta * Index;
         DEBUG ((DEBUG_INFO, "SmbaseAp(%d) - unknown, guess - 0x%x\n", Index, SmBaseBuffer.SmBase));
       } else {
         while (!SmBaseBuffer.Valid) {
           CpuPause ();
         }
-
         DEBUG ((DEBUG_INFO, "SmbaseAp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
       }
     }
-
     mSmBaseBuffer[Index] = SmBaseBuffer.SmBase;
     if (Base == 0) {
       Base = (UINTN)SmBaseBuffer.SmBase;
@@ -285,22 +277,22 @@ SetupSmBaseBuffer (
 
 BOOLEAN
 IsMmSaveState (
-  IN EFI_PHYSICAL_ADDRESS  BaseAddress
+  IN EFI_PHYSICAL_ADDRESS BaseAddress
   )
 {
-  UINTN  Index;
-  UINTN  TileCodeSize;
-  UINTN  TileDataSize;
-  UINTN  TileSize;
+  UINTN                              Index;
+  UINTN                              TileCodeSize;
+  UINTN                              TileDataSize;
+  UINTN                              TileSize;
 
   SetupSmBaseBuffer ();
 
   TileCodeSize = SIZE_4KB; // BUGBUG: Assume 4KB
-  TileCodeSize = ALIGN_VALUE (TileCodeSize, SIZE_4KB);
+  TileCodeSize = ALIGN_VALUE(TileCodeSize, SIZE_4KB);
   TileDataSize = (SMRAM_SAVE_STATE_MAP_OFFSET - TXT_SMM_PSD_OFFSET) + sizeof (SMRAM_SAVE_STATE_MAP);
-  TileDataSize = ALIGN_VALUE (TileDataSize, SIZE_4KB);
-  TileSize     = TileDataSize + TileCodeSize - 1;
-  TileSize     = 2 * GetPowerOfTwo32 ((UINT32)TileSize);
+  TileDataSize = ALIGN_VALUE(TileDataSize, SIZE_4KB);
+  TileSize = TileDataSize + TileCodeSize - 1;
+  TileSize = 2 * GetPowerOfTwo32 ((UINT32)TileSize);
 
   for (Index = 0; Index < gMmst->NumberOfCpus; Index++) {
     if (Index == gMmst->NumberOfCpus - 1) {
@@ -308,8 +300,7 @@ IsMmSaveState (
     }
 
     if ((BaseAddress >= mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileCodeSize) &&
-        (BaseAddress <  mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileSize))
-    {
+        (BaseAddress <  mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileSize)) {
       return TRUE;
     }
   }
@@ -319,16 +310,16 @@ IsMmSaveState (
 
 EFI_STATUS
 TestPointCheckPageTable (
-  IN EFI_PHYSICAL_ADDRESS  BaseAddress,
-  IN UINTN                 Length,
-  IN BOOLEAN               IsCode,
-  IN BOOLEAN               IsOutsideSmram
+  IN EFI_PHYSICAL_ADDRESS   BaseAddress,
+  IN UINTN                  Length,
+  IN BOOLEAN                IsCode,
+  IN BOOLEAN                IsOutsideSmram
   )
 {
-  UINT64                *PageEntry;
-  PAGE_ATTRIBUTE        PageAttribute;
-  UINTN                 PageEntryLength;
-  EFI_PHYSICAL_ADDRESS  BaseAddressEnd;
+  UINT64                            *PageEntry;
+  PAGE_ATTRIBUTE                    PageAttribute;
+  UINTN                             PageEntryLength;
+  EFI_PHYSICAL_ADDRESS              BaseAddressEnd;
 
   ASSERT ((BaseAddress & (SIZE_4KB - 1)) == 0);
   ASSERT ((Length & (SIZE_4KB - 1)) == 0);
@@ -378,7 +369,7 @@ TestPointCheckPageTable (
     // move to next
     //
     BaseAddress += PageEntryLength;
-    Length      -= PageEntryLength;
+    Length -= PageEntryLength;
   }
 
   return RETURN_SUCCESS;
@@ -386,25 +377,25 @@ TestPointCheckPageTable (
 
 EFI_STATUS
 TestPointCheckPagingWithMemoryAttributesTable (
-  IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
+  IN EFI_MEMORY_ATTRIBUTES_TABLE                     *MemoryAttributesTable
   )
 {
-  UINTN                  Index;
-  EFI_MEMORY_DESCRIPTOR  *Entry;
-  EFI_STATUS             Status;
-  EFI_STATUS             ReturnStatus;
+  UINTN                 Index;
+  EFI_MEMORY_DESCRIPTOR *Entry;
+  EFI_STATUS            Status;
+  EFI_STATUS            ReturnStatus;
 
   ReturnStatus = EFI_SUCCESS;
-  Entry        = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
+  Entry = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
   for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
-    DEBUG ((DEBUG_INFO, "MmMemoryAttribute Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages)));
+    DEBUG ((DEBUG_INFO, "MmMemoryAttribute Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages)));
     Status = TestPointCheckPageTable (
                Entry->PhysicalStart,
-               EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages),
+               EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages),
                ((Entry->Attribute & EFI_MEMORY_RO) == 0) ? FALSE : TRUE,
                FALSE
                );
-    if (EFI_ERROR (Status)) {
+    if (EFI_ERROR(Status)) {
       ReturnStatus = Status;
     }
 
@@ -424,7 +415,7 @@ TestPointCheckMmPaging (
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckMmPaging - Enter\n"));
 
-  Status = MmGetSystemConfigurationTable(&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID**)&MemoryAttributesTable);
+  Status = MmGetSystemConfigurationTable(&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
   if (!EFI_ERROR (Status)) {
     Status = TestPointCheckPagingWithMemoryAttributesTable(MemoryAttributesTable);
   }
@@ -434,8 +425,8 @@ TestPointCheckMmPaging (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION_ERROR_CODE \
-      TEST_POINT_SMM_READY_TO_BOOT \
-      TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION_ERROR_STRING
+        TEST_POINT_SMM_READY_TO_BOOT \
+        TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION_ERROR_STRING
       );
   }
 

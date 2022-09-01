@@ -6,12 +6,12 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
+#ifndef _TEST_POINT_IMAGE_DUMP_H_
+#define _TEST_POINT_IMAGE_DUMP_H_
+
 #include <Uefi.h>
 #include <Protocol/LoadedImage.h>
 #include <Protocol/DevicePath.h>
-
-#ifndef _TEST_POINT_IMAGE_DUMP_H_
-#define _TEST_POINT_IMAGE_DUMP_H_
 
 BOOLEAN
 IsRuntimeImage (

@@ -34,16 +34,16 @@ IsUefiPageNotPresent (
   )
 {
   switch (MemoryMap->Type) {
-    case EfiLoaderCode:
-    case EfiLoaderData:
-    case EfiBootServicesCode:
-    case EfiBootServicesData:
-    case EfiConventionalMemory:
-    case EfiUnusableMemory:
-    case EfiACPIReclaimMemory:
-      return TRUE;
-    default:
-      return FALSE;
+  case EfiLoaderCode:
+  case EfiLoaderData:
+  case EfiBootServicesCode:
+  case EfiBootServicesData:
+  case EfiConventionalMemory:
+  case EfiUnusableMemory:
+  case EfiACPIReclaimMemory:
+    return TRUE;
+  default:
+    return FALSE;
   }
 }
 
@@ -55,53 +55,51 @@ TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_ATTRIBUTES_TABLE  *MemoryAttributesTable
   )
 {
-  EFI_STATUS             ReturnStatus;
-  EFI_STATUS             Status;
-  EFI_MEMORY_DESCRIPTOR  *MemoryMap;
-  UINTN                  MemoryMapEntryCount;
-  UINTN                  Index;
-  EFI_MEMORY_DESCRIPTOR  *Entry;
+  EFI_STATUS            ReturnStatus;
+  EFI_STATUS            Status;
+  EFI_MEMORY_DESCRIPTOR *MemoryMap;
+  UINTN                 MemoryMapEntryCount;
+  UINTN                 Index;
+  EFI_MEMORY_DESCRIPTOR *Entry;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckMmCommunicationBuffer - Enter\n"));
 
-  ReturnStatus        = EFI_SUCCESS;
+  ReturnStatus = EFI_SUCCESS;
   MemoryMapEntryCount = UefiMemoryMapSize/UefiDescriptorSize;
-  MemoryMap           = UefiMemoryMap;
+  MemoryMap = UefiMemoryMap;
   for (Index = 0; Index < MemoryMapEntryCount; Index++) {
-    if (IsUefiPageNotPresent (MemoryMap)) {
+    if (IsUefiPageNotPresent(MemoryMap)) {
       DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE (MemoryMap->NumberOfPages)));
       Status = TestPointCheckPageTable (
                  MemoryMap->PhysicalStart,
-                 EFI_PAGES_TO_SIZE ((UINTN)MemoryMap->NumberOfPages),
+                 EFI_PAGES_TO_SIZE((UINTN)MemoryMap->NumberOfPages),
                  FALSE,
                  TRUE
                  );
-      if (EFI_ERROR (Status)) {
+      if (EFI_ERROR(Status)) {
         ReturnStatus = Status;
       }
     }
-
     MemoryMap = NEXT_MEMORY_DESCRIPTOR (MemoryMap, UefiDescriptorSize);
   }
 
   if (MemoryAttributesTable != NULL) {
     Entry = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
     for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
-      if ((Entry->Type == EfiRuntimeServicesCode) || (Entry->Type == EfiRuntimeServicesData)) {
+      if (Entry->Type == EfiRuntimeServicesCode || Entry->Type == EfiRuntimeServicesData) {
         if ((Entry->Attribute & EFI_MEMORY_RO) != 0) {
-          DEBUG ((DEBUG_INFO, "UEFI MemoryAttributeTable Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE (Entry->NumberOfPages)));
+          DEBUG ((DEBUG_INFO, "UEFI MemoryAttributeTable Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE(Entry->NumberOfPages)));
           Status = TestPointCheckPageTable (
                      Entry->PhysicalStart,
-                     EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages),
+                     EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages),
                      FALSE,
                      TRUE
                      );
-          if (EFI_ERROR (Status)) {
+          if (EFI_ERROR(Status)) {
             ReturnStatus = Status;
           }
         }
       }
-
       Entry = NEXT_MEMORY_DESCRIPTOR (Entry, MemoryAttributesTable->DescriptorSize);
     }
   }
@@ -111,8 +109,8 @@ TestPointCheckMmCommunicationBuffer (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       NULL,
       TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER_ERROR_CODE \
-      TEST_POINT_SMM_READY_TO_BOOT \
-      TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER_ERROR_STRING
+        TEST_POINT_SMM_READY_TO_BOOT \
+        TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER_ERROR_STRING
       );
   }
 

@@ -1,7 +1,9 @@
 /** @file
+ * 
 Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
 Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
+
 **/
 
 #include <PiSmm.h>
@@ -73,6 +75,7 @@ EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
                  Verify the GDT/IDT/PageTable is RO, data is NX, and code is RO.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Dumps the SMM memory attribute table and SMM image information.
+
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
@@ -109,9 +112,11 @@ TestPointReadyToLockMmMemoryAttributeTableFunctional (
 
 /**
   This service verifies the security of SMM communication buffers at SMM Ready To Lock.
+
   Test subject: SMM communication buffer.
   Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
   Reporting mechanism: Dumps the memory map and GCD map at SmmReadyToLock and checks at SmmReadyToBoot.
+
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
@@ -149,10 +154,12 @@ TestPointReadyToLockSecureMmCommunicationBuffer (
 
 /**
   This service verifies the validity of the SMM page table at SMM Ready To Boot.
+
   Test subject: SMM page table.
   Test overview: Verify the SMM page table matches the SMM memory attribute table.
   Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
                        Reports an error message upon checking.
+
   @retval EFI_SUCCESS         The test point check was performed successfully.
   @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
 **/
@@ -170,10 +177,9 @@ TestPointReadyToBootMmPageProtection (
   Result = TRUE;
 
   Status = TestPointCheckMmPaging ();
-  if (EFI_ERROR (Status)) {
+  if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
-
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
@@ -200,15 +206,16 @@ TestPointReadyToBootMmPageProtection (
         );
     }
   }
-
   DEBUG ((DEBUG_INFO, "======== TestPointSmmReadyToBootSmmPageProtection - Exit\n"));
   return EFI_SUCCESS;
 }
 
 /**
   Dispatch function for a Software MMI handler.
+
   Caution: This function may receive untrusted input.
   Communicate buffer and buffer size are external input, so this function will do basic validation.
+
   @param CommBuffer      A pointer to a collection of data in memory that will
                          be conveyed from a non-SMM environment into an SMM environment.
   @param CommBufferSize  The size of the CommBuffer.
@@ -320,10 +327,13 @@ Done:
 
 /**
   The library constructor.
+
   The function does the necessary initialization work for this library
   instance.
+
   @param[in]  ImageHandle       The firmware allocated handle for the UEFI image.
   @param[in]  SystemTable       A pointer to the EFI system table.
+  
   @retval     EFI_SUCCESS       The function always return EFI_SUCCESS.
 **/
 EFI_STATUS
