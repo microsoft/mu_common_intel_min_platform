@@ -2,6 +2,7 @@
 # Component information file for Board Init Test Library
 #
 # Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) Microsoft Corporation.
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -34,18 +35,21 @@
   UefiCpuPkg/UefiCpuPkg.dec
 
 [Sources]
-  SmmTestPointCheckLib.c
-  SmmCheckMemoryAttribute.c
-  SmmCheckLoadedImage.c
-  SmmCheckSmrr.c
-  SmmCheckPaging.c
-  SmmCheckCommunicationBuffer.c
+  TraditionalMmTestPointCheckLib.c
+  MmCheckMemoryAttribute.c
+  MmTestPointCheckLib.c
+  MmCheckLoadedImage.c
+  MmCheckSmrr.c
+  MmCheckPaging.c
+  MmCheckCommunicationBuffer.c
   DxeCheckMemoryAttribute.c
   DxeCheckMemoryMap.c
   DxeCheckLoadedImage.c
   DxeCheckGcd.c
   TestPointHelp.c
   TestPointInternal.h
+  TestPointImageDump.c
+  TestPointImageDump.h
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

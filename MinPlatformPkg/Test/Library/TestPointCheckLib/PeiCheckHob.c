@@ -235,12 +235,12 @@ DumpMemoryAllocationHob (
       if (!IsZeroGuid(&MemoryHob->AllocDescriptor.Name)) {
         if (CompareGuid(&gEfiHobMemoryAllocStackGuid, &MemoryHob->AllocDescriptor.Name)) {
           DEBUG ((DEBUG_INFO,
-            "  {Stack}",
+            "  {Stack=%g}",
             &MemoryHob->AllocDescriptor.Name
             ));
         } else if (CompareGuid(&gEfiHobMemoryAllocBspStoreGuid, &MemoryHob->AllocDescriptor.Name)) {
           DEBUG ((DEBUG_INFO,
-            "  {BspStore}",
+            "  {BspStore=%g}",
             &MemoryHob->AllocDescriptor.Name
             ));
         } else if (CompareGuid(&gEfiHobMemoryAllocModuleGuid, &MemoryHob->AllocDescriptor.Name)) {
