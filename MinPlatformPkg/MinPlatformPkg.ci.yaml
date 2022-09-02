@@ -44,7 +44,8 @@
             "IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec",
             "SecurityPkg/SecurityPkg.dec",
             "IntelSiliconPkg/IntelSiliconPkg.dec",
-            "CryptoPkg/CryptoPkg.dec"
+            "CryptoPkg/CryptoPkg.dec",
+            "StandaloneMmPkg/StandaloneMmPkg.dec"
         ],
         # For host based unit tests
         "AcceptableDependencies-HOST_APPLICATION":[

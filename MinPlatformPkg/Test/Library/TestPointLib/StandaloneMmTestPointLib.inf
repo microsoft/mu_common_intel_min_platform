@@ -1,5 +1,5 @@
 ## @file
-# SMM instance of TestPoint Library.
+# Standalone MM instance of TestPoint Library.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 # Copyright (c) Microsoft Corporation.
@@ -10,10 +10,11 @@
 
 [Defines]
   INF_VERSION                    = 0x00010005
-  BASE_NAME                      = SmmTestPointLib
-  FILE_GUID                      = 221290AE-AB4C-4FE1-B4C3-43A43BE13645
-  MODULE_TYPE                    = DXE_SMM_DRIVER
+  BASE_NAME                      = StandaloneMmTestPointLib
+  FILE_GUID                      = E5E3411D-1243-46FD-A658-22717EA20A7A
+  MODULE_TYPE                    = MM_STANDALONE
   VERSION_STRING                 = 1.0
+  PI_SPECIFICATION_VERSION       = 0x00010032
   LIBRARY_CLASS                  = TestPointLib
 
 [Sources]
@@ -21,20 +22,21 @@
   MmTestPointAip.c
   MmTestPoint.c
   MmTestPoint.h
-  SmmTestPoint.h
-  SmmTestPointCommunication.c
+  StandaloneMmTestPointCommunication.c
+  StandaloneMmTestPoint.h
 
 [Packages]
   MdePkg/MdePkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
+  StandaloneMmPkg/StandaloneMmPkg.dec
 
 [LibraryClasses]
   BaseLib
   BaseMemoryLib
   MemoryAllocationLib
   DebugLib
-  SmmServicesTableLib
-  SmmMemLib
+  MmServicesTableLib
+  MemLib
 
 [Guids]
 ## SOMETIMES_PRODUCES ## GUID

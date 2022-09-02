@@ -1,11 +1,12 @@
 /** @file
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) Microsoft Corporation.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-#include "SmmTestPoint.h"
+#include "MmTestPoint.h"
 
 /**
   Returns the current state information for the adapter.
@@ -43,7 +44,7 @@ TestPointAipGetInfo (
 {
   TEST_POINT_AIP_PRIVATE_DATA  *TestPointAip;
 
-  if ((This == NULL) || (InformationBlock == NULL) || (InformationBlockSize == NULL)) {
+  if ((This == NULL) || (InformationBlock == NULL) || (InformationBlockSize == NULL) || (InformationType == NULL)) {
     return EFI_INVALID_PARAMETER;
   }
   if (!CompareGuid (InformationType, &gAdapterInfoPlatformTestPointGuid)) {
@@ -165,7 +166,7 @@ TestPointAipGetSupportedTypes (
   return EFI_SUCCESS;
 }
 
-EFI_ADAPTER_INFORMATION_PROTOCOL mSmmAdapterInformationProtocol = {
+EFI_ADAPTER_INFORMATION_PROTOCOL mMmAdapterInformationProtocol = {
   TestPointAipGetInfo,
   TestPointAipSetInfo,
   TestPointAipGetSupportedTypes,

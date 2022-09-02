@@ -1,11 +1,12 @@
 /** @file
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) Microsoft Corporation.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-#include "SmmTestPoint.h"
+#include "MmTestPoint.h"
 
 /**
   Find TestPoint table in AIP protocol, and return the data.
@@ -47,7 +48,7 @@ InternalTestPointFindAip (
 
   HandleBufSize = 0;
   Handles = NULL;
-  Status = gSmst->SmmLocateHandle (
+  Status = gMmst->MmLocateHandle (
                     ByProtocol,
                     &gEfiAdapterInformationProtocolGuid,
                     NULL,
@@ -62,7 +63,7 @@ InternalTestPointFindAip (
     return NULL;
   }
 
-  Status = gSmst->SmmLocateHandle (
+  Status = gMmst->MmLocateHandle (
                     ByProtocol,
                     &gEfiAdapterInformationProtocolGuid,
                     NULL,
@@ -79,7 +80,7 @@ InternalTestPointFindAip (
   InformationBlock = NULL;
   InformationBlockSize = 0;
   for (Index = 0; Index < NoHandles; Index++) {
-    Status = gSmst->SmmHandleProtocol (
+    Status = gMmst->MmHandleProtocol (
                       Handles[Index],
                       &gEfiAdapterInformationProtocolGuid,
                       (VOID **)&Aip
@@ -315,12 +316,12 @@ TestPointLibSetTable (
   }
 
   TestPointAip->Signature = TEST_POINT_AIP_PRIVATE_SIGNATURE;
-  CopyMem (&TestPointAip->Aip, &mSmmAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
+  CopyMem (&TestPointAip->Aip, &mMmAdapterInformationProtocol, sizeof(EFI_ADAPTER_INFORMATION_PROTOCOL));
   TestPointAip->TestPointSize = TestPointSize;
   TestPointAip->TestPointMaxSize = TestPointSize;
   
   Handle = NULL;
-  Status = gSmst->SmmInstallProtocolInterface (
+  Status = gMmst->MmInstallProtocolInterface (
                     &Handle,
                     &gEfiAdapterInformationProtocolGuid,
                     EFI_NATIVE_INTERFACE,
@@ -332,7 +333,7 @@ TestPointLibSetTable (
   }
 
   if (!EFI_ERROR(Status)) {
-    RegisterSmmTestPointSmiHandler ();
+    RegisterMmTestPointMmiHandler ();
   }
 
   return Status;

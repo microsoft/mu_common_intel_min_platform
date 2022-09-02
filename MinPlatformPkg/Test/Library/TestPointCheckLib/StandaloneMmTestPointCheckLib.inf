@@ -1,0 +1,64 @@
+## @file
+# Component information file for the Standalone MM Test Point Check Library
+#
+# Copyright (c) 2017-2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) Microsoft Corporation.
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = StandaloneMmTestPointCheckLib
+  FILE_GUID                      = AE975D85-61EA-48F1-A68B-BA777751AC21
+  MODULE_TYPE                    = MM_STANDALONE
+  VERSION_STRING                 = 1.0
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  LIBRARY_CLASS                  = TestPointCheckLib|MM_STANDALONE
+  CONSTRUCTOR                    = StandaloneMmTestPointCheckLibConstructor
+
+[LibraryClasses]
+  BaseLib
+  DebugLib
+  MmServicesTableLib
+  MemoryAllocationLib
+  DevicePathLib
+  PcdLib
+  PeCoffGetEntryPointLib
+  MemLib
+  TestPointLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
+  StandaloneMmPkg/StandaloneMmPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[Sources]
+  StandaloneMmCheckMemoryAttribute.c
+  StandaloneMmTestPointCheckLib.c
+  MmTestPointCheckLib.c
+  MmCheckLoadedImage.c
+  MmCheckSmrr.c
+  MmCheckPaging.c
+  MmCheckCommunicationBuffer.c
+  TestPointHelp.c
+  TestPointInternal.h
+  TestPointImageDump.c
+  TestPointImageDump.h
+
+[Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature
+  gUefiCpuPkgTokenSpaceGuid.PcdCpuSmmBlockStartupThisAp
+  gUefiCpuPkgTokenSpaceGuid.PcdCpuHotPlugSupport
+
+[Guids]
+  gEdkiiPiSmmMemoryAttributesTableGuid
+  gEfiMemoryAttributesTableGuid
+
+[Protocols]
+  gEfiLoadedImageProtocolGuid
+  gEfiLoadedImageDevicePathProtocolGuid
+  gEfiDevicePathProtocolGuid

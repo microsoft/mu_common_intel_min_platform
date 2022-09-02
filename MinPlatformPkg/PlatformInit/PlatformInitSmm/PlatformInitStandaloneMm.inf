@@ -1,5 +1,5 @@
 ### @file
-# Module Information file for the PlatformInit SMM driver.
+# Module Information file for the PlatformInit Standalone MM driver.
 #
 # Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
 # Copyright (c) Microsoft Corporation.
@@ -10,23 +10,21 @@
 
 [Defines]
   INF_VERSION                    = 0x00010017
-  BASE_NAME                      = PlatformInitSmm
-  FILE_GUID                      = EE447DFD-7B3A-4F39-80FC-ED02BB20F6A0
+  BASE_NAME                      = PlatformInitStandaloneMm
+  FILE_GUID                      = 5E18EA86-2E7B-4223-8B30-665592448337
   VERSION_STRING                 = 1.0
-  MODULE_TYPE                    = DXE_SMM_DRIVER
-  PI_SPECIFICATION_VERSION       = 1.10
-  ENTRY_POINT                    = PlatformInitSmmEntryPoint
+  MODULE_TYPE                    = MM_STANDALONE
+  PI_SPECIFICATION_VERSION       = 0x00010032
+  ENTRY_POINT                    = PlatformInitStandaloneMmEntryPoint
 
 [LibraryClasses]
   BaseLib
   BaseMemoryLib
   DebugLib
-  DxeServicesTableLib
   MemoryAllocationLib
   PcdLib
   MmServicesTableLib
-  UefiDriverEntryPoint
-  BoardInitLib
+  StandaloneMmDriverEntryPoint
   TestPointCheckLib
 
 [Packages]
@@ -36,7 +34,7 @@
 
 [Sources]
   EventNotify.h
-  PlatformInitSmm.c
+  PlatformInitStandaloneMm.c
   PlatformInitMm.c
 
 [Protocols]
