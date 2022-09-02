@@ -1,6 +1,7 @@
 /** @file
 
 Copyright (c) 2017 - 2018, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -26,7 +27,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/PlatformConfigCheckLib.h>
 // MU_CHANGE [END]
 
-GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunciationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID mTestPointSmmCommunicationGuid = TEST_POINT_SMM_COMMUNICATION_GUID;
 
 VOID
 TestPointDumpGcd (
@@ -594,7 +595,7 @@ TestPointDxeSmmReadyToBootSmmPageProtection (
   CommBuffer = (UINT8 *)(UINTN)Entry->PhysicalStart;
 
   CommHeader = (EFI_SMM_COMMUNICATE_HEADER *)&CommBuffer[0];
-  CopyMem(&CommHeader->HeaderGuid, &mTestPointSmmCommunciationGuid, sizeof(mTestPointSmmCommunciationGuid));
+  CopyMem(&CommHeader->HeaderGuid, &mTestPointSmmCommunicationGuid, sizeof(mTestPointSmmCommunicationGuid));
   CommHeader->MessageLength = MinimalSizeNeeded - OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data);
 
   CommData = (TEST_POINT_SMM_COMMUNICATION_UEFI_GCD_MAP_INFO *)&CommBuffer[OFFSET_OF(EFI_SMM_COMMUNICATE_HEADER, Data)];

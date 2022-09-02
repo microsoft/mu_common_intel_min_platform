@@ -1,16 +1,17 @@
 /** @file
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include <Uefi.h>
-#include <PiSmm.h>
+#include <PiMm.h>
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
 #include <Library/DebugLib.h>
-#include <Library/SmmServicesTableLib.h>
+#include <Library/MmServicesTableLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Guid/MemoryAttributesTable.h>
@@ -66,12 +67,39 @@ PAGE_ATTRIBUTE_TABLE mPageAttributeTable[] = {
   {Page1G,  SIZE_1GB, PAGING_1G_ADDRESS_MASK_64},
 };
 
+/**
+  Retrieves a pointer to the system configuration table from the MM System Table
+  based on a specified GUID.
+
+  @param[in]   TableGuid       The pointer to table's GUID type.
+  @param[out]  Table           The pointer to the table associated with TableGuid in the EFI System Table.
+
+  @retval EFI_SUCCESS     A configuration table matching TableGuid was found.
+  @retval EFI_NOT_FOUND   A configuration table matching TableGuid could not be found.
+
+**/
 EFI_STATUS
 EFIAPI
-SmmGetSystemConfigurationTable (
+MmGetSystemConfigurationTable (
   IN  EFI_GUID  *TableGuid,
   OUT VOID      **Table
-  );
+  )
+{
+  UINTN             Index;
+
+  ASSERT (TableGuid != NULL);
+  ASSERT (Table != NULL);
+
+  *Table = NULL;
+  for (Index = 0; Index < gMmst->NumberOfTableEntries; Index++) {
+    if (CompareGuid (TableGuid, &(gMmst->MmConfigurationTable[Index].VendorGuid))) {
+      *Table = gMmst->MmConfigurationTable[Index].VendorTable;
+      return EFI_SUCCESS;
+    }
+  }
+
+  return EFI_NOT_FOUND;
+}
 
 /**
   Return page table base.
@@ -212,16 +240,16 @@ SetupSmBaseBuffer (
     return ;
   }
 
-  mSmBaseBuffer = AllocatePool (sizeof(UINT64) * gSmst->NumberOfCpus);
+  mSmBaseBuffer = AllocatePool (sizeof(UINT64) * gMmst->NumberOfCpus);
   ASSERT(mSmBaseBuffer != NULL);
 
-  for (Index = 0; Index < gSmst->NumberOfCpus; Index++) {
+  for (Index = 0; Index < gMmst->NumberOfCpus; Index++) {
     ZeroMem ((VOID *)&SmBaseBuffer, sizeof(SmBaseBuffer));
-    if (Index == gSmst->CurrentlyExecutingCpu) {
+    if (Index == gMmst->CurrentlyExecutingCpu) {
       GetSmBaseOnCurrentProcessor ((VOID *)&SmBaseBuffer);
       DEBUG ((DEBUG_INFO, "SmbaseBsp(%d) - 0x%x\n", Index, SmBaseBuffer.SmBase));
     } else {
-      Status = gSmst->SmmStartupThisAp (GetSmBaseOnCurrentProcessor, Index, (VOID *)&SmBaseBuffer);
+      Status = gMmst->MmStartupThisAp (GetSmBaseOnCurrentProcessor, Index, (VOID *)&SmBaseBuffer);
       if (!FeaturePcdGet (PcdCpuHotPlugSupport)) {
         ASSERT_EFI_ERROR (Status);
       }
@@ -247,7 +275,7 @@ SetupSmBaseBuffer (
 }
 
 BOOLEAN
-IsSmmSaveState (
+IsMmSaveState (
   IN EFI_PHYSICAL_ADDRESS   BaseAddress
   )
 {
@@ -265,8 +293,8 @@ IsSmmSaveState (
   TileSize = TileDataSize + TileCodeSize - 1;
   TileSize = 2 * GetPowerOfTwo32 ((UINT32)TileSize);
 
-  for (Index = 0; Index < gSmst->NumberOfCpus; Index++) {
-    if (Index == gSmst->NumberOfCpus - 1) {
+  for (Index = 0; Index < gMmst->NumberOfCpus; Index++) {
+    if (Index == gMmst->NumberOfCpus - 1) {
       TileSize = SIZE_32KB;
     }
     if ((BaseAddress >= mSmBaseBuffer[Index] + SMM_HANDLER_OFFSET + TileCodeSize) &&
@@ -316,9 +344,9 @@ TestPointCheckPageTable (
         return EFI_INVALID_PARAMETER;
       } else if ((*PageEntry & IA32_PG_RW) != 0) {
         //
-        // Check if it is SMM SaveState
+        // Check if it is MM SaveState
         //
-        if (!IsSmmSaveState (BaseAddress)) {
+        if (!IsMmSaveState (BaseAddress)) {
           DEBUG ((DEBUG_ERROR, "Code Page read write - 0x%x\n", BaseAddress));
           return EFI_INVALID_PARAMETER;
         }
@@ -358,7 +386,7 @@ TestPointCheckPagingWithMemoryAttributesTable (
   ReturnStatus = EFI_SUCCESS;
   Entry = (EFI_MEMORY_DESCRIPTOR *)(MemoryAttributesTable + 1);
   for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
-    DEBUG ((DEBUG_INFO, "SmmMemoryAttribute Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages)));
+    DEBUG ((DEBUG_INFO, "MmMemoryAttribute Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages)));
     Status = TestPointCheckPageTable (
                Entry->PhysicalStart,
                EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages),
@@ -375,16 +403,16 @@ TestPointCheckPagingWithMemoryAttributesTable (
 }
 
 EFI_STATUS
-TestPointCheckSmmPaging (
+TestPointCheckMmPaging (
   VOID
   )
 {
   EFI_STATUS  Status;
   VOID        *MemoryAttributesTable;
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmPaging - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmPaging - Enter\n"));
 
-  Status = SmmGetSystemConfigurationTable (&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
+  Status = MmGetSystemConfigurationTable(&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
   if (!EFI_ERROR (Status)) {
     Status = TestPointCheckPagingWithMemoryAttributesTable(MemoryAttributesTable);
   }
@@ -399,6 +427,6 @@ TestPointCheckSmmPaging (
       );
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmPaging - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmPaging - Exit\n"));
   return EFI_SUCCESS;
 }
