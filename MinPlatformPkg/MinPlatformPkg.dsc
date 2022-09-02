@@ -113,8 +113,12 @@
   CompressLib|MinPlatformPkg/Library/CompressLib/CompressLib.inf
 
 [LibraryClasses.common.DXE_SMM_DRIVER]
-  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
+  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/TraditionalMmTestPointCheckLib.inf
   TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
+[LibraryClasses.common.MM_STANDALONE]
+  TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/StandaloneMmTestPointCheckLib.inf
+  TestPointLib|MinPlatformPkg/Test/Library/TestPointLib/StandaloneMmTestPointLib.inf
+  MemLib|StandaloneMmPkg/Library/StandaloneMmMemLib/StandaloneMmMemLib.inf
 
 ###################################################################################################
 #
@@ -188,6 +192,7 @@
   MinPlatformPkg/PlatformInit/PlatformInitPei/PlatformInitPostMem.inf
   MinPlatformPkg/PlatformInit/PlatformInitDxe/PlatformInitDxe.inf
   MinPlatformPkg/PlatformInit/PlatformInitSmm/PlatformInitSmm.inf
+  MinPlatformPkg/PlatformInit/PlatformInitSmm/PlatformInitStandaloneMm.inf
   MinPlatformPkg/PlatformInit/Library/SecBoardInitLibNull/SecBoardInitLibNull.inf
   MinPlatformPkg/PlatformInit/Library/BoardInitLibNull/BoardInitLibNull.inf
   MinPlatformPkg/PlatformInit/Library/MultiBoardInitSupportLib/PeiMultiBoardInitSupportLib.inf
@@ -209,11 +214,13 @@
   MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/PeiTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointCheckLib/DxeTestPointCheckLib.inf
-  MinPlatformPkg/Test/Library/TestPointCheckLib/SmmTestPointCheckLib.inf
+  MinPlatformPkg/Test/Library/TestPointCheckLib/TraditionalMmTestPointCheckLib.inf
+  MinPlatformPkg/Test/Library/TestPointCheckLib/StandaloneMmTestPointCheckLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/DxeTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/PeiTestPointLib.inf
   MinPlatformPkg/Test/Library/TestPointLib/SmmTestPointLib.inf
-  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxe.inf
+  MinPlatformPkg/Test/Library/TestPointLib/StandaloneMmTestPointLib.inf
+  MinPlatformPkg/Test/TestPointStubDxe/TestPointStubDxeMm.inf
   MinPlatformPkg/Test/TestPointDumpApp/TestPointDumpApp.inf
   MinPlatformPkg/Library/TestPointPciSpeedInfoLibNull/TestPointPciSpeedInfoLibNull.inf
 

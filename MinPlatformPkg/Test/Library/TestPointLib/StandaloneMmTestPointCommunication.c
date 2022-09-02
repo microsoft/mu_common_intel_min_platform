@@ -7,7 +7,7 @@
 **/
 
 #include "MmTestPoint.h"
-#include "SmmTestPoint.h"
+#include "StandaloneMmTestPoint.h"
 
 /**
   This function check if the buffer is valid per processor architecture and not overlap with SMRAM.
@@ -25,5 +25,5 @@ IsBufferOutsideMmValid (
   IN UINT64                Length
   )
 {
-  return SmmIsBufferOutsideSmmValid (Buffer, Length);
+  return MmIsBufferOutsideMmValid (Buffer, Length);
 }

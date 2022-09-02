@@ -38,6 +38,6 @@ typedef struct {
   0x9cfa432a, 0x17cd, 0x4eb7, { 0x96, 0x54, 0x2e, 0xb2, 0x5, 0x91, 0xef, 0x8f } \
   }
 
-extern EFI_GUID  mTestPointSmmCommunciationGuid;
+extern EFI_GUID  mTestPointSmmCommunicationGuid;
 
 #endif

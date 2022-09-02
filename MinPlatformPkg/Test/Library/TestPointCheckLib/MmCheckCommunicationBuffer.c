@@ -1,12 +1,13 @@
 /** @file
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include <Uefi.h>
-#include <PiSmm.h>
+#include <PiMm.h>
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
 #include <Library/DebugLib.h>
@@ -15,14 +16,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define NEXT_MEMORY_DESCRIPTOR(MemoryDescriptor, Size) \
   ((EFI_MEMORY_DESCRIPTOR *)((UINT8 *)(MemoryDescriptor) + (Size)))
 
-extern EFI_MEMORY_DESCRIPTOR *mUefiMemoryMap;
-extern UINTN                 mUefiMemoryMapSize;
-extern UINTN                 mUefiDescriptorSize;
-
-extern EFI_GCD_MEMORY_SPACE_DESCRIPTOR *mGcdMemoryMap;
-extern EFI_GCD_IO_SPACE_DESCRIPTOR     *mGcdIoMap;
-extern UINTN                           mGcdMemoryMapNumberOfDescriptors;
-extern UINTN                           mGcdIoMapNumberOfDescriptors;
+extern EFI_MEMORY_DESCRIPTOR  *mUefiMemoryMap;
+extern UINTN                  mUefiMemoryMapSize;
+extern UINTN                  mUefiDescriptorSize;
 
 EFI_STATUS
 TestPointCheckPageTable (
@@ -52,7 +48,7 @@ IsUefiPageNotPresent (
 }
 
 EFI_STATUS
-TestPointCheckSmmCommunicationBuffer (
+TestPointCheckMmCommunicationBuffer (
   IN EFI_MEMORY_DESCRIPTOR        *UefiMemoryMap,
   IN UINTN                        UefiMemoryMapSize,
   IN UINTN                        UefiDescriptorSize,
@@ -66,7 +62,7 @@ TestPointCheckSmmCommunicationBuffer (
   UINTN                 Index;
   EFI_MEMORY_DESCRIPTOR *Entry;
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmCommunicationBuffer - Enter\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmCommunicationBuffer - Enter\n"));
 
   ReturnStatus = EFI_SUCCESS;
   MemoryMapEntryCount = UefiMemoryMapSize/UefiDescriptorSize;
@@ -118,6 +114,6 @@ TestPointCheckSmmCommunicationBuffer (
       );
   }
 
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmCommunicationBuffer - Exit\n"));
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckMmCommunicationBuffer - Exit\n"));
   return EFI_SUCCESS;
 }

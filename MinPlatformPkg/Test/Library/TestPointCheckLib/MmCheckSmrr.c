@@ -1,12 +1,13 @@
 /** @file
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) Microsoft Corporation.
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include <Uefi.h>
-#include <PiSmm.h>
+#include <PiMm.h>
 #include <Library/TestPointCheckLib.h>
 #include <Library/TestPointLib.h>
 #include <Library/DebugLib.h>
@@ -38,13 +39,13 @@ TestPointCheckSmrr (
   UINT64      SmrrBase;
   UINT64      SmrrMask;
   UINT64      Length;
-  
+
   UINT32  RegEax;
   UINT32  RegEdx;
   UINTN   FamilyId;
   UINTN   ModelId;
   BOOLEAN Result;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Enter\n"));
 
   //
@@ -103,9 +104,9 @@ TestPointCheckSmrr (
     SmrrMask = AsmReadMsr64 (mSmrrPhysMaskMsr);
     DEBUG ((DEBUG_INFO, "SMRR : Base=%016lx Make=%016lx\n", SmrrBase, SmrrMask));
   }
-
-  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Exit\n"));
   
+  DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Exit\n"));
+
   Result = TRUE;
   if (!mSmrrSupported) {
     Result = FALSE;
@@ -119,7 +120,7 @@ TestPointCheckSmrr (
       DEBUG ((DEBUG_ERROR, "Smrr is not aligned\n"));
     }
   }
-  
+
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,

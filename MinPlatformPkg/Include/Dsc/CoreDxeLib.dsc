@@ -111,6 +111,7 @@
   StandaloneMmDriverEntryPoint|MdePkg/Library/StandaloneMmDriverEntryPoint/StandaloneMmDriverEntryPoint.inf
   VariableReadLib|MinPlatformPkg/Library/SmmVariableReadLib/StandaloneMmVariableReadLib.inf
   VariableWriteLib|MinPlatformPkg/Library/SmmVariableWriteLib/StandaloneMmVariableWriteLib.inf
+  MemLib|StandaloneMmPkg/Library/StandaloneMmMemLib/StandaloneMmMemLib.inf
 
 !if gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable == TRUE
   PerformanceLib|MdeModulePkg/Library/SmmCorePerformanceLib/SmmCorePerformanceLib.inf
