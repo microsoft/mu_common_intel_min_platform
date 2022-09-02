@@ -127,7 +127,6 @@ PageAttributeToLength (
   )
 {
   UINTN  Index;
-
   for (Index = 0; Index < sizeof(mPageAttributeTable)/sizeof(mPageAttributeTable[0]); Index++) {
     if (PageAttribute == mPageAttributeTable[Index].Attribute) {
       return (UINTN)mPageAttributeTable[Index].Length;

@@ -39,11 +39,13 @@ TestPointCheckSmrr (
   UINT64      SmrrBase;
   UINT64      SmrrMask;
   UINT64      Length;
+
   UINT32  RegEax;
   UINT32  RegEdx;
   UINTN   FamilyId;
   UINTN   ModelId;
   BOOLEAN Result;
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Enter\n"));
 
   //
@@ -102,7 +104,7 @@ TestPointCheckSmrr (
     SmrrMask = AsmReadMsr64 (mSmrrPhysMaskMsr);
     DEBUG ((DEBUG_INFO, "SMRR : Base=%016lx Make=%016lx\n", SmrrBase, SmrrMask));
   }
-
+  
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmrr - Exit\n"));
 
   Result = TRUE;
@@ -118,7 +120,7 @@ TestPointCheckSmrr (
       DEBUG ((DEBUG_ERROR, "Smrr is not aligned\n"));
     }
   }
-  
+
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
