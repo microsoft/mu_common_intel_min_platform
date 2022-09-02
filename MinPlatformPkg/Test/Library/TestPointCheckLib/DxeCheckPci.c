@@ -125,7 +125,7 @@ DumpPciBridge (
     PciData->Bridge.SecondaryBus,
     PciData->Bridge.SubordinateBus
     ));
-  DEBUG ((DEBUG_INFO, " [00:00] [0000:0000] [0000:0000]",
+  DEBUG ((DEBUG_INFO, " [%02x:%02x] [%04x:%04x] [%04x:%04x]",
     PciData->Bridge.IoBase,
     PciData->Bridge.IoLimit,
     PciData->Bridge.MemoryBase,
@@ -133,7 +133,7 @@ DumpPciBridge (
     PciData->Bridge.PrefetchableMemoryBase,
     PciData->Bridge.PrefetchableMemoryLimit
     ));
-  DEBUG ((DEBUG_INFO, " [00000000:00000000] [0000:0000]",
+  DEBUG ((DEBUG_INFO, " [%08x:%08x] [%04x:%04x]",
     PciData->Bridge.PrefetchableBaseUpper32,
     PciData->Bridge.PrefetchableLimitUpper32,
     PciData->Bridge.IoBaseUpper16,

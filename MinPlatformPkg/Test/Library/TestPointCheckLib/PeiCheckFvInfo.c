@@ -61,11 +61,9 @@ TestPointCheckFvInfo (
       "  BA=%08x  L=%08x  Format={%g}",
       (UINT32)(UINTN)FvInfo->FvInfo,
       FvInfo->FvInfoSize,
-      &FvInfo->FvFormat,
-      FvInfo->ParentFvName,
-      FvInfo->ParentFileName
+      &FvInfo->FvFormat
       ));
-    if (FvInfo->ParentFvName != NULL) {
+    if (FvInfo->ParentFvName != NULL) 
       DEBUG ((DEBUG_INFO,
         "  ParentFv={%g}",
         FvInfo->ParentFvName
@@ -95,10 +93,7 @@ TestPointCheckFvInfo (
       "  BA=%08x  L=%08x  Format={%g}",
       (UINT32)(UINTN)FvInfo2->FvInfo,
       FvInfo2->FvInfoSize,
-      &FvInfo2->FvFormat,
-      FvInfo2->ParentFvName,
-      FvInfo2->ParentFileName,
-      FvInfo2->AuthenticationStatus
+      &FvInfo2->FvFormat
       ));
     if (FvInfo2->ParentFvName != NULL) {
       DEBUG ((DEBUG_INFO,
