@@ -63,7 +63,7 @@ TestPointCheckFvInfo (
       FvInfo->FvInfoSize,
       &FvInfo->FvFormat
       ));
-    if (FvInfo->ParentFvName != NULL) 
+    if (FvInfo->ParentFvName != NULL) {
       DEBUG ((DEBUG_INFO,
         "  ParentFv={%g}",
         FvInfo->ParentFvName
