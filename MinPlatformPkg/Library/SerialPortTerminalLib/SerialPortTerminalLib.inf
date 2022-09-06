@@ -1,5 +1,9 @@
 ## @file
-# Component information file for Serial Port Terminal Redirection Library
+# Component information file for the Serial Port Terminal Redirection library.
+#
+#  This library adds a Terminal Device connected to SerialDxe to the UEFI Console
+#  Variables. This allows BIOS Setup, UEFI Shell, etc. to be used on a headless
+#  system via a null modem and terminal
 #
 # Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
 #
@@ -18,22 +22,29 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  BoardModulePkg/BoardModulePkg.dec
-  MinPlatformPkg/MinPlatformPkg.dec
 
 [Sources]
   SerialPortTerminalLib.c
   SerialPortTerminalLib.h
 
 [LibraryClasses]
+  BaseMemoryLib
   DevicePathLib
   DebugLib
   UefiDriverEntryPoint
   UefiBootManagerLib
   UefiLib
 
+[Guids]
+  gEfiPcAnsiGuid
+  gEfiVT100Guid
+  gEfiVT100PlusGuid
+  gEfiVTUTF8Guid
+  gEfiTtyTermGuid
+
 [Pcd]
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultBaudRate
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultDataBits
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultParity
   gEfiMdePkgTokenSpaceGuid.PcdUartDefaultStopBits
+  gEfiMdePkgTokenSpaceGuid.PcdDefaultTerminalType

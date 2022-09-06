@@ -1,12 +1,25 @@
 /** @file
-  Main file for NULL named library for Serial Port Terminal Redirection library.
+  Main file for NULL named library for the Serial Port Terminal Redirection library.
 
-  Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
+  This library adds a Terminal Device connected to SerialDxe to the UEFI Console
+  Variables. This allows BIOS Setup, UEFI Shell, etc. to be used on a headless
+  system via a null modem and terminal
+  emulator.
+
+  Copyright (c) 2020 - 2022, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
 #include "SerialPortTerminalLib.h"
+
+GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID  *mTerminalType[] = {
+  &gEfiPcAnsiGuid,
+  &gEfiVT100Guid,
+  &gEfiVT100PlusGuid,
+  &gEfiVTUTF8Guid,
+  &gEfiTtyTermGuid
+};
 
 GLOBAL_REMOVE_IF_UNREFERENCED SERIAL_DEVICE_PATH mSerialDevicePath = {
   {
@@ -59,10 +72,36 @@ AddSerialTerminal (
   VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "[AddSerialPortTerminal]\n"));
+  UINT8   DefaultTerminalType;
 
   //
-  // Append Serial Terminal into "ConIn"
+  // Update the Terminal Device Configuration Parameters
+  //
+  mSerialDevicePath.Uart.BaudRate = PcdGet64 (PcdUartDefaultBaudRate);
+  mSerialDevicePath.Uart.DataBits = PcdGet8 (PcdUartDefaultDataBits);
+  mSerialDevicePath.Uart.Parity   = PcdGet8 (PcdUartDefaultParity);
+  mSerialDevicePath.Uart.StopBits = PcdGet8 (PcdUartDefaultStopBits);
+  DefaultTerminalType             = PcdGet8 (PcdDefaultTerminalType);
+  DEBUG ((DEBUG_INFO, "[AddSerialPortTerminal] [%d, %d, %d, %d, %d]\n",
+      (int) mSerialDevicePath.Uart.BaudRate,
+      (int) mSerialDevicePath.Uart.DataBits,
+      (int) mSerialDevicePath.Uart.Parity,
+      (int) mSerialDevicePath.Uart.StopBits,
+      (int) DefaultTerminalType));
+
+  if (DefaultTerminalType >= 0 &&
+      DefaultTerminalType < (sizeof (mTerminalType) / sizeof (mTerminalType[0]))) {
+    CopyMem (
+      (VOID *) &(mSerialDevicePath.TerminalType.Guid),
+      (VOID *) mTerminalType[DefaultTerminalType],
+      sizeof (EFI_GUID)
+      );
+  } else {
+    DEBUG ((DEBUG_WARN, "PcdDefaultTerminalType has invalid value: %d\n", (int) DefaultTerminalType));
+  }
+
+  //
+  // Append Serial Terminal into "ConIn", "ConOut", and "ErrOut"
   //
   EfiBootManagerUpdateConsoleVariable (ConOut, (EFI_DEVICE_PATH_PROTOCOL *) &mSerialDevicePath, NULL);
   EfiBootManagerUpdateConsoleVariable (ConIn, (EFI_DEVICE_PATH_PROTOCOL *) &mSerialDevicePath, NULL);
@@ -71,13 +110,12 @@ AddSerialTerminal (
 
 
 /**
-  Constructor for the Serial Port Device controller library.
+  Constructor for the Serial Port Terminal Device library.
 
-  @param ImageHandle    the image handle of the process
-  @param SystemTable    the EFI System Table pointer
+  @param ImageHandle    The Image Handle of the process
+  @param SystemTable    The EFI System Table pointer
 
-  @retval EFI_SUCCESS        the shell command handlers were installed sucessfully
-  @retval EFI_UNSUPPORTED    the shell level required was not found.
+  @retval EFI_SUCCESS   The Serial Port Terminal Device was installed successfully
 **/
 EFI_STATUS
 EFIAPI
@@ -86,15 +124,7 @@ SerialPortTerminalLibConstructor (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  mSerialDevicePath.Uart.BaudRate = PcdGet64(PcdUartDefaultBaudRate);
-  mSerialDevicePath.Uart.DataBits = PcdGet8(PcdUartDefaultDataBits);
-  mSerialDevicePath.Uart.Parity   = PcdGet8(PcdUartDefaultParity);
-  mSerialDevicePath.Uart.StopBits = PcdGet8(PcdUartDefaultStopBits);
-  DEBUG ((DEBUG_INFO, "[SerialPortTerminalLibConstructor] [%d, %d, %d, %d]\n",
-      mSerialDevicePath.Uart.BaudRate,
-      mSerialDevicePath.Uart.DataBits,
-      mSerialDevicePath.Uart.Parity,
-      mSerialDevicePath.Uart.StopBits));
+  DEBUG ((DEBUG_INFO, "[SerialPortTerminalLibConstructor]\n"));
 
   AddSerialTerminal();
 

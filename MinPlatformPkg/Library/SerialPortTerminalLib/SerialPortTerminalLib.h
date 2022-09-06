@@ -1,7 +1,12 @@
 /** @file
-  Header file for NULL named library for for Serial Port Terminal Redirection library.
+  Header file for NULL named library for the Serial Port Terminal Redirection library.
 
-  Copyright (c) 2020, Intel Corporation. All rights reserved.<BR>
+  This library adds a Terminal Device connected to SerialDxe to the UEFI Console
+  Variables. This allows BIOS Setup, UEFI Shell, etc. to be used on a headless
+  system via a null modem and terminal
+  emulator.
+
+  Copyright (c) 2020 -2022, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -12,8 +17,10 @@
 #include <Uefi.h>
 #include <Guid/SerialPortLibVendor.h>
 #include <Library/UefiLib.h>
+#include <Library/BaseMemoryLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/DebugLib.h>
+#include <Library/PcdLib.h>
 #include <Library/UefiBootManagerLib.h>
 
 //
