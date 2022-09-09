@@ -75,7 +75,7 @@ DumpPciDevice (
     PciData->Device.Bar[2],
     PciData->Device.Bar[3],
     PciData->Device.Bar[4],
-    PciData->Device.Bar[6]
+    PciData->Device.Bar[5]
     ));
   DEBUG ((DEBUG_INFO, " %04x\n",
     PciData->Hdr.Command
@@ -256,7 +256,7 @@ TestPointCheckPciResource (
   UINT16                            MinBus;
   UINT16                            MaxBus;
   BOOLEAN                           IsEnd;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckPciResource - Enter\n"));
   HandleBuf = NULL;
   Status = gBS->LocateHandleBuffer (
@@ -338,7 +338,7 @@ TestPointCheckPciResource (
                 // Device
                 DumpPciDevice ((UINT8)Bus, (UINT8)Device, (UINT8)Func, &PciData);
               }
-              
+
               //
               // If this is not a multi-function device, we can leave the loop
               // to deal with the next device.
@@ -360,7 +360,7 @@ TestPointCheckPciResource (
       }
     }
   }
-  
+
 Done:
   if (HandleBuf != NULL) {
     FreePool (HandleBuf);
