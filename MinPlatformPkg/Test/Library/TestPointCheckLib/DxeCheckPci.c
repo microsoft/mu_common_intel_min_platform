@@ -86,7 +86,7 @@ DumpPciDevice (
     PciData->Device.Bar[2],
     PciData->Device.Bar[3],
     PciData->Device.Bar[4],
-    PciData->Device.Bar[6]
+    PciData->Device.Bar[5]
     ));
   DEBUG ((DEBUG_INFO, " %04x\n",
     PciData->Hdr.Command
