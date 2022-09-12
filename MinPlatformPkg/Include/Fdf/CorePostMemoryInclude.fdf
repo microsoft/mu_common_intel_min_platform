@@ -6,3 +6,7 @@
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 ##
+
+!if gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly == FALSE
+  INF  MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTablePei/FirmwarePerformancePei.inf
+!endif

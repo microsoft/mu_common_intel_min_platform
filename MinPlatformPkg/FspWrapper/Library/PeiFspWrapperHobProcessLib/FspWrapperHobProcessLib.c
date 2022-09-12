@@ -16,14 +16,17 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/HobLib.h>
 #include <Library/PcdLib.h>
 #include <Library/FspWrapperPlatformLib.h>
+#include <Guid/AcpiS3Context.h>
 #include <Guid/GuidHobFspEas.h>
 #include <Guid/MemoryTypeInformation.h>
 #include <Guid/GraphicsInfoHob.h>
 #include <Guid/PcdDataBaseHobGuid.h>
 #include <Guid/ZeroGuid.h>
 #include <Ppi/Capsule.h>
+#include <Ppi/ReadOnlyVariable2.h>
 
 #include <FspEas.h>
+#include <AcpiS3MemoryNvData.h>
 
 //
 // Additional pages are used by DXE memory manager.
@@ -128,6 +131,55 @@ GetPeiMemSize (
   }
 
   return MinSize + Size + PEI_ADDITIONAL_MEMORY_SIZE;
+}
+
+/**
+  Get S3 PEI memory information.
+
+  @note At this point, memory is ready, and PeiServices are available to use.
+  Platform can get some data from SMRAM directly.
+
+  @param[out] S3PeiMemSize  PEI memory size to be installed in S3 phase.
+  @param[out] S3PeiMemBase  PEI memory base to be installed in S3 phase.
+
+  @return If S3 PEI memory information is got successfully.
+**/
+EFI_STATUS
+EFIAPI
+GetS3MemoryInfo (
+  OUT UINT64                *S3PeiMemSize,
+  OUT EFI_PHYSICAL_ADDRESS  *S3PeiMemBase
+  )
+{
+  EFI_STATUS                       Status;
+  EFI_PEI_READ_ONLY_VARIABLE2_PPI  *VariablePpi;
+  UINTN                            DataSize;
+  ACPI_S3_MEMORY                   S3MemoryInfo;
+
+  *S3PeiMemBase = 0;
+  *S3PeiMemSize = 0;
+
+  Status = PeiServicesLocatePpi (&gEfiPeiReadOnlyVariable2PpiGuid, 0, NULL, (VOID **) &VariablePpi);
+  ASSERT_EFI_ERROR (Status);
+
+  DataSize = sizeof (S3MemoryInfo);
+  Status = VariablePpi->GetVariable (
+                          VariablePpi,
+                          ACPI_S3_MEMORY_NV_NAME,
+                          &gEfiAcpiVariableGuid,
+                          NULL,
+                          &DataSize,
+                          &S3MemoryInfo
+                          );
+  ASSERT_EFI_ERROR (Status);
+
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  *S3PeiMemBase = S3MemoryInfo.S3PeiMemBase;
+  *S3PeiMemSize = S3MemoryInfo.S3PeiMemSize;
+  return EFI_SUCCESS;
 }
 
 /**
@@ -280,7 +332,7 @@ PostFspmHobProcess (
     0x1000
     );
 
-
+  if (BootMode != BOOT_ON_S3_RESUME) {
     //
     // Capsule mode
     //
@@ -337,7 +389,22 @@ PostFspmHobProcess (
     if (Capsule != NULL) {
       Status = Capsule->CreateState ((EFI_PEI_SERVICES **)PeiServices, CapsuleBuffer, CapsuleBufferLength);
     }
+  } else {
+    Status = GetS3MemoryInfo (&PeiMemSize, &PeiMemBase);
+    ASSERT_EFI_ERROR (Status);
 
+    DEBUG ((DEBUG_INFO, "S3 resume PeiMemBase        : 0x%08x\n", PeiMemBase));
+    DEBUG ((DEBUG_INFO, "S3 resume PeiMemSize        : 0x%08x\n", PeiMemSize));
+
+    //
+    // Install efi memory
+    //
+    Status = PeiServicesInstallPeiMemory (
+               PeiMemBase,
+               PeiMemSize
+               );
+    ASSERT_EFI_ERROR (Status);
+  }
 
   //
   // Create a memory allocation HOB at fixed location for MP Services PPI AP wait loop.

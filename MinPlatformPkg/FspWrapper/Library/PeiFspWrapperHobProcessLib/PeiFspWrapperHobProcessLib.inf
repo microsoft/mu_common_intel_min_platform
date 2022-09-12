@@ -75,7 +75,9 @@
   gZeroGuid
   gEfiGraphicsInfoHobGuid
   gEfiGraphicsDeviceInfoHobGuid
+  gEfiAcpiVariableGuid
 
 [Ppis]
   gEfiPeiCapsulePpiGuid                                   ## CONSUMES
+  gEfiPeiReadOnlyVariable2PpiGuid                         ## CONSUMES
   gEdkiiSiliconInitializedPpiGuid                         ## PRODUCES

@@ -41,3 +41,5 @@
       NULL|SecurityPkg/Library/HashInstanceLibSha256/HashInstanceLibSha256.inf
   }
 !endif
+
+  MdeModulePkg/Universal/Acpi/FirmwarePerformanceDataTablePei/FirmwarePerformancePei.inf
