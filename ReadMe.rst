@@ -59,7 +59,7 @@ Bug Fixes-dev
 -------------------
 
 | Starting commit: 7d2732a6 ("pip: update edk2-pytool-extensions requirement from ~=0.17.2 to ~=0.18.0", 2022-09-15)
-| Destination commit: 7e07c136 ("MinPlatformPkg/SaveMemoryConfig: Fix GCC build failure.", 2022-02-17)
+| Destination commit: 5d93559d ("MinPlatformPkg: Add PcdAcpiGpe1BlockLength for FADT from board package", 2022-08-15)
 
 Repo Maintenance
 ================
