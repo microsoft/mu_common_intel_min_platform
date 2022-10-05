@@ -596,12 +596,12 @@ DumpSmiHandler(
         if (ImageStruct != NULL) {
           DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN) (SmiHandlerStruct->Handler - ImageStruct->ImageBase)));
         }
-        DEBUG ((DEBUG_INFO, "      </Handler>\n", SmiHandlerStruct->Handler));
+        DEBUG ((DEBUG_INFO, "      </Handler>\n"));
         DEBUG ((DEBUG_INFO, "      <Caller Address=\"0x%lx\">\n", SmiHandlerStruct->CallerAddr));
         if (ImageStruct != NULL) {
           DEBUG ((DEBUG_INFO, "         <RVA>0x%x</RVA>\n", (UINTN) (SmiHandlerStruct->CallerAddr - ImageStruct->ImageBase)));
         }
-        DEBUG ((DEBUG_INFO, "      </Caller>\n", SmiHandlerStruct->Handler));
+        DEBUG ((DEBUG_INFO, "      </Caller>\n"));
         SmiHandlerStruct = (VOID *)((UINTN)SmiHandlerStruct + SmiHandlerStruct->Length);
         DEBUG ((DEBUG_INFO, "    </SmiHandler>\n"));
       }

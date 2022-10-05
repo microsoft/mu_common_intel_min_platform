@@ -91,7 +91,7 @@ DumpPhitHob (
   )
 {
   EFI_HOB_HANDOFF_INFO_TABLE  *PhitHob;
-  
+
   PhitHob = HobList;
   ASSERT(GET_HOB_TYPE(HobList) == EFI_HOB_TYPE_HANDOFF);
   DEBUG ((DEBUG_INFO, "PHIT HOB\n"));
@@ -132,7 +132,7 @@ DumpResourceHob (
 {
   EFI_PEI_HOB_POINTERS        Hob;
   EFI_HOB_RESOURCE_DESCRIPTOR *ResourceHob;
-  
+
   DEBUG ((DEBUG_INFO, "Resource Descriptor HOBs\n"));
   for (Hob.Raw = HobList; !END_OF_HOB_LIST (Hob); Hob.Raw = GET_NEXT_HOB (Hob)) {
 
@@ -180,7 +180,7 @@ DumpFvHob (
   EFI_PEI_HOB_POINTERS        Hob;
   EFI_HOB_FIRMWARE_VOLUME     *FirmwareVolumeHob;
   EFI_HOB_FIRMWARE_VOLUME2    *FirmwareVolume2Hob;
-  
+
   DEBUG ((DEBUG_INFO, "FV HOBs\n"));
   for (Hob.Raw = HobList; !END_OF_HOB_LIST (Hob); Hob.Raw = GET_NEXT_HOB (Hob)) {
     if (GET_HOB_TYPE (Hob) == EFI_HOB_TYPE_FV) {
@@ -234,15 +234,9 @@ DumpMemoryAllocationHob (
       DEBUG ((DEBUG_INFO, ShortNameOfMemoryType(MemoryHob->AllocDescriptor.MemoryType)));
       if (!IsZeroGuid(&MemoryHob->AllocDescriptor.Name)) {
         if (CompareGuid(&gEfiHobMemoryAllocStackGuid, &MemoryHob->AllocDescriptor.Name)) {
-          DEBUG ((DEBUG_INFO,
-            "  {Stack}",
-            &MemoryHob->AllocDescriptor.Name
-            ));
+          DEBUG ((DEBUG_INFO, "  {%g}", &MemoryHob->AllocDescriptor.Name));
         } else if (CompareGuid(&gEfiHobMemoryAllocBspStoreGuid, &MemoryHob->AllocDescriptor.Name)) {
-          DEBUG ((DEBUG_INFO,
-            "  {BspStore}",
-            &MemoryHob->AllocDescriptor.Name
-            ));
+          DEBUG ((DEBUG_INFO, "  {%g}", &MemoryHob->AllocDescriptor.Name));
         } else if (CompareGuid(&gEfiHobMemoryAllocModuleGuid, &MemoryHob->AllocDescriptor.Name)) {
           DEBUG ((DEBUG_INFO,
             "  {Module=%g,Entry=0x%lx}",
@@ -290,13 +284,13 @@ TestPointDumpHob (
   )
 {
   VOID                        *HobList;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointDumpHob - Enter\n"));
   //
   // Get Hob list
   //
   HobList = GetHobList ();
-  
+
   DumpPhitHob (HobList);
 
   if (PhitHobOnly) {
@@ -329,7 +323,7 @@ TestPointCheckMemoryResource (
   EFI_HOB_RESOURCE_DESCRIPTOR *ResourceHob;
   EFI_PEI_HOB_POINTERS        Hob2;
   EFI_HOB_RESOURCE_DESCRIPTOR *ResourceHob2;
-  
+
   HobList = GetHobList ();
 
   //

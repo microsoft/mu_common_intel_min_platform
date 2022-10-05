@@ -44,7 +44,7 @@ TestPointCheckFvInfo (
   EFI_PEI_FIRMWARE_VOLUME_INFO2_PPI  *FvInfo2;
   UINTN                              Index;
   UINTN                              Index2;
-  
+
   DEBUG ((DEBUG_INFO, "==== TestPointCheckFvInfo - Enter\n"));
   DEBUG ((DEBUG_INFO, "FV Info PPI\n"));
   for (Index = 0; ; Index++) {
@@ -61,9 +61,7 @@ TestPointCheckFvInfo (
       "  BA=%08x  L=%08x  Format={%g}",
       (UINT32)(UINTN)FvInfo->FvInfo,
       FvInfo->FvInfoSize,
-      &FvInfo->FvFormat,
-      FvInfo->ParentFvName,
-      FvInfo->ParentFileName
+      &FvInfo->FvFormat
       ));
     if (FvInfo->ParentFvName != NULL) {
       DEBUG ((DEBUG_INFO,
@@ -79,7 +77,7 @@ TestPointCheckFvInfo (
     }
     DEBUG ((DEBUG_INFO, "\n"));
   }
-  
+
   DEBUG ((DEBUG_INFO, "FV Info2 PPI\n"));
   for (Index2 = 0; ; Index2++) {
     Status = PeiServicesLocatePpi (
@@ -95,10 +93,7 @@ TestPointCheckFvInfo (
       "  BA=%08x  L=%08x  Format={%g}",
       (UINT32)(UINTN)FvInfo2->FvInfo,
       FvInfo2->FvInfoSize,
-      &FvInfo2->FvFormat,
-      FvInfo2->ParentFvName,
-      FvInfo2->ParentFileName,
-      FvInfo2->AuthenticationStatus
+      &FvInfo2->FvFormat
       ));
     if (FvInfo2->ParentFvName != NULL) {
       DEBUG ((DEBUG_INFO,
