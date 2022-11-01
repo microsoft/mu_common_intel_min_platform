@@ -103,5 +103,10 @@
     ## options defined .pytool/Plugin/UncrustifyCheck
     "UncrustifyCheck": {
         "AuditOnly": True,
+    },
+
+    ## options defined .pytool/Plugin/LineEndingCheck
+    "LineEndingCheck": {
+        "IgnoreFiles": ["**/*"]   # Ignore all line endings to prevent non-visible merge delta from upstream
     }
 }
