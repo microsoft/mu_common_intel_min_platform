@@ -71,3 +71,4 @@ jobs:
       extra_build_args: ${{ parameters.extra_build_args }}
       extra_install_step: ${{ parameters.extra_install_step }}
       tool_chain_tag: ${{ parameters.tool_chain_tag }}
+      install_tools: ${{ eq(parameters.container_image, '') }}
