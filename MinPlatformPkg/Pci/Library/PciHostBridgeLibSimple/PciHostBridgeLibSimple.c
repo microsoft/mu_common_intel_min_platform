@@ -90,7 +90,7 @@ PciHostBridgeGetRootBridges (
   if (PcdGet32(PcdPciReservedMemLimit) != 0) {
     mRootBridgeTemplate.Mem.Limit = PcdGet32 (PcdPciReservedMemLimit);
   } else {
-    mRootBridgeTemplate.Mem.Limit = (UINT32) PcdGet64 (PcdPciExpressBaseAddress) - 1;
+    mRootBridgeTemplate.Mem.Limit = PcdGet64 (PcdPciExpressBaseAddress) - 1;
   }
 
   mRootBridgeTemplate.MemAbove4G.Base = PcdGet64 (PcdPciReservedMemAbove4GBBase);
