@@ -20,4 +20,4 @@
 
 [Packages]
   MdePkg/MdePkg.dec
-  BoardModulePkg/BoardModulePkg.dec
+  BoardModulePkg/BoardModulePkg.dec

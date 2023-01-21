@@ -191,3 +191,4 @@
 !if gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable == TRUE
   ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf
 !endif
+
