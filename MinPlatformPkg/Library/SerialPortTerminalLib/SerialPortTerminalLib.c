@@ -12,7 +12,6 @@
 **/
 
 #include "SerialPortTerminalLib.h"
-
 GLOBAL_REMOVE_IF_UNREFERENCED EFI_GUID  *mTerminalType[] = {
   &gEfiPcAnsiGuid,
   &gEfiVT100Guid,
