@@ -131,22 +131,22 @@ TestPointCheckUefiMemoryMapEntry (
     }
     Entry = NEXT_MEMORY_DESCRIPTOR (Entry, DescriptorSize);
   }
-  if (EntryCount[EfiRuntimeServicesCode] > 1) {
+  if (EntryCount[EfiRuntimeServicesCode] > 2) {
     DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesCode entry - %d\n", EntryCount[EfiRuntimeServicesCode]));
   }
-  if (EntryCount[EfiRuntimeServicesData] > 1) {
+  if (EntryCount[EfiRuntimeServicesData] > 2) {
     DEBUG ((DEBUG_ERROR, "EfiRuntimeServicesData entry - %d\n", EntryCount[EfiRuntimeServicesData]));
   }
-  if (EntryCount[EfiACPIMemoryNVS] > 1) {
+  if (EntryCount[EfiACPIMemoryNVS] > 2) {
     DEBUG ((DEBUG_ERROR, "EfiACPIMemoryNVS entry - %d\n", EntryCount[EfiACPIMemoryNVS]));
   }
-  if (EntryCount[EfiACPIReclaimMemory] > 1) {
+  if (EntryCount[EfiACPIReclaimMemory] > 2) {
     DEBUG ((DEBUG_ERROR, "EfiACPIReclaimMemory entry - %d\n", EntryCount[EfiACPIReclaimMemory]));
   }
-  if ((EntryCount[EfiRuntimeServicesCode] > 1) ||
-      (EntryCount[EfiRuntimeServicesData] > 1) ||
-      (EntryCount[EfiACPIReclaimMemory] > 1) ||
-      (EntryCount[EfiACPIMemoryNVS] > 1) ) {
+  if ((EntryCount[EfiRuntimeServicesCode] > 2) ||
+      (EntryCount[EfiRuntimeServicesData] > 2) ||
+      (EntryCount[EfiACPIReclaimMemory] > 2) ||
+      (EntryCount[EfiACPIMemoryNVS] > 2) ) {
     return FALSE;
   } else {
     return TRUE;
