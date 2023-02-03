@@ -49,7 +49,7 @@ jobs:
     clean: all
 
   ${{ if ne(parameters.container_image, '') }}:
-    container: ${{ parameters.container_image }} 
+    container: ${{ parameters.container_image }}
 
   pool:
     vmImage: ${{ parameters.vm_image }}
@@ -60,6 +60,7 @@ jobs:
       displayName: Add User Local Bin to Path
   - template: Steps/PrGate.yml@mu_devops
     parameters:
+      artifacts_identifier: '$(Build.Pkgs) $(Build.Targets)'
       build_archs: ${{ parameters.arch_list }}
       build_pkgs: $(Build.Pkgs)
       build_targets: $(Build.Targets)
