@@ -23,7 +23,7 @@ DefinitionBlock (
   //---------------------------------------------------------------------------
   // Begin PCI tree object scope
   //---------------------------------------------------------------------------
-    Device(PCI0) { // PCI Bridge "Host Bridge"
+    Device(PC00) { // PCI Bridge "Host Bridge"
       Name(_HID, EISAID("PNP0A08")) // Indicates PCI Express/PCI-X Mode2 host hierarchy
       Name(_CID, EISAID("PNP0A03")) // To support legacy OS that doesn't understand the new HID
       Name(_SEG, 0)
