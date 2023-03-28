@@ -248,7 +248,9 @@ GetTableSize (
   )
 {
   UINT32  TableLength;
+  // MU_CHANGE [BEGIN] - CodeQL (UINT32->UINTN)
   UINTN   Index;
+  // MU_CHANGE [END] - CodeQL
 
   //
   // Compute size of the ACPI table; header plus all structures needed.
@@ -958,10 +960,12 @@ InstallMcfgFromScratch (
   UINTN                                                                                 TableHandle;
 
   PciSegmentInfo = GetPciSegmentInfo (&SegmentCount);
+  // MU_CHANGE [BEGIN] - CodeQL
   if (PciSegmentInfo == NULL) {
-    DEBUG ((DEBUG_ERROR, "Could not create new hob for PciSegmentInfo\n"));
+    ASSERT (PciSegmentInfo != NULL);
     return EFI_OUT_OF_RESOURCES;
   }
+  // MU_CHANGE [END] - CodeQL
 
   McfgTable = AllocateZeroPool (
                 sizeof (EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER) +
