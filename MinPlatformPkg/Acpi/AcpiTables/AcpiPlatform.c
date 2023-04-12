@@ -1096,6 +1096,7 @@ PlatformUpdateTables (
   case EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
     FadtHeader = (EFI_ACPI_6_3_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
 
+    FadtHeader->Header.Revision                   = PcdGet8 (PcdFadtMajorVersion);
     FadtHeader->PreferredPmProfile                = PcdGet8 (PcdFadtPreferredPmProfile);
     FadtHeader->IaPcBootArch                      = PcdGet16 (PcdFadtIaPcBootArch);
     FadtHeader->Flags                             = PcdGet32 (PcdFadtFlags);
@@ -1113,6 +1114,7 @@ PlatformUpdateTables (
     FadtHeader->Gpe1Blk                           = PcdGet16 (PcdAcpiGpe1BlockAddress);
     FadtHeader->Gpe1BlkLen                        = PcdGet8 (PcdAcpiGpe1BlockLength);
     FadtHeader->Gpe1Base                          = PcdGet8 (PcdAcpiGpe1Base);
+    FadtHeader->MinorVersion                      = PcdGet8 (PcdFadtMinorVersion);
 
     FadtHeader->XPm1aEvtBlk.Address               = PcdGet16 (PcdAcpiPm1AEventBlockAddress);
     FadtHeader->XPm1bEvtBlk.Address               = PcdGet16 (PcdAcpiPm1BEventBlockAddress);
