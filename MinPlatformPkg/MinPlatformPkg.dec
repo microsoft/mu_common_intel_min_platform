@@ -311,6 +311,12 @@
 
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformMemoryCheckLevel|0|UINT32|0x30000009
 
+  ## Controls whether the FSP NVS buffer is saved as compressed data.
+  # Data compression can significantly reduce variable storage usage for FSP NVS buffer data.
+  # Platforms that choose to compress the data will need to decompress the variable data upon
+  # extraction.
+  gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer|FALSE|BOOLEAN|0x30000010
+
   ## This PCD is to control which device is the potential trusted console input device.<BR><BR>
   # For example:<BR>
   # USB Short Form: UsbHID(0xFFFF,0xFFFF,0x1,0x1)<BR>
