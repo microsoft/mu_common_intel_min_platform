@@ -146,7 +146,7 @@ UpdateNameAslCode (
   ///
   Handle = 0;
   Status = LocateAcpiTableBySignature (
-             EFI_ACPI_3_0_DIFFERENTIATED_SYSTEM_DESCRIPTION_TABLE_SIGNATURE,
+             EFI_ACPI_6_5_DIFFERENTIATED_SYSTEM_DESCRIPTION_TABLE_SIGNATURE,
              (EFI_ACPI_DESCRIPTION_HEADER **) &Table,
              &Handle
              );

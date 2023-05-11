@@ -28,7 +28,7 @@ UINTN                                               mAcpiGcdIoMapNumberOfDescrip
 
 VOID
 DumpAcpiMadt (
-  IN EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
+  IN EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
   );
 
 VOID
@@ -63,7 +63,7 @@ DumpAcpiTcpa (
 
 EFI_STATUS
 CheckAcpiMadt (
-  IN EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
+  IN EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  *Madt
   );
 
 EFI_STATUS
@@ -187,7 +187,7 @@ DumpAcpiTableHeader (
 
 VOID
 DumpAcpiFadt (
-  IN EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt
+  IN EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt
   )
 {
   DumpAcpiTableHeader (&Fadt->Header);
@@ -201,7 +201,7 @@ DumpAcpiFadt (
 
 EFI_STATUS
 CheckAcpiFadt (
-  IN EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt
+  IN EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt
   )
 {
   if (Fadt->SmiCmd != 0) {
@@ -258,16 +258,16 @@ CheckAcpiFadt (
       return EFI_NOT_STARTED;
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, ResetReg)) {
+  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, ResetReg)) {
     if (Fadt->ResetReg.Address != 0) {
       switch (Fadt->ResetReg.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->ResetReg.Address, Fadt->ResetReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.ResetReg resource (0x%x) is not reported correctly.\n", Fadt->ResetReg.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->ResetReg.Address, Fadt->ResetReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.ResetReg resource (0x%x) is not reported correctly.\n", Fadt->ResetReg.Address));
           return EFI_NOT_STARTED;
@@ -276,16 +276,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPm1aEvtBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPm1aEvtBlk)) {
     if (Fadt->XPm1aEvtBlk.Address != 0) {
       switch (Fadt->XPm1aEvtBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPm1aEvtBlk.Address, Fadt->XPm1aEvtBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1aEvtBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1aEvtBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPm1aEvtBlk.Address, Fadt->XPm1aEvtBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1aEvtBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1aEvtBlk.Address));
           return EFI_NOT_STARTED;
@@ -294,16 +294,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPm1bEvtBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPm1bEvtBlk)) {
     if (Fadt->XPm1bEvtBlk.Address != 0) {
       switch (Fadt->XPm1bEvtBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPm1bEvtBlk.Address, Fadt->XPm1bEvtBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1bEvtBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1bEvtBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPm1bEvtBlk.Address, Fadt->XPm1bEvtBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1bEvtBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1bEvtBlk.Address));
           return EFI_NOT_STARTED;
@@ -312,16 +312,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPm1aCntBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPm1aCntBlk)) {
     if (Fadt->XPm1aCntBlk.Address != 0) {
       switch (Fadt->XPm1aCntBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPm1aCntBlk.Address, Fadt->XPm1aCntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1aCntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1aCntBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPm1aCntBlk.Address, Fadt->XPm1aCntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1aCntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1aCntBlk.Address));
           return EFI_NOT_STARTED;
@@ -330,16 +330,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPm1bCntBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPm1bCntBlk)) {
     if (Fadt->XPm1bCntBlk.Address != 0) {
       switch (Fadt->XPm1bCntBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPm1bCntBlk.Address, Fadt->XPm1bCntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1bCntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1bCntBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPm1bCntBlk.Address, Fadt->XPm1bCntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm1bCntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm1bCntBlk.Address));
           return EFI_NOT_STARTED;
@@ -348,16 +348,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPm2CntBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPm2CntBlk)) {
     if (Fadt->XPm2CntBlk.Address != 0) {
       switch (Fadt->XPm2CntBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPm2CntBlk.Address, Fadt->XPm2CntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm2CntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm2CntBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPm2CntBlk.Address, Fadt->XPm2CntBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPm2CntBlk resource (0x%x) is not reported correctly.\n", Fadt->XPm2CntBlk.Address));
           return EFI_NOT_STARTED;
@@ -366,16 +366,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XPmTmrBlk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XPmTmrBlk)) {
     if (Fadt->XPmTmrBlk.Address != 0) {
       switch (Fadt->XPmTmrBlk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XPmTmrBlk.Address, Fadt->XPmTmrBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPmTmrBlk resource (0x%x) is not reported correctly.\n", Fadt->XPmTmrBlk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XPmTmrBlk.Address, Fadt->XPmTmrBlk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XPmTmrBlk resource (0x%x) is not reported correctly.\n", Fadt->XPmTmrBlk.Address));
           return EFI_NOT_STARTED;
@@ -384,16 +384,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XGpe0Blk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XGpe0Blk)) {
     if (Fadt->XGpe0Blk.Address != 0) {
       switch (Fadt->XGpe0Blk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XGpe0Blk.Address, Fadt->XGpe0Blk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XGpe0Blk resource (0x%x) is not reported correctly.\n", Fadt->XGpe0Blk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XGpe0Blk.Address, Fadt->XGpe0Blk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XGpe0Blk resource (0x%x) is not reported correctly.\n", Fadt->XGpe0Blk.Address));
           return EFI_NOT_STARTED;
@@ -402,16 +402,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, XGpe1Blk)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, XGpe1Blk)) {
     if (Fadt->XGpe1Blk.Address != 0) {
       switch (Fadt->XGpe1Blk.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->XGpe1Blk.Address, Fadt->XGpe1Blk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XGpe1Blk resource (0x%x) is not reported correctly.\n", Fadt->XGpe1Blk.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->XGpe1Blk.Address, Fadt->XGpe1Blk.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.XGpe1Blk resource (0x%x) is not reported correctly.\n", Fadt->XGpe1Blk.Address));
           return EFI_NOT_STARTED;
@@ -420,16 +420,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, SleepControlReg)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, SleepControlReg)) {
     if (Fadt->SleepControlReg.Address != 0) {
       switch (Fadt->SleepControlReg.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->SleepControlReg.Address, Fadt->SleepControlReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.SleepControlReg resource (0x%x) is not reported correctly.\n", Fadt->SleepControlReg.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->SleepControlReg.Address, Fadt->SleepControlReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.SleepControlReg resource (0x%x) is not reported correctly.\n", Fadt->SleepControlReg.Address));
           return EFI_NOT_STARTED;
@@ -438,16 +438,16 @@ CheckAcpiFadt (
       }
     }
   }
-  if (Fadt->Header.Length > OFFSET_OF(EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE, SleepStatusReg)) {
+  if (Fadt->Header.Length > OFFSET_OF (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE, SleepStatusReg)) {
     if (Fadt->SleepStatusReg.Address != 0) {
       switch (Fadt->SleepStatusReg.AddressSpaceId) {
-      case EFI_ACPI_5_0_SYSTEM_MEMORY:
+      case EFI_ACPI_6_5_SYSTEM_MEMORY:
         if (!IsMmioExit (Fadt->SleepStatusReg.Address, Fadt->SleepStatusReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.SleepStatusReg resource (0x%x) is not reported correctly.\n", Fadt->SleepStatusReg.Address));
           return EFI_NOT_STARTED;
         }
         break;
-      case EFI_ACPI_5_0_SYSTEM_IO:
+      case EFI_ACPI_6_5_SYSTEM_IO:
         if (!IsIoExit (Fadt->SleepStatusReg.Address, Fadt->SleepStatusReg.RegisterBitWidth/8, TRUE)) {
           DEBUG ((DEBUG_ERROR, "FADT.SleepStatusReg resource (0x%x) is not reported correctly.\n", Fadt->SleepStatusReg.Address));
           return EFI_NOT_STARTED;
@@ -461,7 +461,7 @@ CheckAcpiFadt (
 
 VOID
 DumpAcpiFacs (
-  IN EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE  *Facs
+  IN EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE  *Facs
   )
 {
   DEBUG ((DEBUG_INFO, "  "));
@@ -476,21 +476,21 @@ DumpAcpiTable (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   )
 {
-  EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt;
+  EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt;
 
   if (Table == NULL) {
     return ;
   }
 
   switch (Table->Signature) {
-  case EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
-    Fadt = (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *)Table;
+  case EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
+    Fadt = (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
     DumpAcpiFadt (Fadt);
-    if (Fadt->Header.Revision >= EFI_ACPI_2_0_FIXED_ACPI_DESCRIPTION_TABLE_REVISION) {
+    if (Fadt->Header.Revision >= EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE_REVISION) {
       if (Fadt->XFirmwareCtrl != 0) {
-        DumpAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->XFirmwareCtrl);
+        DumpAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->XFirmwareCtrl);
       } else {
-        DumpAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->FirmwareCtrl);
+        DumpAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->FirmwareCtrl);
       }
       if (Fadt->XDsdt != 0) {
         DumpAcpiTable ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->XDsdt);
@@ -498,29 +498,29 @@ DumpAcpiTable (
         DumpAcpiTable ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->Dsdt);
       }
     } else {
-      DumpAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->FirmwareCtrl);
+      DumpAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->FirmwareCtrl);
       DumpAcpiTable ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->Dsdt);
     }
     break;
-  case EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
-    DumpAcpiMadt ((EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *)Table);
+  case EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
+    DumpAcpiMadt ((EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *) Table);
     break;
-  case EFI_ACPI_2_0_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_SIGNATURE:
+  case EFI_ACPI_6_5_PCI_EXPRESS_MEMORY_MAPPED_CONFIGURATION_SPACE_BASE_ADDRESS_DESCRIPTION_TABLE_SIGNATURE:
     DumpAcpiMcfg ((EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER *)Table);
     break;
-  case EFI_ACPI_3_0_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
-    DumpAcpiHpet ((EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *)Table);
+  case EFI_ACPI_6_5_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
+    DumpAcpiHpet ((EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *) Table);
     break;
-  case EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE:
+  case EFI_ACPI_6_5_DMA_REMAPPING_TABLE_SIGNATURE:
     DumpAcpiDmar ((EFI_ACPI_DMAR_HEADER *)Table);
     break;
   case EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE:
     DumpAcpiWsmt ((EFI_ACPI_WSMT_TABLE *)Table);
     break;
-  case EFI_ACPI_5_0_TRUSTED_COMPUTING_PLATFORM_2_TABLE_SIGNATURE:
+  case EFI_ACPI_6_5_TRUSTED_COMPUTING_PLATFORM_2_TABLE_SIGNATURE:
     DumpAcpiTpm2 ((EFI_TPM2_ACPI_TABLE *)Table);
     break;
-  case EFI_ACPI_3_0_TRUSTED_COMPUTING_PLATFORM_ALLIANCE_CAPABILITIES_TABLE_SIGNATURE:
+  case EFI_ACPI_6_5_TRUSTED_COMPUTING_PLATFORM_ALLIANCE_CAPABILITIES_TABLE_SIGNATURE:
     DumpAcpiTcpa ((VOID *)Table);
     break;
   default:
@@ -534,52 +534,52 @@ CheckAcpiTableResource (
   IN EFI_ACPI_DESCRIPTION_HEADER  *Table
   )
 {
-  EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt;
+  EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE  *Fadt;
 
   if (Table == NULL) {
     return EFI_INVALID_PARAMETER;
   }
 
   switch (Table->Signature) {
-  case EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
-    Fadt = (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *)Table;
+  case EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE_SIGNATURE:
+    Fadt = (EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE *) Table;
     CheckAcpiFadt (Fadt);
-    if (Fadt->Header.Revision >= EFI_ACPI_2_0_FIXED_ACPI_DESCRIPTION_TABLE_REVISION) {
+    if (Fadt->Header.Revision >= EFI_ACPI_6_5_FIXED_ACPI_DESCRIPTION_TABLE_REVISION) {
       if (Fadt->XFirmwareCtrl != 0) {
-        // CheckAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->XFirmwareCtrl);
+        // CheckAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->XFirmwareCtrl);
       } else {
-        // CheckAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->FirmwareCtrl);
+        // CheckAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->FirmwareCtrl);
       }
       if (Fadt->XDsdt != 0) {
-        // CheckAcpiDsdt ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->XDsdt);
+        // CheckAcpiDsdt ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Fadt->XDsdt);
       } else {
-        // CheckAcpiDsdt ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->Dsdt);
+        // CheckAcpiDsdt ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Fadt->Dsdt);
       }
     } else {
-      // CheckAcpiFacs ((EFI_ACPI_2_0_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN)Fadt->FirmwareCtrl);
+      // CheckAcpiFacs ((EFI_ACPI_6_5_FIRMWARE_ACPI_CONTROL_STRUCTURE *)(UINTN) Fadt->FirmwareCtrl);
       // CheckAcpiDsdt ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Fadt->Dsdt);
     }
     break;
-  case EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
-    return CheckAcpiMadt ((EFI_ACPI_4_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *)Table);
+  case EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_SIGNATURE:
+    return CheckAcpiMadt ((EFI_ACPI_6_5_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER *) Table);
     break;
-  case EFI_ACPI_2_0_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_SIGNATURE:
-    return CheckAcpiMcfg ((EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER *)Table);
+  case EFI_ACPI_6_5_PCI_EXPRESS_MEMORY_MAPPED_CONFIGURATION_SPACE_BASE_ADDRESS_DESCRIPTION_TABLE_SIGNATURE:
+    return CheckAcpiMcfg ((EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER *) Table);
     break;
-  case EFI_ACPI_3_0_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
-    return CheckAcpiHpet ((EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *)Table);
+  case EFI_ACPI_6_5_HIGH_PRECISION_EVENT_TIMER_TABLE_SIGNATURE:
+    return CheckAcpiHpet ((EFI_ACPI_HIGH_PRECISION_EVENT_TIMER_TABLE_HEADER *) Table);
     break;
-  case EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE:
-    return CheckAcpiDmar ((EFI_ACPI_DMAR_HEADER *)Table);
+  case EFI_ACPI_6_5_DMA_REMAPPING_TABLE_SIGNATURE:
+    return CheckAcpiDmar ((EFI_ACPI_DMAR_HEADER *) Table);
     break;
   case EFI_ACPI_WINDOWS_SMM_SECURITY_MITIGATION_TABLE_SIGNATURE:
     // CheckAcpiWsmt ((EFI_ACPI_WSMT_TABLE *)Table);
     break;
-  case EFI_ACPI_5_0_TRUSTED_COMPUTING_PLATFORM_2_TABLE_SIGNATURE:
-    return CheckAcpiTpm2 ((EFI_TPM2_ACPI_TABLE *)Table);
+  case EFI_ACPI_6_5_TRUSTED_COMPUTING_PLATFORM_2_TABLE_SIGNATURE:
+    return CheckAcpiTpm2 ((EFI_TPM2_ACPI_TABLE *) Table);
     break;
-  case EFI_ACPI_3_0_TRUSTED_COMPUTING_PLATFORM_ALLIANCE_CAPABILITIES_TABLE_SIGNATURE:
-    return CheckAcpiTcpa ((VOID *)Table);
+  case EFI_ACPI_6_5_TRUSTED_COMPUTING_PLATFORM_ALLIANCE_CAPABILITIES_TABLE_SIGNATURE:
+    return CheckAcpiTcpa ((VOID *) Table);
     break;
   default:
     break;
@@ -701,7 +701,7 @@ DumpAcpiXsdt (
 
 EFI_STATUS
 DumpAcpiRsdp (
-  IN EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER  *Rsdp,
+  IN EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER  *Rsdp,
   IN UINT32                                        *Signature, OPTIONAL
   OUT VOID                                         **Table,
   IN BOOLEAN                                       DumpPrint,
@@ -720,7 +720,7 @@ DumpAcpiRsdp (
     DEBUG ((DEBUG_INFO, "         "));
     DEBUG ((DEBUG_INFO, " RSDT=0x%08x XSDT=0x%016lx\n", Rsdp->RsdtAddress, Rsdp->XsdtAddress));
 
-    if (Rsdp->Revision >= EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION) {
+    if (Rsdp->Revision >= EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION) {
       DumpAcpiTable ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Rsdp->XsdtAddress);
     }
     DumpAcpiTable ((EFI_ACPI_DESCRIPTION_HEADER *)(UINTN)Rsdp->RsdtAddress);
@@ -729,7 +729,7 @@ DumpAcpiRsdp (
   //
   // Search XSDT
   //
-  if (Rsdp->Revision >= EFI_ACPI_2_0_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION) {
+  if (Rsdp->Revision >= EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION) {
     Xsdt = (EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Rsdp->XsdtAddress;
     Status = DumpAcpiXsdt (Xsdt, Signature, Table, DumpPrint, CheckResource);
   } else {

@@ -281,7 +281,7 @@ TestPointEndOfDxeDmaAcpiTableFunctional (
 
   DEBUG ((DEBUG_INFO, "======== TestPointEndOfDxeDmaAcpiTableFunctional - Enter\n"));
 
-  Acpi = TestPointGetAcpi (EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE);
+  Acpi = TestPointGetAcpi (EFI_ACPI_6_5_DMA_REMAPPING_TABLE_SIGNATURE);
   if (Acpi == NULL) {
     DEBUG ((DEBUG_ERROR, "No DMAR table\n"));
     TestPointLibAppendErrorString (

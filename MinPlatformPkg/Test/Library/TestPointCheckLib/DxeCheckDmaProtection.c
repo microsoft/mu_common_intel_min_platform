@@ -32,7 +32,7 @@ CheckDrhd (
   INTN                                  DmarLen;
   EFI_ACPI_DMAR_DRHD_HEADER             *Drhd;
   UINT32                                Reg32;
-    
+
   //
   // Sub table
   //
@@ -73,7 +73,7 @@ TestPointVtdEngine (
 
   Status = EFI_SUCCESS;
 
-  Dmar = TestPointGetAcpi (EFI_ACPI_4_0_DMA_REMAPPING_TABLE_SIGNATURE);
+  Dmar = TestPointGetAcpi (EFI_ACPI_6_5_DMA_REMAPPING_TABLE_SIGNATURE);
   if (Dmar == NULL) {
     DEBUG ((DEBUG_ERROR, "No DMAR table\n"));
     Status = EFI_INVALID_PARAMETER;
