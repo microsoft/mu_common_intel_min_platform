@@ -18,6 +18,7 @@
 #include <Protocol/SmmVariable.h>
 
 EFI_SMM_VARIABLE_PROTOCOL  *mVariableWriteLibSmmVariable = NULL;
+BOOLEAN                    mEfiAtRuntime = FALSE;
 
 /**
   Sets the value of a variable.
@@ -168,4 +169,19 @@ VarLibVariableRequestToLock (
   // Variable lock protocol is not accessible from SMM
   //
   return EFI_UNSUPPORTED;
+}
+
+/**
+  Indicator of whether it is runtime or not.
+
+  @retval TRUE        It is Runtime.
+  @retval FALSE       It is not Runtime.
+**/
+BOOLEAN
+EFIAPI
+VarLibAtOsRuntime (
+  VOID
+  )
+{
+  return mEfiAtRuntime;
 }

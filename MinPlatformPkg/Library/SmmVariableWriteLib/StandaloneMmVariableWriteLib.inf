@@ -39,7 +39,8 @@
   MmServicesTableLib
 
 [Protocols]
-  gEfiSmmVariableProtocolGuid   ## CONSUMES
+  gEfiSmmVariableProtocolGuid             ## CONSUMES
+  gEdkiiSmmExitBootServicesProtocolGuid   ## CONSUMES
 
 [Depex]
   gEfiSmmVariableProtocolGuid

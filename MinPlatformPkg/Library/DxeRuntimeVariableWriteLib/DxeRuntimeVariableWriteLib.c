@@ -196,6 +196,21 @@ VarLibVariableRequestToLock (
 }
 
 /**
+  Indicator of whether it is runtime or not.
+
+  @retval TRUE        It is Runtime.
+  @retval FALSE       It is not Runtime.
+**/
+BOOLEAN
+EFIAPI
+VarLibAtOsRuntime (
+  VOID
+  )
+{
+  return (mVariableWriteLibVariablePolicy == NULL) ? TRUE : FALSE;
+}
+
+/**
   Close events when driver unloaded.
 
   @param[in] ImageHandle  A handle for the image that is initializing this driver

@@ -20,6 +20,28 @@
 #include <Library/MmServicesTableLib.h>
 
 extern EFI_SMM_VARIABLE_PROTOCOL  *mVariableWriteLibSmmVariable;
+extern BOOLEAN                    mEfiAtRuntime;
+
+/**
+  Callback for ExitBootService, which is registered at the constructor.
+  This callback sets a global variable mEfiAtRuntime to indicate whether
+  it is after ExitBootService.
+
+  @param[in] Protocol        Protocol unique ID.
+  @param[in] Interface       Interface instance.
+  @param[in] Handle          The handle on which the interface is installed.
+**/
+EFI_STATUS
+EFIAPI
+VarLibExitBootServicesCallback (
+  IN      CONST EFI_GUID   *Protocol,
+  IN      VOID             *Interface,
+  IN      EFI_HANDLE        Handle
+  )
+{
+  mEfiAtRuntime = TRUE;
+  return EFI_SUCCESS;
+}
 
 /**
   The constructor function acquires the EFI SMM Variable Services
@@ -41,11 +63,19 @@ StandaloneMmVariableWriteLibConstructor (
   )
 {
   EFI_STATUS    Status;
+  VOID          *Registration = NULL;
 
   //
   // Locate SmmVariableProtocol.
   //
   Status = gMmst->MmLocateProtocol (&gEfiSmmVariableProtocolGuid, NULL, (VOID **) &mVariableWriteLibSmmVariable);
   ASSERT_EFI_ERROR (Status);
+
+  //
+  // Register VarLibExitBootServicesCallback for gEdkiiSmmExitBootServicesProtocolGuid.
+  //
+  Status = SmmRegisterProtocolNotify (&gEdkiiSmmExitBootServicesProtocolGuid, VarLibExitBootServicesCallback, &Registration);
+  ASSERT_EFI_ERROR (Status);
+
   return Status;
 }

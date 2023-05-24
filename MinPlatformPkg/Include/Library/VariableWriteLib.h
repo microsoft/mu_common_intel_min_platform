@@ -135,4 +135,16 @@ VarLibVariableRequestToLock (
   IN  EFI_GUID                     *VendorGuid
   );
 
+/**
+  Indicator of whether it is runtime or not.
+
+  @retval TRUE        It is Runtime.
+  @retval FALSE       It is not Runtime.
+**/
+BOOLEAN
+EFIAPI
+VarLibAtOsRuntime (
+  VOID
+  );
+
 #endif  // _VARIABLE_WRITE_LIB_H_
