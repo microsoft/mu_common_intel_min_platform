@@ -33,4 +33,3 @@ extends:
         Pkgs: 'MinPlatformPkg'
         Targets: 'DEBUG,RELEASE,NO-TARGET,NOOPT'
         ArchList: $(arch_list)
-        SelfHostAgent: false
