@@ -62,6 +62,12 @@ TestPointMmReadyToBootMmPageProtection (
   )
 {
   EFI_STATUS Status;
+
+  if ((mFeatureImplemented[TEST_POINT_INDEX_BYTE6_SMM]
+    & TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION) == 0) {
+    return EFI_SUCCESS;
+  }
+
   DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Enter\n"));
   Status = TestPointReadyToBootMmPageProtection ();
   DEBUG ((DEBUG_INFO, "======== TestPointMmReadyToBootMmPageProtection - Enter\n"));
