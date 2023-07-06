@@ -164,18 +164,22 @@ BuildMemoryTypeInformation (
   EFI_STATUS                      Status;
   EFI_PEI_READ_ONLY_VARIABLE2_PPI *VariableServices;
   UINTN                           DataSize;
+  UINTN                           Index;
   EFI_MEMORY_TYPE_INFORMATION     MemoryData[EfiMaxMemoryType + 1];
 
   //
   // Locate system configuration variable
   //
-  Status = PeiServicesLocatePpi(
+  Status = PeiServicesLocatePpi (
              &gEfiPeiReadOnlyVariable2PpiGuid, // GUID
              0,                                // INSTANCE
              NULL,                             // EFI_PEI_PPI_DESCRIPTOR
              (VOID **) &VariableServices       // PPI
              );
-  ASSERT_EFI_ERROR(Status);
+  if (EFI_ERROR (Status)) {
+    ASSERT_EFI_ERROR (Status);
+    return;
+  }
 
   DataSize = sizeof (MemoryData);
   Status = VariableServices->GetVariable (
@@ -186,9 +190,29 @@ BuildMemoryTypeInformation (
                                &DataSize,
                                &MemoryData
                                );
-  if (EFI_ERROR(Status)) {
+  if (!EFI_ERROR (Status)) {
+    if (DataSize % sizeof (EFI_MEMORY_TYPE_INFORMATION) != 0) {
+      DEBUG ((DEBUG_ERROR, "The UEFI Memory Type Information variable size is inconsistent with this build.\n"));
+      Status = EFI_COMPROMISED_DATA;
+    } else {
+      // Loop through all except the last one and make sure it seems reasonable
+      for (Index = 0; Index < ((DataSize / sizeof (EFI_MEMORY_TYPE_INFORMATION)) - 1); Index++) {
+        if (MemoryData[Index].Type >= EfiMaxMemoryType) {
+          DEBUG ((DEBUG_ERROR, "UEFI Memory Type Information variable has an invalid memory type.\n"));
+          Status = EFI_COMPROMISED_DATA;
+        }
+      }
+      // The last entry must be MaxMemoryType with size 0
+      if ((MemoryData[Index].Type != EfiMaxMemoryType) || (MemoryData[Index].NumberOfPages != 0)) {
+        DEBUG ((DEBUG_ERROR, "UEFI Memory Type Information variable contains an invalid last entry.\n"));
+        Status = EFI_COMPROMISED_DATA;
+      }
+    }
+  }
+
+  if (EFI_ERROR (Status)) {
     DataSize = sizeof (mDefaultMemoryTypeInformation);
-    CopyMem(MemoryData, mDefaultMemoryTypeInformation, DataSize);
+    CopyMem (MemoryData, mDefaultMemoryTypeInformation, DataSize);
   }
 
   ///
