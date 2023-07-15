@@ -320,7 +320,7 @@ MmTestPointMmiHandler (
     return EFI_SUCCESS;
   }
 
-  if (!IsBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
+  if (!IsCommBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
     DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer in SMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }

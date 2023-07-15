@@ -94,7 +94,7 @@
 [Protocols]
   gEfiPciIoProtocolGuid
   gEfiPciRootBridgeIoProtocolGuid
-  gEfiSmmAccess2ProtocolGuid
+  gEfiMmAccessProtocolGuid
   gEdkiiVarCheckProtocolGuid
   gEfiLoadedImageProtocolGuid
   gEfiLoadedImageDevicePathProtocolGuid
