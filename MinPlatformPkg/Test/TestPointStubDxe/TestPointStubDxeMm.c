@@ -15,12 +15,14 @@
 #include <Library/UefiLib.h>
 #include <Library/HobLib.h>
 #include <Library/TestPointLib.h>
+#include <Library/MmUnblockMemoryLib.h>
 #include <Protocol/AdapterInformation.h>
 #include <Protocol/MmCommunication.h>
 #include <Guid/PiSmmCommunicationRegionTable.h>
 
 UINTN  mMmTestPointDatabaseSize;
 VOID   *mMmTestPointDatabase;
+VOID   *mMmCommBuffer;
 
 VOID
 PublishPeiTestPoint (
@@ -75,7 +77,6 @@ GetTestPointDataMm (
   EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
   UINT32                                              Index;
   EFI_MEMORY_DESCRIPTOR                               *Entry;
-  VOID                                                *Buffer;
   UINTN                                               Size;
   UINTN                                               Offset;
 
@@ -124,6 +125,7 @@ GetTestPointDataMm (
   CommGetInfo->DataSize = 0;
 
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
+
   Status = MmCommunication->Communicate(MmCommunication, CommBuffer, &CommSize);
   if (EFI_ERROR(Status)) {
     DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: MmCommunication - %r\n", Status));
@@ -157,10 +159,9 @@ GetTestPointDataMm (
   CommGetData->Header.ReturnStatus = (UINT64)-1;
 
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
-  Buffer = (UINT8 *)CommHeader + CommSize;
   Size -= CommSize;
 
-  CommGetData->DataBuffer = (PHYSICAL_ADDRESS)(UINTN)Buffer;
+  CommGetData->DataBuffer = (PHYSICAL_ADDRESS)(UINTN)mMmCommBuffer;
   CommGetData->DataOffset = 0;
   while (CommGetData->DataOffset < mMmTestPointDatabaseSize) {
     Offset = (UINTN)CommGetData->DataOffset;
@@ -239,6 +240,110 @@ PublishMmTestPoint (
 
     TestPoint = (ADAPTER_INFO_PLATFORM_TEST_POINT *)((UINTN)TestPoint + TestPointSize);
   }
+}
+
+/**
+  Notification function of END_OF_DXE event group.
+
+  This is a notification function registered on END_OF_DXE event group.
+  When End of DXE is signalled we get the size of the PiSmmCommunicationRegionTable
+  to allocate a runtime buffer used for communicating the MM Testpoint results.
+  This requires the allocated pages to be unblocked for MM which must occur before
+  ReadyToLock.
+
+  @param[in] Event        Event whose notification function is being invoked.
+  @param[in] Context      Pointer to the notification function's context.
+
+**/
+VOID
+EFIAPI
+OnEndOfDxe (
+  IN EFI_EVENT  Event,
+  IN VOID       *Context
+  )
+{
+  EFI_STATUS                                          Status;
+  UINTN                                               CommSize;
+  EFI_MM_COMMUNICATION_PROTOCOL                      *MmCommunication;
+  UINTN                                               MinimalSizeNeeded;
+  EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
+  UINT32                                              Index;
+  EFI_MEMORY_DESCRIPTOR                               *Entry;
+  UINTN                                               Size;
+
+  Status = gBS->LocateProtocol(&gEfiMmCommunicationProtocolGuid, NULL, (VOID **)&MmCommunication);
+  if (EFI_ERROR(Status)) {
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Locate MmCommunication protocol - %r\n", Status));
+    return ;
+  }
+
+  MinimalSizeNeeded = EFI_PAGE_SIZE;
+
+  Status = EfiGetSystemConfigurationTable(
+             &gEdkiiPiSmmCommunicationRegionTableGuid,
+             (VOID **)&PiSmmCommunicationRegionTable
+             );
+  if (EFI_ERROR(Status)) {
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
+    return ;
+  }
+  ASSERT(PiSmmCommunicationRegionTable != NULL);
+  Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
+  Size = 0;
+  for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
+    if (Entry->Type == EfiConventionalMemory) {
+      Size = EFI_PAGES_TO_SIZE((UINTN)Entry->NumberOfPages);
+      if (Size >= MinimalSizeNeeded) {
+        break;
+      }
+    }
+    Entry = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)Entry + PiSmmCommunicationRegionTable->DescriptorSize);
+  }
+  ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
+
+  CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET);
+
+  Size -= CommSize;
+  mMmCommBuffer = AllocateRuntimeZeroPool(Size);
+
+  DEBUG ((DEBUG_INFO, "TEST TO SEE IF WE GET HERE\n"));
+  //
+  // Request to unblock the newly allocated cache region to be accessible from inside MM
+  //
+  Status = MmUnblockMemoryRequest (
+             (EFI_PHYSICAL_ADDRESS) ALIGN_VALUE ((UINTN)mMmCommBuffer - EFI_PAGE_SIZE + 1, EFI_PAGE_SIZE),
+             EFI_SIZE_TO_PAGES (Size)
+             );
+  if ((Status != EFI_UNSUPPORTED) && EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "Failed to unblock memory!\n"));
+    return;
+  }
+}
+
+
+/**
+  Notification function of END_OF_DXE event group.
+  This is required to unblock pages before ReadyToLock occurs
+
+**/
+VOID
+TestPointUnblockCall (
+  VOID
+  )
+{
+  EFI_STATUS Status;
+  EFI_EVENT  EndOfDxeEvent;
+
+  Status = gBS->CreateEventEx (
+                  EVT_NOTIFY_SIGNAL,
+                  TPL_CALLBACK,
+                  OnEndOfDxe,
+                  NULL,
+                  &gEfiEndOfDxeEventGroupGuid,
+                  &EndOfDxeEvent
+                  );
+
+  ASSERT_EFI_ERROR (Status);
 }
 
 /**
@@ -337,6 +442,7 @@ TestPointStubDxeMmEntryPoint (
 {
   TestPointStubForPei ();
   TestPointStubForMm ();
+  TestPointUnblockCall ();
 
   return EFI_SUCCESS;
 }
