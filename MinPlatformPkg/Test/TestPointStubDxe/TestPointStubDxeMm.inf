@@ -39,6 +39,7 @@
 [Guids]
   gAdapterInfoPlatformTestPointGuid
   gEdkiiPiSmmCommunicationRegionTableGuid
+  gEfiEndOfDxeEventGroupGuid
 
 [Protocols]
   gEfiAdapterInformationProtocolGuid
