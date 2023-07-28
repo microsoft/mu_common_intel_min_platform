@@ -141,6 +141,7 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize|0x00|UINT8|0x00010049
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize|0x00|UINT8|0x0001004A
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkRegisterBitWidth|0x00|UINT8|0x00010056
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAddressSpaceId|0x00|UINT8|0x00010057
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiS4BiosReq|0x0000|UINT8|0x00010055
 
   #

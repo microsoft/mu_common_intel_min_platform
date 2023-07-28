@@ -1141,6 +1141,7 @@ PlatformUpdateTables (
     FadtHeader->XGpe0Blk.AccessSize               = PcdGet8 (PcdAcpiXGpe0BlkAccessSize);
     FadtHeader->XGpe1Blk.AccessSize               = PcdGet8 (PcdAcpiXGpe1BlkAccessSize);
     FadtHeader->XGpe1Blk.RegisterBitWidth         = PcdGet8 (PcdAcpiXGpe1BlkRegisterBitWidth);
+    FadtHeader->XGpe1Blk.AddressSpaceId           = PcdGet8 (PcdAcpiXGpe1BlkAddressSpaceId);
 
     FadtHeader->SleepControlReg.AddressSpaceId    = PcdGet8 (PcdAcpiSleepControlRegisterAddressSpaceId);
     FadtHeader->SleepControlReg.RegisterBitWidth  = PcdGet8 (PcdAcpiSleepControlRegisterBitWidth);
