@@ -141,6 +141,9 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize|0x00|UINT8|0x00010049
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize|0x00|UINT8|0x0001004A
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkRegisterBitWidth|0x00|UINT8|0x00010056
+  # MU_CHANGE [BEGIN] - Update X_GPE1_BLK AddressSpaceId with PCD value
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAddressSpaceId|0x00|UINT8|0x00010057
+  # MU_CHANGE [END] - Update X_GPE1_BLK AddressSpaceId with PCD value
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiS4BiosReq|0x0000|UINT8|0x00010055
 
   #

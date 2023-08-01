@@ -95,6 +95,9 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkRegisterBitWidth
+  # MU_CHANGE [BEGIN] - Update X_GPE1_BLK AddressSpaceId with PCD value
+  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAddressSpaceId
+  # MU_CHANGE [END] - Update X_GPE1_BLK AddressSpaceId with PCD value
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterAddressSpaceId
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitWidth
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitOffset
