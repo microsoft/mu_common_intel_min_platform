@@ -70,7 +70,7 @@ DebugDisplayReOrderTable (
   IN EFI_CPU_ID_ORDER_MAP *CpuApicIdOrderTable
   )
 {
-  UINT32 Index;
+  UINTN Index; // MU_CHANGE - Codeql
 
   DEBUG ((DEBUG_INFO, "Index  AcpiProcId  ApicId   Thread  Flags   Skt  CoreType\n"));
   for (Index = 0; Index < mNumberOfCpus; Index++) {
@@ -226,9 +226,9 @@ CreateCpuLocalApicInTable (
   EFI_STATUS                                Status;
   EFI_PROCESSOR_INFORMATION                 ProcessorInfoBuffer;
   UINT32                                    Index;
-  UINT32                                    CurrProcessor;
+  UINTN                                     CurrProcessor; // MU_CHANGE - Codeql
   EFI_CPU_ID_ORDER_MAP                      *CpuIdMapPtr;
-  UINT32                                    Socket;
+  UINTN                                     Socket;        // MU_CHANGE - Codeql
   UINT32                                    CpuidMaxInput;
   UINTN                                     BspIndex;
 
