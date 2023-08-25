@@ -109,7 +109,7 @@ TestPointMmEndOfDxeSmrrFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
       TEST_POINT_INDEX_BYTE6_SMM,
       TEST_POINT_BYTE6_SMM_END_OF_DXE_SMRR_FUNCTIONAL
       );

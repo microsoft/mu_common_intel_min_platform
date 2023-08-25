@@ -101,7 +101,7 @@ TestPointReadyToLockMmMemoryAttributeTableFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
       TEST_POINT_INDEX_BYTE6_SMM,
       TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SMM_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL
       );
@@ -184,7 +184,7 @@ TestPointReadyToBootMmPageProtection (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
       TEST_POINT_INDEX_BYTE6_SMM,
       TEST_POINT_BYTE6_SMM_READY_TO_BOOT_SMM_PAGE_LEVEL_PROTECTION
       );
@@ -200,7 +200,7 @@ TestPointReadyToBootMmPageProtection (
     if (Result) {
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-        NULL,
+        TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
         TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
@@ -305,14 +305,14 @@ TestPointReadyToBootMmPageProtectionHandler (
     if (Result) {
       TestPointLibSetFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-        NULL,
+        TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
         TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );
     } else {
       TestPointLibClearFeaturesVerified (
         PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-        NULL,
+        TEST_POINT_IMPLEMENTATION_ID_PLATFORM_SMM,
         TEST_POINT_INDEX_BYTE6_SMM,
         TEST_POINT_BYTE6_SMM_READY_TO_LOCK_SECURE_SMM_COMMUNICATION_BUFFER
         );

@@ -107,7 +107,7 @@ TestPointDebugInitDone (
   //
   TestPointLibSetFeaturesVerified (
     PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-    NULL,
+    TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
     0,
     TEST_POINT_BYTE0_TEMP_INIT_DONE
     );
@@ -121,7 +121,7 @@ TestPointDebugInitDone (
 
   TestPointLibSetFeaturesVerified (
     PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-    NULL,
+    TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
     0,
     TEST_POINT_BYTE0_DEBUG_INIT_DONE
     );
@@ -171,7 +171,7 @@ TestPointMemoryDiscoveredMtrrFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       1,
       TEST_POINT_BYTE1_MEMORY_DISCOVERED_MTRR_FUNCTIONAL
       );
@@ -219,7 +219,7 @@ TestPointMemoryDiscoveredMemoryResourceFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       1,
       TEST_POINT_BYTE1_MEMORY_DISCOVERED_MEMORY_RESOURCE_FUNCTIONAL
       );
@@ -266,7 +266,7 @@ TestPointMemoryDiscoveredFvInfoFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       1,
       TEST_POINT_BYTE1_MEMORY_DISCOVERED_FV_INFO_FUNCTIONAL
       );
@@ -313,7 +313,7 @@ TestPointMemoryDiscoveredDmaProtectionEnabled (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       1,
       TEST_POINT_BYTE1_MEMORY_DISCOVERED_DMA_PROTECTION_ENABLED
       );
@@ -363,7 +363,7 @@ TestPointEndOfPeiSystemResourceFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       2,
       TEST_POINT_BYTE2_END_OF_PEI_SYSTEM_RESOURCE_FUNCTIONAL
       );
@@ -412,7 +412,7 @@ TestPointEndOfPeiMtrrFunctional (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       2,
       TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL
       );
@@ -459,7 +459,7 @@ TestPointEndOfPeiPciBusMasterDisabled (
   if (Result) {
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      NULL,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
       2,
       TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED
       );
