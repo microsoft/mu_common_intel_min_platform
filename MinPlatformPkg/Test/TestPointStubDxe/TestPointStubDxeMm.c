@@ -273,7 +273,7 @@ OnEndOfDxe (
 
   Status = gBS->LocateProtocol(&gEfiMmCommunicationProtocolGuid, NULL, (VOID **)&MmCommunication);
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Locate MmCommunication protocol - %r\n", Status));
+    DEBUG ((DEBUG_ERROR, "MmiHandlerTestPoint: Locate MmCommunication protocol - %r\n", Status));
     return ;
   }
 
@@ -284,10 +284,14 @@ OnEndOfDxe (
              (VOID **)&PiSmmCommunicationRegionTable
              );
   if (EFI_ERROR(Status)) {
-    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
+    DEBUG ((DEBUG_ERROR, "MmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
     return ;
   }
-  ASSERT(PiSmmCommunicationRegionTable != NULL);
+  if (PiSmmCommunicationRegionTable == NULL) {
+    DEBUG ((DEBUG_ERROR, "Failed to get the PiSmmCommunicationRegionTable.\n"));
+    ASSERT(PiSmmCommunicationRegionTable != NULL);
+    return ;
+  }
   Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
   Size = 0;
   for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
@@ -300,13 +304,16 @@ OnEndOfDxe (
     Entry = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)Entry + PiSmmCommunicationRegionTable->DescriptorSize);
   }
   ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
+  if (Size < MinimalSizeNeeded) {
+    DEBUG ((DEBUG_ERROR, "Failed to find any entries in the PiSmmCommunicationRegionTable.\n"));
+    return ;
+  }
 
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET);
 
   Size -= CommSize;
   mMmCommBuffer = AllocateRuntimeZeroPool(Size);
 
-  DEBUG ((DEBUG_INFO, "TEST TO SEE IF WE GET HERE\n"));
   //
   // Request to unblock the newly allocated cache region to be accessible from inside MM
   //
