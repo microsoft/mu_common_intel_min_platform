@@ -204,12 +204,13 @@ typedef struct {
   // On output, actual data buffer size copied.
   //
   UINT64                                     DataSize;
-  PHYSICAL_ADDRESS                           DataBuffer;
+  //PHYSICAL_ADDRESS                           DataBuffer;
   //
   // On input, data buffer offset to copy.
   // On output, next time data buffer offset to copy.
   //
-  UINT64                                     DataOffset;
+  //UINT64                                     DataOffset;
+  UINT8                                      Data[];
 } MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
 
 extern EFI_GUID gAdapterInfoPlatformTestPointGuid;

@@ -220,17 +220,21 @@ MmTestPointMmiHandlerGetDataByOffset (
   CopyMem (
     &MmiHandlerTestPointGetDataByOffset,
     MmiHandlerTestPointParameterGetDataByOffset,
-    sizeof(MmiHandlerTestPointGetDataByOffset)
+    MmiHandlerTestPointParameterGetDataByOffset->DataSize
     );
+
+  DEBUG((DEBUG_ERROR, "Struct Buffer Address: %x\n", (UINTN)MmiHandlerTestPointParameterGetDataByOffset));
+  DEBUG((DEBUG_ERROR, "Struct Data Buffer Address: %x\n", (UINTN)(MmiHandlerTestPointParameterGetDataByOffset->Data)));
+  DEBUG((DEBUG_ERROR, "STRUCTSIZE: %x\n", sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET)));
 
   //
   // Sanity check
   //
-  if (!IsBufferOutsideMmValid((UINTN)MmiHandlerTestPointGetDataByOffset.DataBuffer, (UINTN)MmiHandlerTestPointGetDataByOffset.DataSize)) {
+  /*if (!IsBufferOutsideMmValid((UINTN)&MmiHandlerTestPointParameterGetDataByOffset->Data[0], (UINTN)*Size)) {
     DEBUG((DEBUG_ERROR, "MmTestPointMmiHandlerGetDataByOffset: MmTestPoint get data in SMRAM or overflow!\n"));
-    MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_ACCESS_DENIED;
+    MmiHandlerTestPointParameterGetDataByOffset->ReturnStatus = (UINT64)(INT64)(INTN)EFI_ACCESS_DENIED;
     goto Done;
-  }
+  }*/
   
   DataSize = 0;
   Status = GetAllMmTestPointData (&DataSize, NULL);
@@ -255,18 +259,24 @@ MmTestPointMmiHandlerGetDataByOffset (
   // MmiHandlerTestPointCopyData().
   //
   SpeculationBarrier ();
-  MmiHandlerTestPointCopyData (
+  DEBUG((DEBUG_ERROR, "InputSize: %x\n", DataSize));
+  /*CopyMem (
+    (VOID *)MmiHandlerTestPointGetDataByOffset.Data,
+    Data,
+    DataSize
+    );*/
+  /*MmiHandlerTestPointCopyData (
     Data,
     DataSize,
-    (VOID *)(UINTN)MmiHandlerTestPointGetDataByOffset.DataBuffer,
-    &MmiHandlerTestPointGetDataByOffset.DataSize,
-    &MmiHandlerTestPointGetDataByOffset.DataOffset
-    );
-
+    (VOID *)(UINTN)MmiHandlerTestPointGetDataByOffset.Data,
+    &(MmiHandlerTestPointGetDataByOffset.DataSize),
+    0
+    );*/
+  DEBUG((DEBUG_ERROR, "DO WE GET HERE?\n"));
   CopyMem (
-    MmiHandlerTestPointParameterGetDataByOffset,
-    &MmiHandlerTestPointGetDataByOffset,
-    sizeof(MmiHandlerTestPointGetDataByOffset)
+    (VOID *)(UINTN)MmiHandlerTestPointParameterGetDataByOffset->Data,
+    Data,
+    DataSize
     );
 
   MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = 0;
@@ -315,13 +325,17 @@ MmTestPointMmiHandler (
 
   TempCommBufferSize = *CommBufferSize;
 
+  DEBUG((DEBUG_ERROR, "CommBuffer Real Address: %x\n", (UINTN)CommBuffer));
+  
+  DEBUG((DEBUG_ERROR, "CommBufferSize: %x, Struct size: %x\n", TempCommBufferSize, sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET)));
+
   if (TempCommBufferSize < sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_HEADER)) {
     DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer size invalid!\n"));
     return EFI_SUCCESS;
   }
 
   if (!IsCommBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
-    DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer in SMRAM or overflow!\n"));
+    DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer in MMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }
 
@@ -339,10 +353,10 @@ MmTestPointMmiHandler (
     break;
   case MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET:
     DEBUG((DEBUG_INFO, "MmiHandlerTestPointHandlerGetDataByOffset\n"));
-    if (TempCommBufferSize != sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET)) {
+    /*if (TempCommBufferSize != sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_HEADER)) {
       DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer size invalid!\n"));
       return EFI_SUCCESS;
-    }
+    }*/
     MmTestPointMmiHandlerGetDataByOffset((MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)(UINTN)CommBuffer);
     break;
   default:

@@ -22,6 +22,7 @@
 #include <Library/TestPointLib.h>
 
 #include <Protocol/AdapterInformation.h>
+#include <Protocol/MmCommunication.h>
 
 #define TEST_POINT_AIP_PRIVATE_SIGNATURE  SIGNATURE_32('T', 'S', 'P', 'T')
 
