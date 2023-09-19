@@ -34,12 +34,10 @@
   UefiLib
   HobLib
   TestPointLib
-  MmUnblockMemoryLib
 
 [Guids]
   gAdapterInfoPlatformTestPointGuid
   gEdkiiPiSmmCommunicationRegionTableGuid
-  gEfiEndOfDxeEventGroupGuid
 
 [Protocols]
   gEfiAdapterInformationProtocolGuid
