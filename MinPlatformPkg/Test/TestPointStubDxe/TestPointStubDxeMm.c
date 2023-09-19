@@ -95,7 +95,12 @@ GetTestPointDataMm (
     return;
   }
 
-  ASSERT (PiSmmCommunicationRegionTable != NULL);
+  if (PiSmmCommunicationRegionTable == NULL) {
+    ASSERT (PiSmmCommunicationRegionTable != NULL);
+    DEBUG ((DEBUG_ERROR, "The PiSmmCommunicationRegionTable is NULL!\n"));
+    return;
+  }
+
   Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
   Size  = 0;
   for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
