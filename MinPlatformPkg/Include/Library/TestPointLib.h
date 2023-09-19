@@ -204,12 +204,9 @@ typedef struct {
   // On output, actual data buffer size copied.
   //
   UINT64                                     DataSize;
-  //PHYSICAL_ADDRESS                           DataBuffer;
-  //
-  // On input, data buffer offset to copy.
-  // On output, next time data buffer offset to copy.
-  //
-  //UINT64                                     DataOffset;
+  // Empty array that represents the start of the
+  // data being stored in the comm buffer we're getting
+  // from the MM environment.
   UINT8                                      Data[];
 } MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
 
