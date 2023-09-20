@@ -209,10 +209,9 @@ MmiHandlerTestPointCopyData (
 **/
 VOID
 MmTestPointMmiHandlerGetDataByOffset (
-  IN VOID     *MmiHandlerTestPointParameterGetDataByOffset
+  IN MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET     *MmiHandlerTestPointParameterGetDataByOffset
   )
 {
-  MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET    *MmiHandlerTestPointGetDataByOffset;
   VOID                                                   *Data;
   UINTN                                                  DataSize;
   EFI_STATUS                                             Status;
@@ -223,8 +222,6 @@ MmTestPointMmiHandlerGetDataByOffset (
     DEBUG((DEBUG_ERROR, "[%a] - The Buffer passed in is NULL.  Aborting.\n", __func__));
     return;
   }
-
-  MmiHandlerTestPointGetDataByOffset = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)MmiHandlerTestPointParameterGetDataByOffset;
 
   //
   // Sanity check
@@ -239,17 +236,22 @@ MmTestPointMmiHandlerGetDataByOffset (
   DataSize = 0;
   Status = GetAllMmTestPointData (&DataSize, NULL);
   if (Status != EFI_BUFFER_TOO_SMALL) {
-    MmiHandlerTestPointGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_NOT_FOUND;
+    MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_NOT_FOUND;
     goto Done;
   }
   Data = AllocatePool (DataSize);
   if (Data == NULL) {
-    MmiHandlerTestPointGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_OUT_OF_RESOURCES;
+    MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)EFI_OUT_OF_RESOURCES;
     goto Done;
   }
   Status = GetAllMmTestPointData (&DataSize, Data);
   if (EFI_ERROR(Status)) {
-    MmiHandlerTestPointGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)Status;
+    MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = (UINT64)(INT64)(INTN)Status;
+    goto Done;
+  }
+
+  if (DataSize > MmiHandlerTestPointParameterGetDataByOffset->DataSize) {
+    DEBUG((DEBUG_ERROR, "[%a] - The Datasize we are going to copy over is larger than expected.  Aborting.\n", __func__));
     goto Done;
   }
 
@@ -261,12 +263,12 @@ MmTestPointMmiHandlerGetDataByOffset (
   SpeculationBarrier ();
 
   CopyMem (
-    MmiHandlerTestPointGetDataByOffset->Data,
+    MmiHandlerTestPointParameterGetDataByOffset->Data,
     Data,
     DataSize
     );
 
-  MmiHandlerTestPointGetDataByOffset->Header.ReturnStatus = 0;
+  MmiHandlerTestPointParameterGetDataByOffset->Header.ReturnStatus = 0;
 
 Done:
   if (Data != NULL) {
@@ -342,7 +344,7 @@ MmTestPointMmiHandler (
       DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer size invalid!\n"));
       return EFI_SUCCESS;
     }
-    MmTestPointMmiHandlerGetDataByOffset(CommBuffer);
+    MmTestPointMmiHandlerGetDataByOffset((MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)(UINTN)CommBuffer);
     break;
   default:
     break;
