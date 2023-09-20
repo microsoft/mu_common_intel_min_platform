@@ -202,7 +202,9 @@ MmiHandlerTestPointCopyData (
 /**
   MM test point MMI handler to get data by offset.
 
-  @param MmiHandlerTestPointParameterGetDataByOffset   The parameter of MM test point MMI handler get data by offset.
+  @param MmiHandlerTestPointParameterGetDataByOffset   The Comm buffer that we expect to populated with a
+                                                       MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET
+                                                       structure.
 
 **/
 VOID
@@ -216,6 +218,11 @@ MmTestPointMmiHandlerGetDataByOffset (
   EFI_STATUS                                             Status;
 
   Data = NULL;
+
+  if (MmiHandlerTestPointParameterGetDataByOffset == NULL) {
+    DEBUG((DEBUG_ERROR, "[%a] - The Buffer passed in is NULL.  Aborting.\n", __func__));
+    return;
+  }
 
   MmiHandlerTestPointGetDataByOffset = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)MmiHandlerTestPointParameterGetDataByOffset;
 
