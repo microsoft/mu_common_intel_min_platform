@@ -204,10 +204,12 @@ typedef struct {
   // On output, actual data buffer size copied.
   //
   UINT64                                     DataSize;
+  // MU_CHANGE - START
   // Empty array that represents the start of the
   // data being stored in the comm buffer we're getting
   // from the MM environment.
   UINT8                                      Data[];
+  // MU_CHANGE - END
 } MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET;
 
 extern EFI_GUID gAdapterInfoPlatformTestPointGuid;

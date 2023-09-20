@@ -218,10 +218,12 @@ MmTestPointMmiHandlerGetDataByOffset (
 
   Data = NULL;
 
+  // MU_CHANGE [START] - StandaloneMm Support
   if (MmiHandlerTestPointParameterGetDataByOffset == NULL) {
     DEBUG((DEBUG_ERROR, "[%a] - The Buffer passed in is NULL.  Aborting.\n", __func__));
     return;
   }
+  // MU_CHANGE [END] - StandaloneMm Support
 
   //
   // Sanity check
@@ -250,10 +252,12 @@ MmTestPointMmiHandlerGetDataByOffset (
     goto Done;
   }
 
+  // MU_CHANGE [START] - StandaloneMm Support
   if (DataSize > MmiHandlerTestPointParameterGetDataByOffset->DataSize) {
     DEBUG((DEBUG_ERROR, "[%a] - The Datasize we are going to copy over is larger than expected.  Aborting.\n", __func__));
     goto Done;
   }
+  // MU_CHANGE [END] - StandaloneMm Support
 
   //
   // The SpeculationBarrier() call here is to ensure the previous range/content
@@ -301,7 +305,7 @@ MmTestPointMmiHandler (
   )
 {
   MMI_HANDLER_TEST_POINT_PARAMETER_HEADER     *MmiHandlerTestPointParameterHeader;
-  MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *MmiHandlerTestPointParameterOffset;
+  MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *MmiHandlerTestPointParameterOffset; // MU_CHANGE - StandaloneMm Support
   UINTN                                       TempCommBufferSize;
 
   DEBUG((DEBUG_INFO, "MmTestPointMmiHandler Enter\n"));
@@ -320,7 +324,7 @@ MmTestPointMmiHandler (
     return EFI_SUCCESS;
   }
 
-  if (!IsCommBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) {
+  if (!IsCommBufferOutsideMmValid((UINTN)CommBuffer, TempCommBufferSize)) { // MU_CHANGE - StandaloneMm Support
     DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer in MMRAM or overflow!\n"));
     return EFI_SUCCESS;
   }
@@ -339,11 +343,13 @@ MmTestPointMmiHandler (
     break;
   case MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET:
     DEBUG((DEBUG_INFO, "MmiHandlerTestPointHandlerGetDataByOffset\n"));
+    // MU_CHANGE [START] - StandaloneMm Support
     MmiHandlerTestPointParameterOffset = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)CommBuffer;
     if (TempCommBufferSize != (sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET) + MmiHandlerTestPointParameterOffset->DataSize)) {
       DEBUG((DEBUG_INFO, "MmTestPointMmiHandler: MM communication buffer size invalid!\n"));
       return EFI_SUCCESS;
     }
+    // MU_CHANGE [END] - StandaloneMm Support
     MmTestPointMmiHandlerGetDataByOffset((MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)(UINTN)CommBuffer);
     break;
   default:

@@ -12,7 +12,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/DebugLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/MemoryAllocationLib.h>
-#include <Protocol/MmAccess.h>
+#include <Protocol/MmAccess.h> // MU_CHANGE
 
 CHAR8 *mSmramStateName[] = {
   "Open",
@@ -110,13 +110,13 @@ TestPointCheckSmmInfo (
   )
 {
   EFI_STATUS               Status;
-  EFI_MM_ACCESS_PROTOCOL *SmmAccess;
+  EFI_MM_ACCESS_PROTOCOL *SmmAccess; // MU_CHANGE
   UINTN                    Size;
   EFI_SMRAM_DESCRIPTOR     *SmramRanges;
 
   DEBUG ((DEBUG_INFO, "==== TestPointCheckSmmInfo - Enter\n"));
 
-  Status = gBS->LocateProtocol (&gEfiMmAccessProtocolGuid, NULL, (VOID **)&SmmAccess);
+  Status = gBS->LocateProtocol (&gEfiMmAccessProtocolGuid, NULL, (VOID **)&SmmAccess); // MU_CHANGE
   if (EFI_ERROR (Status)) {
     goto Done ;
   }

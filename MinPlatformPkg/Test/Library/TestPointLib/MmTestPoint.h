@@ -22,7 +22,7 @@
 #include <Library/TestPointLib.h>
 
 #include <Protocol/AdapterInformation.h>
-#include <Protocol/MmCommunication.h>
+#include <Protocol/MmCommunication.h> // MU_CHANGE - StandaloneMm Support
 
 #define TEST_POINT_AIP_PRIVATE_SIGNATURE  SIGNATURE_32('T', 'S', 'P', 'T')
 
@@ -82,6 +82,7 @@ IsBufferOutsideMmValid (
   IN UINT64                Length
   );
 
+// MU_CHANGE [START] - StandaloneMm Support
 /**
   This function check if the buffer is valid per processor architecture and not overlap with SMRAM.
   A separate function exists because Standalone MM compares the comm buffer using a different function
@@ -99,5 +100,6 @@ IsCommBufferOutsideMmValid (
   IN EFI_PHYSICAL_ADDRESS  Buffer,
   IN UINT64                Length
   );
+// MU_CHANGE [END] - StandaloneMm Support
 
 #endif

@@ -94,11 +94,13 @@ GetTestPointDataMm (
     return ;
   }
 
+  // MU_CHANGE [START] - StandaloneMm Support
   if (PiSmmCommunicationRegionTable == NULL) {
     ASSERT (PiSmmCommunicationRegionTable != NULL);
     DEBUG ((DEBUG_ERROR, "The PiSmmCommunicationRegionTable is NULL!\n"));
     return;
   }
+  // MU_CHANGE [END] - StandaloneMm Support
 
   Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
   Size = 0;
@@ -121,7 +123,7 @@ GetTestPointDataMm (
   CopyMem(&CommHeader->HeaderGuid, &gAdapterInfoPlatformTestPointGuid, sizeof(gAdapterInfoPlatformTestPointGuid));
   CommHeader->MessageLength = sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO);
 
-  CommGetInfo = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data)];
+  CommGetInfo = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
   CommGetInfo->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_INFO;
   CommGetInfo->Header.DataLength = sizeof(*CommGetInfo);
   CommGetInfo->Header.ReturnStatus = (UINT64)-1;
@@ -165,6 +167,7 @@ GetTestPointDataMm (
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
   Size -= CommSize;
 
+  // MU_CHANGE [START] - StandaloneMm Support
   CommGetData->DataSize = (UINT64)(mMmTestPointDatabaseSize);
   Status                = MmCommunication->Communicate (MmCommunication, CommBuffer, &CommSize);
   ASSERT_EFI_ERROR (Status);
@@ -177,6 +180,8 @@ GetTestPointDataMm (
   }
 
   CopyMem ((UINT8 *)mMmTestPointDatabase, (VOID *)(UINTN)CommGetData->Data, (UINTN)mMmTestPointDatabaseSize);
+  // MU_CHANGE [END] - StandaloneMm Support
+  DEBUG ((DEBUG_INFO, "MmTestPointDatabaseSize - 0x%x\n", mMmTestPointDatabaseSize));
 
   return ;
 }
