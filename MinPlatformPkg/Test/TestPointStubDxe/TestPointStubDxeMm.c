@@ -39,7 +39,7 @@ PublishPeiTestPoint (
     if (Hob.Raw == NULL) {
       return ;
     }
-    TestPoint     = GET_GUID_HOB_DATA (Hob);
+    TestPoint = GET_GUID_HOB_DATA (Hob);
     TestPointSize = GET_GUID_HOB_DATA_SIZE (Hob);
 
     TestPointLibSetTable (TestPoint, TestPointSize);
@@ -109,10 +109,8 @@ GetTestPointDataMm (
         break;
       }
     }
-
     Entry = (EFI_MEMORY_DESCRIPTOR *)((UINT8 *)Entry + PiSmmCommunicationRegionTable->DescriptorSize);
   }
-
   ASSERT(Index < PiSmmCommunicationRegionTable->NumberOfEntries);
   CommBuffer = (UINT8 *)(UINTN)Entry->PhysicalStart;
 
@@ -121,11 +119,11 @@ GetTestPointDataMm (
   //
   CommHeader = (EFI_MM_COMMUNICATE_HEADER *)&CommBuffer[0];
   CopyMem(&CommHeader->HeaderGuid, &gAdapterInfoPlatformTestPointGuid, sizeof(gAdapterInfoPlatformTestPointGuid));
-  CommHeader->MessageLength = sizeof (MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO);
+  CommHeader->MessageLength = sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO);
 
   CommGetInfo = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_INFO *)&CommBuffer[OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data)];
   CommGetInfo->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_INFO;
-  CommGetInfo->Header.DataLength = sizeof (*CommGetInfo);
+  CommGetInfo->Header.DataLength = sizeof(*CommGetInfo);
   CommGetInfo->Header.ReturnStatus = (UINT64)-1;
   CommGetInfo->DataSize = 0;
 
@@ -160,7 +158,7 @@ GetTestPointDataMm (
 
   CommGetData = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data)];
   CommGetData->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET;
-  CommGetData->Header.DataLength = sizeof (*CommGetData);
+  CommGetData->Header.DataLength = sizeof(*CommGetData);
   CommGetData->Header.ReturnStatus = (UINT64)-1;
 
   // Set comm size to the size of the comm header plus the size of the information we are trying to get
@@ -224,7 +222,6 @@ PublishMmTestPoint (
   if (mMmTestPointDatabaseSize == 0) {
     return ;
   }
-
   if (mMmTestPointDatabase == NULL) {
     return ;
   }
