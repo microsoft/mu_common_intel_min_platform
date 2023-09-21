@@ -75,9 +75,7 @@ GetTestPointDataMm (
   EDKII_PI_SMM_COMMUNICATION_REGION_TABLE             *PiSmmCommunicationRegionTable;
   UINT32                                              Index;
   EFI_MEMORY_DESCRIPTOR                               *Entry;
-  VOID                                                *Buffer;
   UINTN                                               Size;
-  UINTN                                               Offset;
 
   Status = gBS->LocateProtocol(&gEfiMmCommunicationProtocolGuid, NULL, (VOID **)&MmCommunication);
   if (EFI_ERROR(Status)) {
@@ -95,7 +93,15 @@ GetTestPointDataMm (
     DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: Get PiSmmCommunicationRegionTable - %r\n", Status));
     return ;
   }
-  ASSERT(PiSmmCommunicationRegionTable != NULL);
+
+  // MU_CHANGE [START] - StandaloneMm Support
+  if (PiSmmCommunicationRegionTable == NULL) {
+    ASSERT (PiSmmCommunicationRegionTable != NULL);
+    DEBUG ((DEBUG_ERROR, "The PiSmmCommunicationRegionTable is NULL!\n"));
+    return;
+  }
+  // MU_CHANGE [END] - StandaloneMm Support
+
   Entry = (EFI_MEMORY_DESCRIPTOR *)(PiSmmCommunicationRegionTable + 1);
   Size = 0;
   for (Index = 0; Index < PiSmmCommunicationRegionTable->NumberOfEntries; Index++) {
@@ -149,38 +155,32 @@ GetTestPointDataMm (
 
   CommHeader = (EFI_MM_COMMUNICATE_HEADER *)&CommBuffer[0];
   CopyMem(&CommHeader->HeaderGuid, &gAdapterInfoPlatformTestPointGuid, sizeof(gAdapterInfoPlatformTestPointGuid));
-  CommHeader->MessageLength = sizeof(MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET);
+  // Set message length to the struct size and the size of the MmTestPoint Data
+  CommHeader->MessageLength = sizeof (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET) + mMmTestPointDatabaseSize;
 
-  CommGetData = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF(EFI_MM_COMMUNICATE_HEADER, Data)];
+  CommGetData = (MMI_HANDLER_TEST_POINT_PARAMETER_GET_DATA_BY_OFFSET *)&CommBuffer[OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data)];
   CommGetData->Header.Command = MMI_HANDLER_TEST_POINT_COMMAND_GET_DATA_BY_OFFSET;
   CommGetData->Header.DataLength = sizeof(*CommGetData);
   CommGetData->Header.ReturnStatus = (UINT64)-1;
 
+  // Set comm size to the size of the comm header plus the size of the information we are trying to get
   CommSize = OFFSET_OF (EFI_MM_COMMUNICATE_HEADER, Data) + (UINTN)CommHeader->MessageLength;
-  Buffer = (UINT8 *)CommHeader + CommSize;
   Size -= CommSize;
 
-  CommGetData->DataBuffer = (PHYSICAL_ADDRESS)(UINTN)Buffer;
-  CommGetData->DataOffset = 0;
-  while (CommGetData->DataOffset < mMmTestPointDatabaseSize) {
-    Offset = (UINTN)CommGetData->DataOffset;
-    if (Size <= (mMmTestPointDatabaseSize - CommGetData->DataOffset)) {
-      CommGetData->DataSize = (UINT64)Size;
-    } else {
-      CommGetData->DataSize = (UINT64)(mMmTestPointDatabaseSize - CommGetData->DataOffset);
-    }
-    Status = MmCommunication->Communicate(MmCommunication, CommBuffer, &CommSize);
-    ASSERT_EFI_ERROR(Status);
+  // MU_CHANGE [START] - StandaloneMm Support
+  CommGetData->DataSize = (UINT64)(mMmTestPointDatabaseSize);
+  Status                = MmCommunication->Communicate (MmCommunication, CommBuffer, &CommSize);
+  ASSERT_EFI_ERROR (Status);
 
-    if (CommGetData->Header.ReturnStatus != 0) {
-      FreePool(mMmTestPointDatabase);
-      mMmTestPointDatabase = NULL;
-      DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: GetData - 0x%x\n", CommGetData->Header.ReturnStatus));
-      return ;
-    }
-    CopyMem((UINT8 *)mMmTestPointDatabase + Offset, (VOID *)(UINTN)CommGetData->DataBuffer, (UINTN)CommGetData->DataSize);
+  if (CommGetData->Header.ReturnStatus != 0) {
+    FreePool (mMmTestPointDatabase);
+    mMmTestPointDatabase = NULL;
+    DEBUG ((DEBUG_INFO, "MmiHandlerTestPoint: GetData - 0x%x\n", CommGetData->Header.ReturnStatus));
+    return;
   }
 
+  CopyMem ((UINT8 *)mMmTestPointDatabase, (VOID *)(UINTN)CommGetData->Data, (UINTN)mMmTestPointDatabaseSize);
+  // MU_CHANGE [END] - StandaloneMm Support
   DEBUG ((DEBUG_INFO, "MmTestPointDatabaseSize - 0x%x\n", mMmTestPointDatabaseSize));
 
   return ;

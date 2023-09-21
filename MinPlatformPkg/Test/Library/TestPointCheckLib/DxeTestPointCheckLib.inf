@@ -94,7 +94,7 @@
 [Protocols]
   gEfiPciIoProtocolGuid
   gEfiPciRootBridgeIoProtocolGuid
-  gEfiSmmAccess2ProtocolGuid
+  gEfiMmAccessProtocolGuid         #MU_CHANGE - Standalone MM support
   gEdkiiVarCheckProtocolGuid
   gEfiLoadedImageProtocolGuid
   gEfiLoadedImageDevicePathProtocolGuid
