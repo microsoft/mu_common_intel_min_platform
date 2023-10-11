@@ -142,7 +142,7 @@ TestPointCheckLoadOptionVariable (
         if (EFI_ERROR(Status)) {
           TestPointLibAppendErrorString (
             PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-            NULL,
+            TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE,
             TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_CODE \
               TEST_POINT_READY_TO_BOOT \
               TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_STRING
@@ -183,7 +183,7 @@ TestPointCheckPlatformRecoveryOptionVariable (
           ReturnStatus = Status;
           TestPointLibAppendErrorString (
             PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-            NULL,
+            TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE,
             TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_CODE \
               TEST_POINT_READY_TO_BOOT \
               TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_BOOT_VARIABLE_FUNCTIONAL_ERROR_STRING
