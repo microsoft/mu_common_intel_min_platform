@@ -99,7 +99,7 @@ TestPointCheckPciBusMaster (
               DEBUG ((DEBUG_INFO, "PCI BME enabled (S%04x.B%02x.D%02x.F%x - %04x)\n", Segment, Bus, Device, Function, Command));
               TestPointLibAppendErrorString (
                 PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-                NULL,
+                TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
                 TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_CODE \
                   TEST_POINT_END_OF_PEI \
                   TEST_POINT_BYTE2_END_OF_PEI_PCI_BUS_MASTER_DISABLED_ERROR_STRING
