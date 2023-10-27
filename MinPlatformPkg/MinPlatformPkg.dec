@@ -324,12 +324,6 @@
 
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformMemoryCheckLevel|0|UINT32|0x30000009
 
-  ## Controls whether the FSP NVS buffer is saved as compressed data.
-  # Data compression can significantly reduce variable storage usage for FSP NVS buffer data.
-  # Platforms that choose to compress the data will need to decompress the variable data upon
-  # extraction.
-  gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer|FALSE|BOOLEAN|0x30000010
-
   ## This PCD is to control which device is the potential trusted console input device.<BR><BR>
   # For example:<BR>
   # USB Short Form: UsbHID(0xFFFF,0xFFFF,0x1,0x1)<BR>
@@ -360,7 +354,12 @@
   #   //Header<BR>
   #      0x7F, 0xFF, 0x04, 0x00}<BR>
   gMinPlatformPkgTokenSpaceGuid.PcdTrustedStorageDevicePath|{0x02, 0x01, 0x0C, 0x00, 0xd0, 0x41, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x17, 0x7F, 0xFF, 0x04, 0x00}|VOID*|0x3000010
-  gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer|FALSE|BOOLEAN|0x30000011
+  
+  ## Controls whether the FSP NVS buffer is saved as compressed data.
+  # Data compression can significantly reduce variable storage usage for FSP NVS buffer data.
+  # Platforms that choose to compress the data will need to decompress the variable data upon
+  # extraction.
+  gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer|FALSE|BOOLEAN|0x30000010
   ## ACPI
   gMinPlatformPkgTokenSpaceGuid.PcdFadtPreferredPmProfile|0x02|UINT8|0x90000025
   gMinPlatformPkgTokenSpaceGuid.PcdFadtIaPcBootArch|0x0001|UINT16|0x90000026
