@@ -1,6 +1,6 @@
 ## @ RebaseFspBinBaseAddress.py
 #
-# Copyright (c) 2019 - 2021, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2019 - 2023, Intel Corporation. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 
@@ -65,11 +65,7 @@ file.close()
 # Get FSP-M Size, in order to calculate the FSP-T Base. Used SplitFspBin.py script
 # to dump the header, and get the ImageSize in FSP-M section
 #
-pythontool = 'python'
-if 'PYTHON_HOME' in os.environ:
-    pythontool = os.environ['PYTHON_HOME'] + os.sep + 'python'
-else:
-    pythontool = sys.executable
+pythontool = sys.executable
 Process = subprocess.Popen([pythontool, splitFspBinPath, "info","-f",fspBinFilePath], stdout=subprocess.PIPE)
 Output = Process.communicate()[0]
 FsptInfo = Output.rsplit(b"FSP_M", 1);
