@@ -1,6 +1,6 @@
 ## @ PatchBinFv.py
 #
-# Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+# Copyright (c) 2017 - 2023, Intel Corporation. All rights reserved.<BR>
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
 ##
@@ -11,7 +11,6 @@ import sys
 import time
 import shutil
 import struct
-import binascii
 from   ctypes import *
 
 class FileChecker:
@@ -30,20 +29,20 @@ class FileChecker:
     def IsSyncSection(self, line):
         name = self.GetSectionName(line)
         for sectionName in self.SyncSectionList:
-            if (cmp (sectionName, name) == 0) :
+            if sectionName == name:
                 return True
         return False
 
     def PrintPcdList(self, pcdList):
         for pcd in pcdList:
-            print "PCD: " + pcd[0] + "|" + pcd[1] + "|" + pcd[2] + " <== " + pcd[3] + "(" + pcd[4] + ")"
+            print(("PCD: {0} | {1} | {2} <== {3}({4})".format(*pcd)))
 
     def GetInfFileGuid(self, fileName):
         guid = ""
         try :
             file = open(fileName)
         except Exception:
-            print "fail to open " + fileName
+            print("fail to open " + fileName)
             return
         try:
             while 1:
@@ -53,7 +52,7 @@ class FileChecker:
 
                 newline = line[:-1]
 
-                if cmp (line[:11], "  FILE_GUID") == 0:
+                if line[:11] == "  FILE_GUID":
                     splitLine = line.split("=")
                     templine = splitLine[1]
                     guid = templine[1:1+36]
@@ -66,7 +65,7 @@ class FileChecker:
         try :
             file = open(fileName)
         except Exception:
-            print "fail to open " + fileName
+            print("fail to open " + fileName)
             return
         try:
             while 1:
@@ -76,23 +75,23 @@ class FileChecker:
 
                 newline = line[:-1]
 
-                if cmp (line[0], "#") == 0:
+                if line[0] == "#":
                     continue
 
 
-                if cmp (line[0], "[") == 0:
+                if line[0] == "[":
                     SyncToDest = self.IsSyncSection(line)
                     PatchOffset = False
 
-                if (cmp (self.GetSectionName(line), "PatchPcd") == 0) :
+                if (self.GetSectionName(line) == "PatchPcd"):
                     PatchOffset = True
                     continue
 
                 if SyncToDest == True :
                     line = line.strip()
-                    if (cmp (line, "") == 0) :
+                    if line == "":
                         continue
-                    if (cmp (line[0], "#") == 0) :
+                    if line[0] == "#":
                         continue
 
                     splitLine = line.split(" ")
@@ -108,9 +107,9 @@ class FileChecker:
 
     def ProcessFvInf(self, fvName):
         sourceFileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".inf")
-        print "\nprocessing - " + sourceFileName
+        print("\nprocessing - " + sourceFileName)
         fileGuid = self.GetInfFileGuid (sourceFileName)
-        print "FV NAME GUID - " + fileGuid
+        print("FV NAME GUID - " + fileGuid)
 
         self.InfPcdList = []
         self.ParseInfFile(sourceFileName)
@@ -122,12 +121,12 @@ class FileChecker:
         try :
             file = open(self.reportFile)
         except Exception:
-            print "fail to open " + self.reportFile
+            print("fail to open " + self.reportFile)
             return
         try:
             for pcd in self.InfPcdList:
                 file.seek(0)
-                print "checking - " + pcd[0]
+                print("checking - " + pcd[0])
                 ValuePair = self.GetPcdFromReport (file, pcd[0])
                 pcd[3] = ValuePair[0]
                 pcd[4] = ValuePair[1]
@@ -138,12 +137,12 @@ class FileChecker:
 
     def PatchFv(self, fvName):
         sourceFileName = os.path.join(self.sourceRoot,fvName,self.target,fvName+".Fv")
-        print "patching - " + sourceFileName
+        print("patching - " + sourceFileName)
 
         try :
             file = open(sourceFileName, "rb")
         except Exception:
-            print "fail to open " + sourceFileName
+            print("fail to open " + sourceFileName)
             return
         try:
             buffer = file.read()
@@ -152,21 +151,21 @@ class FileChecker:
 
             for pcd in self.InfPcdList:
                 offset = int(pcd[2], 16)
-                if (cmp (pcd[4], "BOOLEAN") == 0) or (cmp (pcd[4], "UINT8") == 0):
+                if (pcd[4] == "BOOLEAN") or (pcd[4] == "UINT8"):
                     b = struct.pack("B", int(pcd[3],16))
-                    print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+1]) + " <= " + binascii.hexlify(b)
+                    print("  [" + hex(offset) + "] " + bytes(data[offset:offset+1]).hex() + " <= " + bytes(b).hex())
                     data[offset:offset+1] = b
-                elif (cmp (pcd[4], "UINT16") == 0):
+                elif (pcd[4] == "UINT16"):
                     h = struct.pack("H", int(pcd[3],16))
-                    print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+2]) + " <= " + binascii.hexlify(h)
+                    print("  [" + hex(offset) + "] " + bytes(data[offset:offset+2]).hex() + " <= " + bytes(h).hex())
                     data[offset:offset+2] = h
-                elif (cmp (pcd[4], "UINT32") == 0):
+                elif (pcd[4] == "UINT32"):
                     l = struct.pack("I", int(pcd[3],16))
-                    print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+4]) + " <= " + binascii.hexlify(l)
+                    print("  [" + hex(offset) + "] " + bytes(data[offset:offset+4]).hex() + " <= " + bytes(l).hex())
                     data[offset:offset+4] = l
-                elif (cmp (pcd[4], "UINT64") == 0):
+                elif (pcd[4] == "UINT64"):
                     q = struct.pack("Q", int(pcd[3],16))
-                    print "  [" + hex(offset) + "] " + binascii.hexlify(data[offset:offset+8]) + " <= " + binascii.hexlify(q)
+                    print("  [" + hex(offset) + "] " + bytes(data[offset:offset+8]).hex() + " <= " + bytes(q).hex())
                     data[offset:offset+8] = q
             file = open(sourceFileName, "wb")
             file.write(data)
@@ -185,36 +184,36 @@ class FileChecker:
 
             newline = line[:-1]
 
-            if (cmp (newline, TargetPkg) == 0):
+            if (newline == TargetPkg):
                 FoundPkg = True
                 continue
 
-            if (cmp (newline, "") == 0) or ((cmp (newline[0], " ") != 0) and (cmp (newline[0], "0") != 0)):
+            if (newline == "") or ((newline[0] != " ") and (newline[0] != "0")):
                 FoundPkg = False
 
             if (FoundPkg == True) :
                 newline = newline.strip()
                 splitLine = newline.split(" ", 2)
-                if (cmp (splitLine[0], "*F") == 0) or (cmp (splitLine[0], "*P") == 0):
-                    if (cmp (splitLine[1], TargetPcd) == 0):
-                        print "found - " + TargetPkg + "." + TargetPcd
+                if (splitLine[0] == "*F") or (splitLine[0] == "*P"):
+                    if (splitLine[1] == TargetPcd):
+                        print("found - " + TargetPkg + "." + TargetPcd)
 
                         splitLine = splitLine[2].strip()[1:].strip().split(" ", 1)
-                        if (cmp (splitLine[0], "FIXED") == 0) or (cmp (splitLine[0], "PATCH") == 0):
+                        if (splitLine[0] == "FIXED") or (splitLine[0] == "PATCH"):
                             SplitLine = splitLine[1].strip()[1:].split(")", 1)
                             Type = SplitLine[0]
                             Value = SplitLine[1].strip()[1:].strip().split()[0]
-                            print "  Type - (" + Type + "), Value - (" + Value + ")"
+                            print("  Type - (" + Type + "), Value - (" + Value + ")")
                             return [Value, Type]
         return ["", ""]
-            
+
 def main():
     global FileChecker
 
     fileChecker = FileChecker()
 
     if (len(sys.argv) != 5) :
-        print "usage: PatchBinFv <Target> <SourceRoot> <ReportFile> <FvName>"
+        print("usage: PatchBinFv <Target> <SourceRoot> <ReportFile> <FvName>")
         return 0
 
     fileChecker.target = sys.argv[1]
