@@ -15,50 +15,50 @@ It is organized so that common code can be made available to any platform with m
 
 This repository is part of Project Mu.  Please see Project Mu for details https://microsoft.github.io/mu
 
-Branch Status - release/202308
+Branch Status - release/202311
 ==============================
 
 :Status:
   In Development
 
 :Entered Development:
-  October 2023
+  December 2023
 
 :Anticipated Stabilization:
   February 2024
 
-Branch Changes - release/202308
+Branch Changes - release/202311
 ===============================
 
 Breaking Changes-dev
 --------------------
 
-- None
+- Incomplete
 
 Main Changes-dev
 ----------------
 
-- None
+- Incomplete
 
 Bug Fixes-dev
 -------------
 
-- None
+- Incomplete
 
-2308_RefBoot Changes
+2311_RefBoot Changes
 --------------------
 
 - Incomplete
 
-2308_CIBuild Changes
+2311_CIBuild Changes
 --------------------
 
 - Incomplete
 
-2308_Rebase Changes
+2311_Rebase Changes
 -------------------
 
-| Starting commit: 118b1545 ("Repo File Sync: Include Rust Env Exclusions in CodeQL Workflow (#207)", 2023-10-25)
+| Starting commit: 118b1545 ("Updated CISettings.py for pipeline testing", 2023-12-14)
 | Destination commit: TBD
 
 Repo Maintenance
@@ -67,7 +67,7 @@ Repo Maintenance
 Upstream Sync Details
 ---------------------
 
-- edk2_platforms - e509ac5a72 ("Platform/SbsaQemu: add GIC ITS support", 2023-08-22)
+- edk2_platforms - 10e2eb030d ("multiple Arm platforms: set WritePolicyValid for all cache types", 2023-11-22)
 
 Instructions
 ------------
@@ -170,12 +170,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 .. CoreCI
 
-.. _Windows_VS2022: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202308
-.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2022?branchName=release%2F202308
+.. _Windows_VS2022: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=71&&branchName=release%2F202311
+.. |WindowsCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20VS2022?branchName=release%2F202311
 .. |WindowsCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/71.svg
 .. |WindowsCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
 
-.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202308
-.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202308
+.. _Ubuntu_GCC5: https://dev.azure.com/projectmu/mu/_build/latest?definitionId=72&branchName=release%2F202311
+.. |UbuntuCiBuild| image:: https://dev.azure.com/projectmu/mu/_apis/build/status/CI/Mu%20Common%20Intel%20MinPlatform%20CI%20Ubuntu%20GCC5?branchName=release%2F202311
 .. |UbuntuCiTest| image:: https://img.shields.io/azure-devops/tests/projectmu/mu/72.svg
 .. |UbuntuCiCoverage| image:: https://img.shields.io/badge/coverage-coming_soon-blue
