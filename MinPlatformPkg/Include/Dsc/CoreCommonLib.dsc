@@ -151,6 +151,11 @@
   #
   # CryptLib
   #
+
+  # MU_CHANGE - Remove Openssl crypto references
+  #IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
+  #OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
+
   RngLib|MdePkg/Library/BaseRngLib/BaseRngLib.inf
 
   Tpm12DeviceLib|SecurityPkg/Library/Tpm12DeviceLibDTpm/Tpm12DeviceLibDTpm.inf
