@@ -34,7 +34,7 @@
 
   TpmMeasurementLib|SecurityPkg/Library/DxeTpmMeasurementLib/DxeTpmMeasurementLib.inf
 
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf
+  #BaseCryptLib|CryptoPkg/Library/BaseCryptLib/BaseCryptLib.inf  MU_CHANGE - Remove Openssl crypto references
 
   Tpm2DeviceLib|SecurityPkg/Library/Tpm2DeviceLibRouter/Tpm2DeviceLibRouterDxe.inf
   HashLib|SecurityPkg/Library/HashLibBaseCryptoRouter/HashLibBaseCryptoRouterDxe.inf
@@ -89,7 +89,7 @@
 
   CpuExceptionHandlerLib|UefiCpuPkg/Library/CpuExceptionHandlerLib/SmmCpuExceptionHandlerLib.inf
   Tcg2PhysicalPresenceLib|SecurityPkg/Library/SmmTcg2PhysicalPresenceLib/SmmTcg2PhysicalPresenceLib.inf
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/SmmCryptLib.inf
+  #BaseCryptLib|CryptoPkg/Library/BaseCryptLib/SmmCryptLib.inf  MU_CHANGE - Remove Openssl crypto references
   VariableReadLib|MinPlatformPkg/Library/SmmVariableReadLib/TraditionalMmVariableReadLib.inf
   VariableWriteLib|MinPlatformPkg/Library/SmmVariableWriteLib/TraditionalMmVariableWriteLib.inf
 
@@ -105,7 +105,7 @@
 
 [LibraryClasses.common.DXE_RUNTIME_DRIVER]
   ReportStatusCodeLib|MdeModulePkg/Library/RuntimeDxeReportStatusCodeLib/RuntimeDxeReportStatusCodeLib.inf
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf
+  #BaseCryptLib|CryptoPkg/Library/BaseCryptLib/RuntimeCryptLib.inf  MU_CHANGE - Remove Openssl crypto references
   VariablePolicyLib|MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLibRuntimeDxe.inf
 
 [LibraryClasses.common.UEFI_APPLICATION]

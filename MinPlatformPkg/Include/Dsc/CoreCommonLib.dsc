@@ -151,8 +151,10 @@
   #
   # CryptLib
   #
-  IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
-  OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
+
+  # MU_CHANGE - Remove Openssl crypto references
+  #IntrinsicLib|CryptoPkg/Library/IntrinsicLib/IntrinsicLib.inf
+  #OpensslLib|CryptoPkg/Library/OpensslLib/OpensslLib.inf
 
   RngLib|MdePkg/Library/BaseRngLib/BaseRngLib.inf
 

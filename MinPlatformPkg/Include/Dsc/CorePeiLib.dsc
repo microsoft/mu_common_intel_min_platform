@@ -47,7 +47,7 @@
   TimerLib|PcAtChipsetPkg/Library/AcpiTimerLib/PeiAcpiTimerLib.inf
 
 [LibraryClasses.common.PEIM]
-  BaseCryptLib|CryptoPkg/Library/BaseCryptLib/PeiCryptLib.inf
+  #BaseCryptLib|CryptoPkg/Library/BaseCryptLib/PeiCryptLib.inf  MU_CHANGE - Remove Openssl crypto references
 
   Tpm2DeviceLib|SecurityPkg/Library/Tpm2DeviceLibRouter/Tpm2DeviceLibRouterPei.inf
   HashLib|SecurityPkg/Library/HashLibBaseCryptoRouter/HashLibBaseCryptoRouterPei.inf
