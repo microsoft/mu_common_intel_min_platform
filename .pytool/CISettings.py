@@ -18,14 +18,7 @@ from edk2toolext.invocables.edk2_pr_eval import PrEvalSettingsManager
 from edk2toollib.utility_functions import GetHostInfo
 from pathlib import Path
 
-try:
-    # May not be present until submodules are populated
-    root = Path(__file__).parent.parent.resolve()
-    sys.path.append(str(root/'MU_BASECORE'/'.pytool'/'Plugin'/'CodeQL'/'integration'))
-    import stuart_codeql as codeql_helpers
-except ImportError:
-    pass
-
+from edk2toolext import codeql as codeql_helpers
 
 class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsManager, SetupSettingsManager, PrEvalSettingsManager):
 
@@ -221,17 +214,17 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
             {
                 "Path": "Common/MU_TIANO",
                 "Url": "https://github.com/microsoft/mu_tiano_plus.git",
-                "Branch": "release/202311"
+                "Branch": "release/202302"
             },
             {
                 "Path": "MU_BASECORE",
                 "Url": "https://github.com/microsoft/mu_basecore.git",
-                "Branch": "release/202311"
+                "Branch": "release/202302"
             },
             {
                 "Path": "Silicon/Intel/MU_TIANO",
                 "Url": "https://github.com/microsoft/mu_silicon_intel_tiano.git",
-                "Branch": "release/202311"
+                "Branch": "release/202302"
             }
         ]
 
