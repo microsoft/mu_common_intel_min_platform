@@ -1,7 +1,7 @@
 /** @file
   Fsp related definitions
 
-Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2024, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -36,7 +36,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // Fsp Header
 //
-#define FSP_HEADER_IMAGEBASE_OFFSET     0x1C
-#define FSP_HEADER_TEMPRAMINIT_OFFSET   0x30
+#define FSP_HEADER_IMAGEBASE_OFFSET   0x1C
+#define FSP_HEADER_TEMPRAMINIT_OFFSET 0x30
 
 #endif

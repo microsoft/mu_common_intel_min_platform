@@ -1,7 +1,7 @@
 ## @file
 #  Provide FSP wrapper platform sec related function.
 #
-#  Copyright (c) 2017 - 2021, Intel Corporation. All rights reserved.<BR>
+#  Copyright (c) 2017 - 2024, Intel Corporation. All rights reserved.<BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 #
@@ -47,7 +47,11 @@
   Ia32/SecEntry.nasm
   Ia32/PeiCoreEntry.nasm
   Ia32/Stack.nasm
-  Ia32/Fsp.h
+
+[Sources.X64]
+  X64/SecEntry.nasm
+  X64/PeiCoreEntry.nasm
+  X64/Stack.nasm
 
 ################################################################################
 #
@@ -96,3 +100,7 @@
   gIntelFsp2WrapperTokenSpaceGuid.PcdFspmBaseAddress                  ## CONSUMES
   gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection                 ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdFspDispatchModeUseFspPeiMain       ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperResetVectorInFsp         ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBfvforResetVectorInFsp   ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFsptUpdHeaderRevision              ## CONSUMES
+  gMinPlatformPkgTokenSpaceGuid.PcdFsptArchUpdRevision                ## CONSUMES

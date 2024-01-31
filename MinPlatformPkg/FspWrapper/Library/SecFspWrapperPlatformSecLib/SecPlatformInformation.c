@@ -1,7 +1,7 @@
 /** @file
   Provide SecPlatformInformation function.
 
-Copyright (c) 2017 - 2019, Intel Corporation. All rights reserved.<BR>
+Copyright (c) 2017 - 2024, Intel Corporation. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -59,9 +59,9 @@ SecPlatformInformation (
   // This routine copies the BIST information to the buffer pointed by
   // PlatformInformationRecord for output.
   //
-  TopOfTemporaryRam = (UINTN) TopOfTemporaryRamPpi - sizeof (UINT32);
-  TopOfTemporaryRam -= sizeof (UINT32) * 2;
-  Count             = *((UINT32 *)(TopOfTemporaryRam - sizeof (UINT32)));
+  TopOfTemporaryRam = (UINTN) TopOfTemporaryRamPpi - sizeof (UINTN);
+  TopOfTemporaryRam -= sizeof (UINTN) * 2;
+  Count             = *((UINT32 *)(UINTN) (TopOfTemporaryRam - sizeof (UINT32)));
   Size              = Count * sizeof (IA32_HANDOFF_STATUS);
 
   if ((*StructureSize) < (UINT64) Size) {
