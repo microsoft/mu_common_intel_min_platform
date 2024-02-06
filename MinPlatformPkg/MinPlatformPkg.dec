@@ -88,6 +88,8 @@
   LargeVariableReadLib|Include/Library/LargeVariableReadLib.h
   LargeVariableWriteLib|Include/Library/LargeVariableWriteLib.h
 
+  PhatAcpiLib|Include/Library/PhatAcpiLib.h
+
 [PcdsFixedAtBuild, PcdsPatchableInModule]
 
   gMinPlatformPkgTokenSpaceGuid.PcdFspMaxUpdSize|0x00000000|UINT32|0x80000000

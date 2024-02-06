@@ -1,0 +1,45 @@
+## @file
+#  Dxe Platform Health Assessment Table Library
+#
+#  Copyright (c) 2024, Intel Corporation. All rights reserved.<BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+###
+
+[Defines]
+  INF_VERSION    = 0x00010017
+  BASE_NAME      = DxePhatAcpiLib
+  FILE_GUID      = 3932BB84-ADFB-4C7A-BC59-E33FC7AD6E20
+  VERSION_STRING = 1.0
+  MODULE_TYPE    = DXE_DRIVER
+  LIBRARY_CLASS  = DxePhatAcpiLib|DXE_DRIVER
+
+[Sources]
+  DxePhatAcpiLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[LibraryClasses]
+  DebugLib
+  BaseMemoryLib
+  MemoryAllocationLib
+  UefiBootServicesTableLib
+
+[Guids]
+  gEfiAcpiTableGuid           ## CONSUMES
+  gEfiAcpi10TableGuid         ## CONSUMES
+
+[Protocols]
+  gEfiAcpiTableProtocolGuid   ## CONSUMES
+  gEfiAcpiSdtProtocolGuid     ## CONSUMES
+
+[Pcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId        ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision  ## CONSUMES
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemRevision      ## CONSUMES
+
+[Depex]
+  TRUE
