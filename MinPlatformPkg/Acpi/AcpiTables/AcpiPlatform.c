@@ -975,7 +975,7 @@ InstallMcfgFromScratch (
              FixedPcdGet32 (PcdAcpiDefaultOemRevision)
              );
   if (EFI_ERROR (Status)) {
-    return Status;
+    goto Done;
   }
 
   //
@@ -1002,7 +1002,8 @@ InstallMcfgFromScratch (
                          McfgTable->Header.Length,
                          &TableHandle
                          );
-
+Done:
+  FreePool (McfgTable);
   return Status;
 }
 
