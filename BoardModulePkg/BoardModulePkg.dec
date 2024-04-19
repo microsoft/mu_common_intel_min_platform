@@ -22,7 +22,7 @@
 
 [Includes]
   Include
-  Test/Mock/Include
+  Test/Mock/Include  # MU_CHANGE
 
 [LibraryClasses]
   ##  @libraryclass    Provide services to access CMOS area.
