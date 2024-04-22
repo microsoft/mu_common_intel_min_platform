@@ -1,6 +1,7 @@
 /** @file
 
 Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
+Copyright (C) 2024 Advanced Micro Devices, Inc. All rights reserved.<BR>
 SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
@@ -235,8 +236,9 @@ DumpAcpiMadt (
       DEBUG ((DEBUG_INFO, "\n"));
       break;
     }
-    ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);
+    // Update MadtLen first to avoid the dead loop and system hang
     MadtLen         -= ApicStructHeader->Length;
+    ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);
   }
 }
 
@@ -324,8 +326,9 @@ CheckAcpiMadt (
     default:
       break;
     }
-    ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);
+    // Update MadtLen first to avoid the dead loop and system hang
     MadtLen         -= ApicStructHeader->Length;
+    ApicStructHeader = (APIC_STRUCT_HEADER *)((UINT8 *)ApicStructHeader + ApicStructHeader->Length);
   }
   return EFI_SUCCESS;
 }
