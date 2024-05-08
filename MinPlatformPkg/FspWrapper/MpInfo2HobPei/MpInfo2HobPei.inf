@@ -1,0 +1,47 @@
+### @file
+# Component information file for the Multi-processor Info 2 HOB PEIM.
+#
+# The purpose of this PEIM is to provide backwards compatibility between FSP
+# binaries built with older versions of EDK II and the latest EDK II.
+#
+# Newer versions of CpuMpPei produce the gMpInformation2HobGuid. This HOB is
+# required by newer implementations of the CPU DXE driver, however older
+# versions of CpuMpPei do not produce it. This PEIM will check if CpuMpPei
+# creates gMpInformation2HobGuid and if it does not it creates it.
+#
+# Copyright (c) 2024, Intel Corporation. All rights reserved.<BR>
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+###
+
+[Defines]
+  INF_VERSION                    = 0x00010017
+  BASE_NAME                      = MpInfo2HobPei
+  FILE_GUID                      = 010B5607-D5B3-4302-BCBC-C1A68087E9BE
+  VERSION_STRING                 = 1.0
+  MODULE_TYPE                    = PEIM
+  ENTRY_POINT                    = MpInfo2HobPeiEntryPoint
+
+[LibraryClasses]
+  PeimEntryPoint
+  DebugLib
+  MemoryAllocationLib
+  HobLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[Sources]
+  MpInfo2HobPei.c
+
+[Guids]
+  gMpInformation2HobGuid                        ## SOMETIMES_PRODUCES   ## HOB
+
+[Ppis]
+  gEdkiiPeiMpServices2PpiGuid                   ## CONSUMES
+
+[Depex]
+  gEdkiiPeiMpServices2PpiGuid
