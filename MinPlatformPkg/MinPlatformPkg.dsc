@@ -64,7 +64,7 @@
   PciSegmentInfoLib|MinPlatformPkg/Pci/Library/PciSegmentInfoLibSimple/PciSegmentInfoLibSimple.inf
   PlatformBootManagerLib|MinPlatformPkg/Bds/Library/DxePlatformBootManagerLib/DxePlatformBootManagerLib.inf
   AslUpdateLib|MinPlatformPkg/Acpi/Library/DxeAslUpdateLib/DxeAslUpdateLib.inf
-  PhatAcpiLib|MinPlatformPkg/Acpi/Library/DxePhatAcpiLib/DxePhatAcpiLib.inf
+  PhatAcpiLib|MinPlatformPkg/Acpi/Library/PhatAcpiLib/DxePhatAcpiLib.inf
 
   #
   # Misc
@@ -210,7 +210,7 @@
   MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableReadLib.inf
   MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableWriteLib.inf
 
-  MinPlatformPkg/Acpi/Library/DxePhatAcpiLib/DxePhatAcpiLib.inf
+  MinPlatformPkg/Acpi/Library/PhatAcpiLib/DxePhatAcpiLib.inf
 
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
