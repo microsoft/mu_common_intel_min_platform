@@ -71,7 +71,7 @@ TestPointDumpMemoryMap (
 
   ZeroMem (Pages, sizeof (Pages));
 
-  DEBUG ((EFI_D_INFO, "MemoryMap:\n"));
+  DEBUG ((DEBUG_INFO, "MemoryMap:\n"));
 
   Entry           = MemoryMap;
   NumberOfEntries = MemoryMapSize / DescriptorSize;
