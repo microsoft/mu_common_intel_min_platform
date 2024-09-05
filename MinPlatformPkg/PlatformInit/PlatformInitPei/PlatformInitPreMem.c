@@ -30,6 +30,9 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Ppi/PlatformMemorySize.h>
 #include <Ppi/BaseMemoryTest.h>
 #include <Ppi/PlatformInitTempRamExitPpi.h>
+// MU_CHANGE Make PlatformInitPreMem silicon independent
+#include <Library/FspSupportLib.h>
+// MU_CHANGE end
 
 EFI_STATUS
 EFIAPI
@@ -516,7 +519,10 @@ PlatformInitPreMem (
 
   BuildMemoryTypeInformation ();
 
-  if ((!PcdGetBool (PcdFspWrapperBootMode)) || (PcdGet8 (PcdFspModeSelection) == 0)) {
+// MU_CHANGE Make PlatformInitPreMem silicon independent
+//if ((!PcdGetBool (PcdFspWrapperBootMode)) || (PcdGet8 (PcdFspModeSelection) == 0)) {
+  if ((!FspGetWrapperBootMode()) || (FspGetModeSelection() == 0)) {
+// MU_CHANGE end
     //
     // Install memory relating PPIs for EDKII native build and FSP dispatch mode
     //

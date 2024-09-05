@@ -88,6 +88,9 @@
   NULL|MdePkg/Library/StackCheckLibNull/StackCheckLibNull.inf # MU_CHANGE: /GS and -fstack-protector support
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLibNull/TestPointCheckLibNull.inf
   TestPointPciSpeedInfoLib|MinPlatformPkg/Library/TestPointPciSpeedInfoLibNull/TestPointPciSpeedInfoLibNull.inf
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  FspSupportLib|MinPlatformPkg/Library/FspSupportLib/FspSupportLib.inf
+  # MU_CHANGE end
 
 [LibraryClasses.common.SEC]
   TestPointCheckLib|MinPlatformPkg/Test/Library/TestPointCheckLib/SecTestPointCheckLib.inf
@@ -237,6 +240,9 @@
   MinPlatformPkg/Library/BaseLargeVariableLib/BaseLargeVariableWriteLib.inf
 
   MinPlatformPkg/Acpi/Library/PhatAcpiLib/DxePhatAcpiLib.inf
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  MinPlatformPkg/Library/FspSupportLib/FspSupportLib.inf
+  # MU_CHANGE end
 
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES

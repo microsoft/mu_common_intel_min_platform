@@ -28,19 +28,28 @@
   TimerLib
   SetCacheMtrrLib
   ReportCpuHobLib
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  FspSupportLib
+  # MU_CHANGE end
 
 [Packages]
   MinPlatformPkg/MinPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-  IntelSiliconPkg/IntelSiliconPkg.dec
-  IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  # IntelSiliconPkg/IntelSiliconPkg.dec
+  # IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec
+  # MU_CHANGE end
 
 [Pcd]
-  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode          ## CONSUMES
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  # gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode          ## CONSUMES
+  # MU_CHANGE end
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterDebugInit          ## CONSUMES
   gMinPlatformPkgTokenSpaceGuid.PcdStopAfterMemInit            ## CONSUMES
-  gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection          ## CONSUMES
+  # MU_CHANGE Make PlatformInitPreMem silicon independent
+  # gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection          ## CONSUMES
+  # MU_CHANGE end
 
 [FixedPcd]
   gMinPlatformPkgTokenSpaceGuid.PcdPlatformEfiAcpiReclaimMemorySize  ## CONSUMES
