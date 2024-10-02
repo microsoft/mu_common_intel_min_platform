@@ -1,0 +1,31 @@
+# @file FspSupportLib.inf
+#
+# Default implementation of FspSupportLib.
+# Library to report FSP support state
+#
+#
+# Copyright (c) Microsoft Corporation. All rights reserved.
+#
+
+[Defines]
+  INF_VERSION         = 0x00010006
+  BASE_NAME           = FspSupportLib
+  FILE_GUID           = 9D79825F-C6A5-4D94-AF26-23AF2BD6BEC7
+  VERSION_STRING      = 1.0
+  MODULE_TYPE         = BASE
+  LIBRARY_CLASS       = FspSupportLib
+
+[Sources]
+  FspSupportLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+  IntelFsp2WrapperPkg/IntelFsp2WrapperPkg.dec
+
+[LibraryClasses]
+  PcdLib
+
+[Pcd]
+  gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode
+  gIntelFsp2WrapperTokenSpaceGuid.PcdFspModeSelection
