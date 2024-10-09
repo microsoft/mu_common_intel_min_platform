@@ -1,0 +1,25 @@
+## @file
+# TestPointMtrrInfoLibNull.inf
+#
+# Null implementation of TestPointMtrrInfoLib.h that doesn't return any MTRRs that we want to check.
+# This is for compatibility purposes.
+#
+##
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION         = 0x00010006
+  BASE_NAME           = TestPointMtrrInfoLibNull
+  FILE_GUID           = b015a43a-7ca3-4c68-80dd-5a9840bbf2bb
+  VERSION_STRING      = 1.0
+  MODULE_TYPE         = BASE
+  LIBRARY_CLASS       = TestPointMtrrInfoLib
+
+[Sources]
+  TestPointMtrrInfoLibNull.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec

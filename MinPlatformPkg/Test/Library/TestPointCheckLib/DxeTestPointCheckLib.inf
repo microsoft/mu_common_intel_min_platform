@@ -37,12 +37,15 @@
   SafeIntLib
   PlatformConfigCheckLib # MU_CHANGE: Support platform level configuration testing
   TestPointPciSpeedInfoLib
+  TestPointMtrrInfoLib
+  MtrrLib
 
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   IntelSiliconPkg/IntelSiliconPkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
 
 [Sources]
   DxeTestPointCheckLib.c
@@ -65,6 +68,7 @@
   DxeCheckHsti.c
   DxeCheckEsrt.c
   DxeCheckLoadedImage.c
+  DxeCheckMtrr.c
   DxeCheckSmmInfo.c
   DxeCheckSmiHandlerInstrument.c
   DxeCheckUefiSecureBoot.c

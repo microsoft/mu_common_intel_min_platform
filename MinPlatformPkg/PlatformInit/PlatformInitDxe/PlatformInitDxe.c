@@ -113,6 +113,7 @@ OnDxeSmmReadyToLock (
   }
 
   TestPointDxeSmmReadyToLockSmramAligned ();
+  TestPointReadyToBootMtrrFunctional ();
 
   TestPointDxeSmmReadyToLockWsmtTableFunctional ();
 }
@@ -155,6 +156,7 @@ OnReadyToBootLater (
   TestPointReadyToBootPiSignedFvBootEnabled ();
   TestPointReadyToBootTcgTrustedBootEnabled ();
   TestPointReadyToBootTcgMorEnabled ();
+
   TestPointReadyToBootEsrtTableFunctional ();
 }
 
