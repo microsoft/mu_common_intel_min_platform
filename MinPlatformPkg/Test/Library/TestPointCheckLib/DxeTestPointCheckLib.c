@@ -148,6 +148,11 @@ TestPointCheckTcgMor (
   );
 
 EFI_STATUS
+TestPointCheckMtrr (
+  VOID
+  );
+
+EFI_STATUS
 TestPointVtdEngine (
   VOID
   );
@@ -1283,7 +1288,7 @@ TestPointReadyToBootMtrrFunctional (
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMtrrFunctional - Enter\n"));
   Result = TRUE;
-  Status = TestPointCheckMtrr (TRUE);
+  Status = TestPointCheckMtrr ();
   if (EFI_ERROR(Status)) {
     Result = FALSE;
   }
