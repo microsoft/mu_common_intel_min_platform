@@ -155,6 +155,7 @@ OnReadyToBootLater (
   TestPointReadyToBootPiSignedFvBootEnabled ();
   TestPointReadyToBootTcgTrustedBootEnabled ();
   TestPointReadyToBootTcgMorEnabled ();
+  TestPointReadyToBootMtrrFunctional ();
   TestPointReadyToBootEsrtTableFunctional ();
 }
 

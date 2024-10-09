@@ -523,6 +523,25 @@ TestPointReadyToBootTcgMorEnabled (
   );
 
 /**
+  This service verifies MTRR settings at Ready to Boot
+
+  Test subject: MTRRs at Ready to Boot
+  Test overview: Verifies MTRR settings.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  Examples of settings verified: No MTRR overlap, DXE data memory is writeback, flash region may be UC, MMIO is UC, etc.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootMtrrFunctional (
+  VOID
+  );
+
+/**
   This service verifies SMI handler profiling.
 
   Test subject: SMI handler profiling.

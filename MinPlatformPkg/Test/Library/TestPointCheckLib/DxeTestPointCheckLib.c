@@ -1252,6 +1252,57 @@ TestPointReadyToBootTcgMorEnabled (
 }
 
 /**
+  This service verifies MTRR settings at Ready to Boot
+
+  Test subject: MTRRs at Ready to Boot
+  Test overview: Verifies MTRR settings.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  Examples of settings verified: No MTRR overlap, DXE data memory is writeback, flash region may be UC, MMIO is UC, etc.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootMtrrFunctional (
+  VOID
+  )
+{
+  EFI_STATUS  Status;
+  BOOLEAN     Result;
+  UINT8       *FeatureImplemented;
+
+  FeatureImplemented = GetFeatureImplemented ();
+
+  // NEED TO ADD NEW BIT HERE
+  if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
+    return EFI_SUCCESS;
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMtrrFunctional - Enter\n"));
+  Result = TRUE;
+  Status = TestPointCheckMtrr (TRUE);
+  if (EFI_ERROR(Status)) {
+    Result = FALSE;
+  }
+
+  if (Result) {
+    // NEED TO UPDATE BIT HERE AS WELL
+    TestPointLibSetFeaturesVerified (
+      PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE, // MU_CHANGE - StandaloneMm Support
+      2,
+      TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL
+      );
+  }
+
+  DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMtrrFunctional - Exit\n"));
+  return EFI_SUCCESS;
+}
+
+/**
   This service verifies the system state after Exit Boot Services is invoked.
 
   @retval EFI_SUCCESS         The test point check was performed successfully.

@@ -65,6 +65,7 @@
   DxeCheckHsti.c
   DxeCheckEsrt.c
   DxeCheckLoadedImage.c
+  DxeCheckMtrr.c
   DxeCheckSmmInfo.c
   DxeCheckSmiHandlerInstrument.c
   DxeCheckUefiSecureBoot.c
