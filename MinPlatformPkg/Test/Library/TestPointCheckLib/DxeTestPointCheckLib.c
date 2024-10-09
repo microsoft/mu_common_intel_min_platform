@@ -1277,14 +1277,11 @@ TestPointReadyToBootMtrrFunctional (
 {
   EFI_STATUS  Status;
   BOOLEAN     Result;
-  UINT8       *FeatureImplemented;
-
-  FeatureImplemented = GetFeatureImplemented ();
 
   // NEED TO ADD NEW BIT HERE
-  if ((FeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
-    return EFI_SUCCESS;
-  }
+  //if ((mFeatureImplemented[2] & TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL) == 0) {
+  //  return EFI_SUCCESS;
+  //}
 
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMtrrFunctional - Enter\n"));
   Result = TRUE;
