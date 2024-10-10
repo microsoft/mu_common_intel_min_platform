@@ -113,6 +113,7 @@ OnDxeSmmReadyToLock (
   }
 
   TestPointDxeSmmReadyToLockSmramAligned ();
+  TestPointReadyToBootMtrrFunctional ();
 
   TestPointDxeSmmReadyToLockWsmtTableFunctional ();
 }
@@ -155,6 +156,7 @@ OnReadyToBootLater (
   TestPointReadyToBootPiSignedFvBootEnabled ();
   TestPointReadyToBootTcgTrustedBootEnabled ();
   TestPointReadyToBootTcgMorEnabled ();
+
   TestPointReadyToBootEsrtTableFunctional ();
 }
 
@@ -220,8 +222,7 @@ OnEndOfFirmware (
 
   Status = BoardInitEndOfFirmware ();
   ASSERT_EFI_ERROR(Status);
-  
-  TestPointReadyToBootMtrrFunctional ();
+
   TestPointExitBootServices ();
 }
 
