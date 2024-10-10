@@ -155,7 +155,6 @@ OnReadyToBootLater (
   TestPointReadyToBootPiSignedFvBootEnabled ();
   TestPointReadyToBootTcgTrustedBootEnabled ();
   TestPointReadyToBootTcgMorEnabled ();
-  TestPointReadyToBootMtrrFunctional ();
   TestPointReadyToBootEsrtTableFunctional ();
 }
 
@@ -221,7 +220,8 @@ OnEndOfFirmware (
 
   Status = BoardInitEndOfFirmware ();
   ASSERT_EFI_ERROR(Status);
-
+  
+  TestPointReadyToBootMtrrFunctional ();
   TestPointExitBootServices ();
 }
 
