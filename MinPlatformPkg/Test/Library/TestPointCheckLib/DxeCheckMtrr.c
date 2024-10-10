@@ -270,6 +270,7 @@ CheckPlatformMtrrCache (
   IN VARIABLE_MTRR  *VariableMtrr
   )
 {
+  DEBUG ((DEBUG_INFO, "PRINTING MTRRs!\n"));
   MtrrDebugPrintAllMtrrs();
   return EFI_SUCCESS;
 }
