@@ -283,7 +283,7 @@ GetPlatformMtrrCacheData (
 }
 
 UINTN
-GetVariableMtrrCount (
+GetPlatformMtrrCacheCount (
   VOID
   )
 {
@@ -307,6 +307,8 @@ TestPointCheckMtrrForDxe (
   ExpectedMtrrs      = GetPlatformMtrrCacheData ();
   ExpectedMtrrsCount = GetPlatformMtrrCacheCount ();
   VariableMtrrCount  = GetVariableMtrrCount ();
+
+  DEBUG ((DEBUG_INFO, "RUNNING THE NEW TEST!\n"));
 
   //
   // Check if the MTRR types match
