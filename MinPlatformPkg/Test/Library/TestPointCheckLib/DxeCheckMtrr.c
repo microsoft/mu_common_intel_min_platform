@@ -296,7 +296,6 @@ TestPointCheckMtrrForDxe (
   IN VARIABLE_MTRR  *VariableMtrr
   )
 {
-  EFI_STATUS       Status;
   UINTN            VariableMtrrIndex;
   UINTN            VariableMtrrCount;
   VARIABLE_MTRR    *ExpectedMtrrs;
