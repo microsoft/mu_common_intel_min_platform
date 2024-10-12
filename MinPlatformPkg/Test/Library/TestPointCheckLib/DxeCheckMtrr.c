@@ -28,6 +28,16 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #define PRESENT_MEMORY_ATTRIBUTES     (EFI_RESOURCE_ATTRIBUTE_PRESENT)
 
+GLOBAL_REMOVE_IF_UNREFERENCED VARIABLE_MTRR mCheckedMtrrs[] = {
+  {0x40000000,   0, 6, 0, TRUE, TRUE},
+  {0x4000000,    0, 6, 0, TRUE, TRUE},
+  {0x8000000,    0, 1, 0, TRUE, TRUE},
+  {0x100000000,  0, 6, 0, TRUE, TRUE},
+  {0x200000000,  0, 6, 0, TRUE, TRUE},
+  {0x400000000,  0, 6, 0, TRUE, TRUE},
+  {0x2000000000, 0, 1, 0, TRUE, TRUE}
+};
+
 MTRR_MEMORY_CACHE_TYPE
 SetCurrentCacheType (
   IN MTRR_MEMORY_CACHE_TYPE  CurrentCacheType,
@@ -264,15 +274,20 @@ TestPointMtrrConvert (
   }
 }
 
-EFI_STATUS
-CheckPlatformMtrrCache (
-  IN MTRR_SETTINGS  *Mtrrs,
-  IN VARIABLE_MTRR  *VariableMtrr
+VARIABLE_MTRR *
+GetPlatformMtrrCacheData (
+  VOID
   )
 {
-  DEBUG ((DEBUG_INFO, "PRINTING MTRRs!\n"));
-  MtrrDebugPrintAllMtrrs();
-  return EFI_SUCCESS;
+  return mCheckedMtrrs;
+}
+
+UINTN
+GetVariableMtrrCount (
+  VOID
+  )
+{
+  return 0;
 }
 
 EFI_STATUS
@@ -281,10 +296,48 @@ TestPointCheckMtrrForDxe (
   IN VARIABLE_MTRR  *VariableMtrr
   )
 {
-  EFI_STATUS                  Status;
-  
-  // Call the platform specific check for MTRRs
-  Status = CheckPlatformMtrrCache(Mtrrs, VariableMtrr);
+  EFI_STATUS       Status;
+  UINTN            VariableMtrrIndex;
+  UINTN            VariableMtrrCount;
+  VARIABLE_MTRR    *ExpectedMtrrs;
+  UINTN            ExpectedMtrrsIndex;
+  UINTN            ExpectedMtrrsCount;
+  BOOLEAN          Found;
+
+  ExpectedMtrrs      = GetPlatformMtrrCacheData ();
+  ExpectedMtrrsCount = GetPlatformMtrrCacheCount ();
+  VariableMtrrCount  = GetVariableMtrrCount ();
+
+  //
+  // Check if the MTRR types match
+  //
+  for (VariableMtrrIndex = 0; VariableMtrrIndex < VariableMtrrCount; VariableMtrrIndex++) {
+    Found = FALSE;
+    if (!VariableMtrr[VariableMtrrIndex].Valid) {
+      continue;
+    }
+    for (ExpectedMtrrsIndex = 0; ExpectedMtrrsIndex < ExpectedMtrrsCount; ExpectedMtrrsIndex++) {
+      if (ExpectedMtrrs[ExpectedMtrrsIndex].BaseAddress == VariableMtrr[VariableMtrrCount].BaseAddress){
+        if (ExpectedMtrrs[ExpectedMtrrsIndex].Type != VariableMtrr[VariableMtrrCount].Type) {
+          DEBUG ((DEBUG_ERROR, "The Mtrr with BaseAddress: 0x%016lx has the incorrect cache type: %d!  Expected: %d\n",
+            VariableMtrr[VariableMtrrIndex].BaseAddress,
+            VariableMtrr[VariableMtrrIndex].Type,
+            ExpectedMtrrs[ExpectedMtrrsIndex].Type
+            ));
+          return EFI_SECURITY_VIOLATION;
+        }
+        Found = TRUE;
+        break;
+      }
+    }
+    if (!Found) {
+      DEBUG ((DEBUG_INFO, "The Mtrr with BaseAddress: 0x%016lx did not have a policy to check against.\n",
+        VariableMtrr[VariableMtrrIndex].BaseAddress
+        ));
+    }
+  }
+
+  return EFI_SUCCESS;
 
   return Status;
 }
@@ -347,9 +400,9 @@ TestPointCheckMtrr (
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
       TEST_POINT_IMPLEMENTATION_ID_PLATFORM_PEI,
-      TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL_ERROR_CODE \
-        TEST_POINT_END_OF_PEI \
-        TEST_POINT_BYTE2_END_OF_PEI_MTRR_FUNCTIONAL_ERROR_STRING
+      TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_CODE \
+        TEST_POINT_READY_TO_BOOT \
+        TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_STRING
       );
   }
 
