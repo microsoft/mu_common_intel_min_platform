@@ -803,8 +803,8 @@ TestPointPciEnumerationDonePcieGenSpeed (
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL_ERROR_STRING                      L"Invalid ACPI Table\r\n"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_CODE                      L"0x04050000"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_STRING                    L"Invalid GCD Resource\r\n"
-#define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_CODE                      L"0x04060000"
-#define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_STRING                    L"Invalid MTRR cache type\r\n"
+#define   TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID_ERROR_CODE                             L"0x04060000"
+#define   TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID_ERROR_STRING                           L"Invalid MTRR cache type\r\n"
 
 #define TEST_POINT_BYTE5_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED                             BIT0
 #define TEST_POINT_BYTE5_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED                            BIT1
