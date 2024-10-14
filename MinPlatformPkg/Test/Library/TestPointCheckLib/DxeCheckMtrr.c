@@ -297,6 +297,10 @@ TestPointCheckMtrrForDxe (
   ExpectedMtrrsCount = GetPlatformMtrrCacheData (ExpectedMtrrs);
   VariableMtrrCount  = GetVariableMtrrCount ();
 
+  if ((ExpectedMtrrs == NULL) || (ExpectedMtrrsCount == 0)) {
+    return EFI_NOT_FOUND;
+  }
+
   DEBUG ((DEBUG_INFO, "RUNNING THE NEW TEST!\n"));
 
   //
