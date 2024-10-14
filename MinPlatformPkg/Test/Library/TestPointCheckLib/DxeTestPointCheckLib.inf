@@ -37,6 +37,7 @@
   SafeIntLib
   PlatformConfigCheckLib # MU_CHANGE: Support platform level configuration testing
   TestPointPciSpeedInfoLib
+  TestPointMtrrInfoLib
   MtrrLib
 
 [Packages]
