@@ -281,22 +281,6 @@ TestPointMtrrConvert (
   }
 }
 
-VARIABLE_MTRR *
-GetPlatformMtrrCacheData (
-  VOID
-  )
-{
-  return mCheckedMtrrs;
-}
-
-UINTN
-GetPlatformMtrrCacheCount (
-  VOID
-  )
-{
-  return 7;
-}
-
 EFI_STATUS
 TestPointCheckMtrrForDxe (
   IN MTRR_SETTINGS  *Mtrrs,
