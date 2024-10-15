@@ -33,7 +33,7 @@ typedef struct {
 **/
 UINTN
 GetPlatformMtrrCacheData (
-  OUT VARIABLE_MTRR_INFO *CheckedMtrrs
+  OUT VARIABLE_MTRR_INFO **CheckedMtrrs
   );
 
 #endif

@@ -27,7 +27,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 UINTN
 GetPlatformMtrrCacheData (
-  OUT VARIABLE_MTRR_INFO *CheckedMtrrs
+  OUT VARIABLE_MTRR_INFO **CheckedMtrrs
   )
 {
   return 0;
