@@ -84,4 +84,5 @@
 
   BoardModulePkg/Library/BiosIdLib/DxeBiosIdLib.inf
   BoardModulePkg/Library/BiosIdLib/PeiBiosIdLib.inf
+  BoardModulePkg/Library/BiosIdLib/StandaloneMmBiosIdLib.inf
 
