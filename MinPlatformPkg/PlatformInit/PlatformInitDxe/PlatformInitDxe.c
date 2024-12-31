@@ -113,7 +113,6 @@ OnDxeSmmReadyToLock (
   }
 
   TestPointDxeSmmReadyToLockSmramAligned ();
-  TestPointReadyToBootMtrrFunctional ();
 
   TestPointDxeSmmReadyToLockWsmtTableFunctional ();
 }
@@ -148,6 +147,7 @@ OnReadyToBootLater (
   TestPointReadyToBootHstiTableFunctional ();
   TestPointReadyToBootAcpiTableFunctional ();
   TestPointReadyToBootGcdResourceFunctional ();
+  TestPointReadyToBootMtrrFunctional (); // MU_CHANGE
 
   TestPointDxeSmmReadyToBootSmiHandlerInstrument ();
   TestPointDxeSmmReadyToBootSmmPageProtection ();

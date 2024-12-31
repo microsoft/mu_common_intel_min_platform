@@ -301,8 +301,6 @@ TestPointCheckMtrrForDxe (
     return EFI_NOT_FOUND;
   }
 
-  DEBUG ((DEBUG_INFO, "RUNNING THE NEW TEST!\n"));
-
   //
   // Check if the MTRR types match
   //
@@ -398,7 +396,7 @@ TestPointCheckMtrr (
     }
   }
 
-  // Update bits
+  // Print error string if we failed
   if (!Result) {
     TestPointLibAppendErrorString (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,

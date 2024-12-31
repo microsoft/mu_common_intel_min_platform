@@ -1290,10 +1290,9 @@ TestPointReadyToBootMtrrFunctional (
   }
 
   if (Result) {
-    // NEED TO UPDATE BIT HERE AS WELL
     TestPointLibSetFeaturesVerified (
       PLATFORM_TEST_POINT_ROLE_PLATFORM_IBV,
-      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE, // MU_CHANGE - StandaloneMm Support
+      TEST_POINT_IMPLEMENTATION_ID_PLATFORM_DXE,
       4,
       TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID
       );
