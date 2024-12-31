@@ -13,8 +13,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #ifndef _TEST_POINT_MTRR_INFO_LIB_H_
 #define _TEST_POINT_MTRR_INFO_LIB_H_
+
 #include <Uefi.h>
-#include <Library/MtrrLib.h>
 
 typedef struct {
   UINT64     BaseAddress;
