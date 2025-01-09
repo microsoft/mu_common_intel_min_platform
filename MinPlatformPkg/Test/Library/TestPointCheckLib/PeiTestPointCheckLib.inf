@@ -44,6 +44,8 @@
   PeiCheckSmmInfo.c
   PeiCheckPci.c
   PeiCheckDmaProtection.c
+  TestPointCheckMtrr.h # MU_CHANGE
+  TestPointCheckMtrr.c # MU_CHANGE
 
 [Pcd]
   gMinPlatformPkgTokenSpaceGuid.PcdTestPointIbvPlatformFeature

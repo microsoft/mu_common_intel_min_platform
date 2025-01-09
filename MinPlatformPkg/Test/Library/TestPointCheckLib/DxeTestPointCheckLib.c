@@ -1256,6 +1256,7 @@ TestPointReadyToBootTcgMorEnabled (
   return EFI_SUCCESS;
 }
 
+// MU_CHANGE - START
 /**
   This service verifies MTRR settings at Ready to Boot
 
@@ -1301,6 +1302,7 @@ TestPointReadyToBootMtrrFunctional (
   DEBUG ((DEBUG_INFO, "======== TestPointReadyToBootMtrrFunctional - Exit\n"));
   return EFI_SUCCESS;
 }
+// MU_CHANGE - END
 
 /**
   This service verifies the system state after Exit Boot Services is invoked.

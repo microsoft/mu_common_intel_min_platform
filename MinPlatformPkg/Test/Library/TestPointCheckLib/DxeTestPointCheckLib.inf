@@ -79,7 +79,9 @@
   TestPointHelp.c
   TestPointInternal.h
   TestPointImageDump.c
-
+  TestPointCheckMtrr.h
+  TestPointCheckMtrr.c
+  
 [Guids]
   gEfiMemoryAttributesTableGuid
   gEfiGlobalVariableGuid
