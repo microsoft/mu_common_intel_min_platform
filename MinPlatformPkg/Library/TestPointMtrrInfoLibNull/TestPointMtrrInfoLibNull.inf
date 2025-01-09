@@ -1,7 +1,7 @@
 ## @file
 # TestPointMtrrInfoLibNull.inf
 #
-# Null implementation of TestPointMtrrInfoLib.h that doesn't return any MTRRs that we want to check.
+# Null implementation of the TestPointMtrrInfoLib class that doesn't return any MTRRs that we want to check.
 # This is for compatibility purposes.
 #
 ##
