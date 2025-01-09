@@ -2,9 +2,9 @@
 TestPointMtrrInfoLibNull.c
 
 An interface for platforms to define the expected MTRR cache types for specific
-regions by Ready To Boot.  Create an array of VARIABLE_MTRR_INFO structures for every
-MTRR range that you want to validate.  If any of the checked regions don't have the
-matching caching type the test will report an error for the failing range and return.
+regions.  Create an array of VARIABLE_MTRR_INFO structures for every MTRR range
+that you want to validate.  If any of the checked regions don't have the matching
+caching type the test will report an error for the failing range and return.
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 SPDX-License-Identifier: BSD-2-Clause-Patent
@@ -26,8 +26,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 UINTN
+EFIAPI
 GetPlatformMtrrCacheData (
-  OUT VARIABLE_MTRR_INFO **CheckedMtrrs
+  OUT VARIABLE_MTRR_INFO **CheckedMtrrs,
+  IN  BOOT_POINT         Boot
+
   )
 {
   return 0;
