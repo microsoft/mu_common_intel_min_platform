@@ -293,7 +293,7 @@ TestPointCheckMtrrForDxe (
   UINTN               ExpectedMtrrsCount;
   BOOLEAN             Found;
 
-  ExpectedMtrrsCount = GetPlatformMtrrCacheData (&ExpectedMtrrs);
+  ExpectedMtrrsCount = GetPlatformMtrrCacheData (&ExpectedMtrrs, ReadyToBoot);
   VariableMtrrCount  = GetVariableMtrrCount ();
 
   if ((ExpectedMtrrs == NULL) || (ExpectedMtrrsCount == 0)) {
