@@ -147,6 +147,7 @@ OnReadyToBootLater (
   TestPointReadyToBootHstiTableFunctional ();
   TestPointReadyToBootAcpiTableFunctional ();
   TestPointReadyToBootGcdResourceFunctional ();
+  TestPointReadyToBootMtrrFunctional (); // MU_CHANGE
 
   TestPointDxeSmmReadyToBootSmiHandlerInstrument ();
   TestPointDxeSmmReadyToBootSmmPageProtection ();
@@ -155,6 +156,7 @@ OnReadyToBootLater (
   TestPointReadyToBootPiSignedFvBootEnabled ();
   TestPointReadyToBootTcgTrustedBootEnabled ();
   TestPointReadyToBootTcgMorEnabled ();
+
   TestPointReadyToBootEsrtTableFunctional ();
 }
 

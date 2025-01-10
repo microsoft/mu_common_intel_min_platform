@@ -91,6 +91,7 @@
   LargeVariableReadLib|Include/Library/LargeVariableReadLib.h
   LargeVariableWriteLib|Include/Library/LargeVariableWriteLib.h
   TestPointPciSpeedInfoLib|Include/Library/TestPointPciSpeedInfoLib.h
+  TestPointMtrrInfoLib|Include/Library/TestPointMtrrInfoLib.h
 
   PhatAcpiLib|Include/Library/PhatAcpiLib.h
 

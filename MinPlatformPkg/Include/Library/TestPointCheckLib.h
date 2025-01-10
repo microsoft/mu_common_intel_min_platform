@@ -523,6 +523,25 @@ TestPointReadyToBootTcgMorEnabled (
   );
 
 /**
+  This service verifies MTRR settings at Ready to Boot
+
+  Test subject: MTRRs at Ready to Boot
+  Test overview: Verifies MTRR settings.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps results to the debug log.
+
+  Examples of settings verified: No MTRR overlap, DXE data memory is writeback, flash region may be UC, MMIO is UC, etc.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointReadyToBootMtrrFunctional (
+  VOID
+  );
+
+/**
   This service verifies SMI handler profiling.
 
   Test subject: SMI handler profiling.
@@ -771,6 +790,7 @@ TestPointPciEnumerationDonePcieGenSpeed (
 #define TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_CONSOLE_VARIABLE_FUNCTIONAL                     BIT3
 #define TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL                                BIT4
 #define TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL                              BIT5
+#define TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID                                     BIT6
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_CODE           L"0x04000000"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_MEMORY_TYPE_INFORMATION_FUNCTIONAL_ERROR_STRING         L"Invalid Memory Type Information\r\n"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_UEFI_MEMORY_ATTRIBUTE_TABLE_FUNCTIONAL_ERROR_CODE       L"0x04010000"
@@ -783,6 +803,8 @@ TestPointPciEnumerationDonePcieGenSpeed (
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_ACPI_TABLE_FUNCTIONAL_ERROR_STRING                      L"Invalid ACPI Table\r\n"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_CODE                      L"0x04050000"
 #define   TEST_POINT_BYTE4_READY_TO_BOOT_GCD_RESOURCE_FUNCTIONAL_ERROR_STRING                    L"Invalid GCD Resource\r\n"
+#define   TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID_ERROR_CODE                             L"0x04060000"
+#define   TEST_POINT_BYTE4_READY_TO_BOOT_MTRR_CACHE_VALID_ERROR_STRING                           L"Invalid MTRR cache type\r\n"
 
 #define TEST_POINT_BYTE5_READY_TO_BOOT_UEFI_SECURE_BOOT_ENABLED                             BIT0
 #define TEST_POINT_BYTE5_READY_TO_BOOT_PI_SIGNED_FV_BOOT_ENABLED                            BIT1
