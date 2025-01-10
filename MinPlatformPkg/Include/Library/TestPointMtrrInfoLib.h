@@ -35,6 +35,8 @@ typedef enum {
 
   @param[out]       CheckedMtrrs  Pointer to the head of an array of VARIABLE_MTRR_INFO structures.
                                   The caller shall not free this array.
+  @param[in]        Boot          Enum value that represents the stage of boot which we want the comparisons
+                                  to be made.
 
   @retval           UINTN         Length of the returned array.
 
