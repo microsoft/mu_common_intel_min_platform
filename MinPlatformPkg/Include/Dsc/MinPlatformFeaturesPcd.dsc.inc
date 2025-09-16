@@ -23,3 +23,6 @@
  gMinPlatformPkgTokenSpaceGuid.PcdTpm2Enable                    |FALSE
 
  gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable             |FALSE
+
+[PcdsFixedAtBuild]
+ gMinPlatformPkgTokenSpaceGuid.PcdFspWrapperBootMode            |FALSE
