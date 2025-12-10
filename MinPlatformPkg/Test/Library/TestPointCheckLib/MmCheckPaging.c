@@ -361,7 +361,7 @@ TestPointCheckPageTable (
     }
 
     PageEntryLength = PageAttributeToLength (PageAttribute);
-    PageEntryLength = (UINTN)((BaseAddress & ~(PageEntryLength - 1)) + PageEntryLength - BaseAddress);
+    PageEntryLength = (UINTN)((BaseAddress & ~(EFI_PHYSICAL_ADDRESS)(PageEntryLength - 1)) + PageEntryLength - BaseAddress);
 
     //
     // move to next
