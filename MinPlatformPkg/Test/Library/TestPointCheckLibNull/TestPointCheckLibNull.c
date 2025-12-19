@@ -729,3 +729,69 @@ TestPointPciEnumerationDonePcieGenSpeed (
 {
   return EFI_SUCCESS;
 }
+
+// MU_CHANGE [BEGIN] - Provide missing stub implementations
+/**
+   Prints out the MM loaded image
+ */
+VOID
+TestPointDumpMmLoadedImage (
+  VOID
+  )
+{
+  return;
+}
+
+/**
+  This service verifies SMRR configuration at the End of DXE.
+
+  Test subject: SMRR.
+  Test overview: Verify SMRR is aligned and SMRR matches SMRAM_INFO.
+  Reporting mechanism: Set ADAPTER_INFO_PLATFORM_TEST_POINT_STRUCT.
+                       Dumps SMRR and SMRAM_INFO.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmEndOfDxeSmrrFunctional (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+/**
+  This service verifies the system state within MM after Exit Boot Services is invoked.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmExitBootServices (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+
+/**
+  This service verifies the security of MM communication buffers at MM Ready To Lock.
+
+  Test subject: MM communication buffer.
+  Test overview: Verify only CommBuffer and MMIO are mapped in the page table.
+  Reporting mechanism: Dumps the memory map and GCD map at MmReadyToLock and checks at MmReadyToBoot.
+
+  @retval EFI_SUCCESS         The test point check was performed successfully.
+  @retval EFI_UNSUPPORTED     The test point check is not supported on this platform.
+**/
+EFI_STATUS
+EFIAPI
+TestPointMmReadyToLockSecureMmCommunicationBuffer (
+  VOID
+  )
+{
+  return EFI_SUCCESS;
+}
+// MU_CHANGE [END]
