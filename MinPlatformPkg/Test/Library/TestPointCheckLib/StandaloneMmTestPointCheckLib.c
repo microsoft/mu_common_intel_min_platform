@@ -30,6 +30,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED UINTN                  mUefiDescriptorSize;
 EFI_MEMORY_ATTRIBUTES_TABLE  *mUefiMemoryAttributesTable;
 
 VOID
+EFIAPI // MU_CHANGE
 TestPointDumpMmLoadedImage (
   VOID
   );

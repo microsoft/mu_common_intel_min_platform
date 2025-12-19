@@ -695,6 +695,7 @@ TestPointMmReadyToBootMmPageProtection (
    Prints out the MM loaded image
  */
 VOID
+EFIAPI // MU_CHANGE
 TestPointDumpMmLoadedImage (
   VOID
   );
