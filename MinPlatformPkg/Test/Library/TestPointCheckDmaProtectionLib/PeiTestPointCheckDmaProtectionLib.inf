@@ -1,0 +1,28 @@
+## @file PeiTestPointCheckDmaProtectionLib
+#
+# Implementation of TestPointCheckDmaProtectionLib Library for PEIM.
+#
+# Copyright (c) Microsoft Corporation.
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = PeiTestPointCheckDmaProtectionLib
+  FILE_GUID                      = 7A4D35E4-3C2A-48E3-92F8-727D53839F69
+  MODULE_TYPE                    = PEIM
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = TestPointCheckDmaProtectionLib
+
+[Sources]
+  PeiTestPointCheckDmaProtectionLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  IntelSiliconPkg/IntelSiliconPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+
+[Ppis]
+  gEdkiiVTdInfoPpiGuid
+

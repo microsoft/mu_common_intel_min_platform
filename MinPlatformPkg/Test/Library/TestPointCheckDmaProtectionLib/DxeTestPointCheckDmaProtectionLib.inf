@@ -1,0 +1,25 @@
+## @file DxeTestPointCheckDmaProtectionLib
+#
+# Implementation of TestPointCheckDmaProtectionLib Library for DXE_DRIVER.
+#
+# Copyright (c) Microsoft Corporation.
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = DxeTestPointCheckDmaProtectionLib
+  FILE_GUID                      = C0569448-C3B8-43BE-87FD-7CFFA5778356
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = TestPointCheckDmaProtectionLib
+
+[Sources]
+  DxeTestPointCheckDmaProtectionLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  IntelSiliconPkg/IntelSiliconPkg.dec
+  MinPlatformPkg/MinPlatformPkg.dec
+

@@ -1,0 +1,23 @@
+## @file TestPointCheckDmaProtectionLibNull
+#
+# NULL instance of TestPointCheckDmaProtectionLib Library.
+#
+# Copyright (c) Microsoft Corporation.
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = TestPointCheckDmaProtectionLibNull
+  FILE_GUID                      = CAC84CC0-A917-40D6-B619-996E54CEBED3
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = TestPointCheckDmaProtectionLib
+
+[Sources]
+  TestPointCheckDmaProtectionLibNull.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+

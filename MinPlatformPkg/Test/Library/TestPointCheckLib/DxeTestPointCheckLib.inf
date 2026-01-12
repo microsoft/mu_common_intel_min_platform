@@ -39,11 +39,11 @@
   TestPointPciSpeedInfoLib
   TestPointMtrrInfoLib
   MtrrLib
+  TestPointCheckDmaProtectionLib
 
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  IntelSiliconPkg/IntelSiliconPkg.dec
   MinPlatformPkg/MinPlatformPkg.dec
   UefiCpuPkg/UefiCpuPkg.dec
 
@@ -75,7 +75,6 @@
   DxeCheckPiSignedFvBoot.c
   DxeCheckTcgTrustedBoot.c
   DxeCheckTcgMor.c
-  DxeCheckDmaProtection.c
   TestPointHelp.c
   TestPointInternal.h
   TestPointImageDump.c

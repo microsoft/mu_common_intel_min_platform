@@ -15,6 +15,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Library/BaseMemoryLib.h>
 #include <Library/SafeIntLib.h>
 #include <Library/UefiBootServicesTableLib.h>
+#include <Library/TestPointCheckDmaProtectionLib.h>
 #include <IndustryStandard/Acpi.h>
 #include <IndustryStandard/DmaRemappingReportingTable.h>
 #include <IndustryStandard/WindowsSmmSecurityMitigationTable.h>
@@ -149,11 +150,6 @@ TestPointCheckTcgMor (
 
 EFI_STATUS
 TestPointCheckMtrr (
-  VOID
-  );
-
-EFI_STATUS
-TestPointVtdEngine (
   VOID
   );
 
