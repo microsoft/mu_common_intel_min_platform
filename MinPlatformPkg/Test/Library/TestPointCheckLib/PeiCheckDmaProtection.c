@@ -46,29 +46,27 @@ CheckDrhd (
       ECapReg.Uint64 = MmioRead64 ((UINTN)Drhd->RegisterBaseAddress + R_ECAP_REG);
       if (ECapReg.Bits.ADMS == 1) {
         Reg64 = MmioRead64 ((UINTN)Drhd->RegisterBaseAddress + R_RTADDR_REG);
-        if (Reg64 != V_RTADDR_REG_TTM_ADM) {
+        if ((Reg64 & V_RTADDR_REG_TTM_ADM) != V_RTADDR_REG_TTM_ADM) {
           DEBUG ((DEBUG_ERROR, "Abort DMA Mode is not enabled\n"));
-          return EFI_INVALID_PARAMETER;
+          return EFI_UNSUPPORTED;
         }
 
         Reg32 = MmioRead32 ((UINTN)Drhd->RegisterBaseAddress + R_GSTS_REG);
         if ((Reg32 & B_GSTS_REG_TE) == 0) {
           DEBUG ((DEBUG_ERROR, "DMA remapping is not enabled\n"));
-          return EFI_INVALID_PARAMETER;
+          return EFI_UNSUPPORTED;
         }
 
         DEBUG ((DEBUG_INFO, "DMA remapping is enabled with Abort DMA Mode\n"));
       } else {
-        Reg32 = MmioRead32 ((UINTN)Drhd->RegisterBaseAddress + R_GSTS_REG);
-
         CapReg.Uint64 = MmioRead64 ((UINTN)Drhd->RegisterBaseAddress + R_CAP_REG);
         if (CapReg.Bits.PLMR == 0 || CapReg.Bits.PHMR == 0) {
-          return EFI_INVALID_PARAMETER;
+          return EFI_UNSUPPORTED;
         }
 
         Reg32 = MmioRead32 ((UINTN)Drhd->RegisterBaseAddress + R_PMEN_ENABLE_REG);
         if ((Reg32 & BIT0) == 0) {
-          return EFI_INVALID_PARAMETER;
+          return EFI_UNSUPPORTED;
         }
       }
 
