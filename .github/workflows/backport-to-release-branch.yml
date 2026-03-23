@@ -43,13 +43,13 @@ jobs:
     steps:
     - name: Generate Token
       id: app-token
-      uses: actions/create-github-app-token@v2
+      uses: actions/create-github-app-token@v3
       with:
         app-id: ${{ vars.MU_ACCESS_APP_ID }}
         private-key: ${{ secrets.MU_ACCESS_APP_PRIVATE_KEY }}
 
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         token: ${{ steps.app-token.outputs.token }}
