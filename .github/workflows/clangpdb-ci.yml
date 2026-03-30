@@ -39,7 +39,7 @@ jobs:
       package-config: ${{ needs.package-matrix.outputs.matrix }}
       runner: windows-latest
       python-version: '3.12'
-      setup-cmd: setup
+      setup-cmd: ci-setup
 
   ubuntu-ci:
     name: Ubuntu CLANGPDB CI
@@ -54,4 +54,4 @@ jobs:
       runner: ubuntu-latest
       container: ghcr.io/microsoft/mu_devops/ubuntu-24-test:latest
       python-version: '3.12'
-      setup-cmd: setup
+      setup-cmd: ci-setup
