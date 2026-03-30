@@ -1,0 +1,57 @@
+# A workflow to build EDKII packages using the CLANGPDB toolchain in windows and ubuntu environments.
+##
+# Copyright (c) Microsoft Corporation.
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+name: CLANGPDB Package CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - release/202511
+  pull_request:
+    branches:
+      - release/202511
+
+jobs:
+  package-matrix:
+    name: Gather Repository Packages
+    uses: microsoft/mu_devops/.github/workflows/PackageMatrix.yml@v18.0.4
+    with:
+      ci-config: '.pytool/CISettings.py'
+      # Default config applied to any undeclared packages in the repo
+      default-config: |
+        targets: ["DEBUG,RELEASE"]
+        toolchain: ["CLANGPDB"]
+      python-version: '3.12'
+
+  windows-ci:
+    name: Windows CLANGPDB CI
+
+    if: ${{ needs.package-matrix.outputs.matrix != '' }}
+
+    needs: package-matrix
+
+    uses: microsoft/mu_devops/.github/workflows/PackageCi.yml@v18.0.4
+    with:
+      package-config: ${{ needs.package-matrix.outputs.matrix }}
+      runner: windows-latest
+      python-version: '3.12'
+      setup-cmd: setup
+
+  ubuntu-ci:
+    name: Ubuntu CLANGPDB CI
+
+    if: ${{ needs.package-matrix.outputs.matrix != '' }}
+
+    needs: package-matrix
+
+    uses: microsoft/mu_devops/.github/workflows/PackageCi.yml@v18.0.4
+    with:
+      package-config: ${{ needs.package-matrix.outputs.matrix }}
+      runner: ubuntu-latest
+      container: ghcr.io/microsoft/mu_devops/ubuntu-24-test:latest
+      python-version: '3.12'
+      setup-cmd: setup
