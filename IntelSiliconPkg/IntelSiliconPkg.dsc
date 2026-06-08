@@ -132,6 +132,7 @@
   # MU_CHANGE [BEGIN]
   IntelSiliconPkg/Feature/SmmAccess/Library/BaseSmmAccessLibNull/BaseSmmAccessLibNull.inf   # MU_CHANGE - TCBZ3540
   IntelSiliconPkg/Library/BaseFitQueryLib/BaseFitQueryLib.inf
+  IntelSiliconPkg/Library/FirmwareInterfaceTableCacheLib/FirmwareInterfaceTableCacheLib.inf
   # MU_CHANGE [END]
 [BuildOptions]
   *_*_*_CC_FLAGS = -D DISABLE_NEW_DEPRECATED_INTERFACES
