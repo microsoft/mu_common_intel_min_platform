@@ -72,11 +72,13 @@ InternalTestPointFindAip (
     //
     // Check AIP
     //
-    Status = Aip->GetSupportedTypes (
-                    Aip,
-                    &InfoTypesBuffer,
-                    &InfoTypesBufferCount
-                    );
+    InfoTypesBuffer      = NULL;
+    InfoTypesBufferCount = 0;
+    Status               = Aip->GetSupportedTypes (
+                                  Aip,
+                                  &InfoTypesBuffer,
+                                  &InfoTypesBufferCount
+                                  );
     if (EFI_ERROR (Status)) {
       continue;
     }
@@ -89,7 +91,9 @@ InternalTestPointFindAip (
       }
     }
 
-    FreePool (InfoTypesBuffer);
+    if (InfoTypesBuffer != NULL) {
+      FreePool (InfoTypesBuffer);
+    }
 
     if (AipCandidate == NULL) {
       continue;
