@@ -112,7 +112,7 @@ ProcessDrhd (
   EFI_STATUS                                   Status;
   VTD_SOURCE_ID                                SourceId;
 
-  mVtdUnitInformation[VtdIndex].PciDeviceInfo = AllocateZeroPool (sizeof (PCI_DEVICE_INFORMATION) + sizeof (PCI_DEVICE_DATA) * MAX_VTD_PCI_DATA_NUMBER);
+  mVtdUnitInformation[VtdIndex].PciDeviceInfo = AllocateZeroPool (sizeof (PCI_DEVICE_INFORMATION) + sizeof (PCI_DEVICE_DATA) * VTD_PCI_DATA_ALLOC_CHUNK);
   if (mVtdUnitInformation[VtdIndex].PciDeviceInfo == NULL) {
     ASSERT (FALSE);
     return EFI_OUT_OF_RESOURCES;
@@ -123,7 +123,7 @@ ProcessDrhd (
   DEBUG ((DEBUG_INFO, "  VTD (%d) BaseAddress -  0x%016lx\n", VtdIndex, DmarDrhd->RegisterBaseAddress));
 
   mVtdUnitInformation[VtdIndex].PciDeviceInfo->Segment                = DmarDrhd->SegmentNumber;
-  mVtdUnitInformation[VtdIndex].PciDeviceInfo->PciDeviceDataMaxNumber = MAX_VTD_PCI_DATA_NUMBER;
+  mVtdUnitInformation[VtdIndex].PciDeviceInfo->PciDeviceDataMaxNumber = VTD_PCI_DATA_ALLOC_CHUNK;
 
   if ((DmarDrhd->Flags & EFI_ACPI_DMAR_DRHD_FLAGS_INCLUDE_PCI_ALL) != 0) {
     mVtdUnitInformation[VtdIndex].PciDeviceInfo->IncludeAllFlag = TRUE;
