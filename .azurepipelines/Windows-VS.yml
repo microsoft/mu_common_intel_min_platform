@@ -16,7 +16,10 @@
 
 variables:
 - group: architectures-x86-64
-- group: tool-chain-windows-visual-studio-latest
+- name: tool_chain_tag
+  value: VS2022
+- name: vm_image
+  value: windows-latest
 - group: coverage
 
 extends:
