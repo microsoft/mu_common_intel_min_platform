@@ -232,7 +232,7 @@ InvalidateIOTLB (
     //
     // Queued Invalidation
     //
-    QiDesc.Uint64[0] = QI_IOTLB_DID (0) | QI_IOTLB_DR (CAP_READ_DRAIN (mVtdUnitInformation[VtdIndex].CapReg.Uint64)) | QI_IOTLB_DW (CAP_WRITE_DRAIN (mVtdUnitInformation[VtdIndex].CapReg.Uint64)) | QI_IOTLB_GRAN (1) | QI_IOTLB_TYPE;
+    QiDesc.Uint64[0] = QI_IOTLB_DID (0) | (mVtdUnitInformation[VtdIndex].CapReg.Bits.DRD ? QI_IOTLB_DR (1) : QI_IOTLB_DR (0)) | (mVtdUnitInformation[VtdIndex].CapReg.Bits.DWD ? QI_IOTLB_DW (1) : QI_IOTLB_DW (0)) | QI_IOTLB_GRAN (1) | QI_IOTLB_TYPE;
     QiDesc.Uint64[1] = QI_IOTLB_ADDR (0) | QI_IOTLB_IH (0) | QI_IOTLB_AM (0);
     QiDesc.Uint64[2] = 0;
     QiDesc.Uint64[3] = 0;

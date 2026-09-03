@@ -1391,7 +1391,7 @@ VtdLibDumpPeiPreMemInfo (
 
   VtdBarAddress = Event->Data1;
   Mode          = Event->Data2 & 0xFF;
-  Status        = (Event->Data2>>8) & 0xFF;
+  Status        = RShiftU64 (Event->Data2, 8) & 0xFF;
 
   switch (Mode) {
     case VTD_LOG_PEI_PRE_MEM_DISABLE:
