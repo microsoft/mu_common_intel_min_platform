@@ -84,7 +84,6 @@ GetGlobalVtdPmrAlignment (
   UINTN                           MemoryAlignment;
   UINT32                          GlobalVTdBaseAddress;
   EFI_STATUS                      Status;
-  UINTN                           VtdIndex;
   EFI_ACPI_DMAR_STRUCTURE_HEADER  *DmarHeader;
   EFI_ACPI_DMAR_DRHD_HEADER       *DrhdHeader;
   EFI_ACPI_DMAR_HEADER            *AcpiDmarTable;
@@ -97,7 +96,6 @@ GetGlobalVtdPmrAlignment (
   HighMemoryAlignment.Data = 0;
   MemoryAlignment          = 0;
   Status                   = EFI_UNSUPPORTED;
-  VtdIndex                 = 0;
   DmarHeader               = NULL;
   DrhdHeader               = NULL;
   AcpiDmarTable            = NULL;
@@ -128,8 +126,6 @@ GetGlobalVtdPmrAlignment (
             GlobalVTdBaseAddress = (UINT32)DrhdHeader->RegisterBaseAddress;
             DEBUG ((DEBUG_INFO, "  GlobalVTdBaseAddress: %x\n", GlobalVTdBaseAddress));
           }
-
-          VtdIndex++;
 
           break;
 
