@@ -69,7 +69,7 @@ TestPointCheckMmCommunicationBuffer (
   MemoryMap           = UefiMemoryMap;
   for (Index = 0; Index < MemoryMapEntryCount; Index++) {
     if (IsUefiPageNotPresent (MemoryMap)) {
-      DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE (MemoryMap->NumberOfPages)));
+      DEBUG ((DEBUG_INFO, "UEFI MemoryMap Checking 0x%lx - 0x%x\n", MemoryMap->PhysicalStart, EFI_PAGES_TO_SIZE ((UINTN)MemoryMap->NumberOfPages)));
       Status = TestPointCheckPageTable (
                  MemoryMap->PhysicalStart,
                  EFI_PAGES_TO_SIZE ((UINTN)MemoryMap->NumberOfPages),
@@ -89,7 +89,7 @@ TestPointCheckMmCommunicationBuffer (
     for (Index = 0; Index < MemoryAttributesTable->NumberOfEntries; Index++) {
       if ((Entry->Type == EfiRuntimeServicesCode) || (Entry->Type == EfiRuntimeServicesData)) {
         if ((Entry->Attribute & EFI_MEMORY_RO) != 0) {
-          DEBUG ((DEBUG_INFO, "UEFI MemoryAttributeTable Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE (Entry->NumberOfPages)));
+          DEBUG ((DEBUG_INFO, "UEFI MemoryAttributeTable Checking 0x%lx - 0x%x\n", Entry->PhysicalStart, EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages)));
           Status = TestPointCheckPageTable (
                      Entry->PhysicalStart,
                      EFI_PAGES_TO_SIZE ((UINTN)Entry->NumberOfPages),

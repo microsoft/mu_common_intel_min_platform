@@ -18,6 +18,7 @@ EFI_STATUS
 EFIAPI
 TestPointVtdEngine (
   VOID
-  ) {
+  )
+{
   return EFI_UNSUPPORTED;
 }

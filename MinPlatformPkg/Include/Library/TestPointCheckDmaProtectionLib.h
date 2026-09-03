@@ -12,7 +12,7 @@
 
 /**
   This function checks if DMA Remapping Hardware Unit Definitions
-  described are configured properly. 
+  described are configured properly.
 
   @retval EFI_SUCCESS         DMA protection is supported.
   @retval other               DMA protection is nor supported.
