@@ -53,26 +53,18 @@ GenerateNvStorageFvbMediaInfo (
   UINT32                      NvBlockNum;
   UINT32                      TotalNvVariableStorageSize;
   EFI_PHYSICAL_ADDRESS        NvStorageBaseAddress;
-  EFI_FIRMWARE_VOLUME_HEADER  FvbInfo = {
-    { 0,   },                                                                     // ZeroVector[16]
-    EFI_SYSTEM_NV_DATA_FV_GUID,                                                   // FileSystemGuid
-    0,                                                                            // FvLength
-    EFI_FVH_SIGNATURE,                                                            // Signature
-    0x0004feff,                                                                   // Attributes
-    sizeof (EFI_FIRMWARE_VOLUME_HEADER) +                                         // HeaderLength
-    sizeof (EFI_FV_BLOCK_MAP_ENTRY),
-    0,                                                                            // Checksum
-    0,                                                                            // ExtHeaderOffset
-    { 0,   },                                                                     // Reserved[1]
-    2,                                                                            // Revision
-    {                                                                             // BlockMap[1]
-      { 0, 0 }
-    }
-  };
+  EFI_FIRMWARE_VOLUME_HEADER  FvbInfo;
 
   if (FvbMediaInfo == NULL) {
     return EFI_INVALID_PARAMETER;
   }
+
+  ZeroMem (&FvbInfo, sizeof (FvbInfo));
+  CopyGuid (&FvbInfo.FileSystemGuid, &gEfiSystemNvDataFvGuid);
+  FvbInfo.Signature    = EFI_FVH_SIGNATURE;
+  FvbInfo.Attributes   = 0x0004feff;
+  FvbInfo.HeaderLength = sizeof (EFI_FIRMWARE_VOLUME_HEADER) + sizeof (EFI_FV_BLOCK_MAP_ENTRY);
+  FvbInfo.Revision     = 2;
 
   ZeroMem (FvbMediaInfo, sizeof (*FvbMediaInfo));
 
