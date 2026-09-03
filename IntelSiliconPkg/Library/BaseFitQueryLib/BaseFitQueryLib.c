@@ -16,7 +16,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // This library was designed with advanced unit-test features.
 // This define handles the configuration.
-#ifdef INTERNAL_UNIT_TEST
+#if defined (INTERNAL_UNIT_TEST) || defined (EDKII_UNIT_TEST_FRAMEWORK_ENABLED)
   #undef STATIC
 #define STATIC    // Nothing...
 #endif
